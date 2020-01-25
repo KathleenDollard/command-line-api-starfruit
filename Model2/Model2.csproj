@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.CommandLine">
+      <HintPath>..\..\..\command-line-api\command-line-api\artifacts\bin\System.CommandLine\Debug\netstandard2.0\System.CommandLine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

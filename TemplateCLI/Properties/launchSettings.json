@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TemplateCLI": {
+      "commandName": "Project",
+      "commandLineArgs": "Uninstall fasdfj"
+    }
+  }
+}
