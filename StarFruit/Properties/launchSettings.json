@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StarFruit": {
+      "commandName": "Project",
+      "commandLineArgs": "Update "
+    }
+  }
+}

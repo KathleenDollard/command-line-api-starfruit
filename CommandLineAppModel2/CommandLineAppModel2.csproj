@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Model2\Model2.csproj" />
-    <ProjectReference Include="..\TemplateCLI\TemplateCLI.csproj" />
   </ItemGroup>
 
 </Project>
