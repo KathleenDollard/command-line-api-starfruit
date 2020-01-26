@@ -13,23 +13,43 @@ namespace System.CommandLine.StarFruit
             return descAttribute?.Description;
         }
 
-        public static (int minCount, int maxCount)
-                GetArgumentValues(
+        public static Range<int>
+                GetArgumentCount(
                     this ICustomAttributeProvider item,
                     bool inherit = false)
         {
-            var attr = item.GetCustomAttributes(typeof(CmdArgumentAttribute), inherit)
-                        .OfType<CmdArgumentAttribute>()
+            var attr = item.GetCustomAttributes(typeof(CmdArgCountAttribute), inherit)
+                        .OfType<CmdArgCountAttribute>()
                         .FirstOrDefault();
-            return (attr.MinArgCount, attr.MaxArgCount);
+            
+            return attr == null 
+                        ? null
+                        : Range.Create(attr.MinArgCount, attr.MaxArgCount);
         }
 
-        public static object GetDefaultValue(this ICustomAttributeProvider item, bool inherit = false)
+        public static Default<object> GetDefaultValue(this ICustomAttributeProvider item, bool inherit = false)
         {
-            var attr = item.GetCustomAttributes(typeof(CmdDefaultValue), inherit)
-                                .OfType<CmdDefaultValue>()
+            var attr = item.GetCustomAttributes(typeof(CmdDefaultValueAttribute), inherit)
+                                .OfType<CmdDefaultValueAttribute>()
                                 .FirstOrDefault();
-            return attr?.DefaultValue;
+            return attr == null
+                      ? null
+                      : Default.Create(attr.DefaultValue);
         }
+
+
+        public static Range<int> GetRange<T>(
+                    this ICustomAttributeProvider item,
+                    bool inherit = false)
+            where T : IComparable<T>
+        {
+            var attr = item.GetCustomAttributes(typeof(CmdRangeAttribute), inherit)
+                        .OfType<CmdRangeAttribute>()
+                        .FirstOrDefault();
+            return attr == null
+                        ? null
+                        : Range.Create(attr.MinValue, attr.MaxValue);
+        }
+
     }
 }

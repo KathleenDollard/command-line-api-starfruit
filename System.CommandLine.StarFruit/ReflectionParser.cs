@@ -37,25 +37,33 @@ namespace System.CommandLine.StarFruit
             }
         }
 
-        // TODO: Ask Jon how to collapse these two overloads. 
+        // TODO: Add configuration, particularly unhandled tokens here
+        public static ReflectionParser<T> GetReflectionParser()
+            => new ReflectionParser<T>();
+
+        // TODO: Ask Jon how to collapse these overloads. 
         public static T GetInstance(string[] args)
         {
-            var reflectionParser = new ReflectionParser<T>();
-            var parser = reflectionParser.CreateParser();
-            parser.Invoke(args);
-            if (reflectionParser.ParseResult.Errors.Any())
-            {
-                // For now, throw
-                throw new ArgumentException(reflectionParser.ParseResult.Errors.ToString());
-            }
-            return reflectionParser.Result;
+            var reflectionParser = GetReflectionParser();
+            return GetInstance(args, reflectionParser);
         }
 
         public static T GetInstance(string args)
         {
-            var reflectionParser = new ReflectionParser<T>();
+            var reflectionParser = GetReflectionParser();
+            return GetInstance(args, reflectionParser);
+        }
+
+        internal static T GetInstance(string args, ReflectionParser<T> reflectionParser)
+            => GetInstanceInternal(p => p.Invoke(args), reflectionParser);
+
+        internal static T GetInstance(string[] args, ReflectionParser<T> reflectionParser)
+            => GetInstanceInternal(p => p.Invoke(args), reflectionParser);
+
+        private static T GetInstanceInternal(Action<Parser> parseAction, ReflectionParser<T> reflectionParser)
+        {
             var parser = reflectionParser.CreateParser();
-            parser.Invoke(args);
+            parseAction(parser);
             if (reflectionParser.ParseResult.Errors.Any())
             {
                 // For now, throw
@@ -113,23 +121,27 @@ namespace System.CommandLine.StarFruit
         private Option GetOption(PropertyInfo property)
             => new Option("--" + property.Name.ToKebabCase().ToLowerInvariant())
             {
-                Argument = new Argument()
-                {
-                    ArgumentType = property.PropertyType
-                },
+                Argument = GetArgument(property),
                 Description = property.GetDescription()
             };
 
         private Argument GetArgument(PropertyInfo property)
         {
-            var (minCount, maxCount) = property.GetArgumentValues();
             var argument = new Argument(property.Name.ToUpperInvariant())
             {
                 ArgumentType = property.PropertyType,
                 Description = property.GetDescription(),
-                Arity = new ArgumentArity(minCount, maxCount),
             };
+            var argCountRange = property.GetArgumentCount();
+            if (!(argCountRange is null))
+            {
+                argument.Arity = new ArgumentArity(argCountRange.Min, argCountRange.Max);
+            }
             var defaultValue = property.GetDefaultValue();
+            if (defaultValue != null)
+            {
+                argument.SetDefaultValue(defaultValue.Value);
+            }
             return argument;
         }
 

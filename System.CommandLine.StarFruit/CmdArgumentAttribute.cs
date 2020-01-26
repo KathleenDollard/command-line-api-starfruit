@@ -1,15 +1,14 @@
 ﻿namespace System.CommandLine.StarFruit
 {
-    public class CmdArgumentAttribute : Attribute
+    public class CmdArgCountAttribute : Attribute
     {
-        public string Description { get; }
-        public int MinArgCount { get; set; }
-        public int MaxArgCount { get; set; }
-        public int MinValue { get; set; }
-        public int MaxValue { get; set; }
-        public object DefaultValue { get; set; }
+        public int MinArgCount { get; }
+        public int MaxArgCount { get; }
 
-        public CmdArgumentAttribute()
-        { }
+        public CmdArgCountAttribute(int minArgCount, int maxArgCount)
+        {
+            MinArgCount = minArgCount;
+            MaxArgCount = maxArgCount;
+        }
     }
 }

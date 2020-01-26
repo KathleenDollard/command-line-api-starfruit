@@ -1,20 +1,21 @@
-﻿using System;
-
-namespace System.CommandLine.StarFruit
+﻿namespace System.CommandLine.StarFruit
 {
 
-    public class CmdDefaultValue : Attribute
-    {
-        public object DefaultValue { get; set; }
+    public class CmdArgumentAttribute: Attribute
+    {  }
 
-        public CmdDefaultValue(object defaultValue)
+    public class CmdDefaultValueAttribute : Attribute
+    {
+        public object DefaultValue { get; }
+
+        public CmdDefaultValueAttribute(object defaultValue)
             => DefaultValue = defaultValue;
     }
 
     public class CmdRangeAttribute : Attribute
     {
-        public int MinValue { get; set; }
-        public int MaxValue { get; set; }
+        public int MinValue { get; }
+        public int MaxValue { get; }
 
         public CmdRangeAttribute(int minValue, int maxValue)
         {

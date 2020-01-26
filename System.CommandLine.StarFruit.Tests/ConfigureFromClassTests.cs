@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System.Runtime.InteropServices;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -81,22 +82,72 @@ namespace System.CommandLine.StarFruit.Tests
         [Fact]
         public void Bad_option_type_gives_parser_error()
         {
-            var nameValue = "Fred";
             var countValue = "Joe";
             var args = $"--count {countValue}";
             Assert.Throws<ArgumentException>(() => ReflectionParser<BaseClass>.GetInstance(args));
         }
 
-
         [Fact]
         public void Bad_option_on_parent_gives_parser_error()
         {
-            var nameValue = "Fred";
             var countValue = "Joe";
             var args = $"--count {countValue} child-class";
             Assert.Throws<ArgumentException>(() => ReflectionParser<BaseClass>.GetInstance(args));
         }
 
+        [Fact]
+        public void Option_with_arity_two_accepts_two_arguments()
+        {
+            var args = $"--fave-foods Banana Waffles";
+            var strongArgs = ReflectionParser<OptionDetails>.GetInstance(args);
+            strongArgs.FaveFoods.Should().BeEquivalentTo(new [] { "Banana", "Waffles"});
+        }
+
+        [Fact]
+        public void Option_with_arity_two_errors_with_three_arguments()
+        {
+            var args = $"--fave-foods Banana Waffles Chocolate --fave-year 2010";
+            Assert.Throws<ArgumentException>(() => ReflectionParser<OptionDetails>
+                                                        .GetReflectionParser()
+                                                        .GetInstance(args));
+        }
+
+        [Fact]
+        public void Option_with_arity_two_errors_with_one_arguments()
+        {
+            var args = $"--fave-foods Banana";
+            Assert.Throws<ArgumentException>(() => ReflectionParser<OptionDetails>.GetInstance(args));
+        }
+
+        [Fact]
+        public void Option_with_default_uses_default()
+        {
+            var args = $"";
+            var strongArgs = ReflectionParser<OptionDetails>.GetInstance(args);
+            strongArgs.FaveYear.Should().Be(2001);
+        }
+
+        [Fact]
+        public void Option_with_range_gives_no_error_in_range()
+        {
+            var args = "--fave-year 2018";
+            var strongArgs = ReflectionParser<OptionDetails>.GetInstance(args);
+            strongArgs.FaveYear.Should().Be(2018);
+        }
+
+        [Fact]
+        public void Option_with_range_gives_error_if_below_range()
+        {
+            var args = "--fave-year 1918";
+            Assert.Throws<ArgumentException>(() => ReflectionParser<OptionDetails>.GetInstance(args));
+        }
+
+        [Fact]
+        public void Option_with_range_gives_error_if_above_range()
+        {
+            var args = "--fave-year 2028";
+            Assert.Throws<ArgumentException>(() => ReflectionParser<OptionDetails>.GetInstance(args));
+        }
 
         public class BaseClass
         {
@@ -113,10 +164,20 @@ namespace System.CommandLine.StarFruit.Tests
             public string Greeting { get; set; }
         }
 
-
         public class ChildClass : BaseClass
         {
             public string Greeting { get; set; }
+        }
+
+        public class OptionDetails
+        {
+            [CmdArgCount(2,3)]
+            public string[] FaveFoods { get; set; }
+
+            [CmdDefaultValue(2001)]
+            [CmdRange(1950, 2020)]
+            public int FaveYear { get; set; }
+
         }
     }
 }
