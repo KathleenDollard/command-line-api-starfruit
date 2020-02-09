@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.StarFruit
+﻿namespace System.CommandLine.ReflectionAppModel
 {
     public class Range
     {
@@ -20,18 +20,5 @@
 
     }
 
-    public class Default
-    {
-        public static Default<T> Create<T>(T defaultValue)
-            => new Default<T>()
-            {
-                Value = defaultValue
-            };
-    }
-
-    public class Default<T> : Default
-    {
-        public T Value { get; internal set; }
-    }
-
+  
 }

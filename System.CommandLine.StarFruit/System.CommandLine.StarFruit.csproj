@@ -1,14 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\System.CommandLine.ReflectionModel\System.CommandLine.ReflectionModel.csproj" />
+    <ProjectReference Include="..\System.CommandLine.StarFruit.WinForms\System.CommandLine.StarFruit.WinForms.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.CommandLine">
       <HintPath>..\..\..\command-line-api\command-line-api\artifacts\bin\System.CommandLine\Debug\netstandard2.0\System.CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="System.CommandLine.Rendering">
+      <HintPath>..\..\..\command-line-api\command-line-api\artifacts\bin\System.CommandLine.Rendering\Debug\netstandard2.0\System.CommandLine.Rendering.dll</HintPath>
+    </Reference>
   </ItemGroup>
+
 
 </Project>
