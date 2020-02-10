@@ -1,5 +1,5 @@
 using FluentAssertions;
-using System.CommandLine.ReflectionAppModel;
+using System.CommandLine.ReflectionModel;
 using System.Runtime.InteropServices;
 using Xunit;
 using Xunit.Abstractions;

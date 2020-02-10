@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.CommandLine.ReflectionAppModel;
+using System.CommandLine.ReflectionModel;
 using System.Text;
 
 namespace System.CommandLine.StarFruit

@@ -1,11 +1,13 @@
-﻿using System.CommandLine.Binding;
+﻿using System.Collections;
+using System.CommandLine.Binding;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.CommandLine.ReflectionModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace System.CommandLine.ReflectionAppModel
+namespace System.CommandLine.ReflectionModel
 {
     public class CommandMaker
     {
@@ -21,9 +23,11 @@ namespace System.CommandLine.ReflectionAppModel
 
         public ArgumentStrategies ArgumentStrategies { get; } = new ArgumentStrategies();
         public CommandStrategies CommandStrategies { get; } = new CommandStrategies();
+        public SubCommandStrategies SubCommandStrategies { get; } = new SubCommandStrategies();
         public ArityStrategies ArityStrategies { get; } = new ArityStrategies();
         public DescriptionStrategies DescriptionStrategies { get; } = new DescriptionStrategies();
         public NameStrategies NameStrategies { get; } = new NameStrategies();
+        public IsRequiredStrategies RequiredStrategies { get; } = new IsRequiredStrategies();
 
         public void Configure(
               Command command,
@@ -78,37 +82,36 @@ namespace System.CommandLine.ReflectionAppModel
                                     .Select(p => BuildCommand(p)));
             command.AddOptions(optionProperties
                                     .Select(p => BuildOption(p)));
+
+            var subCommands = SubCommandStrategies.GetCommandTypes(type)
+                        .Select(t => BuildCommand(t));
+            command.AddCommands(subCommands);
         }
 
 
         public Option BuildOption(ParameterInfo param)
         {
-            var name = NameStrategies.Name(param);
-            var description = DescriptionStrategies.Description(param);
-            var arityMinMax = ArityStrategies.MinMax(param);
             // TODO: DefaultValue strategy 
-            // TODO: Required strategy 
-            var required = false;
-            var argument = BuildArgument(name, description, required, arityMinMax);
+            bool? argumentRequired = RequiredStrategies.IsRequired(param, SymbolType.Argument); ;
+            bool? optionRequired = RequiredStrategies.IsRequired(param, SymbolType.Option); ;
+            (int min, int max)? arityMinMax = ArityStrategies.MinMax(param);
+            var argument = BuildArgument(GetName(param), param.ParameterType, GetDescription(param), argumentRequired, arityMinMax);
 
-            return BuildOption(name, description, argument);
-
+            return BuildOption(GetName(param), GetDescription(param), optionRequired, argument);
         }
 
         public Option BuildOption(PropertyInfo prop)
         {
-            var name = NameStrategies.Name(prop);
-            var description = DescriptionStrategies.Description(prop);
-            var arityMinMax = ArityStrategies.MinMax(prop);
             // TODO: DefaultValue strategy 
-            // TODO: Required strategy 
-            var required = false;
-            var argument = BuildArgument(name, description, required, arityMinMax);
+            bool? argumentRequired = RequiredStrategies.IsRequired(prop, SymbolType.Argument); ;
+            bool? optionRequired = RequiredStrategies.IsRequired(prop, SymbolType.Option); ;
+            (int min, int max)? arityMinMax = ArityStrategies.MinMax(prop);
+            var argument = BuildArgument(GetName(prop), prop.PropertyType, GetDescription(prop), argumentRequired, arityMinMax);
 
-            return BuildOption(name, description, argument);
+            return BuildOption(GetName(prop), GetDescription(prop), optionRequired,  argument);
         }
 
-        public Option BuildOption(string name, string description, Argument argument)
+        public Option BuildOption(string name, string description, bool? optionRequired, Argument argument)
         {
             var option = new Option("--" + name.ToKebabCase().ToLowerInvariant())
             {
@@ -117,43 +120,51 @@ namespace System.CommandLine.ReflectionAppModel
 
                 //Required = required
             };
+            if (optionRequired.HasValue)
+            {
+                option.Required = optionRequired.Value;
+            }
             return option;
         }
 
         public Argument BuildArgument(ParameterInfo param)
         {
-            var name = NameStrategies.Name(param);
-            var description = DescriptionStrategies.Description(param);
-            var arityMinMax = ArityStrategies.MinMax(param);
             // TODO: DefaultValue strategy 
-            // TODO: Required strategy 
-            var required = false;
-
-            return BuildArgument(name, description, required, arityMinMax);
+            var required = RequiredStrategies.IsRequired(param, SymbolType.Argument);
+            return BuildArgument(GetName(param), param.ParameterType, GetDescription(param), required, ArityStrategies.MinMax(param));
         }
 
         public Argument BuildArgument(PropertyInfo prop)
         {
-            var name = NameStrategies.Name(prop);
-            var description = DescriptionStrategies.Description(prop);
-            var arityMinMax = ArityStrategies.MinMax(prop);
             // TODO: DefaultValue strategy 
-            // TODO: Required strategy 
-            var required = false;
-
-            return BuildArgument(name, description, required, arityMinMax);
+            var required = RequiredStrategies.IsRequired(prop, SymbolType.Argument);
+            return BuildArgument(GetName(prop), prop.PropertyType, GetDescription(prop), required, ArityStrategies.MinMax(prop));
         }
 
-        public Argument BuildArgument(string name, string description, bool required, (int min, int max)? arityMinMax)
+        public Argument BuildArgument(string name, Type type, string description, bool? required, (int min, int max)? arityMinMax)
         {
+            // @jonsequitor to review please - can arity have a lower bound and supply upper or is there another way to force required. Maybe an IsRequired method setting something internal. This is a lot of code that overrides core functionality
             var arg = new Argument(name.ToUpperInvariant())
             {
                 Description = description,
-                //Required = required
+                ArgumentType = type,
             };
+
+            var isRequired = required.GetValueOrDefault();
             if (arityMinMax.HasValue)
             {
-                arg.Arity = new ArgumentArity(arityMinMax.Value.min, arityMinMax.Value.max);
+                var min = isRequired && arityMinMax.Value.min <= 1
+                            ? 1
+                            : arityMinMax.Value.min;
+                arg.Arity = new ArgumentArity(min, arityMinMax.Value.max);
+            }
+            else if (isRequired)
+            {
+                // TODO: This is probably not complete for collections!!!!!
+                var max = !typeof(string).IsAssignableFrom(type) && typeof(IEnumerable).IsAssignableFrom(type)
+                            ? byte.MaxValue
+                            : 1;
+                arg.Arity = new ArgumentArity(1,max);
             }
             // TODO: Set default value
             return arg;
@@ -177,6 +188,14 @@ namespace System.CommandLine.ReflectionAppModel
             return BuildCommand(name, description, type);
         }
 
+        public Command BuildCommand(Type type)
+        {
+            var name = NameStrategies.Name(type);
+            var description = DescriptionStrategies.Description(type);
+
+            return BuildCommand(name, description, type);
+        }
+
         public Command BuildCommand(string name, string description, Type type)
         {
 
@@ -185,57 +204,15 @@ namespace System.CommandLine.ReflectionAppModel
                 Description = description,
             };
             AddChildren(command, type);
+
             return command;
         }
 
-        //if (method.GetParameters()
-        //          .FirstOrDefault(p => _argumentParameterNames.Contains(p.Name)) is ParameterInfo argsParam)
-        //{
-        //    var argument = new Argument
-        //    {
-        //        ArgumentType = argsParam.ParameterType,
-        //        Name = argsParam.Name
-        //    };
+        private string GetDescription(ParameterInfo param) => DescriptionStrategies.Description(param);
+        private string GetName(ParameterInfo param) => NameStrategies.Name(param);
+        private string GetDescription(PropertyInfo prop) => DescriptionStrategies.Description(prop);
+        private string GetName(PropertyInfo prop) => NameStrategies.Name(prop);
 
-        //    if (argsParam.HasDefaultValue)
-        //    {
-        //        if (argsParam.DefaultValue != null)
-        //        {
-        //            argument.SetDefaultValue(argsParam.DefaultValue);
-        //        }
-        //        else
-        //        {
-        //            argument.SetDefaultValueFactory(() => null);
-        //        }
-        //    }
-
-        //    command.AddArgument(argument);
-        //}
-
-        //command.Handler = CommandHandler.Create(method, target);
-        //}
-
-        //public Option BuildOption(ParameterDescriptor parameter)
-        //{
-        //    var argument = new Argument
-        //    {
-        //        ArgumentType = parameter.Type
-        //    };
-
-        //    if (parameter.HasDefaultValue)
-        //    {
-        //        argument.SetDefaultValueFactory(parameter.GetDefaultValue);
-        //    }
-
-        //    var option = new Option(
-        //        parameter.BuildAlias(),
-        //        parameter.ValueName)
-        //    {
-        //        Argument = argument
-        //    };
-
-        //    return option;
-        //}
     }
 
     public static class CommandMakerExtensions
@@ -246,6 +223,8 @@ namespace System.CommandLine.ReflectionAppModel
             commandMaker.CommandStrategies.AllStandard();
             commandMaker.ArityStrategies.AllStandard();
             commandMaker.DescriptionStrategies.AllStandard();
+            commandMaker.RequiredStrategies.AllStandard();
+            commandMaker.SubCommandStrategies.AllStandard();
             return commandMaker;
         }
     }

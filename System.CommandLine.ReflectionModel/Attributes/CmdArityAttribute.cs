@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.ReflectionAppModel
+﻿namespace System.CommandLine.ReflectionModel
 {
     /// <summary>
     /// When the argument type is a collection, this specifies the number of arguments allowed. This is not a common case.

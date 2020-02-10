@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.CommandLine.ReflectionAppModel;
+using System.CommandLine.ReflectionModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -157,8 +157,8 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var method = typeof(CommandMakerTests).GetMethod("SampleMethod");
             commandMaker.AddChildren(command, method);
-            command.Options.Count().Should().Be(1);
-            command.Arguments.Count().Should().Be(2);
+            command.Options.Count().Should().Be(4);
+            command.Arguments.Count().Should().Be(5);
             command.OfType<Command>().Count().Should().Be(2);
         }
 
@@ -168,8 +168,8 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var type = typeof(SampleClass);
             commandMaker.AddChildren(command, type);
-            command.Options.Count().Should().Be(2);
-            command.Arguments.Count().Should().Be(2);
+            command.Options.Count().Should().Be(3);
+            command.Arguments.Count().Should().Be(4);
             command.OfType<Command>().Count().Should().Be(2);
         }
 
@@ -179,8 +179,8 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var method = typeof(CommandMakerTests).GetMethod("SampleMethod");
             commandMaker.Configure(command, method);
-            command.Options.Count().Should().Be(1);
-            command.Arguments.Count().Should().Be(2);
+            command.Options.Count().Should().Be(4);
+            command.Arguments.Count().Should().Be(5);
             command.OfType<Command>().Count().Should().Be(2);
         }
 
@@ -195,7 +195,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Configure_from_method_fails_on_null_method()
         {
             var command = new Command("SeaHawks");
-            Assert.Throws<ArgumentNullException>("method",() => commandMaker.Configure(command, (MethodInfo)null));
+            Assert.Throws<ArgumentNullException>("method", () => commandMaker.Configure(command, (MethodInfo)null));
         }
 
         [Fact]
@@ -204,8 +204,8 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var type = typeof(SampleClass);
             commandMaker.Configure(command, type);
-            command.Options.Count().Should().Be(2);
-            command.Arguments.Count().Should().Be(2);
+            command.Options.Count().Should().Be(3);
+            command.Arguments.Count().Should().Be(4);
             command.OfType<Command>().Count().Should().Be(2);
         }
 
@@ -223,11 +223,173 @@ namespace System.CommandLine.ReflectionModel.Tests
             Assert.Throws<ArgumentNullException>("type", () => commandMaker.Configure(command, (Type)null));
         }
 
+        [Fact]
+        public void Arity_is_default_arity_if_not_required_and_no_arity_on_parameter()
+        {
+            var parameter = typeof(CommandMakerTests)
+                                .GetMethod("SampleMethod")
+                                .GetParameters()
+                                .Where(p => p.Name == "G")
+                                .Single();
+            var option = commandMaker.BuildOption(parameter);
+            option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
+        }
+
+        [Fact]
+        public void Arity_is_1_1_on_argument_if_required_and_not_collection_on_parameter()
+        {
+            var parameter = typeof(CommandMakerTests)
+                                .GetMethod("SampleMethod")
+                                .GetParameters()
+                                .Where(p => p.Name == "E")
+                                .Single();
+            var argument = commandMaker.BuildArgument(parameter);
+            argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            argument.Arity.MaximumNumberOfValues.Should().Be(1);
+        }
+
+
+        [Fact]
+        public void Arity_is_1_1_on_Option_if_required_and_not_collection_on_parameter()
+        {
+            var parameter = typeof(CommandMakerTests)
+                                .GetMethod("SampleMethod")
+                                .GetParameters()
+                                .Where(p => p.Name == "E")
+                                .Single();
+            var option = commandMaker.BuildOption(parameter);
+            option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
+        }
+
+        [Fact]
+        public void Required_is_true_on_Option_if_required_on_parameter()
+        {
+            var parameter = typeof(CommandMakerTests)
+                                .GetMethod("SampleMethod")
+                                .GetParameters()
+                                .Where(p => p.Name == "D")
+                                .Single();
+            var option = commandMaker.BuildOption(parameter);
+            option.Required.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Arity_is_1_Max_if_required_and_collection_on_parameter()
+        {
+            var parameter = typeof(CommandMakerTests)
+                                  .GetMethod("SampleMethod")
+                                  .GetParameters()
+                                  .Where(p => p.Name == "I")
+                                  .Single();
+            var argument = commandMaker.BuildArgument(parameter);
+            argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            argument.Arity.MaximumNumberOfValues.Should().Be(byte.MaxValue);
+        }
+
+        [Fact]
+        public void Arity_is_default_arity_if_not_required_and_no_arity_on_property()
+        {
+            var property = typeof(SampleClass)
+                                .GetProperties()
+                                .Where(p => p.Name == "D")
+                                .Single();
+            var option = commandMaker.BuildOption(property);
+            option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
+        }
+
+        [Fact]
+        public void Arity_is_1_1_on_option_arguement_if_required_and_not_collection_on_property()
+        {
+            var property = typeof(SampleClass)
+                                    .GetProperties()
+                                    .Where(p => p.Name == "E")
+                                    .Single();
+            var option = commandMaker.BuildOption(property);
+            option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
+        }
+
+
+        [Fact]
+        public void Arity_is_1_1_on_argument_if_required_and_not_collection_on_property()
+        {
+            var property = typeof(SampleClass)
+                                    .GetProperties()
+                                    .Where(p => p.Name == "F")
+                                    .Single();
+            var argument = commandMaker.BuildArgument(property);
+            argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            argument.Arity.MaximumNumberOfValues.Should().Be(1);
+        }
+
+
+        [Fact]
+        public void Required_is_true_on_Option_if_required_on_property()
+        {
+            var property = typeof(SampleClass)
+                                  .GetProperties()
+                                  .Where(p => p.Name == "F")
+                                  .Single();
+            var option = commandMaker.BuildOption(property);
+            option.Required.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Arity_min_is_not_reset_if_larger_than_1_and_required_on_property()
+        {
+            var property = typeof(SampleClass)
+                                .GetProperties()
+                                .Where(p => p.Name == "C")
+                                .Single();
+            var option = commandMaker.BuildOption(property);
+            option.Argument.Arity.MinimumNumberOfValues.Should().Be(3);
+            option.Argument.Arity.MaximumNumberOfValues.Should().Be(4);
+        }
+
+
+        [Fact]
+        public void Arity_min_is_correct_if_1_and_required_on_property()
+        {
+            var property = typeof(SampleClass)
+                                .GetProperties()
+                                .Where(p => p.Name == "G")
+                                .Single();
+            var option = commandMaker.BuildOption(property);
+            option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
+            option.Argument.Arity.MaximumNumberOfValues.Should().Be(5);
+        }
+
+        [Fact]
+        public void Derived_classes_appear_as_subCommands()
+        {
+            var command = new Command("SeaHawks");
+            commandMaker.Configure(command, typeof(BaseClass));
+            command.Children.OfType<Command>().Count().Should().Be(2);
+        }
+
+
+
         public void SampleMethod([CmdArgument] [CmdArity(MinArgCount = 1, MaxArgCount = 3)][Description("Fred")]string A,
                                  string BArgument,
                                  [Description("George")]string C,
                                  [CmdCommand] string A2,
-                                 string BCommand) { }
+                                 string BCommand,
+                                 [CmdOption(ArgumentRequired =true, OptionRequired =true)]
+                                 string D,
+                                 [CmdArgument(Required = true)]
+                                 string E,
+                                 [CmdOption(ArgumentRequired =false, OptionRequired =false)]
+                                 string F,
+                                 [CmdArgument]
+                                 string G,
+                                 string H,
+                                 [CmdArgument(Required = true)]
+                                 string[] I)
+        { }
+
 
         public class SampleClass
         {
@@ -240,9 +402,33 @@ namespace System.CommandLine.ReflectionModel.Tests
             public string BArgument { get; set; }
             public string BCommand { get; set; }
             [CmdArity(MinArgCount = 3, MaxArgCount = 4)]
+            [CmdOption(ArgumentRequired = true)]
             [Description("George")]
             public string C { get; set; }
             public string D { get; set; }
+            [CmdOption(ArgumentRequired = true, OptionRequired = true)]
+            public string E { get; set; }
+            [CmdArgument(Required = true)]
+            public string F { get; set; }
+            [CmdArgument(Required = true)]
+            [CmdArity(MinArgCount = 1, MaxArgCount = 5)]
+            public string G { get; set; }
+
+        }
+
+        public class BaseClass
+        {
+
+        }
+
+        public class DerivedOne :BaseClass
+        {
+
+        }
+
+        public class DerivedTwo : BaseClass
+        {
+
         }
 
     }

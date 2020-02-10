@@ -1,4 +1,4 @@
-﻿using System.CommandLine.ReflectionAppModel;
+﻿using System.CommandLine.ReflectionModel;
 using System.CommandLine.StarFruit;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

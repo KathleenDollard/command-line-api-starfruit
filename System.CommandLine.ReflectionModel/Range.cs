@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.ReflectionAppModel
+﻿namespace System.CommandLine.ReflectionModel
 {
     public class Range
     {

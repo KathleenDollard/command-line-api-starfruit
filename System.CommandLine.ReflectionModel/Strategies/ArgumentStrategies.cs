@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionAppModel
+namespace System.CommandLine.ReflectionModel
 {
     public class ArgumentStrategies
     {

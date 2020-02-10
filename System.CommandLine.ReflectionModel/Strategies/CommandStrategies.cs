@@ -2,40 +2,40 @@
 using System.Linq;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionAppModel
+namespace System.CommandLine.ReflectionModel
 {
     public class CommandStrategies
     {
+        // @jonseuitor How would we determine that a type is complex enough to be a subcommand (FileInfo, vs dotnet.New)
         private readonly List<Func<string, bool>> nameStrategies = new List<Func<string, bool>>();
-        private readonly List<Func<IEnumerable<Attribute>, bool>> attributeStrategies = new List<Func<IEnumerable<Attribute>, bool>>();
+        internal readonly BoolAttributeStrategies AttributeStrategies = new BoolAttributeStrategies();
 
         public void AddNameStrategy(Func<string, bool> strategy)
             => nameStrategies.Add(strategy);
-
-        public void AddAttributeStrategy(Func<IEnumerable<Attribute>, bool> strategy)
-         => attributeStrategies.Add(strategy);
 
         public bool IsCommand(ParameterInfo parameterInfo)
              // order doesn't matter here, if anything is true, it's true
              => nameStrategies
                     .Any(s => s(parameterInfo.Name))
                     ||
-                    attributeStrategies
-                        .Any(s => s(parameterInfo.GetCustomAttributes().OfType<Attribute>()));
+                    AttributeStrategies
+                        .AreAnyTrue(parameterInfo);
 
         public bool IsCommand(PropertyInfo propertyInfo)
             // order doesn't matter here, if anything is true, it's true
             => nameStrategies
                     .Any(s => s(propertyInfo.Name))
                     ||
-                    attributeStrategies
-                    .Any(s => s(propertyInfo.GetCustomAttributes().OfType<Attribute>()));
+                    AttributeStrategies
+                    .AreAnyTrue(propertyInfo);
     }
 
     public static class IsCommandStrategiesExtensions
     {
         public static CommandStrategies AllStandard(this CommandStrategies commandStrategies)
-            => commandStrategies.HasStandardAttribute().HasStandardSuffixes();
+            => commandStrategies
+                    .HasStandardAttribute()
+                    .HasStandardSuffixes();
 
         public static CommandStrategies HasSuffix(this CommandStrategies commandStrategies, params string[] suffixes)
         {
@@ -54,9 +54,7 @@ namespace System.CommandLine.ReflectionAppModel
             where T : Attribute
         {
 
-            commandStrategies.AddAttributeStrategy(attributes => attributes
-                    .Where(a => a is T)
-                    .Any());
+            commandStrategies.AttributeStrategies.Add<T>();
             return commandStrategies;
         }
 

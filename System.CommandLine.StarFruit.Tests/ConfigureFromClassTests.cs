@@ -1,6 +1,6 @@
 using FluentAssertions;
 using System.CommandLine;
-using System.CommandLine.ReflectionAppModel;
+using System.CommandLine.ReflectionModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Xunit;

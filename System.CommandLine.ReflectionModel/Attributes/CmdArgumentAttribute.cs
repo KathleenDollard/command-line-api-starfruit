@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.ReflectionAppModel
+﻿namespace System.CommandLine.ReflectionModel
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class CmdArgumentAttribute : CmdArgOptionBaseAttribute

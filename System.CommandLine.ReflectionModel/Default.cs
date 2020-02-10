@@ -1,6 +1,6 @@
 ﻿using System.Transactions;
 
-namespace System.CommandLine.ReflectionAppModel
+namespace System.CommandLine.ReflectionModel
 {
     public class Default
     {

@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.ReflectionAppModel
+﻿namespace System.CommandLine.ReflectionModel
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter | AttributeTargets.Property )]
     public class CmdCommandAttribute : Attribute
