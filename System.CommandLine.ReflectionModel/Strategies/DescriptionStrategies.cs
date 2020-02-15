@@ -9,49 +9,40 @@ namespace System.CommandLine.ReflectionModel
     public class DescriptionStrategies
     {
         private readonly List<Func<XmlDocument, string>> xmlDocStrategies = new List<Func<XmlDocument, string>>();
+        internal readonly StringAttributeStrategies attributeStrategies = new StringAttributeStrategies();
 
-        private readonly List<Func<IEnumerable<Attribute>, string>> attributeStrategies = new List<Func<IEnumerable<Attribute>, string>>();
+        // TODO: Add XmlDocStrategies
 
-        //public void AddNameStrategy(Func<string, bool> strategy)
-        //    => nameStrategies.Add(strategy);
-
-        public void AddAttributeStrategy(Func<IEnumerable<Attribute>, string> strategy)
-         => attributeStrategies.Add(strategy);
 
         public string Description(ParameterInfo parameterInfo)
         {
             // order does matter here, attributes win over Xml Docs
-            var descriptions = attributeStrategies
-                                .Select(s => s(parameterInfo.GetCustomAttributes().OfType<Attribute>()))
-                                .Where(s => !(s is null));
-            return descriptions.Any()
-                     ? descriptions.First()
-                     : // else look for XML documents
-                     null;
+            var description = attributeStrategies.GetFirstNonNullOrDefaultValue(parameterInfo, null);
+
+            return description == null
+                     ? null // else look for XML documents
+                     : description;
         }
 
         public string Description(PropertyInfo propertyInfo)
         {
             // order does matter here, attributes win over Xml Docs
-            var descriptions = attributeStrategies
-                                .Select(s => s(propertyInfo.GetCustomAttributes().OfType<Attribute>()))
-                                .Where(s => !(s is null));
-            return descriptions.Any()
-                     ? descriptions.First()
-                     : // else look for XML documents
-                     null;
+            var description = attributeStrategies.GetFirstNonNullOrDefaultValue(propertyInfo, null);
+
+            return description == null
+                     ? null // else look for XML documents
+                     : description;
+
         }
 
         public string Description(Type type)
         {
-            // order does matter here, attributes win over Xml Docs
-            var descriptions = attributeStrategies
-                                .Select(s => s(type.GetCustomAttributes().OfType<Attribute>()))
-                                .Where(s => !(s is null));
-            return descriptions.Any()
-                     ? descriptions.First()
-                     : // else look for XML documents
-                     null;
+            var description = attributeStrategies.GetFirstNonNullOrDefaultValue(type, null);
+
+            return description == null
+                     ? null // else look for XML documents
+                     : description;
+
         }
     }
 
@@ -64,11 +55,7 @@ namespace System.CommandLine.ReflectionModel
             where T : Attribute
         {
 
-            argStrategies.AddAttributeStrategy(
-                attributes => attributes
-                                .OfType<T>()
-                                .Select(a => extractFunc(a))
-                                .FirstOrDefault());
+            argStrategies.attributeStrategies.Add(extractFunc);
             return argStrategies;
         }
 

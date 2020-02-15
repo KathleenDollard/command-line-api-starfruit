@@ -3,7 +3,7 @@
     "tfm": "netcoreapp5.0",
     "framework": {
       "name": "Microsoft.WindowsDesktop.App",
-      "version": "5.0.0-alpha.1.20062.3"
+      "version": "5.0.0-preview.1.20112.2"
     }
   }
 }

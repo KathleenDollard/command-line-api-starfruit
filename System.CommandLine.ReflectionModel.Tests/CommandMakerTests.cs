@@ -26,6 +26,7 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "A")
                                 .Single();
             var argument = commandMaker.BuildArgument(parameter);
+            argument.Should().NotBeNull();
             argument.Name.Should().Be("A");
             argument.Description.Should().Be("Fred");
         }
@@ -38,6 +39,7 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "A")
                                     .Single();
             var argument = commandMaker.BuildArgument(property);
+            argument.Should().NotBeNull();
             argument.Name.Should().Be("A");
             argument.Description.Should().Be("Fred");
         }
@@ -52,6 +54,7 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "C")
                                 .Single();
             var option = commandMaker.BuildOption(parameter);
+            option.Should().NotBeNull();
             option.Name.Should().Be("c");
             option.Description.Should().Be("George");
         }
@@ -64,6 +67,7 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "C")
                                     .Single();
             var option = commandMaker.BuildOption(property);
+            option.Should().NotBeNull();
             option.Name.Should().Be("c");
             option.Description.Should().Be("George");
         }
@@ -77,6 +81,7 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "A")
                                 .Single();
             var command = commandMaker.BuildCommand(parameter);
+            command.Should().NotBeNull();
             command.Name.Should().Be("a");
             command.Description.Should().Be("Fred");
         }
@@ -89,6 +94,7 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "A")
                                     .Single();
             var command = commandMaker.BuildCommand(property);
+            command.Should().NotBeNull();
             command.Name.Should().Be("a");
             command.Description.Should().Be("Fred");
         }
@@ -102,6 +108,8 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "A")
                                 .Single();
             var argument = commandMaker.BuildArgument(parameter);
+            argument.Should().NotBeNull();
+            argument.Arity.Should().NotBeNull();
             argument.Name.Should().Be("A");
             argument.Description.Should().Be("Fred");
             argument.Arity.MinimumNumberOfValues.Should().Be(1);
@@ -116,6 +124,8 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "A")
                                     .Single();
             var argument = commandMaker.BuildArgument(property);
+            argument.Should().NotBeNull();
+            argument.Arity.Should().NotBeNull();
             argument.Name.Should().Be("A");
             argument.Description.Should().Be("Fred");
             argument.Arity.MinimumNumberOfValues.Should().Be(1);
@@ -131,6 +141,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "A")
                                 .Single();
             var option = commandMaker.BuildOption(parameter);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Name.Should().Be("a");
             option.Description.Should().Be("Fred");
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
@@ -145,6 +158,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "C")
                                     .Single();
             var option = commandMaker.BuildOption(property);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Name.Should().Be("c");
             option.Description.Should().Be("George");
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(3);
@@ -157,9 +173,10 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var method = typeof(CommandMakerTests).GetMethod("SampleMethod");
             commandMaker.AddChildren(command, method);
-            command.Options.Count().Should().Be(4);
-            command.Arguments.Count().Should().Be(5);
-            command.OfType<Command>().Count().Should().Be(2);
+            command.Should().NotBeNull();
+            command.Options.Should().HaveCount(4);
+            command.Arguments.Should().HaveCount(5);
+            command.OfType<Command>().Should().HaveCount(2);
         }
 
         [Fact]
@@ -168,6 +185,7 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var type = typeof(SampleClass);
             commandMaker.AddChildren(command, type);
+            command.Should().NotBeNull();
             command.Options.Count().Should().Be(3);
             command.Arguments.Count().Should().Be(4);
             command.OfType<Command>().Count().Should().Be(2);
@@ -179,6 +197,7 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var method = typeof(CommandMakerTests).GetMethod("SampleMethod");
             commandMaker.Configure(command, method);
+            command.Should().NotBeNull();
             command.Options.Count().Should().Be(4);
             command.Arguments.Count().Should().Be(5);
             command.OfType<Command>().Count().Should().Be(2);
@@ -204,9 +223,9 @@ namespace System.CommandLine.ReflectionModel.Tests
             var command = new Command("SeaHawks");
             var type = typeof(SampleClass);
             commandMaker.Configure(command, type);
-            command.Options.Count().Should().Be(3);
-            command.Arguments.Count().Should().Be(4);
-            command.OfType<Command>().Count().Should().Be(2);
+            command.Options.Should().HaveCount(3);
+            command.Arguments.Should().HaveCount(4);
+            command.OfType<Command>().Should().HaveCount(2);
         }
 
         [Fact]
@@ -232,6 +251,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "G")
                                 .Single();
             var option = commandMaker.BuildOption(parameter);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
             option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
         }
@@ -245,6 +267,8 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "E")
                                 .Single();
             var argument = commandMaker.BuildArgument(parameter);
+            argument.Should().NotBeNull();
+            argument.Arity.Should().NotBeNull();
             argument.Arity.MinimumNumberOfValues.Should().Be(1);
             argument.Arity.MaximumNumberOfValues.Should().Be(1);
         }
@@ -259,6 +283,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "E")
                                 .Single();
             var option = commandMaker.BuildOption(parameter);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
             option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
         }
@@ -284,6 +311,8 @@ namespace System.CommandLine.ReflectionModel.Tests
                                   .Where(p => p.Name == "I")
                                   .Single();
             var argument = commandMaker.BuildArgument(parameter);
+            argument.Should().NotBeNull();
+            argument.Arity.Should().NotBeNull();
             argument.Arity.MinimumNumberOfValues.Should().Be(1);
             argument.Arity.MaximumNumberOfValues.Should().Be(byte.MaxValue);
         }
@@ -296,6 +325,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "D")
                                 .Single();
             var option = commandMaker.BuildOption(property);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
             option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
         }
@@ -308,6 +340,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "E")
                                     .Single();
             var option = commandMaker.BuildOption(property);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
             option.Argument.Arity.MaximumNumberOfValues.Should().Be(1);
         }
@@ -321,6 +356,8 @@ namespace System.CommandLine.ReflectionModel.Tests
                                     .Where(p => p.Name == "F")
                                     .Single();
             var argument = commandMaker.BuildArgument(property);
+            argument.Should().NotBeNull();
+            argument.Arity.Should().NotBeNull();
             argument.Arity.MinimumNumberOfValues.Should().Be(1);
             argument.Arity.MaximumNumberOfValues.Should().Be(1);
         }
@@ -345,6 +382,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "C")
                                 .Single();
             var option = commandMaker.BuildOption(property);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(3);
             option.Argument.Arity.MaximumNumberOfValues.Should().Be(4);
         }
@@ -358,6 +398,9 @@ namespace System.CommandLine.ReflectionModel.Tests
                                 .Where(p => p.Name == "G")
                                 .Single();
             var option = commandMaker.BuildOption(property);
+            option.Should().NotBeNull();
+            option.Argument.Should().NotBeNull();
+            option.Argument.Arity.Should().NotBeNull();
             option.Argument.Arity.MinimumNumberOfValues.Should().Be(1);
             option.Argument.Arity.MaximumNumberOfValues.Should().Be(5);
         }
@@ -367,7 +410,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         {
             var command = new Command("SeaHawks");
             commandMaker.Configure(command, typeof(BaseClass));
-            command.Children.OfType<Command>().Count().Should().Be(2);
+            command.Children.OfType<Command>().Should().HaveCount(2);
         }
 
 

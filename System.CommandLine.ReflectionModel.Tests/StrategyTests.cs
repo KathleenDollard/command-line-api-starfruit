@@ -9,6 +9,9 @@ using Xunit;
 
 namespace System.CommandLine.ReflectionModel.Tests
 {
+    // notes: ModelBinder tests for IntOption. Create model binder to look up alternate names
+    //        Add model binder to the binding context in middleware, possibly via dictionary
+    //        Replace all use of new ModelBInder with a service to plumb through to configure model binder
     public class StrategyTests
     {
 

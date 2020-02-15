@@ -26,21 +26,7 @@ namespace System.CommandLine.ReflectionModel
 
     public static class AttributeStrategyExtensions
     {
-        public static TStrategy AttributeValue<TAttribute, TStrategy, TRetrieve>(this TStrategy strategies, Func<TAttribute, TRetrieve> extractFunc, Func<SymbolType, bool> filterFunc = null)
-                  where TAttribute : Attribute
-                  where TStrategy : AttributeStrategiesWithSymbolFilter<TRetrieve>
-        {
-
-            strategies.Add(
-                (attributes, symbolType) => Filter(filterFunc, symbolType)
-                                            ? attributes
-                                                .OfType<TAttribute>()
-                                                .Select(a => extractFunc(a))
-                                                .FirstOrDefault()
-                                            : default);
-            return strategies;
-        }
-
+   
         internal static bool Filter(this Func<SymbolType, bool> filterFunc, SymbolType symbolType)
             => filterFunc is null
                 ? true
