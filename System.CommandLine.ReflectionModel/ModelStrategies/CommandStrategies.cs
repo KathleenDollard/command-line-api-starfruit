@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
 
@@ -7,27 +8,31 @@ namespace System.CommandLine.ReflectionModel
     public class CommandStrategies
     {
         // @jonseuitor How would we determine that a type is complex enough to be a subcommand (FileInfo, vs dotnet.New)
-        private readonly List<Func<string, bool>> nameStrategies = new List<Func<string, bool>>();
+        internal readonly StringContentStrategies NameStrategies = new StringContentStrategies();
         internal readonly BoolAttributeStrategies AttributeStrategies = new BoolAttributeStrategies();
+        internal readonly List<Func<Type, bool>> TypeStrategies = new List<Func<Type, bool>>();
+        private SymbolType symbolType = SymbolType.All;
 
-        public void AddNameStrategy(Func<string, bool> strategy)
-            => nameStrategies.Add(strategy);
+        public void AddTypeStrategy(Func<Type, bool> strategy)
+                    => TypeStrategies.Add(strategy);
 
         public bool IsCommand(ParameterInfo parameterInfo)
              // order doesn't matter here, if anything is true, it's true
-             => nameStrategies
-                    .Any(s => s(parameterInfo.Name))
+             => TypeStrategies.Any(s => s(parameterInfo.ParameterType))
                     ||
-                    AttributeStrategies
-                        .AreAnyTrue(parameterInfo);
+                    NameStrategies.AreAnyFound(parameterInfo.Name, symbolType)
+                    ||
+                    AttributeStrategies.AreAnyTrue(parameterInfo, symbolType);
 
         public bool IsCommand(PropertyInfo propertyInfo)
             // order doesn't matter here, if anything is true, it's true
-            => nameStrategies
-                    .Any(s => s(propertyInfo.Name))
+            => TypeStrategies.Any(s => s(propertyInfo.PropertyType))
+                    ||
+                    NameStrategies
+                    .AreAnyFound(propertyInfo.Name, symbolType)
                     ||
                     AttributeStrategies
-                    .AreAnyTrue(propertyInfo);
+                    .AreAnyTrue(propertyInfo, symbolType);
     }
 
     public static class IsCommandStrategiesExtensions
@@ -35,31 +40,30 @@ namespace System.CommandLine.ReflectionModel
         public static CommandStrategies AllStandard(this CommandStrategies commandStrategies)
             => commandStrategies
                     .HasStandardAttribute()
-                    .HasStandardSuffixes();
+                    .HasStandardNaming()
+                    .IsComplexType();
 
-        public static CommandStrategies HasSuffix(this CommandStrategies commandStrategies, params string[] suffixes)
+
+        public static CommandStrategies HasStandardNaming(this CommandStrategies commandStrategies)
         {
-            if (suffixes.Any())
-            {
-                commandStrategies.AddNameStrategy(name => suffixes
-                        .Any(s => name.EndsWith(s)));
-            }
-            return commandStrategies;
-        }
-
-        public static CommandStrategies HasStandardSuffixes(this CommandStrategies commandStrategies)
-            => commandStrategies.HasSuffix("Command");
-
-        public static CommandStrategies HasAttribute<T>(this CommandStrategies commandStrategies)
-            where T : Attribute
-        {
-
-            commandStrategies.AttributeStrategies.Add<T>();
+            commandStrategies.NameStrategies.Add(StringContentsStrategy.StringPosition.Suffix, "Command");
             return commandStrategies;
         }
 
         public static CommandStrategies HasStandardAttribute(this CommandStrategies commandStrategies)
-            => commandStrategies.HasAttribute<CmdCommandAttribute>();
+        {
+            commandStrategies.AttributeStrategies.Add<CmdCommandAttribute>();
+            return commandStrategies;
+        }
 
+
+        public static CommandStrategies IsComplexType(this CommandStrategies commandStrategies)
+        {
+            commandStrategies.AddTypeStrategy(
+                type => type.GetConstructor(new[] { typeof(string) }) == null
+                        && type.FullName != "System." + type.Name
+                        && !CommandMaker.ommittedTypes.Contains(type));
+            return commandStrategies;
+        }
     }
 }

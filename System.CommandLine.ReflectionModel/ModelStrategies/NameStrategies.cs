@@ -1,44 +1,46 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
-using System.Xml;
 
 namespace System.CommandLine.ReflectionModel
 {
     public class NameStrategies
     {
-        internal readonly StringAttributeStrategies attributeStrategies = new StringAttributeStrategies();
+        internal readonly StringAttributeStrategies AttributeStrategies = new StringAttributeStrategies();
 
-        public string Name(ParameterInfo parameterInfo) 
-            => attributeStrategies.GetFirstNonNullOrDefaultValue(parameterInfo, parameterInfo.Name);
+        public string Name(ParameterInfo parameterInfo, SymbolType symbolType)
+            => GetName(parameterInfo.GetCustomAttributes(),parameterInfo.Name, symbolType);
+        public string Name(PropertyInfo propertyInfo, SymbolType symbolType)
+            => GetName(propertyInfo.GetCustomAttributes(), propertyInfo.Name,symbolType);
+        public string Name(Type type, SymbolType symbolType)
+            => GetName(type.GetCustomAttributes(),  type.Name, symbolType);
 
-        public string Name(PropertyInfo propertyInfo)
-                => attributeStrategies.GetFirstNonNullOrDefaultValue(propertyInfo, propertyInfo.Name);
+        private string GetName(IEnumerable<Attribute> attributes, string defaultValue, SymbolType symbolType)
+        {
+            // order does matter here, attributes win over Xml Docs
+            var (_, name) = AttributeStrategies.GetFirstValue(attributes, symbolType);
 
-        public string Name(Type type)
-                  => attributeStrategies.GetFirstNonNullOrDefaultValue(type, type.Name);
+            return name is null
+               ? defaultValue
+               : name;
+        }
 
     }
 
     public static class NameStrategiesExtensions
     {
         public static NameStrategies AllStandard(this NameStrategies nameStrategies)
-               => nameStrategies.HasStandardAttribute();
+               => nameStrategies.HasStandardAttributes();
 
-        public static NameStrategies HasAttribute<T>(this NameStrategies argStrategies, Func<T, string> extractFunc)
-            where T : Attribute
+        public static NameStrategies HasStandardAttributes(this NameStrategies nameStrategies)
         {
-            argStrategies.attributeStrategies.Add(extractFunc);
-            return argStrategies;
+            nameStrategies.AttributeStrategies.Add<CmdNameAttribute>(a => ((CmdNameAttribute)a).Name);
+            nameStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
+            nameStrategies.AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Name);
+            nameStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
+            return nameStrategies;
         }
 
-        public static NameStrategies HasStandardAttribute(this NameStrategies argStrategies)
-            => argStrategies
-                    .HasAttribute<CmdNameAttribute >(a => a.Name)
-                    .HasAttribute<CmdArgOptionBaseAttribute>(a => a.Name)
-                    .HasAttribute<CmdCommandAttribute>(a => a.Name)
-                    .HasAttribute<CmdArgOptionBaseAttribute>(a => a.Name);
-
     }
+
 }

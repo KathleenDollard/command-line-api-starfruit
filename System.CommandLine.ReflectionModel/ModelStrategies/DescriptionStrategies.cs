@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml;
 
@@ -9,40 +9,25 @@ namespace System.CommandLine.ReflectionModel
     public class DescriptionStrategies
     {
         private readonly List<Func<XmlDocument, string>> xmlDocStrategies = new List<Func<XmlDocument, string>>();
-        internal readonly StringAttributeStrategies attributeStrategies = new StringAttributeStrategies();
+        internal readonly StringAttributeStrategies AttributeStrategies = new StringAttributeStrategies();
 
         // TODO: Add XmlDocStrategies
 
+        public string Description(ParameterInfo parameterInfo, SymbolType symbolType)
+            => GetDescription(parameterInfo.GetCustomAttributes(), symbolType);
+        public string Description(PropertyInfo propertyInfo, SymbolType symbolType)
+            => GetDescription(propertyInfo.GetCustomAttributes(), symbolType);
+        public string Description(Type type, SymbolType symbolType)
+            => GetDescription(type.GetCustomAttributes(), symbolType);
 
-        public string Description(ParameterInfo parameterInfo)
+        private string GetDescription(IEnumerable<Attribute> attributes, SymbolType symbolType)
         {
             // order does matter here, attributes win over Xml Docs
-            var description = attributeStrategies.GetFirstNonNullOrDefaultValue(parameterInfo, null);
+            var (found, description) = AttributeStrategies.GetFirstValue(attributes, symbolType);
 
-            return description == null
-                     ? null // else look for XML documents
-                     : description;
-        }
-
-        public string Description(PropertyInfo propertyInfo)
-        {
-            // order does matter here, attributes win over Xml Docs
-            var description = attributeStrategies.GetFirstNonNullOrDefaultValue(propertyInfo, null);
-
-            return description == null
-                     ? null // else look for XML documents
-                     : description;
-
-        }
-
-        public string Description(Type type)
-        {
-            var description = attributeStrategies.GetFirstNonNullOrDefaultValue(type, null);
-
-            return description == null
-                     ? null // else look for XML documents
-                     : description;
-
+            return found
+               ? description
+               : null; // else look for XML documents
         }
     }
 
@@ -51,19 +36,13 @@ namespace System.CommandLine.ReflectionModel
         public static DescriptionStrategies AllStandard(this DescriptionStrategies descriptionStrategies)
                => descriptionStrategies.HasStandardAttribute();
 
-        public static DescriptionStrategies HasAttribute<T>(this DescriptionStrategies argStrategies, Func<T, string> extractFunc)
-            where T : Attribute
+
+        public static DescriptionStrategies HasStandardAttribute(this DescriptionStrategies descriptionStrategies)
         {
-
-            argStrategies.attributeStrategies.Add(extractFunc);
-            return argStrategies;
+            descriptionStrategies.AttributeStrategies.Add<DescriptionAttribute>(a => ((DescriptionAttribute)a).Description);
+            descriptionStrategies.AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Description);
+            descriptionStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Description);
+            return descriptionStrategies;
         }
-
-        public static DescriptionStrategies HasStandardAttribute(this DescriptionStrategies argStrategies)
-            => argStrategies
-                    .HasAttribute<DescriptionAttribute>(a => a.Description)
-                    .HasAttribute<CmdCommandAttribute>(a => a.Description)
-                    .HasAttribute<CmdArgOptionBaseAttribute>(a => a.Description);
-
     }
 }

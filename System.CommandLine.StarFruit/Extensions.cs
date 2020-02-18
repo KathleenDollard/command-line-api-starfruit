@@ -16,21 +16,21 @@ namespace System.CommandLine.StarFruit
         //    => ReflectionParser<T>.GetInstance(args, reflectionParser, isRoot);
 
 
-        public static CommandLineBuilder UseGui(
-            this CommandLineBuilder builder)
-        {
-            builder.AddMiddleware(async (context, next) =>
-            {
-                if (context.ParseResult.Directives.Contains("gui"))
-                {
-                    var guiMaker = new GuiMaker();
-                    guiMaker.Configure(context);
-                    guiMaker.Show();
-                }
-                await next(context);
-            }, MiddlewareOrder.Default);
-            return builder;
-        }
+        //public static CommandLineBuilder UseGui(
+        //    this CommandLineBuilder builder)
+        //{
+        //    builder.AddMiddleware(async (context, next) =>
+        //    {
+        //        if (context.ParseResult.Directives.Contains("gui"))
+        //        {
+        //            var guiMaker = new GuiMaker();
+        //            guiMaker.Configure(context);
+        //            guiMaker.Show();
+        //        }
+        //        await next(context);
+        //    }, MiddlewareOrder.Default);
+        //    return builder;
+        //}
 
     }
 }

@@ -1,27 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ArityAttributeStrategies = System.CommandLine.ReflectionModel.AttributeStrategies<System.CommandLine.ReflectionModel.ArityDescriptor>;
 
 namespace System.CommandLine.ReflectionModel
 {
+    public class ArityDescriptor
+    {
+        public ArityDescriptor(int min, int max)
+        {
+            Min = min;
+            Max = max;
+            IsSet = true;
+        }
+        public ArityDescriptor()
+        { }
+
+        public int Min { get; }
+        public int Max { get; }
+        public bool IsSet { get; set; }
+    }
+
     public class ArityStrategies
     {
-        private readonly List<Func<IEnumerable<Attribute>, (int min, int max)?>> attributeStrategies = new List<Func<IEnumerable<Attribute>, (int min, int max)?>>();
+        internal readonly ArityAttributeStrategies AttributeStrategies = new ArityAttributeStrategies();
 
-        public void AddAttributeStrategy(Func<IEnumerable<Attribute>, (int min, int max)?> strategy)
-            => attributeStrategies.Add(strategy);
+        public ArityDescriptor GetArity(ParameterInfo parameterInfo)
+            => GetArity(parameterInfo.GetCustomAttributes());
 
-        public (int min, int max)? MinMax(ParameterInfo parameterInfo)
-            => attributeStrategies
-                                .Select(s => s(parameterInfo.GetCustomAttributes().OfType<Attribute>()))
-                                .Where(s => !(s is null))
-                                .FirstOrDefault();
+        public ArityDescriptor GetArity(PropertyInfo propertyInfo)
+            => GetArity(propertyInfo.GetCustomAttributes());
 
-        public (int min, int max)? MinMax(PropertyInfo propertyInfo)
-            => attributeStrategies
-                        .Select(s => s(propertyInfo.GetCustomAttributes().OfType<Attribute>()))
-                        .Where(s => !(s is null))
-                        .FirstOrDefault();
+        private ArityDescriptor GetArity(IEnumerable<Attribute> attributes)
+        {
+            (bool found, ArityDescriptor arityDescriptor) = AttributeStrategies.GetFirstValue(attributes, SymbolType.Argument);
+            return found
+                ? arityDescriptor
+                : null;
+        }
     }
 
     public static class ArityStrategiesExtensions
@@ -29,20 +45,11 @@ namespace System.CommandLine.ReflectionModel
         public static ArityStrategies AllStandard(this ArityStrategies arityStrategies)
              => arityStrategies.HasStandardAttribute();
 
-        public static ArityStrategies HasAttribute<T>(this ArityStrategies arityStrategies, Func<T, (int min, int max)?> extractFunc)
-            where T : Attribute
+        public static ArityStrategies HasStandardAttribute(this ArityStrategies arityStrategies)
         {
-
-            arityStrategies.AddAttributeStrategy(
-                attributes => attributes
-                                .OfType<T>()
-                                .Select(a => extractFunc(a))
-                                .FirstOrDefault());
+            arityStrategies.AttributeStrategies.Add<CmdArityAttribute>(a => new ArityDescriptor(((CmdArityAttribute)a).MinArgCount,
+                                                                                                ((CmdArityAttribute)a).MaxArgCount));
             return arityStrategies;
         }
-
-        public static ArityStrategies HasStandardAttribute(this ArityStrategies argStrategies)
-            => argStrategies.HasAttribute<CmdArityAttribute>(a => (a.MinArgCount, a.MaxArgCount ));
-
     }
 }

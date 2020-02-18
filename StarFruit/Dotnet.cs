@@ -1,13 +1,9 @@
 ﻿using System.CommandLine.ReflectionModel;
-using System.CommandLine.StarFruit;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 
 namespace StarFruit.CLI
 {
     // template-cli 
-    
+
     // complex types with multiple options
     public class Dotnet
     {
@@ -45,7 +41,7 @@ namespace StarFruit.CLI
         string Package { get; set; }
     }
 
-    public class List : Dotnet
+    public class List : Template
     {
         public string Name { get; set; }
         public string Type { get; set; }
@@ -58,7 +54,7 @@ namespace StarFruit.CLI
         public string Source { get; set; }
     }
 
-    public class Update : Template
+    public class Update : Dotnet
     {
         public string Name { get; set; }
         public bool All { get; set; }

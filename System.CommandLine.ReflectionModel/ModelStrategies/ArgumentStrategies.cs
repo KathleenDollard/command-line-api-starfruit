@@ -1,69 +1,53 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.CommandLine.ReflectionModel.Strategies;
+
 
 namespace System.CommandLine.ReflectionModel
 {
     public class ArgumentStrategies
     {
-        private readonly List<Func<string, bool>> nameStrategies = new List<Func<string, bool>>();
-        private readonly List<Func<IEnumerable<Attribute>, bool>> attributeStrategies = new List<Func<IEnumerable<Attribute>, bool>>();
+        internal readonly StringContentStrategies NameStrategies = new StringContentStrategies();
+        internal readonly BoolAttributeStrategies AttributeStrategies = new BoolAttributeStrategies();
+        private SymbolType symbolType = SymbolType.All;
 
-        public void AddNameStrategy(Func<string, bool> strategy)
-            => nameStrategies.Add(strategy);
-
-        public void AddAttributeStrategy(Func<IEnumerable<Attribute>, bool> strategy)
-            => attributeStrategies.Add(strategy);
+        public void AddNameStrategy(StringContentsStrategy.StringPosition position, string compareTo)
+           => NameStrategies.Add(position, compareTo);
 
         public bool IsArgument(ParameterInfo parameterInfo)
             // order doesn't matter here, if anything is true, it's true
-            => nameStrategies
-                     .Any(s => s(parameterInfo.Name))
+            => NameStrategies.AreAnyFound(parameterInfo.Name, symbolType)
                    ||
-                   attributeStrategies
-                     .Any(s => s(parameterInfo.GetCustomAttributes().OfType<Attribute>()));
+                   AttributeStrategies.AreAnyTrue(parameterInfo, symbolType);
 
         public bool IsArgument(PropertyInfo propertyInfo)
-            // order doesn't matter here, if anything is true, it's true
-            => nameStrategies
-                    .Any(s => s(propertyInfo.Name))
-                    ||
-                    attributeStrategies
-                    .Any(s => s(propertyInfo.GetCustomAttributes().OfType<Attribute>()));
+                 // order doesn't matter here, if anything is true, it's true
+                 => NameStrategies.AreAnyFound(propertyInfo.Name, symbolType)
+                   ||
+                   AttributeStrategies.AreAnyTrue(propertyInfo, symbolType);
 
     }
 
     public static class IsArgumentStrategiesExtensions
     {
         public static ArgumentStrategies AllStandard(this ArgumentStrategies argumentStrategies)
-            => argumentStrategies.HasStandardAttribute().HasStandardSuffixes();
+            => argumentStrategies
+                    .HasStandardAttribute()
+                    .HasStandardNaming();
 
-        public static ArgumentStrategies HasSuffix(this ArgumentStrategies argStrategies, params string[] suffixes)
+        public static ArgumentStrategies HasStandardNaming(this ArgumentStrategies argStrategies)
         {
-            if (suffixes.Any())
-            {
-                argStrategies.AddNameStrategy(name => suffixes
-                        .Any(s => name.EndsWith(s)));
-            }
-            return argStrategies;
-        }
-
-        public static ArgumentStrategies HasStandardSuffixes(this ArgumentStrategies argStrategies)
-            => argStrategies.HasSuffix("Arg", "Argument");
-
-        public static ArgumentStrategies HasAttribute<T>(this ArgumentStrategies argStrategies)
-            where T : Attribute
-        {
-
-            argStrategies.AddAttributeStrategy(attributes => attributes
-                    .Where(a => a is T)
-                    .Any());
+            argStrategies.NameStrategies.Add(StringContentsStrategy.StringPosition.Suffix, "Arg");
+            argStrategies.NameStrategies.Add(StringContentsStrategy.StringPosition.Suffix, "Argument");
             return argStrategies;
         }
 
         public static ArgumentStrategies HasStandardAttribute(this ArgumentStrategies argStrategies)
-            => argStrategies.HasAttribute<CmdArgumentAttribute>();
-
+        {
+            argStrategies.AttributeStrategies.Add<CmdArgumentAttribute>();
+            return argStrategies;
+        }
     }
 
 }

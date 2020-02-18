@@ -85,15 +85,18 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_arity_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("AritySample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = arityStrategies.MinMax(p);
-            result.Should().Be((1, 3));
+            var result = arityStrategies.GetArity(p);
+            result.Should().NotBeNull();
+            result.IsSet.Should().BeTrue();
+            result.Min.Should().Be(1);
+            result.Max.Should().Be(3);
         }
 
         [Fact]
         public void Atribute_strategy_finds_no_arity_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("AritySample").GetParameters().Where(p => p.Name == "C").Single();
-            var result = arityStrategies.MinMax(p);
+            var result = arityStrategies.GetArity(p);
             result.Should().BeNull();
         }
 
@@ -101,7 +104,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("DescriptionSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Fred");
         }
 
@@ -109,7 +112,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("DescriptionSample").GetParameters().Where(p => p.Name == "C").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -117,7 +120,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_argument_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("ArgumentSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Joe");
         }
 
@@ -125,7 +128,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_argument_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("ArgumentSample").GetParameters().Where(p => p.Name == "D").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -133,7 +136,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_option_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("OptionSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Sue");
         }
 
@@ -141,7 +144,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_option_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("OptionSample").GetParameters().Where(p => p.Name == "D").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -149,7 +152,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_command_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("CommandSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Sam");
         }
 
@@ -157,7 +160,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_command_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("CommandSample").GetParameters().Where(p => p.Name == "D").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -167,7 +170,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("NameSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("Terry");
         }
 
@@ -175,7 +178,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("NameSample").GetParameters().Where(p => p.Name == "C").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("C");
         }
 
@@ -183,7 +186,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_argument_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("ArgumentSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("A2");
         }
 
@@ -191,7 +194,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_argument_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("ArgumentSample").GetParameters().Where(p => p.Name == "D").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("D");
         }
 
@@ -199,7 +202,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_option_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("OptionSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("A2");
         }
 
@@ -207,7 +210,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_option_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("OptionSample").GetParameters().Where(p => p.Name == "D").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("D");
         }
 
@@ -215,7 +218,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_command_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("CommandSample").GetParameters().Where(p => p.Name == "A").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("A2");
         }
 
@@ -223,7 +226,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_command_attribute_on_parameter()
         {
             var p = typeof(StrategyTests).GetMethod("CommandSample").GetParameters().Where(p => p.Name == "D").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("D");
         }
         #endregion 
@@ -280,15 +283,18 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_arity_on_property()
         {
             var p = typeof(AritySampleClass).GetProperties().Where(p => p.Name == "A").Single();
-            var result = arityStrategies.MinMax(p);
-            result.Should().Be((1, 3));
+            var result = arityStrategies.GetArity(p);
+            result.Should().NotBeNull();
+            result.IsSet.Should().BeTrue();
+            result.Min.Should().Be(1);
+            result.Max.Should().Be(3);
         }
 
         [Fact]
         public void Atribute_strategy_finds_no_arity_on_property()
         {
             var p = typeof(AritySampleClass).GetProperties().Where(p => p.Name == "C").Single();
-            var result = arityStrategies.MinMax(p);
+            var result = arityStrategies.GetArity(p);
             result.Should().BeNull();
         }
 
@@ -296,7 +302,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "A").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Fred");
         }
 
@@ -304,7 +310,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "C").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -312,7 +318,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_argument_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "D").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Mary");
         }
 
@@ -320,7 +326,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_argument_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "E").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -328,7 +334,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_option_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "F").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Jane");
         }
 
@@ -336,7 +342,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_option_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "G").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -344,7 +350,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_command_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "H").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Jill");
         }
 
@@ -352,7 +358,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_command_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "I").Single();
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -361,7 +367,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "A").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("Terry");
         }
 
@@ -369,7 +375,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "C").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("C");
         }
 
@@ -377,7 +383,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_argument_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "D").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("D2");
         }
 
@@ -385,7 +391,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_argument_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "E").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("E");
         }
 
@@ -393,7 +399,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_option_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "F").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("F2");
         }
 
@@ -401,7 +407,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_option_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "G").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("G");
         }
 
@@ -409,7 +415,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_command_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "H").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("H2");
         }
 
@@ -417,7 +423,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_command_attribute_on_property()
         {
             var p = typeof(DescriptionSampleClass).GetProperties().Where(p => p.Name == "I").Single();
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("I");
         }
 
@@ -425,7 +431,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_type()
         {
             var p = typeof(DescriptionSampleClass);
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("Charlie");
         }
 
@@ -433,7 +439,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_type()
         {
             var p = typeof(DescriptionSampleClass3);
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("DescriptionSampleClass3");
         }
 
@@ -442,7 +448,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_type()
         {
             var p = typeof(DescriptionSampleClass);
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Frank");
         }
 
@@ -450,7 +456,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_type()
         {
             var p = typeof(DescriptionSampleClass3);
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
@@ -458,7 +464,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_name_on_command_attribute_on_type()
         {
             var p = typeof(DescriptionSampleClass2);
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("Jean");
         }
 
@@ -466,7 +472,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_uses_default_when_no_name_on_command_attribute_on_type()
         {
             var p = typeof(DescriptionSampleClass3);
-            var result = nameStrategies.Name(p);
+            var result = nameStrategies.Name(p, SymbolType.All);
             result.Should().Be("DescriptionSampleClass3");
         }
 
@@ -474,7 +480,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void AttributeStrategy_finds_description_on_command_attribute_on_type()
         {
             var p = typeof(DescriptionSampleClass2);
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().Be("Will");
         }
 
@@ -482,7 +488,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Atribute_strategy_finds_no_description_on_command_attribute_on_type()
         {
             var p = typeof(DescriptionSampleClass3);
-            var result = descriptionStrategies.Description(p);
+            var result = descriptionStrategies.Description(p, SymbolType.All);
             result.Should().BeNull();
         }
 
