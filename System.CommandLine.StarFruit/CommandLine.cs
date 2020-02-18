@@ -82,9 +82,9 @@ namespace System.CommandLine.StarFruit
         {
             var builder = new CommandLineBuilder()
                 .ConfigureRootCommandFromMethod(method, target)
-                .UseDefaults()
-                .UseGui()
-                .UseAnsiTerminalWhenAvailable();
+                .UseDefaults();
+                //.UseGui()
+                //.UseAnsiTerminalWhenAvailable();
 
             return builder.Build();
         }

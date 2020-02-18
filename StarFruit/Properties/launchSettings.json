@@ -2,7 +2,7 @@
   "profiles": {
     "StarFruit": {
       "commandName": "Project",
-      "commandLineArgs": "[gui] update "
+      "commandLineArgs": "update "
     }
   }
 }

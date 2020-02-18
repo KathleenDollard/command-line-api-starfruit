@@ -8,46 +8,43 @@
     ".NETCoreApp,Version=v5.0": {
       "StarFruit/1.0.0": {
         "dependencies": {
-          "System.CommandLine.StarFruit": "1.0.0",
-          "System.CommandLine": "42.42.42.42"
+          "System.CommandLine.ReflectionModel": "1.0.0"
         },
         "runtime": {
           "StarFruit.dll": {}
         }
       },
-      "System.CommandLine.ReflectionModel/1.0.0": {
-        "runtime": {
-          "System.CommandLine.ReflectionModel.dll": {}
-        }
-      },
-      "System.CommandLine.StarFruit/1.0.0": {
+      "Microsoft.CSharp/4.4.1": {},
+      "System.CommandLine/2.0.0-beta1.20104.2": {
         "dependencies": {
-          "System.CommandLine.ReflectionModel": "1.0.0",
-          "System.CommandLine.StarFruit.WinForms": "1.0.0"
+          "Microsoft.CSharp": "4.4.1",
+          "System.Memory": "4.5.3"
         },
         "runtime": {
-          "System.CommandLine.StarFruit.dll": {}
-        }
-      },
-      "System.CommandLine.StarFruit.WinForms/1.0.0": {
-        "runtime": {
-          "System.CommandLine.StarFruit.WinForms.dll": {}
-        }
-      },
-      "System.CommandLine/42.42.42.42": {
-        "runtime": {
-          "System.CommandLine.dll": {
-            "assemblyVersion": "42.42.42.42",
-            "fileVersion": "42.42.42.42424"
+          "lib/netstandard2.0/System.CommandLine.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.20.10402"
           }
         }
       },
-      "System.CommandLine.Rendering/42.42.42.42": {
+      "System.CommandLine.Rendering/0.3.0-alpha.20104.2": {
+        "dependencies": {
+          "System.CommandLine": "2.0.0-beta1.20104.2"
+        },
         "runtime": {
-          "System.CommandLine.Rendering.dll": {
-            "assemblyVersion": "42.42.42.42",
-            "fileVersion": "42.42.42.42424"
+          "lib/netstandard2.0/System.CommandLine.Rendering.dll": {
+            "assemblyVersion": "0.3.0.0",
+            "fileVersion": "0.300.20.10402"
           }
+        }
+      },
+      "System.Memory/4.5.3": {},
+      "System.CommandLine.ReflectionModel/1.0.0": {
+        "dependencies": {
+          "System.CommandLine.Rendering": "0.3.0-alpha.20104.2"
+        },
+        "runtime": {
+          "System.CommandLine.ReflectionModel.dll": {}
         }
       }
     }
@@ -58,28 +55,36 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Microsoft.CSharp/4.4.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-A5hI3gk6WpcBI0QGZY6/d5CCaYUxJgi7iENn1uYEng+Olo8RfI5ReGVkjXjeu3VR3srLvVYREATXa2M0X7FYJA==",
+      "path": "microsoft.csharp/4.4.1",
+      "hashPath": "microsoft.csharp.4.4.1.nupkg.sha512"
+    },
+    "System.CommandLine/2.0.0-beta1.20104.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-41xMZaxXYJnHeoDeQGj3JUIZUvxF/+t3n2Y/pbUMOL6lvEUWaL2ze+DgAzo4TvrIwHNy7DOhFKQy1CujhUxJHA==",
+      "path": "system.commandline/2.0.0-beta1.20104.2",
+      "hashPath": "system.commandline.2.0.0-beta1.20104.2.nupkg.sha512"
+    },
+    "System.CommandLine.Rendering/0.3.0-alpha.20104.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IE3d8k5bwoSLw9VrhqbUiwA48+Hiv61p2/HfR1f8/nDetousWijUuxrHPFBS8DQ9CHz10sgoSnen9yq11ivZvA==",
+      "path": "system.commandline.rendering/0.3.0-alpha.20104.2",
+      "hashPath": "system.commandline.rendering.0.3.0-alpha.20104.2.nupkg.sha512"
+    },
+    "System.Memory/4.5.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA==",
+      "path": "system.memory/4.5.3",
+      "hashPath": "system.memory.4.5.3.nupkg.sha512"
+    },
     "System.CommandLine.ReflectionModel/1.0.0": {
       "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "System.CommandLine.StarFruit/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "System.CommandLine.StarFruit.WinForms/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "System.CommandLine/42.42.42.42": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "System.CommandLine.Rendering/42.42.42.42": {
-      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

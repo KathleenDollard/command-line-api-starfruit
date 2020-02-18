@@ -12,7 +12,7 @@ namespace System.CommandLine.ReflectionModel
     public class CommandMaker
     {
         // Get this from ServiceProvider
-        private readonly Type[] omittedTypes = new[]
+        internal static readonly Type[] ommittedTypes = new[]
                            {
                                    typeof(IConsole),
                                    typeof(InvocationContext),
@@ -29,18 +29,31 @@ namespace System.CommandLine.ReflectionModel
         public NameStrategies NameStrategies { get; } = new NameStrategies();
         public IsRequiredStrategies RequiredStrategies { get; } = new IsRequiredStrategies();
 
+        private MethodInfo methodInfo;
+        private object target;
+
         public void Configure(
               Command command,
               MethodInfo method,
               object target = null)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
-            _ = method ?? throw new ArgumentNullException(nameof(method));
+            methodInfo = method ?? throw new ArgumentNullException(nameof(method));
+            this.target = target;
 
-            // TODO: Differentiate between Main with single type and more complex scenarios (sometimes need to collapse root type)
-            AddChildren(command, method);
+            var parameters = method.GetParameters();
+            if (parameters.Count() == 1 && CommandStrategies.IsCommand(parameters.First()))
+            {
+                AddChildren(command, parameters.First().ParameterType);
+            }
+            else
+            {
+                AddChildren(command, method);
+            };
+
             command.Handler = CommandHandler.Create(method, target);
-        }
+        
+         }
 
         public void Configure(
                Command command,
@@ -57,9 +70,9 @@ namespace System.CommandLine.ReflectionModel
         public void AddChildren(Command command, MethodInfo method)
         {
             var parameters = method.GetParameters();
-            var argumentParameters = parameters.Where(p => ArgumentStrategies.IsArgument(p));
-            var commandParameters = parameters.Where(p => CommandStrategies.IsCommand(p));
-            var optionParameters = parameters.Except(argumentParameters).Except(commandParameters);
+            var argumentParameters = parameters.Where(p => ArgumentStrategies.IsArgument(p)).ToList();
+            var commandParameters = parameters.Where(p => CommandStrategies.IsCommand(p)).ToList();
+            var optionParameters = parameters.Except(argumentParameters).Except(commandParameters).ToList();
 
             command.AddArguments(argumentParameters
                                    .Select(p => BuildArgument(p)));
@@ -77,17 +90,19 @@ namespace System.CommandLine.ReflectionModel
             var optionProperties = properties.Except(argumentProperties).Except(commandProperties);
 
             command.AddArguments(argumentProperties
-                                    .Select(p => BuildArgument(p)));
+                                    .Select(p => BuildArgument(p))
+                                    .ToList());
             command.AddCommands(commandProperties
-                                    .Select(p => BuildCommand(p)));
+                                    .Select(p => BuildCommand(p))
+                                    .ToList());
             command.AddOptions(optionProperties
-                                    .Select(p => BuildOption(p)));
+                                    .Select(p => BuildOption(p))
+                                    .ToList());
 
-            var subCommands = SubCommandStrategies.GetCommandTypes(type)
-                        .Select(t => BuildCommand(t));
-            command.AddCommands(subCommands);
+            command.AddCommands(SubCommandStrategies.GetCommandTypes(type)
+                        .Select(t => BuildCommand(t))
+                        .ToList());
         }
-
 
         public Option BuildOption(ParameterInfo param)
         {
@@ -108,7 +123,7 @@ namespace System.CommandLine.ReflectionModel
             (int min, int max)? arityMinMax = ArityStrategies.MinMax(prop);
             var argument = BuildArgument(GetName(prop), prop.PropertyType, GetDescription(prop), argumentRequired, arityMinMax);
 
-            return BuildOption(GetName(prop), GetDescription(prop), optionRequired,  argument);
+            return BuildOption(GetName(prop), GetDescription(prop), optionRequired, argument);
         }
 
         public Option BuildOption(string name, string description, bool? optionRequired, Argument argument)
@@ -164,7 +179,7 @@ namespace System.CommandLine.ReflectionModel
                 var max = !typeof(string).IsAssignableFrom(type) && typeof(IEnumerable).IsAssignableFrom(type)
                             ? byte.MaxValue
                             : 1;
-                arg.Arity = new ArgumentArity(1,max);
+                arg.Arity = new ArgumentArity(1, max);
             }
             // TODO: Set default value
             return arg;
@@ -203,6 +218,18 @@ namespace System.CommandLine.ReflectionModel
             {
                 Description = description,
             };
+            command.Handler = CommandHandler.Create<InvocationContext>(
+                ic =>
+                {
+                    var parseResult = ic.ParseResult;
+                    if (ic.ParseResult.Errors.Count == 0)
+                    {
+                        var binder = new ModelBinder(type);
+                        var newObj =  binder.CreateInstance(ic.BindingContext);
+                        methodInfo.Invoke(null, new [] { newObj });
+                    }
+                }); 
+            
             AddChildren(command, type);
 
             return command;

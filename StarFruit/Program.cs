@@ -1,7 +1,9 @@
 ﻿using System;
-using System.CommandLine.StarFruit;
-using StarFruit.CLI;
+using System.CommandLine.ReflectionModel;
+using System.CommandLine;
 using System.Threading.Tasks;
+using StarFruit.CLI;
+using System.Linq;
 
 namespace StarFruit
 {
@@ -15,15 +17,17 @@ namespace StarFruit
                 Uninstall uninstall => Uninstall(uninstall),
                 List list => DoWork(list),
                 Search search => DoWork(search),
-                Update update => DoWork(update),
+                Update update => Update(update),
                 Dotnet cli => DoWork(cli),
                 _ => throw new InvalidOperationException()
             };
+        private static int Update(Update update) => DoWork<Update>(update);
         private static int Run(bool dryRun, bool force, string language, string name, string output, string project, string templateName) => throw new NotImplementedException();
-        private static int Uninstall(Uninstall uninstall) => throw new NotImplementedException();
-        private static int Install(Install install) => throw new NotImplementedException();
+        private static int Uninstall(Uninstall uninstall) => DoWork<Uninstall>(uninstall);
+        private static int Install(Install install) => DoWork<Install>(install);
 
-        private static int DoWork(Dotnet command)
+        private static int DoWork<T>(T command)
+            where T : Dotnet
         {
             Console.WriteLine(command.GetType().Name);
             return 0;
@@ -36,6 +40,12 @@ namespace StarFruit
         //}
 
         public static async Task<int> Main(string[] args)
-            => await CommandLine.ExecuteMethodAsync<Dotnet>(typeof(Program).GetMethod("Main"), args);
+        {
+            var methodInfo = typeof(Program).GetMethods()
+                                            .Where(x => x.Name == "Main")
+                                            .Where(x => x.GetParameters().First().ParameterType != typeof(string[]))
+                                            .Single();
+            return await CommandLine.ExecuteMethodAsync<Dotnet>(ParserBuilder.ConfigureFromMethod, methodInfo, args);
+        }
     }
 }
