@@ -1,9 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace System.CommandLine.ReflectionModel
 {
+    //public class BoolAttributeStrategy : AttributeStrategy<bool?>
+    //{
+    //    public BoolAttributeStrategy(Expression<Func<Attribute, bool?>> extract,
+    //                        Type attributeType,
+    //                        SymbolType symbolType)
+    //   : base(extract, attributeType, symbolType)
+    //    { }
+
+    //    public override string Description
+    //        => $"Boolean Attribute Strategy: {AttributeType.Name} {Extract.Description()}";
+    //}
 
     public class BoolAttributeStrategies : AttributeStrategies<bool?>
     {
