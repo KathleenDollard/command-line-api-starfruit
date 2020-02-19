@@ -1,15 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace System.CommandLine.ReflectionModel
 {
     public class SubCommandStrategies
     {
-        private readonly List<Func<Type, TypeCache, IEnumerable<Type>>> typeStrategies = new List<Func<Type, TypeCache, IEnumerable<Type>>>();
+        internal readonly List<TypeStrategy> TypeStrategies = new List<TypeStrategy>();
+
+        public IEnumerable<Type> GetCommandTypes(Type type)
+            => TypeStrategies.SelectMany(s => s.GetCommandTypes(type));
+    }
+
+    public class TypeStrategy : StrategyBase
+    {
         private TypeCache typeCache;
+
+        public TypeStrategy(Func<Type, TypeCache, IEnumerable<Type>> getCommandFunc,
+                            SymbolType symbolType = SymbolType.All)
+            : base(symbolType)
+            => GetCommandFunc = getCommandFunc;
+
+        public Func<Type, TypeCache, IEnumerable<Type>> GetCommandFunc { get; }
 
         public IEnumerable<Type> GetCommandTypes(Type type)
         {
@@ -17,11 +29,8 @@ namespace System.CommandLine.ReflectionModel
             {
                 typeCache = new TypeCache(type);
             }
-            return typeStrategies.SelectMany(s => s(type, typeCache));
+            return GetCommandFunc(type, typeCache);
         }
-
-        public void AddTypeStrategy(Func<Type, TypeCache, IEnumerable<Type>> strategy)
-            => typeStrategies.Add(strategy);
     }
 
     public class TypeCache
@@ -32,13 +41,9 @@ namespace System.CommandLine.ReflectionModel
         public Assembly Assembly { get; }
 
         public IEnumerable<Type> GetDerivedTypes(Type baseType)
-        {
-            if (Types.ContainsKey(baseType))
-            {
-                return Types[baseType];
-            }
-            return new List<Type>();
-        }
+            => Types.ContainsKey(baseType)
+                ? Types[baseType]
+                : new List<Type>();
 
         private Dictionary<Type, List<Type>> _types;
 
@@ -76,7 +81,7 @@ namespace System.CommandLine.ReflectionModel
         public static SubCommandStrategies DerivedTypes(this SubCommandStrategies subCommandStrategies)
         {
 
-            subCommandStrategies.AddTypeStrategy((type, typeCache) => typeCache.GetDerivedTypes(type));
+            subCommandStrategies.TypeStrategies.Add(new TypeStrategy((type, typeCache) => typeCache.GetDerivedTypes(type)));
             return subCommandStrategies;
         }
     }
