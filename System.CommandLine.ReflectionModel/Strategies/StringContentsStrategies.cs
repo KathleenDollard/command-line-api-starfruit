@@ -4,11 +4,11 @@ using System.Linq;
 namespace System.CommandLine.ReflectionModel.Strategies
 {
 
-    public class StringContentsStrategy : StrategyBase
+    public class StringContentStrategy : StrategyBase
     {
         // TODO: Extend strategy replacement for Func to other strategy types
         // TODO: Should all strategies have a symbol type filter
-        public StringContentsStrategy(StringPosition position,
+        public StringContentStrategy(StringPosition position,
                                       string compareTo,
                                       SymbolType symbolType = SymbolType.All)
         : base(symbolType)
@@ -41,26 +41,27 @@ namespace System.CommandLine.ReflectionModel.Strategies
             Suffix,
             Contains
         }
-        public override string Description
-            => $"String Contents: {CompareTo} as {Position}";
+        public override string StrategyDescription
+            => $"String Contents: {Position} - '{CompareTo}'";
     }
 
-    public class StringContentStrategies
+    public class StringContentStrategies : ModelStrategies
     {
-        private readonly List<StringContentsStrategy> stringStrategies = new List<StringContentsStrategy>();
+        private readonly List<StringContentStrategy> stringStrategies = new List<StringContentStrategy>();
 
-        protected IEnumerable<StringContentsStrategy> StringContentsStrategy
+        protected IEnumerable<StringContentStrategy> StringContentsStrategy
             => stringStrategies;
-        public void AddInternal(StringContentsStrategy strategy)
+        public void AddInternal(StringContentStrategy strategy)
             => stringStrategies.Add((strategy));
 
-        public void Add(StringContentsStrategy.StringPosition position, string compareTo)
-             => AddInternal(new StringContentsStrategy(position, compareTo));
+        public void Add(StringContentStrategy.StringPosition position, string compareTo)
+             => AddInternal(new StringContentStrategy(position, compareTo));
 
         public bool AreAnyFound(string stringToMatch, SymbolType symbolType)
             => stringStrategies
                         .Where(s => (s.SymbolType & symbolType) != 0)
                         .Any(s => s.IsFound(stringToMatch));
-
+        public override  IEnumerable<string> StrategyDescriptions
+             => stringStrategies.Select(s => s.StrategyDescription);
     }
 }

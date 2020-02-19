@@ -4,12 +4,15 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionModel
 {
-    public class SubCommandStrategies
+    public class SubCommandStrategies : ModelStrategies
     {
         internal readonly List<TypeStrategy> TypeStrategies = new List<TypeStrategy>();
 
         public IEnumerable<Type> GetCommandTypes(Type type)
             => TypeStrategies.SelectMany(s => s.GetCommandTypes(type));
+
+        public override IEnumerable<string> StrategyDescriptions
+            => TypeStrategies.Select(s=>s.StrategyDescription );
     }
 
     public class TypeStrategy : StrategyBase
@@ -31,6 +34,10 @@ namespace System.CommandLine.ReflectionModel
             }
             return GetCommandFunc(type, typeCache);
         }
+
+        public override string StrategyDescription
+            => $"Type Strategy: Derived Types";
+
     }
 
     public class TypeCache

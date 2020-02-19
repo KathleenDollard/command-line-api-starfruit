@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml;
 
 namespace System.CommandLine.ReflectionModel
 {
-    public class DescriptionStrategies
+    public class DescriptionStrategies : ModelStrategies
     {
-        private readonly List<Func<XmlDocument, string>> xmlDocStrategies = new List<Func<XmlDocument, string>>();
+        private readonly XmlDocStrategies xmlDocStrategies = new XmlDocStrategies();
         internal readonly StringAttributeStrategies AttributeStrategies = new StringAttributeStrategies();
 
         // TODO: Add XmlDocStrategies
@@ -29,6 +30,10 @@ namespace System.CommandLine.ReflectionModel
                ? description
                : null; // else look for XML documents
         }
+
+        public override IEnumerable<string> StrategyDescriptions
+            => AttributeStrategies.StrategyDescriptions
+               .Union(xmlDocStrategies.StrategyDescriptions);
     }
 
     public static class DescriptionStrategiesExtensions
@@ -44,5 +49,11 @@ namespace System.CommandLine.ReflectionModel
             descriptionStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Description);
             return descriptionStrategies;
         }
+    }
+
+    public class XmlDocStrategies : ModelStrategies
+    {
+        public override IEnumerable<string> StrategyDescriptions
+            => new [] {"XML Documentation Strategy"};
     }
 }

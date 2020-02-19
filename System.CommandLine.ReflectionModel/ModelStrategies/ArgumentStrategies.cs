@@ -6,13 +6,13 @@ using System.CommandLine.ReflectionModel.Strategies;
 
 namespace System.CommandLine.ReflectionModel
 {
-    public class ArgumentStrategies
+    public class ArgumentStrategies : ModelStrategies
     {
         internal readonly StringContentStrategies NameStrategies = new StringContentStrategies();
         internal readonly BoolAttributeStrategies AttributeStrategies = new BoolAttributeStrategies();
-        private SymbolType symbolType = SymbolType.All;
+        private readonly SymbolType symbolType = SymbolType.All;
 
-        public void AddNameStrategy(StringContentsStrategy.StringPosition position, string compareTo)
+        public void AddNameStrategy(StringContentStrategy.StringPosition position, string compareTo)
            => NameStrategies.Add(position, compareTo);
 
         public bool IsArgument(ParameterInfo parameterInfo)
@@ -27,6 +27,10 @@ namespace System.CommandLine.ReflectionModel
                    ||
                    AttributeStrategies.AreAnyTrue(propertyInfo, symbolType);
 
+        public override IEnumerable<string> StrategyDescriptions
+            => AttributeStrategies.StrategyDescriptions
+               .Union(NameStrategies.StrategyDescriptions);
+
     }
 
     public static class IsArgumentStrategiesExtensions
@@ -38,8 +42,8 @@ namespace System.CommandLine.ReflectionModel
 
         public static ArgumentStrategies HasStandardNaming(this ArgumentStrategies argStrategies)
         {
-            argStrategies.NameStrategies.Add(StringContentsStrategy.StringPosition.Suffix, "Arg");
-            argStrategies.NameStrategies.Add(StringContentsStrategy.StringPosition.Suffix, "Argument");
+            argStrategies.NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Arg");
+            argStrategies.NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Argument");
             return argStrategies;
         }
 

@@ -1,10 +1,11 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 
 
 namespace System.CommandLine.ReflectionModel
 {
-    public class IsRequiredStrategies
+    public class IsRequiredStrategies : ModelStrategies
     {
         internal readonly BoolAttributeStrategies AttributeStrategies = new BoolAttributeStrategies();
 
@@ -14,7 +15,9 @@ namespace System.CommandLine.ReflectionModel
         public bool? IsRequired(PropertyInfo propertyInfo, SymbolType symbolType)
             => AttributeStrategies.AreAnyTrue(propertyInfo, symbolType);
 
-     }
+        public override IEnumerable<string> StrategyDescriptions
+             => AttributeStrategies.StrategyDescriptions;
+    }
 
     public static class RequiredStrategiesExtensions
     {

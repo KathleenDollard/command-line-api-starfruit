@@ -5,7 +5,7 @@ using ArityAttributeStrategies = System.CommandLine.ReflectionModel.AttributeStr
 
 namespace System.CommandLine.ReflectionModel
 {
-    public class ArityDescriptor
+    public class ArityDescriptor 
     {
         public ArityDescriptor(int min, int max)
         {
@@ -19,9 +19,11 @@ namespace System.CommandLine.ReflectionModel
         public int Min { get; }
         public int Max { get; }
         public bool IsSet { get; set; }
+
+ 
     }
 
-    public class ArityStrategies
+    public class ArityStrategies: ModelStrategies
     {
         internal readonly ArityAttributeStrategies AttributeStrategies = new ArityAttributeStrategies();
 
@@ -38,6 +40,9 @@ namespace System.CommandLine.ReflectionModel
                 ? arityDescriptor
                 : null;
         }
+
+        public override IEnumerable<string> StrategyDescriptions
+         => AttributeStrategies.StrategyDescriptions;
     }
 
     public static class ArityStrategiesExtensions

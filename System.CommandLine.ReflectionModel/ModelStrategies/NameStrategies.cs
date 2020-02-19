@@ -4,16 +4,16 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionModel
 {
-    public class NameStrategies
+    public class NameStrategies : ModelStrategies
     {
         internal readonly StringAttributeStrategies AttributeStrategies = new StringAttributeStrategies();
 
         public string Name(ParameterInfo parameterInfo, SymbolType symbolType)
-            => GetName(parameterInfo.GetCustomAttributes(),parameterInfo.Name, symbolType);
+            => GetName(parameterInfo.GetCustomAttributes(), parameterInfo.Name, symbolType);
         public string Name(PropertyInfo propertyInfo, SymbolType symbolType)
-            => GetName(propertyInfo.GetCustomAttributes(), propertyInfo.Name,symbolType);
+            => GetName(propertyInfo.GetCustomAttributes(), propertyInfo.Name, symbolType);
         public string Name(Type type, SymbolType symbolType)
-            => GetName(type.GetCustomAttributes(),  type.Name, symbolType);
+            => GetName(type.GetCustomAttributes(), type.Name, symbolType);
 
         private string GetName(IEnumerable<Attribute> attributes, string defaultValue, SymbolType symbolType)
         {
@@ -24,6 +24,9 @@ namespace System.CommandLine.ReflectionModel
                ? defaultValue
                : name;
         }
+
+        public override IEnumerable<string> StrategyDescriptions
+           => AttributeStrategies.StrategyDescriptions;
 
     }
 
@@ -40,6 +43,10 @@ namespace System.CommandLine.ReflectionModel
             nameStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
             return nameStrategies;
         }
+
+        public static (bool, T) AttributeValue<TAttribute, T>(this Attribute attribute, Func<TAttribute, T> extractFunc)
+         where TAttribute : Attribute
+         => (true, extractFunc((TAttribute)attribute));
 
     }
 
