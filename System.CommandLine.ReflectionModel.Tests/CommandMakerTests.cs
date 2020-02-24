@@ -15,7 +15,10 @@ namespace System.CommandLine.ReflectionModel.Tests
         private readonly CommandMaker commandMaker;
 
         public CommandMakerTests()
-            => commandMaker = new CommandMaker().UseDefaults();
+        {
+            commandMaker = new CommandMaker();
+            commandMaker.UseDefaults();
+        }
 
         [Fact]
         public void Can_make_argument_for_parameter()

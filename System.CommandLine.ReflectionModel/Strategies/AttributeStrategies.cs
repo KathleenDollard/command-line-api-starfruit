@@ -54,7 +54,7 @@ namespace System.CommandLine.ReflectionModel.Strategies
 
 
     // TODO for SourceGeneration: Redesign this class so the same class works for source generation
-    public class AttributeStrategies<T> : ModelStrategies.ModelStrategies
+    public class AttributeStrategies<T> : RuleStrategies
     {
         private readonly List<AttributeStrategy<T>> attributeStrategies = new List<AttributeStrategy<T>>();
 

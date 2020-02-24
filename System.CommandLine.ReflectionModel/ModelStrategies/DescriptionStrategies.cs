@@ -55,30 +55,16 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
                     : descriptions.Union(new[] { xmlDocStrategy.StrategyDescription });
             }
         }
-    }
 
-    public static class DescriptionStrategiesExtensions
-    {
-        public static DescriptionStrategies AllStandard(this DescriptionStrategies descriptionStrategies)
-               => descriptionStrategies
-                        .HasStandardAttribute()
-                        .XmlDocumentStrategy();
-
-
-        public static DescriptionStrategies HasStandardAttribute(this DescriptionStrategies descriptionStrategies)
+        public override void UseStandard()
         {
-            descriptionStrategies.AttributeStrategies.Add<DescriptionAttribute>(a => ((DescriptionAttribute)a).Description);
-            descriptionStrategies.AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Description);
-            descriptionStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Description);
-            return descriptionStrategies;
-        }
-
-
-        public static DescriptionStrategies XmlDocumentStrategy(this DescriptionStrategies strategies)
-        {
-            strategies.AddXmlDocumentStrategy();
-            return strategies;
+            AttributeStrategies.Add<DescriptionAttribute>(a => ((DescriptionAttribute)a).Description);
+            AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Description);
+            AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Description);
+            AddXmlDocumentStrategy();
         }
     }
+
+  
 
 }

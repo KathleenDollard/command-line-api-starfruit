@@ -31,27 +31,11 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
             => AttributeStrategies.StrategyDescriptions
                .Union(NameStrategies.StrategyDescriptions);
 
-    }
-
-    public static class IsArgumentStrategiesExtensions
-    {
-        public static ArgumentStrategies AllStandard(this ArgumentStrategies argumentStrategies)
-            => argumentStrategies
-                    .HasStandardAttribute()
-                    .HasStandardNaming();
-
-        public static ArgumentStrategies HasStandardNaming(this ArgumentStrategies argStrategies)
+        public override void UseStandard()
         {
-            argStrategies.NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Arg");
-            argStrategies.NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Argument");
-            return argStrategies;
-        }
-
-        public static ArgumentStrategies HasStandardAttribute(this ArgumentStrategies argStrategies)
-        {
-            argStrategies.AttributeStrategies.Add<CmdArgumentAttribute>();
-            return argStrategies;
+            NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Arg");
+            NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Argument");
+            AttributeStrategies.Add<CmdArgumentAttribute>();
         }
     }
-
 }

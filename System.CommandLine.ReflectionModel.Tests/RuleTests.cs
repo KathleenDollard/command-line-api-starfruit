@@ -9,12 +9,15 @@ namespace System.CommandLine.ReflectionModel.Tests
         private readonly CommandMaker commandMaker;
 
         public RuleTests()
-            => commandMaker = new CommandMaker().UseDefaults();
+        {
+            commandMaker = new CommandMaker();
+            commandMaker.UseDefaults();
+        }
 
         [Fact]
         public void Default_strategies_are_as_expected()
         {
-            var rules = commandMaker.AppModelDescription;
+            var rules = commandMaker.StrategiesSet.StrategiesSetDescription;
             rules.Should().Be(@"
 AppModel:
    IsArgumentStrategies: 

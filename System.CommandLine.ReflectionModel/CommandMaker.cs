@@ -21,13 +21,7 @@ namespace System.CommandLine.ReflectionModel
                                    typeof(CancellationToken),
                                };
 
-        public ArgumentStrategies ArgumentStrategies { get; } = new ArgumentStrategies();
-        public CommandStrategies CommandStrategies { get; } = new CommandStrategies();
-        public SubCommandStrategies SubCommandStrategies { get; } = new SubCommandStrategies();
-        public ArityStrategies ArityStrategies { get; } = new ArityStrategies();
-        public DescriptionStrategies DescriptionStrategies { get; } = new DescriptionStrategies();
-        public NameStrategies NameStrategies { get; } = new NameStrategies();
-        public IsRequiredStrategies RequiredStrategies { get; } = new IsRequiredStrategies();
+        public StrategiesSet StrategiesSet { get; } = new StrategiesSet();
 
         private MethodInfo methodInfo;
         private object target;
@@ -42,7 +36,7 @@ namespace System.CommandLine.ReflectionModel
             this.target = target;
 
             var parameters = method.GetParameters();
-            if (parameters.Count() == 1 && CommandStrategies.IsCommand(parameters.First()))
+            if (parameters.Count() == 1 && StrategiesSet.CommandStrategies.IsCommand(parameters.First()))
             {
                 AddChildren(command, parameters.First().ParameterType);
             }
@@ -70,8 +64,8 @@ namespace System.CommandLine.ReflectionModel
         public void AddChildren(Command command, MethodInfo method)
         {
             var parameters = method.GetParameters();
-            var argumentParameters = parameters.Where(p => ArgumentStrategies.IsArgument(p)).ToList();
-            var commandParameters = parameters.Where(p => CommandStrategies.IsCommand(p)).ToList();
+            var argumentParameters = parameters.Where(p => StrategiesSet.ArgumentStrategies.IsArgument(p)).ToList();
+            var commandParameters = parameters.Where(p => StrategiesSet.CommandStrategies.IsCommand(p)).ToList();
             var optionParameters = parameters.Except(argumentParameters).Except(commandParameters).ToList();
 
             command.AddArguments(argumentParameters
@@ -85,8 +79,8 @@ namespace System.CommandLine.ReflectionModel
         public void AddChildren(Command command, Type type)
         {
             var properties = type.GetProperties();
-            var argumentProperties = properties.Where(p => ArgumentStrategies.IsArgument(p));
-            var commandProperties = properties.Where(p => CommandStrategies.IsCommand(p));
+            var argumentProperties = properties.Where(p => StrategiesSet.ArgumentStrategies.IsArgument(p));
+            var commandProperties = properties.Where(p => StrategiesSet.CommandStrategies.IsCommand(p));
             var optionProperties = properties.Except(argumentProperties).Except(commandProperties);
 
             command.AddArguments(argumentProperties
@@ -99,7 +93,7 @@ namespace System.CommandLine.ReflectionModel
                                     .Select(p => BuildOption(p))
                                     .ToList());
 
-            command.AddCommands(SubCommandStrategies.GetCommandTypes(type)
+            command.AddCommands(StrategiesSet.SubCommandStrategies.GetCommandTypes(type)
                         .Select(t => BuildCommand(t))
                         .ToList());
 
@@ -108,9 +102,9 @@ namespace System.CommandLine.ReflectionModel
         public Option BuildOption(ParameterInfo param)
         {
             // TODO: DefaultValue strategy 
-            bool? argumentRequired = RequiredStrategies.IsRequired(param, SymbolType.Argument); ;
-            bool? optionRequired = RequiredStrategies.IsRequired(param, SymbolType.Option); ;
-            ArityDescriptor arityDescriptor = ArityStrategies.GetArity(param);
+            bool? argumentRequired = StrategiesSet.RequiredStrategies.IsRequired(param, SymbolType.Argument); ;
+            bool? optionRequired = StrategiesSet.RequiredStrategies.IsRequired(param, SymbolType.Option); ;
+            ArityDescriptor arityDescriptor = StrategiesSet.ArityStrategies.GetArity(param);
             var argument = BuildArgument(GetName(param, SymbolType.Argument), param.ParameterType, GetDescription(param, SymbolType.Argument), argumentRequired, arityDescriptor);
 
             return BuildOption(GetName(param, SymbolType.Option), GetDescription(param, SymbolType.Option), optionRequired, argument);
@@ -119,9 +113,9 @@ namespace System.CommandLine.ReflectionModel
         public Option BuildOption(PropertyInfo prop)
         {
             // TODO: DefaultValue strategy 
-            bool? argumentRequired = RequiredStrategies.IsRequired(prop, SymbolType.Argument); ;
-            bool? optionRequired = RequiredStrategies.IsRequired(prop, SymbolType.Option); ;
-            ArityDescriptor arityDescriptor = ArityStrategies.GetArity(prop);
+            bool? argumentRequired = StrategiesSet.RequiredStrategies.IsRequired(prop, SymbolType.Argument); ;
+            bool? optionRequired = StrategiesSet.RequiredStrategies.IsRequired(prop, SymbolType.Option); ;
+            ArityDescriptor arityDescriptor = StrategiesSet.ArityStrategies.GetArity(prop);
             var argument = BuildArgument(GetName(prop, SymbolType.Argument), prop.PropertyType, GetDescription(prop, SymbolType.Argument), argumentRequired, arityDescriptor);
 
             return BuildOption(GetName(prop, SymbolType.Option), GetDescription(prop, SymbolType.Option), optionRequired, argument);
@@ -146,15 +140,23 @@ namespace System.CommandLine.ReflectionModel
         public Argument BuildArgument(ParameterInfo param)
         {
             // TODO: DefaultValue strategy 
-            var required = RequiredStrategies.IsRequired(param, SymbolType.Argument);
-            return BuildArgument(GetName(param, SymbolType.Argument), param.ParameterType, GetDescription(param, SymbolType.Argument), required, ArityStrategies.GetArity(param));
+            var required = StrategiesSet.RequiredStrategies.IsRequired(param, SymbolType.Argument);
+            return BuildArgument(GetName(param, SymbolType.Argument),
+                                 param.ParameterType,
+                                 GetDescription(param, SymbolType.Argument),
+                                 required,
+                                 StrategiesSet.ArityStrategies.GetArity(param));
         }
 
         public Argument BuildArgument(PropertyInfo prop)
         {
             // TODO: DefaultValue strategy 
-            var required = RequiredStrategies.IsRequired(prop, SymbolType.Argument);
-            return BuildArgument(GetName(prop, SymbolType.Argument), prop.PropertyType, GetDescription(prop, SymbolType.Argument), required, ArityStrategies.GetArity(prop));
+            var required = StrategiesSet.RequiredStrategies.IsRequired(prop, SymbolType.Argument);
+            return BuildArgument(GetName(prop, SymbolType.Argument),
+                                 prop.PropertyType,
+                                 GetDescription(prop, SymbolType.Argument),
+                                 required,
+                                 StrategiesSet.ArityStrategies.GetArity(prop));
         }
 
         public Argument BuildArgument(string name, Type type, string description, bool? required, ArityDescriptor arityDescriptor)
@@ -188,26 +190,26 @@ namespace System.CommandLine.ReflectionModel
 
         public Command BuildCommand(ParameterInfo param)
         {
-            var name = NameStrategies.Name(param, SymbolType.Command);
+            var name = StrategiesSet.NameStrategies.Name(param, SymbolType.Command);
             var type = param.ParameterType;
-            var description = DescriptionStrategies.Description(param, SymbolType.Command);
+            var description = StrategiesSet.DescriptionStrategies.Description(param, SymbolType.Command);
 
             return BuildCommand(name, description, type);
         }
 
         public Command BuildCommand(PropertyInfo prop)
         {
-            var name = NameStrategies.Name(prop, SymbolType.Command);
+            var name = StrategiesSet.NameStrategies.Name(prop, SymbolType.Command);
             var type = prop.PropertyType;
-            var description = DescriptionStrategies.Description(prop, SymbolType.Command);
+            var description = StrategiesSet.DescriptionStrategies.Description(prop, SymbolType.Command);
 
             return BuildCommand(name, description, type);
         }
 
         public Command BuildCommand(Type type)
         {
-            var name = NameStrategies.Name(type, SymbolType.Command);
-            var description = DescriptionStrategies.Description(type, SymbolType.Command);
+            var name = StrategiesSet.NameStrategies.Name(type, SymbolType.Command);
+            var description = StrategiesSet.DescriptionStrategies.Description(type, SymbolType.Command);
 
             return BuildCommand(name, description, type);
         }
@@ -236,49 +238,20 @@ namespace System.CommandLine.ReflectionModel
             return command;
         }
 
-        private string GetDescription(ParameterInfo param, SymbolType symbolType) => DescriptionStrategies.Description(param, symbolType);
-        private string GetName(ParameterInfo param, SymbolType symbolType) => NameStrategies.Name(param, symbolType);
-        private string GetDescription(PropertyInfo prop, SymbolType symbolType) => DescriptionStrategies.Description(prop, symbolType);
-        private string GetName(PropertyInfo prop, SymbolType symbolType) => NameStrategies.Name(prop, symbolType);
+        private string GetDescription(ParameterInfo param, SymbolType symbolType) => StrategiesSet.DescriptionStrategies.Description(param, symbolType);
+        private string GetName(ParameterInfo param, SymbolType symbolType) => StrategiesSet.NameStrategies.Name(param, symbolType);
+        private string GetDescription(PropertyInfo prop, SymbolType symbolType) => StrategiesSet.DescriptionStrategies.Description(prop, symbolType);
+        private string GetName(PropertyInfo prop, SymbolType symbolType) => StrategiesSet.NameStrategies.Name(prop, symbolType);
 
-        public string AppModelDescription
+        public void UseDefaults()
         {
-            get
-            {
-                var newLine = "\r\n       ";
-                return $@"
-AppModel:
-   IsArgumentStrategies: 
-       {string.Join(newLine, ArgumentStrategies.StrategyDescriptions)}
-   IsCommandStrategies:
-       {string.Join(newLine, CommandStrategies.StrategyDescriptions)}
-   SubCommandStrategies:
-       {string.Join(newLine, SubCommandStrategies.StrategyDescriptions)}
-   ArityStrategies:
-       {string.Join(newLine, ArityStrategies.StrategyDescriptions)}
-   DescriptionStrategies:
-       {string.Join(newLine, DescriptionStrategies.StrategyDescriptions)}
-   NameStrategies:
-       {string.Join(newLine, NameStrategies.StrategyDescriptions)}
-   IsRequiredStrategies:
-       {string.Join(newLine, RequiredStrategies.StrategyDescriptions)}";
-            }
-        }
-
-    }
-
-    public static class CommandMakerExtensions
-    {
-        public static CommandMaker UseDefaults(this CommandMaker commandMaker)
-        {
-            commandMaker.ArgumentStrategies.AllStandard();
-            commandMaker.CommandStrategies.AllStandard();
-            commandMaker.ArityStrategies.AllStandard();
-            commandMaker.DescriptionStrategies.AllStandard();
-            commandMaker.NameStrategies.AllStandard();
-            commandMaker.RequiredStrategies.AllStandard();
-            commandMaker.SubCommandStrategies.AllStandard();
-            return commandMaker;
+            StrategiesSet.ArgumentStrategies.UseStandard();
+            StrategiesSet.CommandStrategies.UseStandard();
+            StrategiesSet.ArityStrategies.UseStandard();
+            StrategiesSet.DescriptionStrategies.UseStandard();
+            StrategiesSet.NameStrategies.UseStandard();
+            StrategiesSet.RequiredStrategies.UseStandard();
+            StrategiesSet.SubCommandStrategies.UseStandard();
         }
     }
 }

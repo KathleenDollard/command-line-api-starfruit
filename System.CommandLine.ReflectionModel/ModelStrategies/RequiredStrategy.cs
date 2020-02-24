@@ -19,20 +19,13 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
 
         public override IEnumerable<string> StrategyDescriptions
              => AttributeStrategies.StrategyDescriptions;
-    }
 
-    public static class RequiredStrategiesExtensions
-    {
-        public static IsRequiredStrategies AllStandard(this IsRequiredStrategies isRequiredStrategies)
-               => isRequiredStrategies.HasStandardAttribute();
-
-        public static IsRequiredStrategies HasStandardAttribute(this IsRequiredStrategies argStrategies)
+        public override void UseStandard()
         {
-            argStrategies.AttributeStrategies.Add<CmdRequiredAttribute>();
-            argStrategies.AttributeStrategies.Add<CmdOptionAttribute>(a => ((CmdOptionAttribute)a).OptionRequired, SymbolType.Option);
-            argStrategies.AttributeStrategies.Add<CmdOptionAttribute>(a => ((CmdOptionAttribute)a).ArgumentRequired, SymbolType.Argument);
-            argStrategies.AttributeStrategies.Add<CmdArgumentAttribute>(a => ((CmdArgumentAttribute)a).Required);
-            return argStrategies;
+            AttributeStrategies.Add<CmdRequiredAttribute>();
+            AttributeStrategies.Add<CmdOptionAttribute>(a => ((CmdOptionAttribute)a).OptionRequired, SymbolType.Option);
+            AttributeStrategies.Add<CmdOptionAttribute>(a => ((CmdOptionAttribute)a).ArgumentRequired, SymbolType.Argument);
+            AttributeStrategies.Add<CmdArgumentAttribute>(a => ((CmdArgumentAttribute)a).Required);
         }
     }
 }
