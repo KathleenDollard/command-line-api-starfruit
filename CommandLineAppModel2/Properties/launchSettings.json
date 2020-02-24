@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "CommandLineAppModel2": {
-      "commandName": "Project",
-      "commandLineArgs": "Uninstall asdf"
-    }
-  }
-}
