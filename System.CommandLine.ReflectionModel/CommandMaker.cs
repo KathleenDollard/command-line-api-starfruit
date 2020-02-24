@@ -2,6 +2,7 @@
 using System.CommandLine.Binding;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -51,8 +52,8 @@ namespace System.CommandLine.ReflectionModel
             };
 
             command.Handler = CommandHandler.Create(method, target);
-        
-         }
+
+        }
 
         public void Configure(
                Command command,
@@ -101,6 +102,7 @@ namespace System.CommandLine.ReflectionModel
             command.AddCommands(SubCommandStrategies.GetCommandTypes(type)
                         .Select(t => BuildCommand(t))
                         .ToList());
+
         }
 
         public Option BuildOption(ParameterInfo param)
@@ -120,7 +122,7 @@ namespace System.CommandLine.ReflectionModel
             bool? argumentRequired = RequiredStrategies.IsRequired(prop, SymbolType.Argument); ;
             bool? optionRequired = RequiredStrategies.IsRequired(prop, SymbolType.Option); ;
             ArityDescriptor arityDescriptor = ArityStrategies.GetArity(prop);
-            var argument = BuildArgument(GetName(prop, SymbolType.Argument ), prop.PropertyType, GetDescription(prop, SymbolType.Argument), argumentRequired, arityDescriptor);
+            var argument = BuildArgument(GetName(prop, SymbolType.Argument), prop.PropertyType, GetDescription(prop, SymbolType.Argument), argumentRequired, arityDescriptor);
 
             return BuildOption(GetName(prop, SymbolType.Option), GetDescription(prop, SymbolType.Option), optionRequired, argument);
         }
@@ -224,11 +226,11 @@ namespace System.CommandLine.ReflectionModel
                     if (ic.ParseResult.Errors.Count == 0)
                     {
                         var binder = new ModelBinder(type);
-                        var newObj =  binder.CreateInstance(ic.BindingContext);
-                        methodInfo.Invoke(null, new [] { newObj });
+                        var newObj = binder.CreateInstance(ic.BindingContext);
+                        methodInfo.Invoke(null, new[] { newObj });
                     }
-                }); 
-            
+                });
+
             AddChildren(command, type);
 
             return command;
@@ -238,6 +240,30 @@ namespace System.CommandLine.ReflectionModel
         private string GetName(ParameterInfo param, SymbolType symbolType) => NameStrategies.Name(param, symbolType);
         private string GetDescription(PropertyInfo prop, SymbolType symbolType) => DescriptionStrategies.Description(prop, symbolType);
         private string GetName(PropertyInfo prop, SymbolType symbolType) => NameStrategies.Name(prop, symbolType);
+
+        public string AppModelDescription
+        {
+            get
+            {
+                var newLine = "\r\n       ";
+                return $@"
+AppModel:
+   IsArgumentStrategies: 
+       {string.Join(newLine, ArgumentStrategies.StrategyDescriptions)}
+   IsCommandStrategies:
+       {string.Join(newLine, CommandStrategies.StrategyDescriptions)}
+   SubCommandStrategies:
+       {string.Join(newLine, SubCommandStrategies.StrategyDescriptions)}
+   ArityStrategies:
+       {string.Join(newLine, ArityStrategies.StrategyDescriptions)}
+   DescriptionStrategies:
+       {string.Join(newLine, DescriptionStrategies.StrategyDescriptions)}
+   NameStrategies:
+       {string.Join(newLine, NameStrategies.StrategyDescriptions)}
+   IsRequiredStrategies:
+       {string.Join(newLine, RequiredStrategies.StrategyDescriptions)}";
+            }
+        }
 
     }
 
@@ -249,6 +275,7 @@ namespace System.CommandLine.ReflectionModel
             commandMaker.CommandStrategies.AllStandard();
             commandMaker.ArityStrategies.AllStandard();
             commandMaker.DescriptionStrategies.AllStandard();
+            commandMaker.NameStrategies.AllStandard();
             commandMaker.RequiredStrategies.AllStandard();
             commandMaker.SubCommandStrategies.AllStandard();
             return commandMaker;

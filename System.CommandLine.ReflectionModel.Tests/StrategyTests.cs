@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.CommandLine.ReflectionModel;
+using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
