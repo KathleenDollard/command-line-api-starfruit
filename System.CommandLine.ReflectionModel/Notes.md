@@ -11,10 +11,10 @@ Also, the changes to rules may be quite simple - removing a rule or using a diff
 
 To address this, the problem a few known commonalities and examples (this list will likely extend):
 
-* Attribute (Attributes in Reflection and Roslyn, child values in JSON)
+* Attribute (Attributes in Reflection and Roslyn, child values in JSON, not used in OptDoc)
   * Bool (presence of attribute is generally sufficient for true)
   * String
-* Strings (grabbing meaning from names, happily this is universal)
+* Strings (grabbing meaning from names, happily this is universal. )
 
 A strategy is a single type of rule like: determining if a name has the "Arg" suffix
 Strategies (might rename to StrategySet) is a collection of strategies and the logic for combining them. The logic differs by rule type, but includes

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
     public abstract class ModelStrategies
     {

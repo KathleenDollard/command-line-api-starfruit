@@ -4,7 +4,7 @@ using System.Reflection;
 using System.CommandLine.ReflectionModel.Strategies;
 
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
     public class ArgumentStrategies : ModelStrategies
     {

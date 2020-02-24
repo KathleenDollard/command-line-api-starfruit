@@ -1,45 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.CommandLine.ReflectionModel.Strategies;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Xml;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
     public class DescriptionStrategies : ModelStrategies
     {
-        private readonly XmlDocStrategies xmlDocStrategies = new XmlDocStrategies();
+        private XmlDocStrategy xmlDocStrategy = null;
         internal readonly StringAttributeStrategies AttributeStrategies = new StringAttributeStrategies();
 
-        // TODO: Add XmlDocStrategies
+        public void AddXmlDocumentStrategy() 
+            => xmlDocStrategy = new XmlDocStrategy();
 
         public string Description(ParameterInfo parameterInfo, SymbolType symbolType)
-            => GetDescription(parameterInfo.GetCustomAttributes(), symbolType);
+            => GetDescription(parameterInfo.Name, parameterInfo.Member, parameterInfo.GetCustomAttributes(), symbolType);
         public string Description(PropertyInfo propertyInfo, SymbolType symbolType)
-            => GetDescription(propertyInfo.GetCustomAttributes(), symbolType);
+            => GetDescription(propertyInfo.Name, propertyInfo, propertyInfo.GetCustomAttributes(), symbolType);
         public string Description(Type type, SymbolType symbolType)
-            => GetDescription(type.GetCustomAttributes(), symbolType);
+            => GetDescription(type.Name, type, type.GetCustomAttributes(), symbolType);
 
-        private string GetDescription(IEnumerable<Attribute> attributes, SymbolType symbolType)
+        private (bool found, string description) GetAttributeDescription(IEnumerable<Attribute> attributes, SymbolType symbolType)
+            => AttributeStrategies.GetFirstValue(attributes, symbolType);
+
+        private string GetDescription(string name, object info, IEnumerable<Attribute> attributes, SymbolType symbolType)
         {
             // order does matter here, attributes win over Xml Docs
-            var (found, description) = AttributeStrategies.GetFirstValue(attributes, symbolType);
+            var (found, description) = GetAttributeDescription(attributes, symbolType);
+            if (found)
+            {
+                return description;
+            }
 
-            return found
-               ? description
-               : null; // else look for XML documents
+            if (!(xmlDocStrategy is null))
+            {
+                (found, description) = xmlDocStrategy.GetDescription(info, name);
+                if (found)
+                {
+                    return description;
+                }
+            }
+            return null;
         }
 
         public override IEnumerable<string> StrategyDescriptions
-            => AttributeStrategies.StrategyDescriptions
-               .Union(xmlDocStrategies.StrategyDescriptions);
+        {
+            get
+            {
+                var descriptions = AttributeStrategies.StrategyDescriptions;
+                return xmlDocStrategy is null
+                    ? descriptions
+                    : descriptions.Union(new[] { xmlDocStrategy.StrategyDescription });
+            }
+        }
     }
 
     public static class DescriptionStrategiesExtensions
     {
         public static DescriptionStrategies AllStandard(this DescriptionStrategies descriptionStrategies)
-               => descriptionStrategies.HasStandardAttribute();
+               => descriptionStrategies
+                        .HasStandardAttribute()
+                        .XmlDocumentStrategy();
 
 
         public static DescriptionStrategies HasStandardAttribute(this DescriptionStrategies descriptionStrategies)
@@ -49,11 +72,13 @@ namespace System.CommandLine.ReflectionModel
             descriptionStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Description);
             return descriptionStrategies;
         }
+
+
+        public static DescriptionStrategies XmlDocumentStrategy(this DescriptionStrategies strategies)
+        {
+            strategies.AddXmlDocumentStrategy();
+            return strategies;
+        }
     }
 
-    public class XmlDocStrategies : ModelStrategies
-    {
-        public override IEnumerable<string> StrategyDescriptions
-            => new [] {"XML Documentation Strategy"};
-    }
 }

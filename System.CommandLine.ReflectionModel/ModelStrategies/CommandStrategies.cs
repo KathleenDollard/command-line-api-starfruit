@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
     public class CommandStrategies : ModelStrategies
     {
@@ -34,7 +35,7 @@ namespace System.CommandLine.ReflectionModel
         public override IEnumerable<string> StrategyDescriptions
             => AttributeStrategies.StrategyDescriptions
                .Union(NameStrategies.StrategyDescriptions)
-               .Union(TypeStrategies.Select(s=>s.StrategyDescription));
+               .Union(TypeStrategies.Select(s => s.StrategyDescription));
     }
 
     public abstract class IsCommandTypeStrategy : StrategyBase
@@ -66,7 +67,7 @@ namespace System.CommandLine.ReflectionModel
 
         public static CommandStrategies IsComplexType(this CommandStrategies commandStrategies)
         {
-            commandStrategies.TypeStrategies .Add(new IsCommandComplexTypeStrategy());
+            commandStrategies.TypeStrategies.Add(new IsCommandComplexTypeStrategy());
             return commandStrategies;
         }
 

@@ -1,29 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
-using ArityAttributeStrategies = System.CommandLine.ReflectionModel.AttributeStrategies<System.CommandLine.ReflectionModel.ArityDescriptor>;
+using ArityAttributeStrategies = System.CommandLine.ReflectionModel.Strategies.AttributeStrategies<System.CommandLine.ReflectionModel.ArityDescriptor>;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
-    public class ArityDescriptor 
-    {
-        public ArityDescriptor(int min, int max)
-        {
-            Min = min;
-            Max = max;
-            IsSet = true;
-        }
-        public ArityDescriptor()
-        { }
 
-        public int Min { get; }
-        public int Max { get; }
-        public bool IsSet { get; set; }
-
- 
-    }
-
-    public class ArityStrategies: ModelStrategies
+    public class ArityStrategies : ModelStrategies
     {
         internal readonly ArityAttributeStrategies AttributeStrategies = new ArityAttributeStrategies();
 

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System;
+using System.Collections.Generic;
+using System.CommandLine.ReflectionModel.Strategies;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
     public class NameStrategies : ModelStrategies
     {

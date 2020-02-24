@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.ModelStrategies
 {
     public class SubCommandStrategies : ModelStrategies
     {
@@ -12,7 +13,7 @@ namespace System.CommandLine.ReflectionModel
             => TypeStrategies.SelectMany(s => s.GetCommandTypes(type));
 
         public override IEnumerable<string> StrategyDescriptions
-            => TypeStrategies.Select(s=>s.StrategyDescription );
+            => TypeStrategies.Select(s => s.StrategyDescription);
     }
 
     public class TypeStrategy : StrategyBase

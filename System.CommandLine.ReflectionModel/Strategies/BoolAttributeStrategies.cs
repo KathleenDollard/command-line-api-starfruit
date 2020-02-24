@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.Strategies
 {
     public class BoolAttributeStrategies : AttributeStrategies<bool?>
     {

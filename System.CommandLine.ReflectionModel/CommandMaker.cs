@@ -2,6 +2,7 @@
 using System.CommandLine.Binding;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -102,7 +103,6 @@ namespace System.CommandLine.ReflectionModel
                         .Select(t => BuildCommand(t))
                         .ToList());
 
-            var temp = this.AppModelDescription;
         }
 
         public Option BuildOption(ParameterInfo param)
@@ -249,7 +249,7 @@ namespace System.CommandLine.ReflectionModel
                 return $@"
 AppModel:
    IsArgumentStrategies: 
-      {string.Join(newLine, ArgumentStrategies.StrategyDescriptions)}
+       {string.Join(newLine, ArgumentStrategies.StrategyDescriptions)}
    IsCommandStrategies:
        {string.Join(newLine, CommandStrategies.StrategyDescriptions)}
    SubCommandStrategies:
@@ -275,6 +275,7 @@ AppModel:
             commandMaker.CommandStrategies.AllStandard();
             commandMaker.ArityStrategies.AllStandard();
             commandMaker.DescriptionStrategies.AllStandard();
+            commandMaker.NameStrategies.AllStandard();
             commandMaker.RequiredStrategies.AllStandard();
             commandMaker.SubCommandStrategies.AllStandard();
             return commandMaker;

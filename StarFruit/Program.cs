@@ -4,6 +4,7 @@ using System.CommandLine;
 using System.Threading.Tasks;
 using StarFruit.CLI;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace StarFruit
 {
@@ -21,6 +22,8 @@ namespace StarFruit
                 Dotnet cli => DoWork(cli),
                 _ => throw new InvalidOperationException()
             };
+
+
         private static int Update(Update update) => DoWork<Update>(update);
         private static int Run(bool dryRun, bool force, string language, string name, string output, string project, string templateName) => throw new NotImplementedException();
         private static int Uninstall(Uninstall uninstall) => DoWork<Uninstall>(uninstall);

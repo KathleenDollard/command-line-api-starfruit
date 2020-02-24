@@ -3,8 +3,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.CommandLine;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.Strategies
 {
     public abstract class StrategyBase
     {
@@ -53,7 +54,7 @@ namespace System.CommandLine.ReflectionModel
 
 
     // TODO for SourceGeneration: Redesign this class so the same class works for source generation
-    public class AttributeStrategies<T> : ModelStrategies
+    public class AttributeStrategies<T> : ModelStrategies.ModelStrategies
     {
         private readonly List<AttributeStrategy<T>> attributeStrategies = new List<AttributeStrategy<T>>();
 
