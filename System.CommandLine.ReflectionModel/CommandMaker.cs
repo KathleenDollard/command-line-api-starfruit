@@ -3,6 +3,7 @@ using System.CommandLine.Binding;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.CommandLine.ReflectionModel.ModelStrategies;
+using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -28,24 +29,25 @@ namespace System.CommandLine.ReflectionModel
 
         public void Configure(
               Command command,
-              MethodInfo method,
+              MethodInfo methodInfo,
               object target = null)
         {
-            _ = command ?? throw new ArgumentNullException(nameof(command));
-            methodInfo = method ?? throw new ArgumentNullException(nameof(method));
+             _ = command ?? throw new ArgumentNullException(nameof(command));
+            _ = methodInfo ?? throw new ArgumentNullException(nameof(methodInfo));
             this.target = target;
 
-            var parameters = method.GetParameters();
+            var parameters = methodInfo.GetParameters();
             if (parameters.Count() == 1 && StrategiesSet.CommandStrategies.IsCommand(parameters.First()))
             {
                 AddChildren(command, parameters.First().ParameterType);
             }
             else
             {
-                AddChildren(command, method);
+                AddChildren(command, methodInfo);
             };
 
-            command.Handler = CommandHandler.Create(method, target);
+            command.Handler = CommandHandler.Create(methodInfo, target);
+            this.methodInfo = methodInfo;
 
         }
 

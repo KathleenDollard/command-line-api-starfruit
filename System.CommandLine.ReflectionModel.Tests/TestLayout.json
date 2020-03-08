@@ -1,0 +1,28 @@
+﻿{
+  "name": "root",
+  "options": [
+    {
+      "name": "count",
+      "type": "int"
+    },
+    {
+      "name": "exclaim",
+      "type": "bool"
+    }
+  ],
+  "arguments": [
+    {
+      "name": "name",
+      "type": "string"
+    }
+  ],
+  "subcommands": [
+    {
+      "name": "hello"
+    }
+    {
+      "name": "goodbye"
+    }
+  ]
+
+}

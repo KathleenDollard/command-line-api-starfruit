@@ -3,7 +3,7 @@
     "tfm": "netcoreapp5.0",
     "framework": {
       "name": "Microsoft.NETCore.App",
-      "version": "5.0.0-alpha.1.20112.1"
+      "version": "5.0.0-preview.2.20152.11"
     }
   }
 }

@@ -217,7 +217,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Configure_from_method_fails_on_null_method()
         {
             var command = new Command("SeaHawks");
-            Assert.Throws<ArgumentNullException>("method", () => commandMaker.Configure(command, (MethodInfo)null));
+            Assert.Throws<ArgumentNullException>("methodInfo", () => commandMaker.Configure(command, (MethodInfo)null));
         }
 
         [Fact]

@@ -34,7 +34,6 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
             AttributeStrategies.Add<CmdNameAttribute>(a => ((CmdNameAttribute)a).Name);
             AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
             AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Name);
-            AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
         }
     }
 }

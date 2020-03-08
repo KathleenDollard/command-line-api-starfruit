@@ -41,7 +41,6 @@ AppModel:
        Attribute: [CmdNameAttribute] attribute.Name
        Attribute: [CmdArgOptionBaseAttribute] attribute.Name
        Attribute: [CmdCommandAttribute] attribute.Name
-       Attribute: [CmdArgOptionBaseAttribute] attribute.Name
    IsRequiredStrategies:
        Attribute: [CmdRequiredAttribute] 
        Attribute: [CmdOptionAttribute] 

@@ -1,0 +1,49 @@
+{
+  "name": "dotnet",
+  "arguments": [],
+  "options": [],
+  "commands": [
+    {
+      "name": "template",
+      "arguments": [],
+      "options": [],
+      "commands": [
+        {
+          "name": "run",
+          "arguments": [
+            {
+              "name": "templateName",
+              "description": "The name of the template to run",
+              "type": "string"
+            }
+          ],
+          "options": [
+            {
+              "name": "Output",
+              "type": "string"
+            },
+            {
+              "name": "Name",
+              "type": "string"
+            },
+            {
+              "name": "Force",
+              "type": "bool"
+            },
+            {
+              "name": "Language",
+              "type": "string"
+            },
+            {
+              "name": "DryRun",
+              "type": "bool"
+            }
+          ],
+          "commands": [
+            {
+            }
+        }
+      ]
+    }
+  ]
+}

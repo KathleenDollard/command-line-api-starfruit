@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.ReflectionModel.ModelStrategies;
-using System.Text;
+﻿using System.CommandLine.ReflectionModel.ModelStrategies;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.Strategies
 {
     public class StrategiesSet
     {
