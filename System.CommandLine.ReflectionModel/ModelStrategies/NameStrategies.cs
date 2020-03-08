@@ -29,26 +29,11 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
         public override IEnumerable<string> StrategyDescriptions
            => AttributeStrategies.StrategyDescriptions;
 
-    }
-
-    public static class NameStrategiesExtensions
-    {
-        public static NameStrategies AllStandard(this NameStrategies nameStrategies)
-               => nameStrategies.HasStandardAttributes();
-
-        public static NameStrategies HasStandardAttributes(this NameStrategies nameStrategies)
+        public override void UseStandard()
         {
-            nameStrategies.AttributeStrategies.Add<CmdNameAttribute>(a => ((CmdNameAttribute)a).Name);
-            nameStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
-            nameStrategies.AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Name);
-            nameStrategies.AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
-            return nameStrategies;
+            AttributeStrategies.Add<CmdNameAttribute>(a => ((CmdNameAttribute)a).Name);
+            AttributeStrategies.Add<CmdArgOptionBaseAttribute>(a => ((CmdArgOptionBaseAttribute)a).Name);
+            AttributeStrategies.Add<CmdCommandAttribute>(a => ((CmdCommandAttribute)a).Name);
         }
-
-        public static (bool, T) AttributeValue<TAttribute, T>(this Attribute attribute, Func<TAttribute, T> extractFunc)
-         where TAttribute : Attribute
-         => (true, extractFunc((TAttribute)attribute));
-
     }
-
 }

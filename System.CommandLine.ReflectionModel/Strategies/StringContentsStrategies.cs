@@ -45,7 +45,7 @@ namespace System.CommandLine.ReflectionModel.Strategies
             => $"String Contents: {Position} - '{CompareTo}'";
     }
 
-    public class StringContentStrategies : ModelStrategies.ModelStrategies 
+    public class StringContentStrategies : RuleStrategies
     {
         private readonly List<StringContentStrategy> stringStrategies = new List<StringContentStrategy>();
 

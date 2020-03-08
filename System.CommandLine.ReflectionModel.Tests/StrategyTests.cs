@@ -15,23 +15,35 @@ namespace System.CommandLine.ReflectionModel.Tests
     public class StrategyTests
     {
 
-        private readonly ArgumentStrategies argumentStrategies = new ArgumentStrategies()
-                            .AllStandard();
+        private readonly ArgumentStrategies argumentStrategies;
+        private readonly CommandStrategies commandStrategies;
+        private readonly ArityStrategies arityStrategies;
+        private readonly DescriptionStrategies descriptionStrategies;
+        private readonly NameStrategies nameStrategies;
+        private readonly IsRequiredStrategies requiredStrategies;
 
-        private readonly CommandStrategies commandStrategies = new CommandStrategies()
-                            .AllStandard();
+        public StrategyTests()
+        {
+            argumentStrategies = new ArgumentStrategies();
+            argumentStrategies.UseStandard();
 
-        private readonly ArityStrategies arityStrategies = new ArityStrategies()
-                            .AllStandard();
+            commandStrategies = new CommandStrategies();
+            commandStrategies.UseStandard();
 
-        private readonly DescriptionStrategies descriptionStrategies = new DescriptionStrategies()
-                            .AllStandard();
+            arityStrategies = new ArityStrategies();
+            arityStrategies.UseStandard();
 
-        private readonly NameStrategies nameStrategies = new NameStrategies()
-                            .AllStandard();
+            descriptionStrategies = new DescriptionStrategies();
+            descriptionStrategies.UseStandard();
 
-        private readonly IsRequiredStrategies requiredStrategies = new IsRequiredStrategies()
-                         .AllStandard();
+            nameStrategies = new NameStrategies();
+            nameStrategies.UseStandard();
+
+            requiredStrategies = new IsRequiredStrategies();
+            requiredStrategies.UseStandard();
+
+        }
+
 
         [Fact]
         public void AttributeStrategy_finds_argument_on_parameter()

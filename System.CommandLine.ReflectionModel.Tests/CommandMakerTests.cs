@@ -15,7 +15,10 @@ namespace System.CommandLine.ReflectionModel.Tests
         private readonly CommandMaker commandMaker;
 
         public CommandMakerTests()
-            => commandMaker = new CommandMaker().UseDefaults();
+        {
+            commandMaker = new CommandMaker();
+            commandMaker.UseDefaults();
+        }
 
         [Fact]
         public void Can_make_argument_for_parameter()
@@ -214,7 +217,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void Configure_from_method_fails_on_null_method()
         {
             var command = new Command("SeaHawks");
-            Assert.Throws<ArgumentNullException>("method", () => commandMaker.Configure(command, (MethodInfo)null));
+            Assert.Throws<ArgumentNullException>("methodInfo", () => commandMaker.Configure(command, (MethodInfo)null));
         }
 
         [Fact]

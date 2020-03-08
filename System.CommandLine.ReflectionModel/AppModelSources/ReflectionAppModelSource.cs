@@ -1,43 +1,45 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.CommandLine.Binding;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
+using System.Text;
 
-namespace System.CommandLine.ReflectionModel
+namespace System.CommandLine.ReflectionModel.AppModelSources
 {
-    public class CommandMaker
+    public class ReflectionAppModelSource : AppModelSourceBase
     {
-        // Get this from ServiceProvider
-        internal static readonly Type[] ommittedTypes = new[]
-                           {
-                                   typeof(IConsole),
-                                   typeof(InvocationContext),
-                                   typeof(BindingContext),
-                                   typeof(ParseResult),
-                                   typeof(CancellationToken),
-                               };
-
-        public StrategiesSet StrategiesSet { get; } = new StrategiesSet();
 
         private MethodInfo methodInfo;
         private object target;
+        public StrategiesSet StrategiesSet { get; } = new StrategiesSet();
 
-        public void Configure(
+        public override bool Configure(Command command,
+                                       object startingItem,
+                                       object target = null) 
+            => startingItem switch
+                    {
+                        MethodInfo methodInfo => Configure(command, methodInfo, target),
+                        Type type => Configure(command, type, target),
+                        _ => throw new ArgumentException(nameof(startingItem))
+                    };
+
+        public bool Configure(
               Command command,
               MethodInfo methodInfo,
               object target = null)
         {
-             _ = command ?? throw new ArgumentNullException(nameof(command));
+            _ = command ?? throw new ArgumentNullException(nameof(command));
             _ = methodInfo ?? throw new ArgumentNullException(nameof(methodInfo));
             this.target = target;
 
             var parameters = methodInfo.GetParameters();
-            if (parameters.Count() == 1 && StrategiesSet.CommandStrategies.IsCommand(parameters.First()))
+            if (parameters.Count() == 1
+                && StrategiesSet.CommandStrategies.IsCommand(parameters.First()))
             {
                 AddChildren(command, parameters.First().ParameterType);
             }
@@ -47,20 +49,21 @@ namespace System.CommandLine.ReflectionModel
             };
 
             command.Handler = CommandHandler.Create(methodInfo, target);
-            this.methodInfo = methodInfo;
-
+            return true;
         }
 
-        public void Configure(
-               Command command,
-               Type type,
-               object target = null)
+        public bool Configure(
+                Command command,
+                Type type,
+                object target = null)
         {
             _ = command ?? throw new ArgumentNullException(nameof(command));
             _ = type ?? throw new ArgumentNullException(nameof(type));
 
             // TODO: Differentiate between Main with single type and more complex scenarios (sometimes need to collapse root type)
             AddChildren(command, type);
+
+            return true;
         }
 
         public void AddChildren(Command command, MethodInfo method)
@@ -245,15 +248,5 @@ namespace System.CommandLine.ReflectionModel
         private string GetDescription(PropertyInfo prop, SymbolType symbolType) => StrategiesSet.DescriptionStrategies.Description(prop, symbolType);
         private string GetName(PropertyInfo prop, SymbolType symbolType) => StrategiesSet.NameStrategies.Name(prop, symbolType);
 
-        public void UseDefaults()
-        {
-            StrategiesSet.ArgumentStrategies.UseStandard();
-            StrategiesSet.CommandStrategies.UseStandard();
-            StrategiesSet.ArityStrategies.UseStandard();
-            StrategiesSet.DescriptionStrategies.UseStandard();
-            StrategiesSet.NameStrategies.UseStandard();
-            StrategiesSet.RequiredStrategies.UseStandard();
-            StrategiesSet.SubCommandStrategies.UseStandard();
-        }
     }
 }

@@ -26,20 +26,12 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
                 : null;
         }
 
+
         public override IEnumerable<string> StrategyDescriptions
          => AttributeStrategies.StrategyDescriptions;
-    }
-
-    public static class ArityStrategiesExtensions
-    {
-        public static ArityStrategies AllStandard(this ArityStrategies arityStrategies)
-             => arityStrategies.HasStandardAttribute();
-
-        public static ArityStrategies HasStandardAttribute(this ArityStrategies arityStrategies)
-        {
-            arityStrategies.AttributeStrategies.Add<CmdArityAttribute>(a => new ArityDescriptor(((CmdArityAttribute)a).MinArgCount,
-                                                                                                ((CmdArityAttribute)a).MaxArgCount));
-            return arityStrategies;
-        }
+        public override void UseStandard() 
+            => AttributeStrategies.Add<CmdArityAttribute>(
+                            a => new ArityDescriptor(((CmdArityAttribute)a).MinArgCount,
+                                                     ((CmdArityAttribute)a).MaxArgCount));
     }
 }

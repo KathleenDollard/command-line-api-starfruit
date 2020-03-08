@@ -8,20 +8,20 @@ using System.Runtime.CompilerServices;
 
 namespace StarFruit
 {
-    class Program
+class Program
+{
+public static int Main(Dotnet args)
+    => args switch
     {
-        public static int Main(Dotnet args)
-            => args switch
-            {
-                Run run => Run(run.DryRun, run.Force, run.Language, run.Name, run.Output, run.Project, run.TemplateName),
-                Install install => Install(install),
-                Uninstall uninstall => Uninstall(uninstall),
-                List list => DoWork(list),
-                Search search => DoWork(search),
-                Update update => Update(update),
-                Dotnet cli => DoWork(cli),
-                _ => throw new InvalidOperationException()
-            };
+        Run run => Run(run.DryRun, run.Force, run.Language, run.Name, run.Output, run.Project, run.TemplateName),
+        Install install => Install(install),
+        Uninstall uninstall => Uninstall(uninstall),
+    List list => DoWork(list),
+    Search search => DoWork(search),
+    Update update => Update(update),
+    Dotnet cli => DoWork(cli),
+    _ => throw new InvalidOperationException()
+};
 
 
         private static int Update(Update update) => DoWork<Update>(update);

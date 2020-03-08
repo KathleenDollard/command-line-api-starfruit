@@ -31,11 +31,18 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
                     ||
                     AttributeStrategies
                     .AreAnyTrue(propertyInfo, symbolType);
-
+       
         public override IEnumerable<string> StrategyDescriptions
             => AttributeStrategies.StrategyDescriptions
                .Union(NameStrategies.StrategyDescriptions)
                .Union(TypeStrategies.Select(s => s.StrategyDescription));
+
+        public override void UseStandard()
+        {
+            TypeStrategies.Add(new IsCommandComplexTypeStrategy());
+            NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Command");
+            AttributeStrategies.Add<CmdCommandAttribute>();
+        }
     }
 
     public abstract class IsCommandTypeStrategy : StrategyBase
@@ -55,35 +62,5 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
                      && !CommandMaker.ommittedTypes.Contains(type);
 
         public override string StrategyDescription => "Complex Type Strategy";
-    }
-
-    public static class IsCommandStrategiesExtensions
-    {
-        public static CommandStrategies AllStandard(this CommandStrategies commandStrategies)
-            => commandStrategies
-                    .HasStandardAttribute()
-                    .HasStandardNaming()
-                    .IsComplexType();
-
-        public static CommandStrategies IsComplexType(this CommandStrategies commandStrategies)
-        {
-            commandStrategies.TypeStrategies.Add(new IsCommandComplexTypeStrategy());
-            return commandStrategies;
-        }
-
-        public static CommandStrategies HasStandardNaming(this CommandStrategies commandStrategies)
-        {
-            commandStrategies.NameStrategies.Add(StringContentStrategy.StringPosition.Suffix, "Command");
-            return commandStrategies;
-        }
-
-        public static CommandStrategies HasStandardAttribute(this CommandStrategies commandStrategies)
-        {
-            commandStrategies.AttributeStrategies.Add<CmdCommandAttribute>();
-            return commandStrategies;
-        }
-
-
-
     }
 }

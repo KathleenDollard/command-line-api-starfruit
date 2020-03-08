@@ -42,22 +42,28 @@ namespace System.CommandLine.ReflectionModel.Strategies
               Path.GetDirectoryName(assembly.Location),
               Path.GetFileNameWithoutExtension(assembly.Location) + ".xml");
 
-        private (bool found, string description) GetDescriptionInternal(MethodInfo methodInfo, string name) 
-        => DocReader.TryGetMethodDescription(methodInfo, out MethodHelpMetadata commandHelpMetdata)
-                    && commandHelpMetdata.ParameterDescriptions.TryGetValue(name, out string parameterDescription)
-            ? (true, parameterDescription)
-            : ((bool found, string description))(false, null);
+        private (bool found, string description) GetDescriptionInternal(MethodInfo methodInfo, string name)
+        => DocReader is null
+            ? ((bool found, string description))(false, null)
+            : DocReader.TryGetMethodDescription(methodInfo, out MethodHelpMetadata commandHelpMetdata)
+                        && commandHelpMetdata.ParameterDescriptions.TryGetValue(name, out string parameterDescription)
+                ? (true, parameterDescription)
+                : ((bool found, string description))(false, null);
 
-        private (bool found, string description) GetDescriptionInternal(PropertyInfo propertyInfo, string name)
-        => DocReader.TryGetTypeDescription(propertyInfo.DeclaringType, out TypeHelpMetadata typeHelpMetdata)
-                    && typeHelpMetdata.PropertyDescriptions.TryGetValue(name, out string propertyDescription)
-            ? (true, propertyDescription)
-            : ((bool found, string description))(false, null);
+        private (bool found, string description) GetDescriptionInternal(PropertyInfo propertyInfo, string name) 
+        => DocReader is null
+            ? ((bool found, string description))(false, null)
+            : DocReader.TryGetTypeDescription(propertyInfo.DeclaringType, out TypeHelpMetadata typeHelpMetdata)
+                            && typeHelpMetdata.PropertyDescriptions.TryGetValue(name, out string propertyDescription)
+                ? (true, propertyDescription)
+                : ((bool found, string description))(false, null);
 
         private (bool found, string description) GetDescriptionInternal(Type type, string name)
-        => DocReader.TryGetTypeDescription(type, out TypeHelpMetadata typeHelpMetdata)
-            ? (true, typeHelpMetdata.Description )
-            : ((bool found, string description))(false, null);
+        => DocReader is null
+            ? ((bool found, string description))(false, null)
+            : DocReader.TryGetTypeDescription(type, out TypeHelpMetadata typeHelpMetdata)
+                ? (true, typeHelpMetdata.Description)
+                : ((bool found, string description))(false, null);
 
         internal (bool found, string description) GetDescription(object info, string name)
         => info switch

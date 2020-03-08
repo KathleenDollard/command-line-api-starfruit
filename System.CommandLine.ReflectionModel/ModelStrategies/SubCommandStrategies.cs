@@ -14,6 +14,9 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
 
         public override IEnumerable<string> StrategyDescriptions
             => TypeStrategies.Select(s => s.StrategyDescription);
+
+        public override void UseStandard() 
+            => TypeStrategies.Add(new TypeStrategy((type, typeCache) => typeCache.GetDerivedTypes(type)));
     }
 
     public class TypeStrategy : StrategyBase
@@ -81,16 +84,4 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
         }
     }
 
-    public static class SubCommandStrategiesExtensions
-    {
-        public static SubCommandStrategies AllStandard(this SubCommandStrategies subCommandStrategies)
-            => subCommandStrategies.DerivedTypes();
-
-        public static SubCommandStrategies DerivedTypes(this SubCommandStrategies subCommandStrategies)
-        {
-
-            subCommandStrategies.TypeStrategies.Add(new TypeStrategy((type, typeCache) => typeCache.GetDerivedTypes(type)));
-            return subCommandStrategies;
-        }
-    }
 }

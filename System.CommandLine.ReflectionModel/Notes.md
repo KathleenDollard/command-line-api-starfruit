@@ -1,4 +1,8 @@
-﻿## Basic goals
+﻿Twitter threads on better CLI
+https://twitter.com/quorralyne/status/1225414312950403072?s=20
+
+
+## Basic goals
 
 We have two orthogonal expectations: 
 
@@ -13,7 +17,8 @@ To address this, the problem a few known commonalities and examples (this list w
 
 * Attribute (Attributes in Reflection and Roslyn, child values in JSON, not used in OptDoc)
   * Bool (presence of attribute is generally sufficient for true)
-  * String
+  * String or other native type
+  * Custom type
 * Strings (grabbing meaning from names, happily this is universal. )
 
 A strategy is a single type of rule like: determining if a name has the "Arg" suffix
@@ -29,6 +34,34 @@ Most of the things strategies are needed for require a strategy. Defaults are no
 People need to understand strageies rules. They need to self describe. This is started with the Description abstract property on Strategy. We also need strategy on Strategies to include the logic and a grouping Description that describes the purpose of each (IsArgument vs. SubCommands vs Description) 
 
 People may need additional tools to debug why their model was built the way it was. Once we have descriptions, we can see if this is a problem. (This would be a different user, one debugging JSON or reflection input, not the rules themselves.)
+
+## Examples
+
+Description rules: 
+- "description" string attribute value (this has special interpretation for XML Docs)
+
+IsArgument rules:
+- Name ends in "Arg" or "Argument"
+- "argument" bool attribute 
+
+Arity rules:
+- "arity" attribute custom arity type
+
+IsCommand rules:
+- "command" bool attribute
+- Name ends in "Cmd"
+- ComplexType strategy
+
+Name rules:
+- "name" string attribute
+- "option" or "arg" attribute Name property if present
+- item name
+
+IsRequired rules:
+- "required" bool attribute
+- Option: "option" attribute OptionRequired property
+- Argument: "option" attribute ArgumentRequired property
+- "argument" attribute Required property
 
 ## Source Generation
 
