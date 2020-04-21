@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionModel.Strategies;
 using System.Reflection;
 
@@ -18,7 +19,6 @@ namespace System.CommandLine.ReflectionModel.ModelStrategies
 
         private string GetName(IEnumerable<Attribute> attributes, string defaultValue, SymbolType symbolType)
         {
-            // order does matter here, attributes win over Xml Docs
             var (_, name) = AttributeStrategies.GetFirstValue(attributes, symbolType);
 
             return name is null

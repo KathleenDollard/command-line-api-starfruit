@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.CommandLine.Binding;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.CommandLine.ReflectionModel.Strategies;
@@ -14,7 +15,7 @@ namespace System.CommandLine.ReflectionModel.AppModelSources
     public class ReflectionAppModelSource : AppModelSourceBase
     {
 
-        private MethodInfo methodInfo;
+        private readonly MethodInfo methodInfo;
         private object target;
         public StrategiesSet StrategiesSet { get; } = new StrategiesSet();
 

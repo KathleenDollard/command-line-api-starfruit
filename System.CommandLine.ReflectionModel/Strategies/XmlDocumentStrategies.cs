@@ -5,6 +5,7 @@ using System.CommandLine.ReflectionModel.XmlDocument;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.ReflectionModel.Strategies
 {

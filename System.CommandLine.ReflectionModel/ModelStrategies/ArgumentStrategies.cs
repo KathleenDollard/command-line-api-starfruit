@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.CommandLine.ReflectionModel.Strategies;
-
+using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.ReflectionModel.ModelStrategies
 {

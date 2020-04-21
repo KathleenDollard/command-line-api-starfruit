@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Xunit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace System.CommandLine.ReflectionModel.Tests
 {
@@ -416,8 +417,7 @@ namespace System.CommandLine.ReflectionModel.Tests
             command.Children.OfType<Command>().Should().HaveCount(2);
         }
 
-
-
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void SampleMethod([CmdArgument] [CmdArity(MinArgCount = 1, MaxArgCount = 3)][Description("Fred")]string A,
                                  string BArgument,
                                  [Description("George")]string C,

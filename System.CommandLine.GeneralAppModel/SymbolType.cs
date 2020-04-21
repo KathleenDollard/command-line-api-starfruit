@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.ReflectionModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
     public enum SymbolType
     {

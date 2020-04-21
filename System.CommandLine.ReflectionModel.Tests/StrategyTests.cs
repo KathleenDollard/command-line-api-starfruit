@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -567,11 +569,18 @@ namespace System.CommandLine.ReflectionModel.Tests
         }
 
 
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void OptionSample([CmdOption(Name = "A2", Description = "Sue", OptionRequired = true, ArgumentRequired = true)] string A, string BArgument, string C, [CmdOption()] string D) { }
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void ArgumentSample([CmdArgument(Name = "A2", Description = "Joe")] string A, string BArgument, string C, [CmdArgument()] string D) { }
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void CommandSample([CmdCommand(Name = "A2", Description = "Sam")] string A, string BCommand, string C, [CmdCommand()] string D) { }
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void AritySample([CmdArity(MinArgCount = 1, MaxArgCount = 3)] string A, string C) { }
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void DescriptionSample([Description("Fred")] string A, string C) { }
+        [SuppressMessage("Usage", "xUnit1013:Public method should be marked as theory", Justification = "It isn't a theory")]
         public void NameSample([CmdName("Terry")] string A, string C) { }
 
         public class ArgumentSampleClass

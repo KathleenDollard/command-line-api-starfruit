@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
     <ProjectReference Include="..\System.CommandLine.ReflectionModel\System.CommandLine.ReflectionModel.csproj" />
   </ItemGroup>
 

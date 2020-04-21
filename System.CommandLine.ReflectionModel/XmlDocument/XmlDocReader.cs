@@ -156,7 +156,7 @@ namespace System.CommandLine.ReflectionModel.XmlDocument
             //    }
             //}
 
-            return true;
+           // return true;
         }
 
         private static void AppendTypeName(StringBuilder sb, Type type)

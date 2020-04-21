@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.CommandLine;
+using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.ReflectionModel.Strategies
 {
@@ -61,7 +62,7 @@ namespace System.CommandLine.ReflectionModel.Strategies
         protected IEnumerable<AttributeStrategy<T>> Strategies
             => attributeStrategies;
 
-        public void AddInternal(AttributeStrategy<T> strategy)
+        protected void AddInternal(AttributeStrategy<T> strategy)
                             => attributeStrategies.Add((strategy));
 
         public void Add<TAttribute>(Expression<Func<Attribute, T>> extractFunc, SymbolType symbolType = SymbolType.All)

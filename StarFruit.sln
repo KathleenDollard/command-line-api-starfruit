@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.Reflecti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.ReflectionModel.Tests", "System.CommandLine.ReflectionModel.Tests\System.CommandLine.ReflectionModel.Tests.csproj", "{7AB563D5-F3FF-40FC-9CC8-273FA45D257B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "Playground\Playground.csproj", "{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.CommandLine.GeneralAppModel", "System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj", "{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
