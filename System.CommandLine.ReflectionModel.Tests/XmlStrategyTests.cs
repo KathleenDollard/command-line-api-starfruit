@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-
-namespace System.CommandLine.ReflectionModel.Tests
+﻿namespace System.CommandLine.ReflectionModel.Tests
 {
     public class XmlStrategyTests
     {

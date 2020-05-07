@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
-using System.CommandLine.ReflectionModel.Strategies;
-using System.Linq;
 using System.Reflection;
 using ArityAttributeStrategies = System.CommandLine.ReflectionModel.Strategies.AttributeStrategies<System.CommandLine.GeneralAppModel.ArityDescriptor>;
 

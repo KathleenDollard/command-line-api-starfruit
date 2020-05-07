@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.CommandLine.GeneralAppModel.Descriptors
+﻿namespace System.CommandLine.GeneralAppModel.Descriptors
 {
     public class DefaultValueDescriptor
     {

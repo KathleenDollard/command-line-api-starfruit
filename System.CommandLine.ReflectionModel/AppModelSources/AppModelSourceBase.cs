@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.CommandLine.ReflectionModel.AppModelSources
+﻿namespace System.CommandLine.ReflectionModel.AppModelSources
 {
-   public abstract class AppModelSourceBase
+    public abstract class AppModelSourceBase
     {
         // Expected pattern: 
         //   Create new model source

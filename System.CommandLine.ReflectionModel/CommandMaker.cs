@@ -3,7 +3,6 @@ using System.CommandLine.Binding;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;

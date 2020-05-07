@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.CommandLine.Binding;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.Invocation;
@@ -8,7 +6,6 @@ using System.CommandLine.Parsing;
 using System.CommandLine.ReflectionModel.Strategies;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace System.CommandLine.ReflectionModel.AppModelSources
 {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
     public class CommandDescriptor
     {
         public object Raw { get; set; }
-        public List<string> Aliases { get; } = new List<string>();
+        public IEnumerable<string> Aliases { get; set; } 
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsHidden { get; set; }

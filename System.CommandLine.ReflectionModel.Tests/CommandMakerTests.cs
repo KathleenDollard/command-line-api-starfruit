@@ -1,11 +1,7 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.CommandLine.ReflectionModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Xunit;
 using System.Diagnostics.CodeAnalysis;
 

@@ -5,7 +5,7 @@
 
 using System.CommandLine.Builder;
 using System.CommandLine.Parsing;
-using System.CommandLine.Rendering;
+//using System.CommandLine.Rendering;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -79,8 +79,9 @@ namespace System.CommandLine.ReflectionModel
         {
             var builder = new CommandLineBuilder();
             configureFunc(builder, method, target);
-            builder.UseDefaults()
-                    .UseAnsiTerminalWhenAvailable();
+            builder.UseDefaults();
+           // builder.UseDefaults()
+           //.UseAnsiTerminalWhenAvailable();
             // .UseGui()
             return builder.Build();
         }

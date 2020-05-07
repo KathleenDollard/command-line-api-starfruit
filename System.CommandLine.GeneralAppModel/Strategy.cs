@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Text;
 
 namespace System.CommandLine.GeneralAppModel
 {

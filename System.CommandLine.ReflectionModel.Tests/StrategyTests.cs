@@ -1,12 +1,9 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionModel.ModelStrategies;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using Xunit;
 
 namespace System.CommandLine.ReflectionModel.Tests
