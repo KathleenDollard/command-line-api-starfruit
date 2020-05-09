@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Tests
@@ -25,6 +26,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
             }
             return null;
         }
+
+        public static IEnumerable<MethodInfo> GetMethodsOnDeclaredType(this Type type)
+           => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
     }
 }

@@ -5,32 +5,79 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class StandardRules
     {
-        public static RuleSet<ArityDescriptor> SetStandardArityRules(RuleSet<ArityDescriptor> rules)
+        public static Strategy SetStandardArityRules(this Strategy strategy)
+        {
+            strategy.ArityRules.SetStandardArityRules();
+            return strategy;
+        }
+
+        public static Strategy SetStandardDescriptionRules(this Strategy strategy)
+        {
+            strategy.DescriptionRules.SetStandardDescriptionRules();
+            return strategy;
+        }
+
+        public static Strategy SetStandardArgumentRules(this Strategy strategy)
+        {
+            strategy.ArgumentRules.SetStandardArgumentRules();
+            return strategy;
+        }
+
+        public static Strategy SetStandardCommandRules(this Strategy strategy)
+        {
+            strategy.CommandRules.SetStandardCommandRules();
+            return strategy;
+        }
+
+        public static Strategy SetStandardNameRules(this Strategy strategy)
+        {
+            strategy.NameRules.SetStandardNameRules();
+            return strategy;
+        }
+
+        public static Strategy SetStandardRequiredRules(this Strategy strategy)
+        {
+            strategy.RequiredRules.SetStandardRequiredRules();
+            return strategy;
+        }
+
+        public static Strategy SetStandardSubCommandRules(this Strategy strategy)
+        {
+            strategy.SubCommandRules.SetStandardSubCommandRules();
+            return strategy;
+        }
+
+
+
+
+        public static RuleSet<ArityDescriptor> SetStandardArityRules(this RuleSet<ArityDescriptor> rules)
            => rules
                 .Add(new ComplexAttributeRule<ArityDescriptor>(
                            "Arity", new string[] { "MinArgCount", "MaxArgCount" }));
 
-        public static RuleSet<string> SetStandardDescriptionRules(RuleSet<string> rules)
+        public static RuleSet<string> SetStandardDescriptionRules(this RuleSet<string> rules)
            => rules
                 .Add(new AttributeRule<string>("Description", "string", "Description"))
                 .Add(new AttributeRule<string>("Command", "string", "Description", SymbolType.Command))
                 .Add(new AttributeRule<string>("Argument", "string", "Description", SymbolType.Argument))
                 .Add(new AttributeRule<string>("Option", "string", "Description", SymbolType.Option))
-                .Add(new LabelRule<string>("XmlDocComments"));
+                // TODO: .Add(new LabelRule<string>("XmlDocComments") )
+                ;
 
-        public static RuleSet<string> SetStandardArgumentRules(RuleSet<string> rules)
+        public static RuleSet<string> SetStandardArgumentRules(this RuleSet<string> rules)
            => rules
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg"))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument"))
                 .Add(new AttributeRule<string>("Argument", "string", "Name"));
 
-        public static RuleSet<string> SetStandardCommandRules(RuleSet<string> rules)
+        public static RuleSet<string> SetStandardCommandRules(this RuleSet<string> rules)
            => rules
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
                 .Add(new AttributeRule<string>("Command", "string", "Name"))
-                .Add(new LabelRule<string>("ComplexUserType"));
+                // TODO: .Add(new LabelRule<string>("ComplexUserType"))
+            ;
 
-        public static RuleSet<string> SetStandardNameRules(RuleSet<string> rules)
+        public static RuleSet<string> SetStandardNameRules(this RuleSet<string> rules)
         {
             rules
                 .Add(new AttributeRule<string>("Name", "string", "Name"))
@@ -41,15 +88,16 @@ namespace System.CommandLine.GeneralAppModel
             return rules;
         }
 
-        public static RuleSet<bool> SetStandardRequiredRules(RuleSet<bool> rules)
+        public static RuleSet<bool> SetStandardRequiredRules(this RuleSet<bool> rules)
            => rules
                 .Add(new BoolAttributeRule("Required"))
                 .Add(new AttributeRule<bool>("Argument", "bool", "Required", SymbolType.Option))
                 .Add(new AttributeRule<bool>("Option", "bool", "OptionRequired", SymbolType.Option))
                 .Add(new AttributeRule<bool>("Option", "bool", "ArgumentRequired", SymbolType.Argument));
 
-        public static RuleSet<IEnumerable<CommandDescriptor>> SetStandardSubCommandRules(RuleSet<IEnumerable<CommandDescriptor>> rules)
+        public static RuleSet<IEnumerable<CommandDescriptor>> SetStandardSubCommandRules(this RuleSet<IEnumerable<CommandDescriptor>> rules)
            => rules
-                .Add(new LabelRule<IEnumerable<CommandDescriptor>>("DerivedTypes"));
+                // TODO: .Add(new LabelRule<IEnumerable<CommandDescriptor>>("DerivedTypes"))
+               ;
     }
 }

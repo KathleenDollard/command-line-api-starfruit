@@ -83,13 +83,14 @@ namespace System.CommandLine.GeneralAppModel
      
         private object[] FlattenItems(object[] items)
         {
-            if (items.Any(i => i is IEnumerable))
+            if (items.Any(i => ShouldFlatten(i)))
             {
                 var list = new List<object>();
                 foreach (var item in items)
                 {
-                    if (item is IEnumerable subItems)
+                    if (ShouldFlatten(item))
                     {
+                        var subItems = item as IEnumerable;
                         foreach (var subItem in subItems)
                         {
                             list.Add(subItem);
@@ -103,6 +104,11 @@ namespace System.CommandLine.GeneralAppModel
                 return list.ToArray();
             }
             return items;
+
+            static bool ShouldFlatten(object i)
+            {
+                return (i is IEnumerable) && i.GetType() != typeof(string);
+            }
         }
     }
 }
