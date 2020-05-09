@@ -6,44 +6,32 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    internal class MethodInfoAppModel : ReflectionAppModel
+    internal class MethodInfoAppModel : ReflectionAppModel<MethodInfo, ParameterInfo>
     {
-        private readonly object target;
         private readonly MethodInfo entryMethod;
-        private readonly ParameterClassification parameterClassification;
+        private readonly AttributeClassification<ParameterInfo> sourceClassification;
 
         private MethodInfoAppModel(Strategy strategy,
-                               object dataSource,
+                              MethodInfo entryMethod,
                                object parentDataSource,
                                Type[] ommittedTypes = null)
-            : base(strategy, dataSource, parentDataSource, ommittedTypes)
-        { }
+            : base(strategy, entryMethod, parentDataSource, ommittedTypes)
+        {
+            _ = entryMethod ?? throw new ArgumentNullException(nameof(entryMethod));
+            this.entryMethod = entryMethod;
+            sourceClassification = new AttributeClassification<ParameterInfo>(strategy, entryMethod.GetParameters());
+        }
 
         public MethodInfoAppModel(Strategy strategy,
                               MethodInfo entryMethod,
                               Type[] ommittedTypes = null)
             : this(strategy, entryMethod, null, ommittedTypes)
         {
-            this.entryMethod = entryMethod;
-            parameterClassification = new ParameterClassification(strategy, entryMethod.GetParameters());
-        }
-
-
-        protected override CommandDescriptor GetCommand()
-        {
-            _ = entryMethod ?? throw new ArgumentNullException(nameof(entryMethod));
-
-            var command = BuildCommand();
-
-            var arguments = parameterClassification.ArgumentItems
-                                .Select(p => BuildArgument(p, SymbolType.Argument));
-
-            return command;
         }
 
         protected override IEnumerable<ArgumentDescriptor> GetArguments()
         {
-            return parameterClassification
+            return sourceClassification
                         .ArgumentItems
                         .Select(p => BuildArgument(p, SymbolType.Argument));
 
@@ -51,19 +39,15 @@ namespace System.CommandLine.ReflectionAppModel
 
         protected override IEnumerable<OptionDescriptor> GetOptions()
         {
-            throw new NotImplementedException();
+            return sourceClassification
+                        .OptionItems
+                        .Select(p => BuildOption(p));
         }
 
         protected override IEnumerable<CommandDescriptor> GetSubCommands()
         {
             throw new NotImplementedException();
         }
-
-        private CommandDescriptor BuildCommand()
-            => new CommandDescriptor
-            {
-                Name = GetValue(Strategy.NameRules, entryMethod, SymbolType.Command)
-            };
 
         private ArgumentDescriptor BuildArgument(ParameterInfo param, SymbolType symbolType)
             => new ArgumentDescriptor
@@ -79,8 +63,7 @@ namespace System.CommandLine.ReflectionAppModel
             };
 
         private OptionDescriptor BuildOption(ParameterInfo param)
-        {
-            return new OptionDescriptor
+            => new OptionDescriptor
             {
                 Raw = param,
                 Name = GetValue(Strategy.NameRules, param, SymbolType.Option),
@@ -90,7 +73,6 @@ namespace System.CommandLine.ReflectionAppModel
                 Arguments = new ArgumentDescriptor[] { BuildArgument(param, SymbolType.Option) },
                 Required = GetValue(Strategy.RequiredRules, param, SymbolType.Option)
             };
-        }
 
         private DefaultValueDescriptor GetDefaultValue(RuleSet<DefaultValueDescriptor> defaultRules,
                                                        ParameterInfo param,
@@ -105,33 +87,5 @@ namespace System.CommandLine.ReflectionAppModel
         {
             throw new NotImplementedException();
         }
-
-        private T GetValue<T>(RuleSet<T> rules, ParameterInfo param, SymbolType symbolType)
-            => rules.GetFirstOrDefault(symbolType,
-                                        param.GetCustomAttributes(),
-                                        param.Name,
-                                        param.Name);
-
-        private T GetValue<T>(RuleSet<T> rules, MethodInfo method, SymbolType symbolType)
-            => rules.GetFirstOrDefault(symbolType,
-                                         method.GetCustomAttributes(),
-                                         method.Name,
-                                         new IdentityWrapper<string>(method.Name));
-
-        private IEnumerable<T> GetAll<T>(RuleSet<T> rules, ParameterInfo param, SymbolType symbolType)
-            => rules.GetAll(symbolType,
-                                    param.GetCustomAttributes(),
-                                    param.Name,
-                                    param.Name);
-
-
-        private class ParameterClassification : ReflectionSourceClassification<ParameterInfo>
-        {
-            internal ParameterClassification(Strategy strategy, IEnumerable<ParameterInfo> sourceItems)
-                : base(strategy, sourceItems)
-            {
-            }
-        }
     }
-
 }

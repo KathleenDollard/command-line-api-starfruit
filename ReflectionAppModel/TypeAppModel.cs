@@ -6,44 +6,32 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    internal class TypeAppModel : ReflectionAppModel
+    internal class TypeAppModel : ReflectionAppModel<Type, PropertyInfo>
     {
-        private readonly object target;
         private readonly Type entryType;
-        private readonly PropertyClassification propertyClassification;
+        private readonly AttributeClassification<PropertyInfo> sourceClassification;
 
         private TypeAppModel(Strategy strategy,
-                               object dataSource,
+                              Type entryType,
                                object parentDataSource,
                                Type[] ommittedTypes = null)
-            : base(strategy, dataSource, parentDataSource, ommittedTypes)
-        { }
+            : base(strategy, entryType, parentDataSource, ommittedTypes)
+        {
+            _ = entryType ?? throw new ArgumentNullException(nameof(entryType));
+            this.entryType = entryType;
+            sourceClassification = new AttributeClassification<PropertyInfo>(strategy,entryType.GetProperties());
+        }
 
         public TypeAppModel(Strategy strategy,
                               Type entryType,
                               Type[] ommittedTypes = null)
             : this(strategy, entryType, null, ommittedTypes)
         {
-            this.entryType = entryType;
-            propertyClassification = new PropertyClassification(strategy, entryType.GetProperties());
-        }
-
-
-        protected override CommandDescriptor GetCommand()
-        {
-            _ = entryType ?? throw new ArgumentNullException(nameof(entryType));
-
-            var command = BuildCommand();
-
-            var arguments = propertyClassification.ArgumentItems
-                                .Select(p => BuildArgument(p, SymbolType.Argument));
-
-            return command;
         }
 
         protected override IEnumerable<ArgumentDescriptor> GetArguments()
         {
-            return propertyClassification
+            return sourceClassification
                         .ArgumentItems
                         .Select(p => BuildArgument(p, SymbolType.Argument));
 
@@ -51,7 +39,9 @@ namespace System.CommandLine.ReflectionAppModel
 
         protected override IEnumerable<OptionDescriptor> GetOptions()
         {
-            throw new NotImplementedException();
+            return sourceClassification
+                        .OptionItems
+                        .Select(p => BuildOption(p));
         }
 
         protected override IEnumerable<CommandDescriptor> GetSubCommands()
@@ -59,15 +49,8 @@ namespace System.CommandLine.ReflectionAppModel
             throw new NotImplementedException();
         }
 
-        private CommandDescriptor BuildCommand()
-             => new CommandDescriptor
-             {
-                 Name = GetValue(Strategy.NameRules, entryType, SymbolType.Command)
-             };
-
         private ArgumentDescriptor BuildArgument(PropertyInfo prop, SymbolType symbolType)
-        {
-            return new ArgumentDescriptor
+            => new ArgumentDescriptor
             {
                 Raw = prop,
                 Name = GetValue(Strategy.NameRules, prop, symbolType),
@@ -78,11 +61,9 @@ namespace System.CommandLine.ReflectionAppModel
                 DefaultValue = GetDefaultValue(Strategy.DefaultRules, prop, symbolType),
                 Required = GetValue(Strategy.RequiredRules, prop, symbolType)
             };
-        }
 
         private OptionDescriptor BuildOption(PropertyInfo prop)
-        {
-            return new OptionDescriptor
+            => new OptionDescriptor
             {
                 Raw = prop,
                 Name = GetValue(Strategy.NameRules, prop, SymbolType.Option),
@@ -92,7 +73,6 @@ namespace System.CommandLine.ReflectionAppModel
                 Arguments = new ArgumentDescriptor[] { BuildArgument(prop, SymbolType.Option) },
                 Required = GetValue(Strategy.RequiredRules, prop, SymbolType.Option)
             };
-        }
 
         private DefaultValueDescriptor GetDefaultValue(RuleSet<DefaultValueDescriptor> defaultRules,
                                                        PropertyInfo prop,
@@ -106,31 +86,6 @@ namespace System.CommandLine.ReflectionAppModel
                                          SymbolType symbolType)
         {
             throw new NotImplementedException();
-        }
-
-        private T GetValue<T>(RuleSet<T> rules, PropertyInfo prop, SymbolType symbolType)
-            => rules.GetFirstOrDefault(symbolType,
-                                    prop.GetCustomAttributes(),
-                                    prop.Name);
-
-        private T GetValue<T>(RuleSet<T> rules, Type type, SymbolType symbolType)
-            => rules.GetFirstOrDefault(symbolType,
-                                            type.GetCustomAttributes(),
-                                            type.Name,
-                                            new IdentityWrapper<string>(type.Name));
-
-        private IEnumerable<T> GetAll<T>(RuleSet<T> rules, PropertyInfo prop, SymbolType symbolType)
-            => rules.GetAll(symbolType,
-                                    prop.GetCustomAttributes(),
-                                    prop.Name);
-
-
-        private class PropertyClassification : ReflectionSourceClassification<PropertyInfo>
-        {
-            internal PropertyClassification(Strategy strategy, IEnumerable<PropertyInfo> sourceItems)
-                : base(strategy, sourceItems)
-            {
-            }
         }
     }
 }

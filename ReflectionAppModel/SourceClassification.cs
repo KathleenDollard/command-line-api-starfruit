@@ -4,20 +4,33 @@ using System.CommandLine.GeneralAppModel;
 using System.Linq;
 using System.Text;
 
-namespace ReflectionAppModel
+namespace System.CommandLine.ReflectionAppModel
 {
-    internal abstract class SourceClassification<T>
+    /// <summary>
+    /// This class supports separating a list into those things used for Arguments, Options 
+    /// and SubCommands. Unless overridden in a derived class, the default is to recognize
+    /// ArgumentItems and OptionItems and the rest are SubCommands. 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class SourceClassification<T>
     {
         internal SourceClassification(Strategy strategy, IEnumerable<T> sourceItems)
+        {
+            Classify(strategy, sourceItems);
+        }
+
+        protected virtual void Classify(Strategy strategy, IEnumerable<T> sourceItems)
         {
             ArgumentItems = sourceItems.Where(p => Match(p, strategy.ArgumentRules));
             SubCommandItems = sourceItems.Where(p => Match(p, strategy.CommandRules));
             OptionItems = sourceItems.Except(ArgumentItems).Except(SubCommandItems).ToList();
         }
-        internal IEnumerable<T> ArgumentItems { get; }
-        internal IEnumerable<T> OptionItems { get; }
-        internal IEnumerable<T> SubCommandItems { get; }
+
+        internal IEnumerable<T> ArgumentItems { get; private set; }
+        internal IEnumerable<T> OptionItems { get; private set; }
+        internal IEnumerable<T> SubCommandItems { get; private set; }
 
         protected abstract bool Match(T item, RuleSet<string> rules);
+
     }
 }
