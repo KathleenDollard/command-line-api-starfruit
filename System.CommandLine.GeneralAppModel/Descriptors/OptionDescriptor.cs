@@ -2,14 +2,17 @@
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
-    public class OptionDescriptor
+    public class OptionDescriptor : SymbolDescriptorBase
     {
-        public object Raw { get; set; }
-        public IEnumerable<string> Aliases { get; set; } 
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool IsHidden { get; set; }
-        public IEnumerable< ArgumentDescriptor> Arguments { get; set; }
+        public OptionDescriptor(SymbolDescriptorBase parentSymbolDescriptorBase,
+                                object raw)
+            : base(parentSymbolDescriptorBase, raw, SymbolType.Option) { }
+
+        public IEnumerable<ArgumentDescriptor> Arguments { get; set; }
         public bool Required { get; set; }
+
+        public IEnumerable<RuleBase> AppliedRequiredRules { get; } = new List<RuleBase>();
+        // TODO: Create OptionArgumentRules, probably different than CommandArgumentRules: public IEnumerable<RuleBase> AppliedRequiredRules { get; } = new List<RuleBase>();
+
     }
 }

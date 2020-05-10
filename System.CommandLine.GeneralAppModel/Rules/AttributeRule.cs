@@ -18,21 +18,26 @@ namespace System.CommandLine.GeneralAppModel
         public string PropertyName { get; set; }
         public override string RuleDescription { get; }
 
-        protected override  IEnumerable<T> GetMatchingItems(SymbolType symbolType, object[] items)
+        protected override IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
-            return GetMatchingAttributes(symbolType, items)
+            return GetMatchingAttributes(symbolDescriptor, items)
                         .Select(a => GetProperty(a, PropertyName));
         }
 
-        private IEnumerable<Attribute> GetMatchingAttributes(SymbolType symbolType, object[] items)
+        private IEnumerable<Attribute> GetMatchingAttributes(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
-            if (SymbolType != SymbolType.All && SymbolType != symbolType)
-            {
-                return Array.Empty<Attribute>();
-            }
-            return items
+            return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
+                ? Array.Empty<Attribute>()
+                : items
                     .OfType<Attribute>()
-                    .Where(a => a.GetType().Name.Equals(AttributeName, StringComparison.OrdinalIgnoreCase));
+                    .Where(a => NewMethod(AttributeName, a));
+
+            static bool NewMethod(string attributeName, Attribute a)
+            {
+                var itemName = a.GetType().Name;
+                return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
+                    || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase) ;
+            }
         }
 
         private static T GetProperty(Attribute attribute, string propertyName)
@@ -43,11 +48,11 @@ namespace System.CommandLine.GeneralAppModel
             return Conversions.To<T>(raw);
         }
 
-        public override bool HasMatch(SymbolType symbolType, object[] items)
+        public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
-            return GetMatchingItems(symbolType, items)
+            return GetMatchingItems(symbolDescriptor, items)
                             .OfType<Attribute>()
-                            .Where(v=>!v.Equals(default))
+                            .Where(v => !v.Equals(default))
                             .Any();
 
         }

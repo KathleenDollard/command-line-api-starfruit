@@ -17,15 +17,14 @@ namespace System.CommandLine.GeneralAppModel
         public StringPosition Position { get; }
         public string CompareTo { get; }
 
-        public override bool HasMatch(SymbolType symbolType ,object[] items)
+        public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             return items
-                    .OfType<IdentityWrapper<string>>()
-                    .Select(w => Check(w.Value, Position, CompareTo))
-                    .Where(x=>x)
+                    .OfType<string>()
+                    .Where(x => Check(x, Position, CompareTo))
                     .Any();
 
-            static bool Check(string value,StringPosition position, string compareTo)
+            static bool Check(string value, StringPosition position, string compareTo)
             {
                 if (value is null)
                 {
@@ -43,15 +42,28 @@ namespace System.CommandLine.GeneralAppModel
 
         private string Strip(string s)
         {
-            return s is null
-                ? null
-                : (Position switch
-                {
-                    StringPosition.Prefix => s.Substring(CompareTo.Length),
-                    StringPosition.Suffix => s.Substring(s.Length, s.Length - CompareTo.Length),
-                    StringPosition.Contains => s.Replace(CompareTo, ""),
-                    _ => throw new ArgumentException("Unexpected position")
-                });
+            if (s is null)
+            {
+                return null;
+            }
+            if (Position == StringPosition.Prefix)
+                return s.Substring(CompareTo.Length);
+            else if (Position == StringPosition.Suffix)
+                return s.Substring(0, s.Length - CompareTo.Length);
+            else if (Position == StringPosition.Contains)
+                return s.Replace(CompareTo, "");
+            else
+                throw new ArgumentException("Unexpected position");
+
+            //return s is null
+            //    ? null
+            //    : (Position switch
+            //    {
+            //        StringPosition.Prefix => s.Substring(CompareTo.Length),
+            //        StringPosition.Suffix => s.Substring(s.Length, s.Length - CompareTo.Length),
+            //        StringPosition.Contains => s.Replace(CompareTo, ""),
+            //        _ => throw new ArgumentException("Unexpected position")
+            //    });
         }
 
         public enum StringPosition
@@ -61,13 +73,13 @@ namespace System.CommandLine.GeneralAppModel
             Contains
         }
 
-        protected override IEnumerable<string> GetMatchingItems(SymbolType symbolType, object[] items)
+        protected override IEnumerable<string> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
-            return SymbolType != SymbolType.All && SymbolType != symbolType
+            return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
                 ? Array.Empty<string>()
                 : items
                     .OfType<IdentityWrapper<string>>()
-                    .Select(w => Conversions.To<string>(Strip( w.Value.ToString())));
+                    .Select(w => Conversions.To<string>(Strip(w.Value.ToString())));
         }
 
         public override string RuleDescription

@@ -12,16 +12,16 @@ namespace System.CommandLine.GeneralAppModel
         public override string RuleDescription
             => "Identity Rule";
 
-        public override bool HasMatch(SymbolType symbolType ,object[] items)
+        public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             return items
                     .Any();
 
         }
 
-        protected override IEnumerable<T> GetMatchingItems(SymbolType symbolType, object[] items)
+        protected override IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
-            return SymbolType != SymbolType.All && SymbolType != symbolType
+            return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
                 ? Array.Empty<T>()
                 : items
                     .OfType<IdentityWrapper<T>>()

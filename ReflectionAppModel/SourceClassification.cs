@@ -21,8 +21,8 @@ namespace System.CommandLine.ReflectionAppModel
 
         protected virtual void Classify(Strategy strategy, IEnumerable<T> sourceItems)
         {
-            ArgumentItems = sourceItems.Where(p => Match(p, strategy.ArgumentRules));
-            SubCommandItems = sourceItems.Where(p => Match(p, strategy.CommandRules));
+            ArgumentItems = sourceItems.Where(p => Match(p, strategy.ArgumentRules)).ToList();
+            SubCommandItems = sourceItems.Where(p => Match(p, strategy.CommandRules)).ToList();
             OptionItems = sourceItems.Except(ArgumentItems).Except(SubCommandItems).ToList();
         }
 

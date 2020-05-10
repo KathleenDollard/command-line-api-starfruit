@@ -22,12 +22,12 @@ namespace System.CommandLine.GeneralAppModel
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<RuleBase<T>>)_rules).GetEnumerator();
 
-        public virtual T GetFirstOrDefault(SymbolType symbolType, params object[] items)
+        public virtual T GetFirstOrDefault(SymbolDescriptorBase symbolDescriptor, params object[] items)
         {
             var flattenedItems = FlattenItems(items);
             foreach (var rule in Rules)
             {
-                var (Success, Value) = rule.GetSingleOrDefault(symbolType, flattenedItems);
+                var (Success, Value) = rule.GetSingleOrDefault(symbolDescriptor, flattenedItems);
                 if (Success)
                 {
                     return Value;
@@ -36,11 +36,11 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
-        public virtual bool HasMatch(SymbolType symbolType, object[] items)
+        public virtual bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             foreach (var rule in Rules)
             {
-                var success = rule.HasMatch(symbolType, items);
+                var success = rule.HasMatch(symbolDescriptor, items);
                 if (success)
                 {
                     return true;
@@ -49,14 +49,16 @@ namespace System.CommandLine.GeneralAppModel
             return false;
         }
 
-        public virtual IEnumerable<T> GetAll(SymbolType symbolType, params object[] items)
+        public virtual IEnumerable<T> GetAll(SymbolDescriptorBase descriptor, 
+                                             IEnumerable<object> items,
+                                             SymbolDescriptorBase parentSymbolDescriptor)
         {
             var flattenedItems = FlattenItems(items);
 
             var list = new List<T>();
             foreach (var rule in Rules)
             {
-                var values = rule.GetAllNonDefault(symbolType, flattenedItems);
+                var values = rule.GetAllNonDefault(descriptor, flattenedItems);
                 list.AddRange(values);
             }
             return list;
@@ -81,7 +83,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
      
-        private object[] FlattenItems(object[] items)
+        private IEnumerable<object> FlattenItems(IEnumerable<object> items)
         {
             if (items.Any(i => ShouldFlatten(i)))
             {

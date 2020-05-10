@@ -66,25 +66,25 @@ namespace System.CommandLine.GeneralAppModel
 
         public static RuleSet<string> SetStandardArgumentRules(this RuleSet<string> rules)
            => rules
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument"))
-                .Add(new AttributeRule<string>("Argument", "string", "Name"));
+                .Add(new AttributeRule<string>("Argument", "string", "Name", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument));
 
         public static RuleSet<string> SetStandardCommandRules(this RuleSet<string> rules)
            => rules
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
                 .Add(new AttributeRule<string>("Command", "string", "Name"))
-                // TODO: .Add(new LabelRule<string>("ComplexUserType"))
+            // TODO: .Add(new LabelRule<string>("ComplexUserType"))
             ;
 
         public static RuleSet<string> SetStandardNameRules(this RuleSet<string> rules)
         {
             rules
                 .Add(new AttributeRule<string>("Name", "string", "Name"))
-                .Add(new AttributeRule<string>("Option", "string", "Name", SymbolType.Option))
-                .Add(new IdentityRule<string>());
+                .Add(new AttributeRule<string>("Option", "string", "Name", SymbolType.Option));
             rules.AddRange(SetStandardArgumentRules, SymbolType.Argument);
             rules.AddRange(SetStandardCommandRules, SymbolType.Command);
+            rules.Add(new IdentityRule<string>());
             return rules;
         }
 
@@ -97,7 +97,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public static RuleSet<IEnumerable<CommandDescriptor>> SetStandardSubCommandRules(this RuleSet<IEnumerable<CommandDescriptor>> rules)
            => rules
-                // TODO: .Add(new LabelRule<IEnumerable<CommandDescriptor>>("DerivedTypes"))
+               // TODO: .Add(new LabelRule<IEnumerable<CommandDescriptor>>("DerivedTypes"))
                ;
     }
 }

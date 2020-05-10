@@ -5,6 +5,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public class ArgumentTestData
     {
+        public object Raw { get; set; }
         public IEnumerable<string> Aliases { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -20,56 +21,5 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         //public DefaultValueDescriptor DefaultValue { get; set; }
         public bool Required { get; set; }
-    }
-
-    public static class ArgumentDataExtensions
-    {
-        public static Argument CreateArgument(this ArgumentTestData data)
-        {
-            var arg = new Argument(data.Name)
-            {
-                ArgumentType = data.ArgumentType,
-                Description = data.Description,
-                IsHidden = data.IsHidden
-            };
-            CommonTestSupport.AddAliases(arg, data.Aliases);
-            if (data.HasArity)
-            {
-                arg.Arity = new ArgumentArity(data.MinArityValues, data.MaxArityValues);
-            }
-            if (data.HasDefault)
-            {
-                arg.SetDefaultValue(data.DefaultValue);
-            }
-            return arg;
-        }
-
-        public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data)
-        {
-            var arg = new ArgumentDescriptor
-            {
-                Name = data.Name,
-                ArgumentType = data.ArgumentType,
-                Description = data.Description,
-                IsHidden = data.IsHidden,
-                Aliases = data.Aliases,
-            };
-            if (data.HasArity)
-            {
-                arg.Arity = new ArityDescriptor
-                {
-                    MinimumNumberOfValues = data.MinArityValues,
-                    MaximumNumberOfValues = data.MaxArityValues
-                };
-            }
-            if (data.HasDefault)
-            {
-                arg.DefaultValue = new DefaultValueDescriptor
-                {
-                    DefaultValue = data.DefaultValue
-                };
-            }
-            return arg;
-        }
     }
 }

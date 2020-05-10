@@ -20,11 +20,11 @@ namespace System.CommandLine.GeneralAppModel
         public RuleBase(SymbolType symbolType) : base(symbolType)
         { }
 
-        protected abstract IEnumerable<T> GetMatchingItems(SymbolType symbolType, object[] items);
-        public abstract bool HasMatch(SymbolType symbolType, object[] items);
+        protected abstract IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items);
+        public abstract bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items);
 
-        public virtual IEnumerable<T> GetAllNonDefault(SymbolType symbolType, object[] items)
-              => GetMatchingItems(symbolType, items)
+        public virtual IEnumerable<T> GetAllNonDefault(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+              => GetMatchingItems(symbolDescriptor, items)
                        .Where(v => !v.Equals(default));
 
         public RuleBase<T> WithSymbolType(SymbolType symbolType)
@@ -34,9 +34,9 @@ namespace System.CommandLine.GeneralAppModel
             return ret;
         }
 
-        public virtual (bool Success, T Value) GetSingleOrDefault(SymbolType symbolType, object[] items)
+        public virtual (bool Success, T Value) GetSingleOrDefault(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
-            var matches = GetMatchingItems(symbolType, items)
+            var matches = GetMatchingItems(symbolDescriptor, items)
                                 .Where(v => !v.Equals(default));
             return matches.Any()
                        ? (true, matches.FirstOrDefault())

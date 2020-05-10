@@ -33,13 +33,30 @@ namespace System.CommandLine.ReflectionModel.Tests.Maker
         public void CanMakeSimplestCommandDescriptorFromTypeOnNamedModel()
             => TestType<SimpleTypeNoAttributes>(new Strategy().SetAllStandardRules());
 
+        [Fact]
+        public void CanGetCommandDescriptionFromMethodAttribute()
+           => TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetAllStandardRules());
+
+        [Fact]
+        public void CanGetCommandDescriptionFromTypeAttribute()
+            => TestType<SimpleTypeWithDescriptionAttribute>(new Strategy().SetAllStandardRules());
+
+        [Fact]
+        public void CanGetArgumentFromNamedMethodParam()
+           => TestFirstMethodOnType<MethodWithParameterNamedArgs>(new Strategy().SetAllStandardRules());
+
+        [Fact]
+        public void CanGetArgumentFromNamedTypeProperty()
+            => TestType<TypeWithPropertyNamedArgs>(new Strategy().SetAllStandardRules());
+
+
         private void TestType<T>(Strategy strategy)
             where T : IHasTestData, new()
         {
             var type = typeof(T);
 
             var actual = ReflectionAppModel.ReflectionAppModel.RootCommandDescriptor(strategy, type);
-            var expected = ModelData.FromType<T>();
+            var expected = ModelData.FromType<T>().CreateDescriptor();
 
             actual.Should().BeEquivalentTo(expected);
         }
@@ -51,12 +68,9 @@ namespace System.CommandLine.ReflectionModel.Tests.Maker
             var method = type.GetMethodsOnDeclaredType().First();
 
             var actual = ReflectionAppModel.ReflectionAppModel.RootCommandDescriptor(strategy, method);
-            var expected = ModelData.FromFirstMethod<T>();
+            var expected = ModelData.FromFirstMethod<T>().CreateDescriptor();
 
             actual.Should().BeEquivalentTo(expected);
         }
-
-
-
     }
 }

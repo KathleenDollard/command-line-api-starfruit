@@ -14,12 +14,12 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string RuleDescription { get; }
 
-        public override bool HasMatch(SymbolType symbolType, object[] items)
+        public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             throw new NotImplementedException();
         }
 
-        protected override IEnumerable<T> GetMatchingItems(SymbolType symbolType, object[] items)
+        protected override IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             throw new NotImplementedException();
         }
