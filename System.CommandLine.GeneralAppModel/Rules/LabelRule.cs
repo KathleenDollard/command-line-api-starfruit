@@ -2,7 +2,7 @@
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class LabelRule<T> : RuleBase<T>
+    public class LabelRule : RuleBase
     {
         public LabelRule(string label, SymbolType symbolType = SymbolType.All)
             : base(symbolType)

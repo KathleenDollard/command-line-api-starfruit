@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class StringContentsRule : IdentityRule<string>
+    public class StringContentsRule : IdentityRule
     {
         public StringContentsRule(StringPosition position,
                                  string compareTo,

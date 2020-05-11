@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class IdentityRule<T> : RuleBase<T>
+    public class IdentityRule : RuleBase
     {
         public IdentityRule(SymbolType symbolType = SymbolType.All)
               : base(symbolType)

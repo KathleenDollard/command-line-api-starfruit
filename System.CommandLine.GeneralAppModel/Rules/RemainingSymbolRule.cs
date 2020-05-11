@@ -6,7 +6,7 @@ using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Rules
 {
-    public class RemainingSymbolRule : RuleBase<string>
+    public class RemainingSymbolRule : RuleBase
     {
         public RemainingSymbolRule(SymbolType symbolType)
             : base(symbolType)
