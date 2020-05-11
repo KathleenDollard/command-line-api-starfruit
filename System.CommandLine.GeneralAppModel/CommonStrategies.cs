@@ -12,6 +12,7 @@ namespace System.CommandLine.GeneralAppModel
                 .SetStandardArityRules()
                 .SetStandardArgumentRules()
                 .SetStandardCommandRules()
+                .SetStandardOptionRules()
                 .SetStandardDescriptionRules()
                 .SetStandardNameRules()
                 .SetStandardRequiredRules()

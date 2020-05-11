@@ -22,7 +22,7 @@ namespace System.CommandLine.GeneralAppModel
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<RuleBase<T>>)_rules).GetEnumerator();
 
-        public virtual T GetFirstOrDefault(SymbolDescriptorBase symbolDescriptor, params object[] items)
+        public virtual T GetFirstOrDefault(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             var flattenedItems = FlattenItems(items);
             foreach (var rule in Rules)
@@ -49,7 +49,7 @@ namespace System.CommandLine.GeneralAppModel
             return false;
         }
 
-        public virtual IEnumerable<T> GetAll(SymbolDescriptorBase descriptor, 
+        public virtual IEnumerable<T> GetMatching(SymbolDescriptorBase descriptor, 
                                              IEnumerable<object> items,
                                              SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -59,9 +59,9 @@ namespace System.CommandLine.GeneralAppModel
             foreach (var rule in Rules)
             {
                 var values = rule.GetAllNonDefault(descriptor, flattenedItems);
-                list.AddRange(values);
+                list.AddRange(values.OfType<T>());
             }
-            return list;
+            return list.Distinct();
         }
 
         // Do we need GetAllFromFirstMatchingRule?

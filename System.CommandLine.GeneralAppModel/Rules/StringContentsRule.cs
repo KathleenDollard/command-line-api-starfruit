@@ -73,7 +73,7 @@ namespace System.CommandLine.GeneralAppModel
             Contains
         }
 
-        protected override IEnumerable<string> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
                 ? Array.Empty<string>()

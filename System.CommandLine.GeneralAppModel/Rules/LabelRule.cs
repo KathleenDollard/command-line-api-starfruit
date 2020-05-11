@@ -19,7 +19,7 @@ namespace System.CommandLine.GeneralAppModel
             throw new NotImplementedException();
         }
 
-        protected override IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             throw new NotImplementedException();
         }

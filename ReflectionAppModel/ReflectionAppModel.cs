@@ -52,8 +52,7 @@ namespace System.CommandLine.ReflectionAppModel
         protected Type[] OmmittedTypes { get; }
     }
 
-    public abstract class ReflectionAppModel<T, TPropOrParam> : ReflectionAppModel
-        where TPropOrParam : ICustomAttributeProvider
+    public abstract class ReflectionAppModel<T> : ReflectionAppModel
         where T : ICustomAttributeProvider
     {
         private readonly object target;
@@ -68,6 +67,7 @@ namespace System.CommandLine.ReflectionAppModel
             entryPoint = dataSource;
         }
 
+        protected abstract IEnumerable<ICustomAttributeProvider> GetChildCandidates();
 
         protected override CommandDescriptor GetCommand(SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -78,18 +78,31 @@ namespace System.CommandLine.ReflectionAppModel
         }
 
         protected override IEnumerable<ArgumentDescriptor> GetArguments(SymbolDescriptorBase parentSymbolDescriptor)
-            => SourceClassification
-                        .ArgumentItems
-                        .Select(p => BuildArgument(p, parentSymbolDescriptor));
+        {
+            return GetMatching(parentSymbolDescriptor, Strategy.ArgumentRules, entryPoint, parentSymbolDescriptor);
+            //return GetChildCandidates()
+            //                       .Where(p => Match(parentSymbolDescriptor, p, Strategy.ArgumentRules))
+            //                       .Select(p => BuildArgument(p, parentSymbolDescriptor));
+        }
 
-        protected override IEnumerable<OptionDescriptor> GetOptions(SymbolDescriptorBase parentSymbolDescriptor)
-            => SourceClassification
-                        .OptionItems
+        protected override IEnumerable<CommandDescriptor> GetSubCommands(SymbolDescriptorBase parentSymbolDescriptor)
+            => GetChildCandidates()
+                        .Where(p => Match(parentSymbolDescriptor, p, Strategy.SubCommandRules))
+                        .Select(p => BuildCommand(p, parentSymbolDescriptor));
+
+         protected override IEnumerable<OptionDescriptor> GetOptions(SymbolDescriptorBase parentSymbolDescriptor)
+            => GetChildCandidates()
+                        .Where(p => Match(parentSymbolDescriptor, p, Strategy.OptionRules))
                         .Select(p => BuildOption(p, parentSymbolDescriptor));
 
-        protected SourceClassification<TPropOrParam> SourceClassification { get; set; }
+        //protected SourceClassification<TPropOrParam> SourceClassification { get; set; }
 
-        private ArgumentDescriptor BuildArgument(TPropOrParam param, SymbolDescriptorBase parentSymbolDescriptor)
+        private CommandDescriptor BuildCommand(ICustomAttributeProvider p, SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ArgumentDescriptor BuildArgument(ICustomAttributeProvider param, SymbolDescriptorBase parentSymbolDescriptor)
         {
             var descriptor = new ArgumentDescriptor(parentSymbolDescriptor, entryPoint);
             descriptor.Name = GetValue(descriptor, Strategy.NameRules, param, parentSymbolDescriptor);
@@ -98,9 +111,10 @@ namespace System.CommandLine.ReflectionAppModel
             descriptor.Arity = GetArity(descriptor, Strategy.ArityRules, param, parentSymbolDescriptor);
             descriptor.DefaultValue = GetDefaultValue(descriptor, Strategy.DefaultRules, param, parentSymbolDescriptor);
             descriptor.Required = GetValue(descriptor, Strategy.RequiredRules, param, parentSymbolDescriptor);
+            descriptor.ArgumentType = GetArgumentType(param);
             return descriptor;
 
-            static Type GetArgumentType(TPropOrParam param)
+            static Type GetArgumentType(ICustomAttributeProvider param)
             {
                 return param switch
                 {
@@ -111,14 +125,14 @@ namespace System.CommandLine.ReflectionAppModel
             }
         }
 
-        private OptionDescriptor BuildOption(TPropOrParam param, SymbolDescriptorBase parentSymbolDescriptor)
+        private OptionDescriptor BuildOption(ICustomAttributeProvider param, SymbolDescriptorBase parentSymbolDescriptor)
         {
             var descriptor = new OptionDescriptor(parentSymbolDescriptor, param)
             {
                 Arguments = new ArgumentDescriptor[] { BuildArgument(param, parentSymbolDescriptor) }
             };
             descriptor.Name = GetValue(descriptor, Strategy.NameRules, param, parentSymbolDescriptor);
-            descriptor.Aliases = GetAll(descriptor, Strategy.AliasRules, param, parentSymbolDescriptor);
+            descriptor.Aliases = GetMatching(descriptor, Strategy.AliasRules, param, parentSymbolDescriptor);
             descriptor.Description = GetValue(descriptor, Strategy.DescriptionRules, param, parentSymbolDescriptor);
             descriptor.IsHidden = GetValue(descriptor, Strategy.HiddenRules, param, parentSymbolDescriptor);
             descriptor.Required = GetValue(descriptor, Strategy.RequiredRules, param, parentSymbolDescriptor);
@@ -127,7 +141,7 @@ namespace System.CommandLine.ReflectionAppModel
 
         private DefaultValueDescriptor GetDefaultValue(SymbolDescriptorBase descriptor,
                                                 RuleSet<DefaultValueDescriptor> defaultRules,
-                                                TPropOrParam param,
+                                                ICustomAttributeProvider param,
                                                 SymbolDescriptorBase parentSymbolDescriptor)
         {
             return null; // TODO
@@ -135,23 +149,23 @@ namespace System.CommandLine.ReflectionAppModel
 
         private ArityDescriptor GetArity(SymbolDescriptorBase descriptor,
                                          RuleSet<ArityDescriptor> arityRules,
-                                         TPropOrParam param,
+                                         ICustomAttributeProvider param,
                                          SymbolDescriptorBase parentSymbolDescriptor)
         {
             return null; // TODO
         }
 
-        private IEnumerable<TRet> GetAll<TRet>(SymbolDescriptorBase symbolDescriptor,
+        private IEnumerable<TRet> GetMatching<TRet>(SymbolDescriptorBase symbolDescriptor,
                                                RuleSet<TRet> rules,
                                                ICustomAttributeProvider reflectingOver,
                                                SymbolDescriptorBase parentSymbolDescriptor)
-            => rules.GetAll(symbolDescriptor, GetItems(symbolDescriptor, reflectingOver, parentSymbolDescriptor), parentSymbolDescriptor);
+            => rules.GetMatching(symbolDescriptor, GetItems(symbolDescriptor, reflectingOver, parentSymbolDescriptor), parentSymbolDescriptor);
 
         private TRet GetValue<TRet>(SymbolDescriptorBase symbolDescriptor,
                                     RuleSet<TRet> rules,
                                     ICustomAttributeProvider reflectingOver,
                                     SymbolDescriptorBase parentSymbolDescriptor)
-            => rules.GetFirstOrDefault(symbolDescriptor);
+            => rules.GetFirstOrDefault(symbolDescriptor, GetItems(symbolDescriptor, reflectingOver, parentSymbolDescriptor));
 
         private static object[] GetItems(SymbolDescriptorBase symbolDescriptor,
                                          ICustomAttributeProvider reflectingOver,
@@ -180,27 +194,36 @@ namespace System.CommandLine.ReflectionAppModel
             };
         }
 
-        protected class AttributeClassification<TMatch> : SourceClassification<TMatch>
-            where TMatch : ICustomAttributeProvider
+        protected bool Match(SymbolDescriptorBase symbolDescriptor, ICustomAttributeProvider reflectingOver, RuleSet<string> rules)
         {
-            private readonly SymbolDescriptorBase parentSymbolDescriptor;
-
-            internal AttributeClassification(Strategy strategy,
-                                             IEnumerable<TMatch> sourceItems,
-                                             SymbolDescriptorBase parentSymbolDescriptor)
-                : base(strategy, sourceItems)
-            {
-                this.parentSymbolDescriptor = parentSymbolDescriptor;
-            }
-
-            protected override bool Match(TMatch reflectingOver, RuleSet<string> rules)
-            {
-                return rules.HasMatch(SymbolType.All, GetItems(null,
-                                                               reflectingOver,
-                                                               parentSymbolDescriptor,
-                                                               useBaseClassAttributes));
-            }
-
+            return rules.HasMatch(symbolDescriptor, GetItems(null,
+                                                           reflectingOver,
+                                                           symbolDescriptor,
+                                                           useBaseClassAttributes));
         }
+
+
+        //protected class AttributeClassification<TMatch> : SourceClassification<TMatch>
+        //    where TMatch : ICustomAttributeProvider
+        //{
+        //    private readonly SymbolDescriptorBase parentSymbolDescriptor;
+
+        //    internal AttributeClassification(Strategy strategy,
+        //                                     IEnumerable<TMatch> sourceItems,
+        //                                     SymbolDescriptorBase parentSymbolDescriptor)
+        //        : base(strategy, sourceItems)
+        //    {
+        //        this.parentSymbolDescriptor = parentSymbolDescriptor;
+        //    }
+
+        //    protected override bool Match(TMatch reflectingOver, RuleSet<string> rules)
+        //    {
+        //        return rules.HasMatch(SymbolType.All, GetItems(null,
+        //                                                       reflectingOver,
+        //                                                       parentSymbolDescriptor,
+        //                                                       useBaseClassAttributes));
+        //    }
+
+        //}
     }
 }

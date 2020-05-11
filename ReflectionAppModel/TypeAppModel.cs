@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Linq;
 using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    internal class TypeAppModel : ReflectionAppModel<Type, PropertyInfo>
+    internal class TypeAppModel : ReflectionAppModel<Type>
     {
         private readonly Type entryType;
 
@@ -18,7 +17,7 @@ namespace System.CommandLine.ReflectionAppModel
         {
             _ = entryType ?? throw new ArgumentNullException(nameof(entryType));
             this.entryType = entryType;
-            SourceClassification = new AttributeClassification<PropertyInfo>(strategy, entryType.GetProperties());
+            //SourceClassification = new AttributeClassification<PropertyInfo>(strategy, entryType.GetProperties());
         }
 
         public TypeAppModel(Strategy strategy,
@@ -27,16 +26,17 @@ namespace System.CommandLine.ReflectionAppModel
             : this(strategy, entryType, null, ommittedTypes)
         { }
 
-        protected override IEnumerable<CommandDescriptor> GetSubCommands()
-        {
-            return new List<CommandDescriptor>(); // TODO
-        }
-
+   
         private ArityDescriptor GetArity(RuleSet<ArityDescriptor> arityRules,
                                          PropertyInfo prop,
                                          SymbolType symbolType)
         {
             return null; // TODO
+        }
+
+        protected override IEnumerable<ICustomAttributeProvider> GetChildCandidates()
+        {
+            return entryType.GetProperties();
         }
     }
 }

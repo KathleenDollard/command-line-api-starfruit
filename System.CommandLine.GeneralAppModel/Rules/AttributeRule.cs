@@ -18,10 +18,11 @@ namespace System.CommandLine.GeneralAppModel
         public string PropertyName { get; set; }
         public override string RuleDescription { get; }
 
-        protected override IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             return GetMatchingAttributes(symbolDescriptor, items)
-                        .Select(a => GetProperty(a, PropertyName));
+                        .Select(a => GetProperty(a, PropertyName))
+                        .OfType<object>();
         }
 
         private IEnumerable<Attribute> GetMatchingAttributes(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)

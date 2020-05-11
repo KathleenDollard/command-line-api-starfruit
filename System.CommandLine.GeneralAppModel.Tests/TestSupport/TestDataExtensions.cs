@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.Data.Common;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests
@@ -20,14 +21,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public static CommandDescriptor CreateDescriptor(this CommandTestData data)
         {
 
-            var command = new CommandDescriptor
+            var command = new CommandDescriptor(null, data.Raw)
             {
-                Raw = data.Raw,
                 Name = data.Name,
                 Description = data.Description,
                 IsHidden = data.IsHidden,
                 Aliases = data.Aliases,
-                TreatUnmatchedTokensAsErrors = data.TreatUnmatchedTokensAsErrors
             };
             if (!(data.Arguments is null))
                 command.Arguments.AddRange(data
@@ -49,15 +48,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         public static OptionDescriptor CreateDescriptor(this OptionTestData data)
-        => new OptionDescriptor
-        {
-            Raw = data.Raw,
-            Name = data.Name,
-            Description = data.Description,
-            IsHidden = data.IsHidden,
-            Aliases = data.Aliases,
-            Required = data.Required
-        };
+            => new OptionDescriptor(null, data.Raw)
+            {
+                Name = data.Name,
+                Description = data.Description,
+                IsHidden = data.IsHidden,
+                Aliases = data.Aliases,
+                Required = data.Required
+            };
 
         public static Argument CreateArgument(this ArgumentTestData data)
         {
@@ -81,10 +79,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data)
         {
-            var arg = new ArgumentDescriptor
+            var arg = new ArgumentDescriptor(null, data.Raw)
             {
                 Name = data.Name,
-                Raw = data.Raw,
                 ArgumentType = data.ArgumentType,
                 Description = data.Description,
                 IsHidden = data.IsHidden,

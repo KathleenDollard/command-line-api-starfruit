@@ -44,8 +44,8 @@ namespace System.CommandLine.GeneralAppModel
         {
             var commandDescriptor = GetCommand(parentSymbolDescriptor);
             commandDescriptor.Arguments.AddRange(GetArguments(commandDescriptor));
-            commandDescriptor.Options.AddRange(GetOptions(commandDescriptor));
             commandDescriptor.SubCommands.AddRange(GetSubCommands(commandDescriptor));
+            commandDescriptor.Options.AddRange(GetOptions(commandDescriptor));
             return commandDescriptor;
         }
     }

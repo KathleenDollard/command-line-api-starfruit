@@ -10,12 +10,13 @@ namespace System.CommandLine.GeneralAppModel
         public RuleSet<string> DescriptionRules { get; } = new RuleSet<string>();
         public RuleSet<string> ArgumentRules { get; } = new RuleSet<string>();
         public RuleSet<string> CommandRules { get; } = new RuleSet<string>();
+        public RuleSet<string> OptionRules { get; } = new RuleSet<string>();
         public RuleSet<string> AliasRules { get; } = new RuleSet<string>();
         public RuleSet<string> NameRules { get; } = new RuleSet<string>();
         public RuleSet<bool> RequiredRules { get; } = new RuleSet<bool>();
         public RuleSet<bool> HiddenRules { get; } = new RuleSet<bool>();
         public RuleSet<DefaultValueDescriptor> DefaultRules { get; } = new RuleSet<DefaultValueDescriptor>();
-        public RuleSet<IEnumerable<CommandDescriptor>> SubCommandRules { get; } = new RuleSet<IEnumerable<CommandDescriptor>>();
+        public RuleSet<string> SubCommandRules { get; } = new RuleSet<string>();
 
   
     }

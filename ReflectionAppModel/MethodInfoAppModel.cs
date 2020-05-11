@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    internal class MethodInfoAppModel : ReflectionAppModel<MethodInfo, ParameterInfo>
+    internal class MethodInfoAppModel : ReflectionAppModel<MethodInfo>
     {
         private readonly MethodInfo entryMethod;
 
@@ -19,19 +17,23 @@ namespace System.CommandLine.ReflectionAppModel
         {
             _ = entryMethod ?? throw new ArgumentNullException(nameof(entryMethod));
             this.entryMethod = entryMethod;
-            SourceClassification = new AttributeClassification<ParameterInfo>(strategy, entryMethod.GetParameters());
+            //SourceClassification = new AttributeClassification<ParameterInfo>(strategy, entryMethod.GetParameters());
         }
 
         public MethodInfoAppModel(Strategy strategy,
                               MethodInfo entryMethod,
                               Type[] ommittedTypes = null)
             : this(strategy, entryMethod, null, ommittedTypes)
-        {
-        }
+        { }
 
-        protected override IEnumerable<CommandDescriptor> GetSubCommands()
+        protected override IEnumerable<CommandDescriptor> GetSubCommands(SymbolDescriptorBase parentSymbolDescriptor)
         {
             return new List<CommandDescriptor>();
+        }
+
+        protected override IEnumerable<ICustomAttributeProvider> GetChildCandidates()
+        {
+            return entryMethod.GetParameters();
         }
     }
 }

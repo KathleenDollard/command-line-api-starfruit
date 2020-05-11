@@ -19,13 +19,14 @@ namespace System.CommandLine.GeneralAppModel
 
         }
 
-        protected override IEnumerable<T> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
         {
             return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
-                ? Array.Empty<T>()
+                ? Array.Empty<object>()
                 : items
                     .OfType<IdentityWrapper<T>>()
-                    .Select(w => w.Value);
+                    .Select(w => w.Value)
+                    .OfType<object>();
         }
     }
 
