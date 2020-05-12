@@ -26,17 +26,30 @@ namespace System.CommandLine.ReflectionAppModel
             : this(strategy, entryType, null, ommittedTypes)
         { }
 
-   
-        private ArityDescriptor GetArity(RuleSet<ArityDescriptor> arityRules,
-                                         PropertyInfo prop,
-                                         SymbolType symbolType)
-        {
-            return null; // TODO
-        }
 
-        protected override IEnumerable<ICustomAttributeProvider> GetChildCandidates()
+        //private ArityDescriptor GetArity(RuleSet<ArityDescriptor> arityRules,
+        //                                 PropertyInfo prop,
+        //                                 SymbolType symbolType)
+        //{
+        //    return null; // TODO
+        //}
+
+        protected override IEnumerable<object> GetChildCandidates(object DataSource)
         {
             return entryType.GetProperties();
+        }
+
+        protected override IEnumerable<object> GetDataCandidates(object DataSource)
+        {
+            string name = entryType.Name;
+            var items = new List<object>();
+            items.AddRange(entryType.GetCustomAttributes(useBaseClassAttributes));
+            items.Add(name);
+            //if (includeNameIdentity)
+            //{
+            items.Add(new IdentityWrapper<string>(name));
+            //}
+            return items.ToArray();
         }
     }
 }

@@ -26,14 +26,32 @@ namespace System.CommandLine.ReflectionAppModel
             : this(strategy, entryMethod, null, ommittedTypes)
         { }
 
-        protected override IEnumerable<CommandDescriptor> GetSubCommands(SymbolDescriptorBase parentSymbolDescriptor)
+        protected override IEnumerable<object> GetChildCandidates(object DataSource)
         {
-            return new List<CommandDescriptor>();
+            return entryMethod.GetParameters ();
         }
 
-        protected override IEnumerable<ICustomAttributeProvider> GetChildCandidates()
+        protected override IEnumerable<object> GetDataCandidates(object DataSource)
         {
-            return entryMethod.GetParameters();
+            string name = entryMethod.Name;
+            var items = new List<object>();
+            items.AddRange(entryMethod.GetCustomAttributes(useBaseClassAttributes));
+            items.Add(name);
+            //if (includeNameIdentity)
+            //{
+            items.Add(new IdentityWrapper<string>(name));
+            //}
+            return items.ToArray();
         }
+
+        //protected override IEnumerable<CommandDescriptor> GetSubCommands(SymbolDescriptorBase parentSymbolDescriptor)
+        //{
+        //    return new List<CommandDescriptor>();
+        //}
+
+        //protected override IEnumerable<ICustomAttributeProvider> GetChildCandidates()
+        //{
+        //    return entryMethod.GetParameters();
+        //}
     }
 }

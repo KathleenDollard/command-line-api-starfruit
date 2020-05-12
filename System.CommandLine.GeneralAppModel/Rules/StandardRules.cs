@@ -1,22 +1,7 @@
-﻿using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Descriptors;
-using System.CommandLine.GeneralAppModel.Rules;
-
-namespace System.CommandLine.GeneralAppModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
     public static class StandardRules
     {
-        public static Strategy SetStandardArityRules(this Strategy strategy)
-        {
-            strategy.ArityRules.SetStandardArityRules();
-            return strategy;
-        }
-
-        public static Strategy SetStandardDescriptionRules(this Strategy strategy)
-        {
-            strategy.DescriptionRules.SetStandardDescriptionRules();
-            return strategy;
-        }
 
         public static Strategy SetStandardArgumentRules(this Strategy strategy)
         {
@@ -26,7 +11,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public static Strategy SetStandardCommandRules(this Strategy strategy)
         {
-            strategy.CommandRules.SetStandardSubCommandRules();
+            strategy.CommandRules.SetStandardCommandRules();
             return strategy;
         }
 
@@ -36,75 +21,129 @@ namespace System.CommandLine.GeneralAppModel
             return strategy;
         }
 
-        public static Strategy SetStandardNameRules(this Strategy strategy)
+        public static RuleSetSelectSymbols SetStandardSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
-            strategy.NameRules.SetStandardNameRules();
-            return strategy;
-        }
-
-        public static Strategy SetStandardRequiredRules(this Strategy strategy)
-        {
-            strategy.RequiredRules.SetStandardRequiredRules();
-            return strategy;
-        }
-
-        public static Strategy SetStandardSubCommandRules(this Strategy strategy)
-        {
-            strategy.SubCommandRules.SetStandardSubCommandRules();
-            return strategy;
-        }
-
-
-
-
-        public static RuleSet SetStandardArityRules(this RuleSet rules)
-           => rules
-                .Add(new ComplexAttributeRule<ArityDescriptor>(
-                           "Arity", new string[] { "MinArgCount", "MaxArgCount" }));
-
-        public static RuleSet SetStandardDescriptionRules(this RuleSet rules)
-           => rules
-                .Add(new NamedAttributeRule("Description", "string", "Description"))
-                .Add(new NamedAttributeRule("Command", "string", "Description", SymbolType.Command))
-                .Add(new NamedAttributeRule("Argument", "string", "Description", SymbolType.Argument))
-                .Add(new NamedAttributeRule("Option", "string", "Description", SymbolType.Option))
-                // TODO: .Add(new LabelRule<string>("XmlDocComments") )
-                ;
-
-        public static RuleSet SetStandardArgumentRules(this RuleSet rules)
-           => rules
-                .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Argument))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument));
-
-        public static RuleSet SetStandardSubCommandRules(this RuleSet rules)
-           => rules
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
-                .Add(new NamedAttributeRule("Command", "string", "Name"))
+            rules.SelectSymbolRules
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
+               .Add(new NamedAttributeRule("Command", "string", "Name"))
             // TODO: .Add(new LabelRule<string>("ComplexUserType"))
             ;
-        public static RuleSet SetStandardOptionRules(this RuleSet rules)
-            => rules
-                 .Add(new RemainingSymbolRule(SymbolType.Option))
-             ;
-
-        public static RuleSet SetStandardNameRules(this RuleSet rules)
+            return rules;
+        }
+        public static RuleSetArgument SetStandardArgumentRules(this RuleSetArgument rules)
         {
-            rules
+            rules.DescriptionRules
+                .Add(new NamedAttributeRule("Description", "string", "Description"))
+                .Add(new NamedAttributeRule("Argument", "string", "Description"))
+                // TODO: .Add(new LabelRule<string>("XmlDocComments") )
+                ;
+            rules.NameRules
                 .Add(new NamedAttributeRule("Name", "string", "Name"))
-                .Add(new NamedAttributeRule("Option", "string", "Name", SymbolType.Option));
-            rules.AddRange(SetStandardArgumentRules, SymbolType.Argument);
-            rules.AddRange(SetStandardSubCommandRules, SymbolType.Command);
-            rules.Add(new IdentityRule<string>());
+                .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument))
+                .Add(new IdentityRule<string>())
+                ;
+            //rules.IsHiddenRule
+            //    ;
+
+            rules.RequiredRule
+                .Add(new BoolAttributeRule("Required"))
+                .Add(new NamedAttributeRule("Argument", "bool", "Required", SymbolType.Option))
+            ;
+
+            //rules.AliasesRules
+            //    ;
+
+            //rules.ArityRule
+            //    .Add(new ComplexAttributeRule<ArityDescriptor>(
+            //               "Arity", new string[] { "MinArgCount", "MaxArgCount" }));
+            // ;
+
             return rules;
         }
 
-        public static RuleSet SetStandardRequiredRules(this RuleSet rules)
-           => rules
+        public static RuleSetOption SetStandardOptionRules(this RuleSetOption rules)
+        {
+
+            rules.DescriptionRules
+                .Add(new NamedAttributeRule("Description", "string", "Description"))
+                .Add(new NamedAttributeRule("Option", "string", "Description", SymbolType.Option))
+                // TODO: .Add(new LabelRule<string>("XmlDocComments") )
+                ;
+            rules.NameRules
+                .Add(new NamedAttributeRule("Name", "string", "Name"))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Option", SymbolType.Argument))
+                .Add(new NamedAttributeRule("Option", "string", "Name", SymbolType.Option));
+            //rules.IsHiddenRule
+            //    ;
+
+            rules.RequiredRule
                 .Add(new BoolAttributeRule("Required"))
-                .Add(new NamedAttributeRule("Argument", "bool", "Required", SymbolType.Option))
                 .Add(new NamedAttributeRule("Option", "bool", "OptionRequired", SymbolType.Option))
-                .Add(new NamedAttributeRule("Option", "bool", "ArgumentRequired", SymbolType.Argument));
+             ;
+
+            //rules.AliasesRules
+            //    ;
+
+            //rules.IsHiddenRules
+            //    ;
+
+
+            return rules;
+        }
+
+        public static RuleSetArgument SetStandardOptionArgumentRules(this RuleSetArgument rules)
+        {
+            rules.DescriptionRules
+                .Add(new NamedAttributeRule ("Option", "string", "ArgumentDescription", SymbolType.Option))
+                ;
+            rules.NameRules
+                .Add(new NamedAttributeRule("Option", "string", "ArgumentName", SymbolType.Argument))
+                ;
+            //rules.IsHiddenRule
+            //    ;
+
+            rules.RequiredRule
+                .Add(new NamedAttributeRule("Option", "bool", "ArgumentRequired", SymbolType.Option))
+            ;
+
+            //rules.AliasesRules
+            //    ;
+
+            //rules.ArityRule
+            //    .Add(new ComplexAttributeRule<ArityDescriptor>(
+            //               "Arity", new string[] { "MinArgCount", "MaxArgCount" }));
+            // ;
+
+            return rules;
+        }
+
+        public static RuleSetCommand SetStandardCommandRules(this RuleSetCommand rules)
+        {
+
+            rules.DescriptionRules
+                .Add(new NamedAttributeRule("Description", "string", "Description"))
+                .Add(new NamedAttributeRule("Command", "string", "Description", SymbolType.Command))
+                // TODO: .Add(new LabelRule<string>("XmlDocComments") )
+                ;
+            rules.NameRules
+                .Add(new NamedAttributeRule("Name", "string", "Name"))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
+                .Add(new NamedAttributeRule("Command", "string", "Name"))
+            ;
+            //rules.IsHiddenRules
+            //    ;
+
+            //rules.AliasesRules
+            //    ;
+
+            //rules.IsHiddenRules
+            //    ;
+
+
+            return rules;
+        }
 
     }
 }

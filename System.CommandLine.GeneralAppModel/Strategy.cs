@@ -5,20 +5,10 @@ namespace System.CommandLine.GeneralAppModel
 {
     public class Strategy
     {
-        public Storage Settable { get; } = new Storage();
-        public IRuleSelectSymbols SelectSymbolRules { get; }
-        public IRuleUseArgument ArgumentRules { get; }
-        public IRuleUseOption OptionRules { get; }
-        public IRuleUseCommand CommandRules { get; }
-
-        public class Storage
-        {
-            public RuleUseSymbols SelectSymbolRules { get; }
-            public RuleUseArgument ArgumentRules { get; }
-            public RuleUseOption OptionRules { get; }
-            public RuleUseCommand CommandRules { get; }
-
-        }
+        public RuleSetSelectSymbols SelectSymbolRules { get; } = new RuleSetSelectSymbols();
+        public RuleSetArgument ArgumentRules { get; } = new RuleSetArgument();
+        public RuleSetOption OptionRules { get; } = new RuleSetOption();
+        public RuleSetCommand CommandRules { get; } = new RuleSetCommand();
 
 
         //public RuleSet NameRules { get; } = new RuleSet();

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class IdentityRule : RuleBase
+    public class IdentityRule<T> : RuleBase, IRuleGetValue<T>
     {
         public IdentityRule(SymbolType symbolType = SymbolType.All)
               : base(symbolType)
@@ -12,22 +12,34 @@ namespace System.CommandLine.GeneralAppModel
         public override string RuleDescription
             => "Identity Rule";
 
-        public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        public (bool success, T value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+                                                              IEnumerable<object> items,
+                                                              SymbolDescriptorBase parentSymbolDescriptor)
         {
-            return items
-                    .Any();
-
+            var matches = items.OfType<IdentityWrapper<T>>();
+            if (matches.Any())
+            {
+                return (true, matches.First().Value);
+            }
+            return (false, default);
         }
 
-        protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        {
-            return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
-                ? Array.Empty<object>()
-                : items
-                    .OfType<IdentityWrapper<T>>()
-                    .Select(w => w.Value)
-                    .OfType<object>();
-        }
+        //public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        //{
+        //    return items
+        //            .Any();
+
+        //}
+
+        //protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
+        //{
+        //    return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
+        //        ? Array.Empty<object>()
+        //        : items
+        //            .OfType<IdentityWrapper<T>>()
+        //            .Select(w => w.Value)
+        //            .OfType<object>();
+        //}
     }
 
     /// <summary>
@@ -38,12 +50,12 @@ namespace System.CommandLine.GeneralAppModel
     public class IdentityWrapper
     { }
 
-    public class IdentityWrapper<T> : IdentityWrapper 
+    public class IdentityWrapper<T> : IdentityWrapper
     {
         public IdentityWrapper(T value)
         {
             Value = value;
         }
-        public T Value { get;  }
+        public T Value { get; }
     }
 }

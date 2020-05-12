@@ -5,16 +5,22 @@ using System.Text;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public interface IRuleSelectSymbols
+    public interface IRule
+    { }
+
+    public interface IRule<T> : IRule
+    { }
+
+    public interface IRuleSelectSymbols : IRule
     {
-        IEnumerable<T> GetSymbols<T>(SymbolType requestedSymbolType,
+        IEnumerable<T> GetItemsForSymbol<T>(SymbolType requestedSymbolType,
                                      IEnumerable<T> items,
                                      SymbolDescriptorBase parentSymbolDescriptor);
     }
 
-    public interface IRuleGetValue<T>
+    public interface IRuleGetValue<T> : IRule
     {
-        T GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        (bool success, T value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                  IEnumerable<object> item,
                                  SymbolDescriptorBase parentSymbolDescriptor);
 
@@ -28,47 +34,55 @@ namespace System.CommandLine.GeneralAppModel
                                     SymbolDescriptorBase parentSymbolDescriptor);
     }
 
-    public interface IRuleMorphValue
+    public interface IRuleMorphValue<T> : IRule
     {
-        T MorphValue<T>(SymbolDescriptorBase symbolDescriptor,
+        T MorphValue(SymbolDescriptorBase symbolDescriptor,
                         object item,
                         T input,
                         SymbolDescriptorBase parentSymbolDescriptor);
     }
 
-    public interface IRuleArity
+    public interface IRuleArity : IRule
     {
         (uint MinimumCount, uint MaximumCount) GetArity(SymbolDescriptorBase symbolDescriptor,
                                                         IEnumerable<object> item,
                                                         SymbolDescriptorBase parentSymbolDescriptor);
     }
 
-    public interface IRuleUseSymbol : IRuleSelectSymbols
+    public interface IRuleAliases : IRule
     {
-        IRuleGetValues<string> DescriptionRule { get; }
-        IRuleGetValues<string> NameRule { get; }
-        IRuleGetValues<IEnumerable<string>> AliasesRule { get; }
-        IRuleGetValues<bool> IsHiddenRule { get; }
+        // TODO: 
+        //(uint MinimumCount, uint MaximumCount) GetArity(SymbolDescriptorBase symbolDescriptor,
+        //                                                IEnumerable<object> item,
+        //                                                SymbolDescriptorBase parentSymbolDescriptor);
     }
 
-    public interface IRuleUseArgument : IRuleUseSymbol
+    public interface IRuleSetSymbol : IRule
     {
-        IRuleGetValues<ArityDescriptor> ArityRule { get; }
-        IRuleGetValues<bool> RequiredRule { get; }
+        RuleSet<IRuleGetValues<string>> DescriptionRules { get; }
+        RuleSet<IRuleGetValues<string>> NameRules { get; }
+        RuleSet<IRuleAliases> AliasesRule { get; }
+        RuleSet<IRuleGetValues<bool>> IsHiddenRule { get; }
+    }
+
+    public interface IRuleSetArgument : IRuleSetSymbol
+    {
+        RuleSet<IRuleArity> ArityRule { get; }
+       RuleSet< IRuleGetValues<bool>> RequiredRule { get; }
 
         /// <summary>
         /// The argument type is inferred in most cases. However, a JSON or other non-typed
         /// AppModel may need this. The name is intended to imply its use is rare.
         /// </summary>
-        IRuleGetValues<Type> SpecialArgumentType { get; }
+        RuleSet<IRuleGetValues<Type>> SpecialArgumentTypeRule { get; }
         //IRuleGetValues<DefaultDescriptor> DefaultRule { get; }
     }
-    public interface IRuleUseCommand : IRuleUseSymbol
+    public interface IRuleSetCommand : IRuleSetSymbol
     {
     }
-    public interface IRuleUseOption : IRuleUseSymbol
+    public interface IRuleSetOption : IRuleSetSymbol
     {
-        IRuleGetValues<bool> RequiredRule { get; }
+        RuleSet<IRuleGetValues<bool>> RequiredRule { get; }
         // TODO: We need a rule to recognize arguments
     }
 

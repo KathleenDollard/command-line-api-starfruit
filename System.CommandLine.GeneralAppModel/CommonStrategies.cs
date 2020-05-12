@@ -9,13 +9,8 @@ namespace System.CommandLine.GeneralAppModel
     {
         public static Strategy SetAllStandardRules(this Strategy strategy) 
             => strategy
-                .SetStandardArityRules()
                 .SetStandardArgumentRules()
                 .SetStandardCommandRules()
-                .SetStandardOptionRules()
-                .SetStandardDescriptionRules()
-                .SetStandardNameRules()
-                .SetStandardRequiredRules()
-                .SetStandardSubCommandRules();
+                .SetStandardOptionRules();
     }
 }
