@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
+using System.Net.Http.Headers;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -31,22 +32,22 @@ namespace System.CommandLine.GeneralAppModel
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<IRule>)_rules).GetEnumerator();
 
-        public IEnumerable<T> GetItemsForSymbol<T>(SymbolType requestedSymbolType,
-                             IEnumerable<T> items,
-                             SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> candidates,
+                                          SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var symbolRules = Rules.OfType<IRuleSelectSymbols>();
+            var symbolRules = Rules.OfType<IRuleGetItems>();
             var matches = symbolRules
-                            .SelectMany(rule => rule.GetItemsForSymbol(requestedSymbolType, items, parentSymbolDescriptor))
+                            .SelectMany(rule => rule.GetItems(candidates, parentSymbolDescriptor))
                             .Distinct();
             return matches;
         }
 
         public virtual T GetFirstOrDefaultValue<T>(SymbolDescriptorBase symbolDescriptor,
-                                                   IEnumerable<object> items,
+                                                   Candidate candidate,
                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var flattenedItems = FlattenItems(items);
+            var traits = candidate.Traits;
+            var flattenedItems = FlattenItems(traits);
             var valueRules = Rules.OfType<IRuleGetValue<T>>();
             foreach (var rule in valueRules)
             {
@@ -58,6 +59,24 @@ namespace System.CommandLine.GeneralAppModel
             }
             return default;
         }
+
+        public virtual T MorphValue<T>(SymbolDescriptorBase symbolDescriptor,
+                                       Candidate candidate,
+                                       T value,
+                                       SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            T retValue = value;
+            foreach (var rule in Rules.OfType<IRuleMorphValue<T>>())
+            {
+                retValue  = rule.MorphValue(symbolDescriptor, candidate, value, parentSymbolDescriptor);
+                if (!value .Equals( retValue))
+                {
+                    return retValue;
+                }
+            }
+            return value;
+        }
+
 
         private IEnumerable<object> FlattenItems(IEnumerable<object> items)
         {

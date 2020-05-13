@@ -6,7 +6,7 @@ using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Rules
 {
-    public class RemainingSymbolRule : RuleBase, IRuleSelectSymbols 
+    public class RemainingSymbolRule : RuleBase, IRuleGetItems
     {
         public RemainingSymbolRule(SymbolType symbolType)
             : base(symbolType)
@@ -15,9 +15,7 @@ namespace System.CommandLine.GeneralAppModel.Rules
 
         public override string RuleDescription { get; }
 
-        public IEnumerable<T> GetItemsForSymbol<T>(SymbolType requestedSymbolType,
-                                                   IEnumerable<T> items,
-                                                   SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor)
         {
             return items;
         }

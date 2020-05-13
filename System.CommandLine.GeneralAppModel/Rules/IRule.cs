@@ -11,11 +11,11 @@ namespace System.CommandLine.GeneralAppModel
     public interface IRule<T> : IRule
     { }
 
-    public interface IRuleSelectSymbols : IRule
+    public interface IRuleGetItems : IRule
     {
-        IEnumerable<T> GetItemsForSymbol<T>(SymbolType requestedSymbolType,
-                                     IEnumerable<T> items,
-                                     SymbolDescriptorBase parentSymbolDescriptor);
+        SymbolType SymbolType { get; }
+        IEnumerable<Candidate> GetItems(IEnumerable<Candidate> candidates,
+                                   SymbolDescriptorBase parentSymbolDescriptor);
     }
 
     public interface IRuleGetValue<T> : IRule
@@ -56,7 +56,6 @@ namespace System.CommandLine.GeneralAppModel
         //                                                IEnumerable<object> item,
         //                                                SymbolDescriptorBase parentSymbolDescriptor);
     }
-
     public interface IRuleSetSymbol : IRule
     {
         RuleSet<IRuleGetValues<string>> DescriptionRules { get; }
@@ -64,11 +63,10 @@ namespace System.CommandLine.GeneralAppModel
         RuleSet<IRuleAliases> AliasesRule { get; }
         RuleSet<IRuleGetValues<bool>> IsHiddenRule { get; }
     }
-
     public interface IRuleSetArgument : IRuleSetSymbol
     {
         RuleSet<IRuleArity> ArityRule { get; }
-       RuleSet< IRuleGetValues<bool>> RequiredRule { get; }
+        RuleSet<IRuleGetValues<bool>> RequiredRule { get; }
 
         /// <summary>
         /// The argument type is inferred in most cases. However, a JSON or other non-typed

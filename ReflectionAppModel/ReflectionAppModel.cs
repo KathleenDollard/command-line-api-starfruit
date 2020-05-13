@@ -50,6 +50,14 @@ namespace System.CommandLine.ReflectionAppModel
                 };
 
         protected Type[] OmmittedTypes { get; }
+
+        protected override Type GetArgumentType(Candidate candidate)
+            => candidate.Item switch
+            {
+                PropertyInfo prop => prop.PropertyType,
+                ParameterInfo param => param.ParameterType,
+                _ => null
+            };
     }
 
     public abstract class ReflectionAppModel<T> : ReflectionAppModel

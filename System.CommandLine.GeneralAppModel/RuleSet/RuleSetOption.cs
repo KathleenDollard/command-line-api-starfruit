@@ -2,7 +2,7 @@
 {
     public class RuleSetOption : RuleSetSymbols, IRuleSetOption
     {
-        public RuleSet<IRuleGetValues<bool>> RequiredRule { get; private set; }
+        public RuleSet<IRuleGetValues<bool>> RequiredRule { get; } = new RuleSet<IRuleGetValues<bool>>();
 
         public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
         {

@@ -15,6 +15,10 @@ namespace System.CommandLine.GeneralAppModel
                 : true;
 
         public RuleSet<IRuleGetValues<string>> DescriptionRules { get; } = new RuleSet<IRuleGetValues<string>>();
+
+        /// <summary>
+        /// Some NameRules will also morph the names. When morphing names, only those name rules with IRuleMorphValue<string>  will be used
+        /// </summary>
         public RuleSet<IRuleGetValues<string>> NameRules { get; } = new RuleSet<IRuleGetValues<string>>();
         public RuleSet<IRuleAliases> AliasesRule { get; } = new RuleSet<IRuleAliases>();
         public RuleSet<IRuleGetValues<bool>> IsHiddenRule { get; } = new RuleSet<IRuleGetValues<bool>>();

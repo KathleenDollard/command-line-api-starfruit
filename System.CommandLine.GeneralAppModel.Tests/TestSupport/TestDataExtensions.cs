@@ -31,7 +31,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
             if (!(data.Arguments is null))
                 command.Arguments.AddRange(data
                                     .Arguments
-                                    .Select(a => CreateDescriptor(a)));
+                                    .Select(a => CreateDescriptor(a, command)));
+            if (!(data.Options is null))
+                command.Options.AddRange(data
+                                    .Options
+                                    .Select(a => CreateDescriptor(a, command)));
             return command;
         }
 
@@ -47,7 +51,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return option;
         }
 
-        public static OptionDescriptor CreateDescriptor(this OptionTestData data)
+        public static OptionDescriptor CreateDescriptor(this OptionTestData data, SymbolDescriptorBase parentSymbolDescriptor)
             => new OptionDescriptor(null, data.Raw)
             {
                 Name = data.Name,
@@ -77,9 +81,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return arg;
         }
 
-        public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data)
+        public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var arg = new ArgumentDescriptor(null, data.Raw)
+            var arg = new ArgumentDescriptor(parentSymbolDescriptor, data.Raw)
             {
                 Name = data.Name,
                 ArgumentType = data.ArgumentType,

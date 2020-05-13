@@ -8,69 +8,51 @@ using System.Linq;
 using System.Collections.Generic;
 using System.CommandLine.ReflectionModel.Tests.ModelCodeForTests;
 
-namespace System.CommandLine.ReflectionModel.Tests.Maker
+namespace System.CommandLine.ReflectionModel.Tests
 {
 
     public class DescriptorMakerTests
     {
-        private IEnumerable<Type> modelTypes;
-        private readonly string modelNamespace = "ReflectionAppModel.Tests.Models";
-
         public DescriptorMakerTests()
         {
-            modelTypes = GetType()
-                .Assembly
-                .GetTypes()
-                .Where(t => t.Namespace == modelNamespace)
-                .ToList();
+            strategy = new Strategy().SetStandardRules();
         }
+
+        private readonly Strategy strategy ;
 
         [Fact]
         public void CanMakeSimplestCommandDescriptorFromMethodOnNamedModel() 
-            => TestFirstMethodOnType<SimpleTypeWithMethodNoAtributes>(new Strategy().SetAllStandardRules());
+            => Utils.TestFirstMethodOnType<SimpleTypeWithMethodNoAtributes>(strategy);
 
         [Fact]
         public void CanMakeSimplestCommandDescriptorFromTypeOnNamedModel()
-            => TestType<SimpleTypeNoAttributes>(new Strategy().SetAllStandardRules());
+            => Utils.TestType<SimpleTypeNoAttributes>(strategy);
 
         [Fact]
         public void CanGetCommandDescriptionFromMethodAttribute()
-           => TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetAllStandardRules());
+           => Utils.TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetStandardRules());
 
         [Fact]
         public void CanGetCommandDescriptionFromTypeAttribute()
-            => TestType<SimpleTypeWithDescriptionAttribute>(new Strategy().SetAllStandardRules());
+            => Utils.TestType<SimpleTypeWithDescriptionAttribute>(strategy);
 
         [Fact]
         public void CanGetArgumentFromNamedMethodParam()
-           => TestFirstMethodOnType<MethodWithParameterNamedArgs>(new Strategy().SetAllStandardRules());
+           => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgs>(strategy);
 
         [Fact]
-        public void CanGetArgumentFromNamedTypeProperty()
-            => TestType<TypeWithPropertyNamedArgs>(new Strategy().SetAllStandardRules());
+        public void CanGetArgumentFromNamedPropertyProperty()
+            => Utils.TestType<TypeWithPropertyNamedArgs>(strategy);
+
+        [Fact]
+        public void CanGetOptionFromMethodParam()
+            => Utils.TestFirstMethodOnType<MethodWithParameterOption>(strategy);
+
+        [Fact]
+        public void CanGetOptionFromPropertyProperty()
+            => Utils.TestType<TypeWithPropertyOption>(strategy);
 
 
-        private void TestType<T>(Strategy strategy)
-            where T : IHasTestData, new()
-        {
-            var type = typeof(T);
-
-            var actual = ReflectionAppModel.ReflectionAppModel.RootCommandDescriptor(strategy, type);
-            var expected = ModelData.FromType<T>().CreateDescriptor();
-
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        private void TestFirstMethodOnType<T>(Strategy strategy )
-            where T : IHasTestData, new()
-        {
-            var type = typeof(T);
-            var method = type.GetMethodsOnDeclaredType().First();
-
-            var actual = ReflectionAppModel.ReflectionAppModel.RootCommandDescriptor(strategy, method);
-            var expected = ModelData.FromFirstMethod<T>().CreateDescriptor();
-
-            actual.Should().BeEquivalentTo(expected);
-        }
+  
     }
 }

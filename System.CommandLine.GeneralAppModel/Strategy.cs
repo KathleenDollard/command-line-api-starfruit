@@ -10,7 +10,6 @@ namespace System.CommandLine.GeneralAppModel
         public RuleSetOption OptionRules { get; } = new RuleSetOption();
         public RuleSetCommand CommandRules { get; } = new RuleSetCommand();
 
-
         //public RuleSet NameRules { get; } = new RuleSet();
         //public RuleSet DescriptionRules { get; } = new RuleSet();
         //public RuleSet AliasRules { get; } = new RuleSet();

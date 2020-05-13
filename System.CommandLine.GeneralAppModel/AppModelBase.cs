@@ -33,19 +33,20 @@ namespace System.CommandLine.GeneralAppModel
             ParentDataSource = parentDataSource;
         }
 
-        protected abstract IEnumerable<object> GetChildCandidates(object DataSource);
-        protected abstract IEnumerable<object> GetDataCandidates(object DataSource);
+        protected abstract IEnumerable<Candidate> GetChildCandidates(object DataSource);
+        protected abstract Candidate GetCandidate(object item);
+        protected abstract Type GetArgumentType(Candidate candidate);
 
         protected Strategy Strategy { get; }
         protected object DataSource { get; }
         protected object ParentDataSource { get; }
 
-        protected (IEnumerable<object> optionItems, IEnumerable<object> subCommandItems, IEnumerable<object> argumentItems)
+        protected (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
              ClassifyChildren(SymbolDescriptorBase commandDescriptor)
         {
-            IEnumerable<object> optionItems = null;
-            IEnumerable<object> subCommandItems = null;
-            IEnumerable<object> argumentItems = null;
+            IEnumerable<Candidate> optionItems = null;
+            IEnumerable<Candidate> subCommandItems = null;
+            IEnumerable<Candidate> argumentItems = null;
 
             var candidates = GetChildCandidates(DataSource);
             // TODO: Provide way to customize this order since the first match wins
@@ -55,84 +56,93 @@ namespace System.CommandLine.GeneralAppModel
                 switch (symbolType)
                 {
                     case SymbolType.Option:
-                        optionItems = Strategy.SelectSymbolRules.SelectSymbolRules
-                                    .GetItemsForSymbol<object>(symbolType, candidates, commandDescriptor)
-                                    .ToList();
-                        candidates = candidates.Except(optionItems);
+                        optionItems = Strategy.SelectSymbolRules.GetItems(SymbolType.Option, commandDescriptor, candidates);
+                        candidates = Remove(candidates, optionItems);
                         break;
                     case SymbolType.Command:
-                        subCommandItems = Strategy.SelectSymbolRules.SelectSymbolRules
-                                    .GetItemsForSymbol<object>(symbolType, candidates, commandDescriptor)
-                                    .ToList();
-                        candidates = candidates.Except(subCommandItems);
+                        subCommandItems = Strategy.SelectSymbolRules.GetItems(SymbolType.Command, commandDescriptor, candidates);
+                        candidates = Remove(candidates, subCommandItems);
                         break;
                     case SymbolType.Argument:
-                        argumentItems = Strategy.SelectSymbolRules.SelectSymbolRules
-                                    .GetItemsForSymbol<object>(symbolType, candidates, commandDescriptor)
-                                    .ToList();
-                        candidates = candidates.Except(argumentItems);
+                        argumentItems = Strategy.SelectSymbolRules.GetItems(SymbolType.Argument, commandDescriptor, candidates);
+                        candidates = Remove(candidates, argumentItems);
                         break;
                 }
+
+                // I had trouble with Except matching on the Candidate and didn't find the problem, so, this works
             }
             return (optionItems, subCommandItems, argumentItems);
-        }
 
+            static IEnumerable<Candidate> Remove(IEnumerable<Candidate> candidates, IEnumerable<Candidate> assigned)
+            {
+                var list = new List<Candidate>();
+                foreach (var candidate in candidates)
+                {
+                    if (assigned.Any(c => c.Item == candidate.Item))
+                    { continue; }
+                    list.Add(candidate);
+                }
+                return list;
+            }
+        }
 
 
         protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var commandDescriptor = GetCommand(DataSource, parentSymbolDescriptor);
+            var candidate = GetCandidate(DataSource);
+            var commandDescriptor = GetCommand(candidate, parentSymbolDescriptor);
             var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(commandDescriptor);
 
             commandDescriptor.Arguments.AddRange(argumentItems.Select(i => GetArgument(i, commandDescriptor)));
-            commandDescriptor.Options.AddRange(argumentItems.Select(i => GetOption(i, commandDescriptor)));
-            commandDescriptor.SubCommands.AddRange(argumentItems.Select(i => GetCommand(i, commandDescriptor)));
+            commandDescriptor.Options.AddRange(optionItems.Select(i => GetOption(i, commandDescriptor)));
+            commandDescriptor.SubCommands.AddRange(subCommandItems.Select(i => GetCommand(i, commandDescriptor)));
 
             return commandDescriptor;
         }
-        protected CommandDescriptor GetCommand(object item, SymbolDescriptorBase parentSymbolDescriptor)
+
+        protected CommandDescriptor GetCommand(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var dataCandidates = GetDataCandidates(DataSource);
-            var descriptor = new CommandDescriptor(parentSymbolDescriptor, DataSource);
+            var descriptor = new CommandDescriptor(parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.CommandRules;
-            descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
+            FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             return descriptor;
 
         }
 
-        private ArgumentDescriptor GetArgument(object item, SymbolDescriptorBase parentSymbolDescriptor)
+        private ArgumentDescriptor GetArgument(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var dataCandidates = GetDataCandidates(item);
-            var descriptor = new ArgumentDescriptor(parentSymbolDescriptor, item);
+            var descriptor = new ArgumentDescriptor(parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.ArgumentRules;
-            descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.IsHidden = ruleSet.IsHiddenRule.GetFirstOrDefaultValue<bool>(descriptor, dataCandidates, parentSymbolDescriptor);
-            //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.Required = ruleSet.RequiredRule.GetFirstOrDefaultValue<bool>(descriptor, dataCandidates, parentSymbolDescriptor);
-            //descriptor.ArgumentType = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
+            FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
+            //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.Required = ruleSet.RequiredRule.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.ArgumentType = GetArgumentType(candidate);
             return descriptor;
         }
 
-        private OptionDescriptor GetOption(object item, SymbolDescriptorBase parentSymbolDescriptor)
+        private OptionDescriptor GetOption(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var dataCandidates = GetDataCandidates(item);
-            var descriptor = new OptionDescriptor(parentSymbolDescriptor, item);
+            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
             //{
             //    Arguments = new ArgumentDescriptor[] { BuildArgument(param, parentSymbolDescriptor) }
             //};
             var ruleSet = Strategy.ArgumentRules;
-            descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.IsHidden = ruleSet.IsHiddenRule.GetFirstOrDefaultValue<bool>(descriptor, dataCandidates, parentSymbolDescriptor);
+            FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             //descriptor.Aliases = GetMatching(descriptor, Strategy.AliasRules, param, parentSymbolDescriptor);
-            //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
-            descriptor.Required = ruleSet.RequiredRule.GetFirstOrDefaultValue<bool>(descriptor, dataCandidates, parentSymbolDescriptor);
-            //descriptor.ArgumentType = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, dataCandidates, parentSymbolDescriptor);
+            //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.Required = ruleSet.RequiredRule.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+            //descriptor.ArgumentType = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             return descriptor;
+        }
+
+        private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbols ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.Name = ruleSet.NameRules.MorphValue(descriptor, candidate, name, parentSymbolDescriptor);
+            descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.IsHidden = ruleSet.IsHiddenRule.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }
 
         //protected abstract ArgumentDescriptor GetArgument(object item, SymbolDescriptorBase parentSymbolDescriptor);

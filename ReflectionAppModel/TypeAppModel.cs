@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
-using System.CommandLine.GeneralAppModel.Descriptors;
+using System.Data;
+using System.Linq;
 using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
@@ -34,22 +35,33 @@ namespace System.CommandLine.ReflectionAppModel
         //    return null; // TODO
         //}
 
-        protected override IEnumerable<object> GetChildCandidates(object DataSource)
+        protected override Candidate GetCandidate(object item)
         {
-            return entryType.GetProperties();
+            if (item is Type typeItem)
+            {
+                var name = typeItem.Name;
+                var candidate = new Candidate(typeItem);
+                candidate.AddTraitRange(typeItem.GetCustomAttributes(useBaseClassAttributes));
+                candidate.AddTrait(name);
+                candidate.AddTrait(new IdentityWrapper<string>(name));
+                return candidate;
+            }
+            return null;
         }
 
-        protected override IEnumerable<object> GetDataCandidates(object DataSource)
+        protected override IEnumerable<Candidate> GetChildCandidates(object item) 
+            => (IEnumerable<Candidate>)entryType.GetProperties()
+                                .Select(x => GetChildCandidate(x));
+
+  
+        private Candidate GetChildCandidate(PropertyInfo propertyInfo)
         {
-            string name = entryType.Name;
-            var items = new List<object>();
-            items.AddRange(entryType.GetCustomAttributes(useBaseClassAttributes));
-            items.Add(name);
-            //if (includeNameIdentity)
-            //{
-            items.Add(new IdentityWrapper<string>(name));
-            //}
-            return items.ToArray();
+            var name = propertyInfo.Name;
+            var candidate = new Candidate(propertyInfo);
+            candidate.AddTraitRange(entryType.GetCustomAttributes(useBaseClassAttributes));
+            candidate.AddTrait(name);
+            candidate.AddTrait(new IdentityWrapper<string>(name));
+            return candidate;
         }
     }
 }

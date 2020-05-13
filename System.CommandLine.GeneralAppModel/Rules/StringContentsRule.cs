@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleMorphValue<string>
+    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleMorphValue<string>, IRuleGetItems
     {
         public StringContentsRule(StringPosition position,
                                  string compareTo,
@@ -33,6 +33,10 @@ namespace System.CommandLine.GeneralAppModel
             {
                 return null;
             }
+            if (!DoesStringMatch(input, Position, CompareTo ))
+            {
+                return input;
+            }
             if (Position == StringPosition.Prefix)
                 return s.Substring(CompareTo.Length);
             else if (Position == StringPosition.Suffix)
@@ -48,28 +52,36 @@ namespace System.CommandLine.GeneralAppModel
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var matches = items.OfType<string>()
-                               .Where(x=>Check(x, Position, CompareTo ));
+                               .Where(x => DoesStringMatch(x, Position, CompareTo));
             if (matches.Any())
             {
                 return (true, matches.First());
             }
             return (false, default);
-            
-            static bool Check(string value, StringPosition position, string compareTo)
-            {
-                if (value is null)
-                {
-                    return false;
-                }
-                return position switch
-                {
-                    StringPosition.Prefix => value.StartsWith(compareTo),
-                    StringPosition.Suffix => value.EndsWith(compareTo),
-                    StringPosition.Contains => value.Contains(compareTo),
-                    _ => throw new ArgumentException("Unexpected position")
-                };
-            }
+
+
         }
+
+        public bool DoesStringMatch(string value, StringPosition position, string compareTo)
+        {
+            if (value is null)
+            {
+                return false;
+            }
+            return position switch
+            {
+                StringPosition.Prefix => value.StartsWith(compareTo),
+                StringPosition.Suffix => value.EndsWith(compareTo),
+                StringPosition.Contains => value.Contains(compareTo),
+                _ => throw new ArgumentException("Unexpected position")
+            };
+        }
+        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor) 
+            => (IEnumerable<Candidate>)items
+                            .Where(x=>x.Traits
+                                        .OfType<string>()
+                                        .Where(x => DoesStringMatch(x, Position, CompareTo))
+                                        .Any());
 
         public override string RuleDescription
             => $"String Contents: {Position} - '{CompareTo}'";

@@ -36,7 +36,7 @@ namespace System.CommandLine.GeneralAppModel
                                                 IEnumerable<object> item,
                                                 SymbolDescriptorBase parentSymbolDescriptor)
         {
-            return GetMatches(symbolDescriptor,  item, parentSymbolDescriptor)
+            return GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
                                      .OfType<Attribute>()
                                      .Select(a => GetProperty<string>(a, PropertyName))
                                      .Where(x => x != default)
@@ -54,16 +54,11 @@ namespace System.CommandLine.GeneralAppModel
                              object item,
                              SymbolDescriptorBase parentSymbolDescriptor)
         {
-            if (item is ICustomAttributeProvider attributeProvider)
+            return item switch
             {
-                return item switch
-                {
-                    Attribute a => GetMatchingAttributes(symbolDescriptor, GetAttributes(attributeProvider))
-                                     .Any(),
-                    _ => false
-                };
-            }
-            return false;
+                Attribute a => DoesAttributeMatch(AttributeName, a),
+                _ => false
+            };
         }
 
         private static T GetProperty<T>(Attribute attribute, string propertyName)
@@ -79,14 +74,14 @@ namespace System.CommandLine.GeneralAppModel
             return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
                 ? Array.Empty<Attribute>()
                 : items
-                    .Where(a => NewMethod(AttributeName, a));
+                    .Where(a => DoesAttributeMatch(AttributeName, a));
+        }
 
-            static bool NewMethod(string attributeName, Attribute a)
-            {
-                var itemName = a.GetType().Name;
-                return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
-                    || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
-            }
+        private bool DoesAttributeMatch(string attributeName, Attribute a)
+        {
+            var itemName = a.GetType().Name;
+            return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
+                || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
         }
 
         private IEnumerable<Attribute> GetAttributes(ICustomAttributeProvider attributeProvider)

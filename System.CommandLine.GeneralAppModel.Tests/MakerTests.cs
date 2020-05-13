@@ -21,7 +21,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         [Fact]
         public void CanMakeSimpleOption()
         {
-            var descriptor = TestData.OptionData1.CreateDescriptor();
+            var descriptor = TestData.OptionData1.CreateDescriptor(null);
             var option = CommandMaker.MakeOption(descriptor);
 
             var expected = TestData.OptionData1.CreateOption();
@@ -31,7 +31,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         [Fact]
         public void CanMakeSimpleArgument()
         {
-            var descriptor = TestData.ArgData1.CreateDescriptor();
+            var descriptor = TestData.ArgData1.CreateDescriptor(null);
             var argument = CommandMaker.MakeArgument(descriptor);
 
             var expectedArg = TestData.ArgData1.CreateArgument();
@@ -42,7 +42,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public void CommandsHasCorrectArgument()
         {
             var descriptor = TestData.CommandData1.CreateDescriptor();
-            descriptor.Arguments.Add(TestData.ArgData1.CreateDescriptor());
+            descriptor.Arguments.Add(TestData.ArgData1.CreateDescriptor(null));
             var command = CommandMaker.MakeCommand(descriptor);
 
             var expected = TestData.CommandData1.CreateCommand();

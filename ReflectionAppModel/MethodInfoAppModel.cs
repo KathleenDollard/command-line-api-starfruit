@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
-using System.CommandLine.GeneralAppModel.Descriptors;
+using System.Linq;
 using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
@@ -26,23 +26,51 @@ namespace System.CommandLine.ReflectionAppModel
             : this(strategy, entryMethod, null, ommittedTypes)
         { }
 
-        protected override IEnumerable<object> GetChildCandidates(object DataSource)
+        protected override Candidate GetCandidate(object item)
         {
-            return entryMethod.GetParameters ();
+            if (item is MethodInfo methodItem)
+            {
+                var name = methodItem.Name;
+                var candidate = new Candidate(methodItem);
+                candidate.AddTraitRange(methodItem.GetCustomAttributes(useBaseClassAttributes));
+                candidate.AddTrait(name);
+                candidate.AddTrait(new IdentityWrapper<string>(name));
+                return candidate;
+            }
+            return null;
         }
 
-        protected override IEnumerable<object> GetDataCandidates(object DataSource)
+        protected override IEnumerable<Candidate> GetChildCandidates(object DataSource)
+            => (IEnumerable<Candidate>)entryMethod.GetParameters()
+                         .Select(x => GetChildCandidate(x));
+
+        private Candidate GetChildCandidate(ParameterInfo parameterInfo)
         {
-            string name = entryMethod.Name;
-            var items = new List<object>();
-            items.AddRange(entryMethod.GetCustomAttributes(useBaseClassAttributes));
-            items.Add(name);
-            //if (includeNameIdentity)
-            //{
-            items.Add(new IdentityWrapper<string>(name));
-            //}
-            return items.ToArray();
+            var name = parameterInfo.Name;
+            var candidate = new Candidate(parameterInfo);
+            candidate.AddTraitRange(entryMethod.GetCustomAttributes(useBaseClassAttributes));
+            candidate.AddTrait(name);
+            candidate.AddTrait(new IdentityWrapper<string>(name));
+            return candidate;
         }
+
+        //protected override IEnumerable<object> GetChildCandidates(object DataSource)
+        //{
+        //    return entryMethod.GetParameters ();
+        //}
+
+        //protected override IEnumerable<object> GetDataCandidates(object DataSource)
+        //{
+        //    string name = entryMethod.Name;
+        //    var items = new List<object>();
+        //    items.AddRange(entryMethod.GetCustomAttributes(useBaseClassAttributes));
+        //    items.Add(name);
+        //    //if (includeNameIdentity)
+        //    //{
+        //    items.Add(new IdentityWrapper<string>(name));
+        //    //}
+        //    return items.ToArray();
+        //}
 
         //protected override IEnumerable<CommandDescriptor> GetSubCommands(SymbolDescriptorBase parentSymbolDescriptor)
         //{

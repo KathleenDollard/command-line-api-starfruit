@@ -1,7 +1,15 @@
-﻿namespace System.CommandLine.GeneralAppModel
+﻿using System.CommandLine.GeneralAppModel.Rules;
+
+namespace System.CommandLine.GeneralAppModel
 {
     public static class StandardRules
     {
+
+        public static Strategy SetStandardSelectSymbolRules(this Strategy strategy)
+        {
+            strategy.SelectSymbolRules.SetStandardSelectSymbolRules();
+            return strategy;
+        }
 
         public static Strategy SetStandardArgumentRules(this Strategy strategy)
         {
@@ -23,10 +31,14 @@
 
         public static RuleSetSelectSymbols SetStandardSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
-            rules.SelectSymbolRules
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
-               .Add(new NamedAttributeRule("Command", "string", "Name"))
-            // TODO: .Add(new LabelRule<string>("ComplexUserType"))
+            rules.Rules
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command",SymbolType.Command))
+               .Add(new NamedAttributeRule("Command", "string", "Name", SymbolType.Command))
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument))
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
+               .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Option))
+               .Add(new RemainingSymbolRule ( SymbolType.Option))
+            // TODO: .Add(new LabelRule<string>("ComplexUserType", SymbolType.Command))
             ;
             return rules;
         }
@@ -131,6 +143,7 @@
                 .Add(new NamedAttributeRule("Name", "string", "Name"))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
                 .Add(new NamedAttributeRule("Command", "string", "Name"))
+                .Add(new IdentityRule<string>())
             ;
             //rules.IsHiddenRules
             //    ;

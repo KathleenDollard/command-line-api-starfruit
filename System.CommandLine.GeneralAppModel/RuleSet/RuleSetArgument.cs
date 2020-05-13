@@ -4,7 +4,7 @@ namespace System.CommandLine.GeneralAppModel
 {
     public class RuleSetArgument : RuleSetSymbols, IRuleSetArgument
     {
-        public RuleSetArgument OptionArgumentRuleSet { get; } = new RuleSetArgument();
+        public RuleSetArgument OptionArgumentRuleSet { get; } 
         public RuleSet<IRuleArity> ArityRule { get; } = new RuleSet<IRuleArity>();
         public RuleSet<IRuleGetValues<bool>> RequiredRule { get; } = new RuleSet<IRuleGetValues<bool>>();
         public RuleSet<IRuleGetValues<Type>> SpecialArgumentTypeRule { get; } = new RuleSet<IRuleGetValues<Type>>();
