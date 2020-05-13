@@ -18,7 +18,6 @@ namespace System.CommandLine.ReflectionAppModel
         {
             _ = entryType ?? throw new ArgumentNullException(nameof(entryType));
             this.entryType = entryType;
-            //SourceClassification = new AttributeClassification<PropertyInfo>(strategy, entryType.GetProperties());
         }
 
         public TypeAppModel(Strategy strategy,

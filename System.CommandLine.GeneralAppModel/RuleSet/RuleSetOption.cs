@@ -1,15 +1,22 @@
-﻿namespace System.CommandLine.GeneralAppModel
+﻿using System.Linq;
+
+namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleSetOption : RuleSetSymbols, IRuleSetOption
+    public class RuleSetOption : RuleSetSymbol, IRuleSetOption
     {
-        public RuleSet<IRuleGetValues<bool>> RequiredRule { get; } = new RuleSet<IRuleGetValues<bool>>();
+        public RuleGroup<IRuleGetValues<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValues<bool>>();
 
         public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
         {
             CheckFrozen();
-            RequiredRule.Add(requiredRule);
+            RequiredRules.Add(requiredRule);
         }
 
+        public override string Report(int tabsCount)
+        {
+            return base.Report(tabsCount) +
+                     $@"{CoreExtensions.NewLineWithTabs(tabsCount)} Required Rules: { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
+        }
 
     }
 }

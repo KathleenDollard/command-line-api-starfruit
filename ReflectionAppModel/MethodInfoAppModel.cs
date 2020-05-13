@@ -17,7 +17,6 @@ namespace System.CommandLine.ReflectionAppModel
         {
             _ = entryMethod ?? throw new ArgumentNullException(nameof(entryMethod));
             this.entryMethod = entryMethod;
-            //SourceClassification = new AttributeClassification<ParameterInfo>(strategy, entryMethod.GetParameters());
         }
 
         public MethodInfoAppModel(Strategy strategy,
@@ -53,33 +52,5 @@ namespace System.CommandLine.ReflectionAppModel
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;
         }
-
-        //protected override IEnumerable<object> GetChildCandidates(object DataSource)
-        //{
-        //    return entryMethod.GetParameters ();
-        //}
-
-        //protected override IEnumerable<object> GetDataCandidates(object DataSource)
-        //{
-        //    string name = entryMethod.Name;
-        //    var items = new List<object>();
-        //    items.AddRange(entryMethod.GetCustomAttributes(useBaseClassAttributes));
-        //    items.Add(name);
-        //    //if (includeNameIdentity)
-        //    //{
-        //    items.Add(new IdentityWrapper<string>(name));
-        //    //}
-        //    return items.ToArray();
-        //}
-
-        //protected override IEnumerable<CommandDescriptor> GetSubCommands(SymbolDescriptorBase parentSymbolDescriptor)
-        //{
-        //    return new List<CommandDescriptor>();
-        //}
-
-        //protected override IEnumerable<ICustomAttributeProvider> GetChildCandidates()
-        //{
-        //    return entryMethod.GetParameters();
-        //}
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -12,10 +10,11 @@ namespace System.CommandLine.GeneralAppModel
     /// In order to support remaining items (those not in the other two groups) being identifiable
     /// order matters, and the last can have a RemainingItemRule
     /// </remarks>
-    public class RuleSetSelectSymbols
+    public class RuleSetSelectSymbols : RuleSetBase
     {
-        public RuleSet<IRuleGetItems> Rules { get; private set; } = new RuleSet<IRuleGetItems>();
         public List<string> NamesToIgnore { get; } = new List<string>();
+        public RuleGroup<IRuleGetItems> Rules { get; private set; } = new RuleGroup<IRuleGetItems>();
+
 
         public IEnumerable<Candidate> GetItems(SymbolType symbolType,
                                                SymbolDescriptorBase commandDescriptor,
@@ -26,6 +25,11 @@ namespace System.CommandLine.GeneralAppModel
                     .Where(x => x.SymbolType == symbolType)
                     .SelectMany(r => r.GetItems(candidates, commandDescriptor))
                     .ToList();
+        }
+
+        public override string Report(int tabsCount)
+        {
+            return String.Join("", Rules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount) + r.RuleDescription));
         }
     }
 }

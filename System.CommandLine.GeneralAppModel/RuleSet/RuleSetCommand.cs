@@ -1,6 +1,7 @@
 ﻿namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleSetCommand : RuleSetSymbols,IRuleSetCommand
+    public class RuleSetCommand : RuleSetSymbol,IRuleSetCommand
     {
+     
     }
 }

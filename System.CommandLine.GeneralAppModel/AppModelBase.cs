@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
-using System.Threading;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -116,7 +115,7 @@ namespace System.CommandLine.GeneralAppModel
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.Required = ruleSet.RequiredRule.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.ArgumentType = GetArgumentType(candidate);
             return descriptor;
         }
@@ -132,21 +131,17 @@ namespace System.CommandLine.GeneralAppModel
             //descriptor.Aliases = GetMatching(descriptor, Strategy.AliasRules, param, parentSymbolDescriptor);
             //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.Required = ruleSet.RequiredRule.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             //descriptor.ArgumentType = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             return descriptor;
         }
 
-        private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbols ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbol ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
             var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Name = ruleSet.NameRules.MorphValue(descriptor, candidate, name, parentSymbolDescriptor);
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.IsHidden = ruleSet.IsHiddenRule.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }
-
-        //protected abstract ArgumentDescriptor GetArgument(object item, SymbolDescriptorBase parentSymbolDescriptor);
-        //protected abstract OptionDescriptor GetOption(object item, SymbolDescriptorBase parentSymbolDescriptor);
-        //protected abstract CommandDescriptor GetCommand(object item, SymbolDescriptorBase parentSymbolDescriptor);}
     }
 }

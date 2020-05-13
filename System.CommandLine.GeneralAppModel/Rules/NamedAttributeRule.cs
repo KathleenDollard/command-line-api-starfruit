@@ -17,7 +17,6 @@ namespace System.CommandLine.GeneralAppModel
         public string AttributeName { get; set; }
         public string Type { get; set; }
         public string PropertyName { get; set; }
-        public override string RuleDescription { get; }
 
         public (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> item,
@@ -88,53 +87,7 @@ namespace System.CommandLine.GeneralAppModel
             => attributeProvider.GetCustomAttributes(Context.IncludeBaseClassAttributes)
                                         .OfType<Attribute>();
 
-        //protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    return GetMatchingAttributes(symbolDescriptor, items)
-        //                .Select(a => GetProperty(a, PropertyName))
-        //                .OfType<object>();
-        //}
-
-        //public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    return GetMatchingItems(symbolDescriptor, items)
-        //                    .OfType<Attribute>()
-        //                    .Where(v => !v.Equals(default))
-        //                    .Any();
-
-        //}
-
-        // ISymbolSelectionRule implementation
-
-
-
-        //// IValueRule<string>
-        //public string GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
-        //                                     SymbolType requestedSymbolType,
-        //                                     IEnumerable<object> item,
-        //                                     SymbolDescriptorBase parentSymbolDescriptor)
-        //{
-        //    var attribute = GetMatches(symbolDescriptor, requestedSymbolType, item, parentSymbolDescriptor)
-        //                        .OfType<Attribute>()
-        //                        .FirstOrDefault();
-        //    return GetProperty<string>(attribute, PropertyName);
-        //    throw new NotImplementedException();
-        //}
-
-        //public IEnumerable<string> GetAllValues(SymbolDescriptorBase symbolDescriptor,
-        //                                        SymbolType requestedSymbolType,
-        //                                        IEnumerable<object> item,
-        //                                        SymbolDescriptorBase parentSymbolDescriptor)
-        //    => GetMatches(symbolDescriptor, requestedSymbolType, item, parentSymbolDescriptor)
-        //                        .OfType<Attribute>()
-        //                        .Select(a => GetProperty<string>(a, PropertyName))
-        //                        .Where(x => x != default)
-        //                        .Distinct();
-
-
-        //// Support methods
-
-
-
+        public override string RuleDescription
+            => $"AttributeName Rule: {AttributeName} PropertyName: {PropertyName}";
     }
 }

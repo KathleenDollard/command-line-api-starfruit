@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Data.Common;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
@@ -15,6 +15,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 IsHidden = true
             };
             command.AddAliases(data.Aliases);
+            if (!(data.Arguments is null))
+            {
+                command.AddArguments(data.Arguments.Select(x => CreateArgument(x)));
+            }
             return command;
         }
 

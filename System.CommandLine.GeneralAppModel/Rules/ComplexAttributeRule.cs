@@ -2,7 +2,10 @@
 
 namespace System.CommandLine.GeneralAppModel
 {
-    // TODO: Clarify complex types here
+
+    /// <summary>
+    /// This will be important for multi-part attributes like arity
+    /// </summary>
     public class ComplexAttributeRule : NamedAttributeRule
     {
         public IEnumerable<string> PropertyNames { get; }
@@ -11,5 +14,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             PropertyNames = propertyNames;
         }
+        public override string RuleDescription
+            => $"ComplexAttribute Rule: {AttributeName} PropertyNames: {String.Join (", ",PropertyNames)}";
     }
 }

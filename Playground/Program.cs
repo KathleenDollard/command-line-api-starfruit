@@ -1,22 +1,16 @@
 ﻿using System;
 using System.CommandLine;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.Invocation;
 
 namespace UserStudyTest2
 {
-class Program
-{
-    static void Main(string[] args)
+    class Program
     {
-        var command = new RootCommand("Application to adjust volume")
+        static void Main(string[] args)
         {
-            new Argument<int>("new-volume")
-        };
-        command.Handler = CommandHandler.Create<int>(AdjustVolume);
-        command.Invoke(args);
+            var strategy = new Strategy("Standard").SetStandardRules();
+            Console.WriteLine(strategy.Report());
+        }
     }
-
-    private static void AdjustVolume(int newVolume)
-        => Console.WriteLine($"New volume: {newVolume}!");
-}
 }

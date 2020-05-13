@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {

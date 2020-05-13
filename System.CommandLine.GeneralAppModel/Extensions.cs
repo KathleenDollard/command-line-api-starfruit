@@ -48,9 +48,13 @@ namespace System.CommandLine.GeneralAppModel
                                                 MemberExpression member => "attribute." + member.Member.Name,
                                                 _ => "<Unknown>"
                                             });
-                            //.Select(a => "attribute." + a.Member.Name);
                 return ret;
             }
+        }
+
+        public static string NewLineWithTabs(int tabsCount)
+        {
+            return Environment.NewLine + new string('\x09', tabsCount);
         }
     }
 }

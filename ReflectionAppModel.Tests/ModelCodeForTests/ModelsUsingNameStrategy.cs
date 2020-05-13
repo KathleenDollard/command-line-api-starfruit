@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.ComponentModel;
-using System.Reflection;
-using System.Text;
-using Xunit.Abstractions;
 
 namespace System.CommandLine.ReflectionModel.Tests.ModelCodeForTests
 {

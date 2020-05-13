@@ -59,7 +59,7 @@ namespace System.CommandLine.GeneralAppModel
             //rules.IsHiddenRule
             //    ;
 
-            rules.RequiredRule
+            rules.RequiredRules
                 .Add(new BoolAttributeRule("Required"))
                 .Add(new NamedAttributeRule("Argument", "bool", "Required", SymbolType.Option))
             ;
@@ -90,7 +90,7 @@ namespace System.CommandLine.GeneralAppModel
             //rules.IsHiddenRule
             //    ;
 
-            rules.RequiredRule
+            rules.RequiredRules
                 .Add(new BoolAttributeRule("Required"))
                 .Add(new NamedAttributeRule("Option", "bool", "OptionRequired", SymbolType.Option))
              ;
@@ -116,7 +116,7 @@ namespace System.CommandLine.GeneralAppModel
             //rules.IsHiddenRule
             //    ;
 
-            rules.RequiredRule
+            rules.RequiredRules
                 .Add(new NamedAttributeRule("Option", "bool", "ArgumentRequired", SymbolType.Option))
             ;
 

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace System.CommandLine.GeneralAppModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
-    public class LabelRule : RuleBase
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class LabelRule : RuleBase
     {
         public LabelRule(string label, SymbolType symbolType = SymbolType.All)
             : base(symbolType)
@@ -12,16 +13,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public string Label { get; }
 
-        public override string RuleDescription { get; }
-
-        //public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public override string RuleDescription
+            => $"Label Rule: {Label}";
     }
 }

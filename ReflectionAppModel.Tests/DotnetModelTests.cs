@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel;
+﻿using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionModel.Tests.DotnetModel;
-using System.Text;
 using Xunit;
 
 namespace System.CommandLine.ReflectionModel.Tests

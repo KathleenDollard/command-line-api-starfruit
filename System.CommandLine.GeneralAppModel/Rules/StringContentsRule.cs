@@ -84,39 +84,7 @@ namespace System.CommandLine.GeneralAppModel
                                         .Any());
 
         public override string RuleDescription
-            => $"String Contents: {Position} - '{CompareTo}'";
-
-        //public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    return items
-        //            .OfType<string>()
-        //            .Where(x => Check(x, Position, CompareTo))
-        //            .Any();
-
-        //    static bool Check(string value, StringPosition position, string compareTo)
-        //    {
-        //        if (value is null)
-        //        {
-        //            return false;
-        //        }
-        //        return position switch
-        //        {
-        //            StringPosition.Prefix => value.StartsWith(compareTo),
-        //            StringPosition.Suffix => value.EndsWith(compareTo),
-        //            StringPosition.Contains => value.Contains(compareTo),
-        //            _ => throw new ArgumentException("Unexpected position")
-        //        };
-        //    }
-        //}
-
-        //protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
-        //        ? Array.Empty<string>()
-        //        : items
-        //            .OfType<IdentityWrapper<string>>()
-        //            .Select(w => Conversions.To<string>(Strip(w.Value.ToString())));
-        //}
+            => $"String Contents Rule: {Position} - '{CompareTo}'";
     }
 
 }

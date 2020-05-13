@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Descriptors;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {

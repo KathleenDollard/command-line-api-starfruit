@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
-using System.CommandLine.ReflectionModel.Tests;
 using System.CommandLine.ReflectionModel.Tests.ModelCodeForTests;
-using System.Text;
 
 namespace System.CommandLine.ReflectionModel.Tests.DotnetModel
 {

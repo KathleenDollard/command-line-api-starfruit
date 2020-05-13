@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-  public  static class  Utils
+    public  static class  Utils
     {
         public static string CompareLists<T>(this IEnumerable<T> list1, IEnumerable<T> list2, string name)
         {

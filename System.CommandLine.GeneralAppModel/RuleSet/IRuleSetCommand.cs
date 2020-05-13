@@ -1,6 +1,7 @@
 ﻿namespace System.CommandLine.GeneralAppModel
 {
-    public class DescriptorMaker
+    public interface IRuleSetCommand : IRuleSetSymbol
     {
     }
+
 }

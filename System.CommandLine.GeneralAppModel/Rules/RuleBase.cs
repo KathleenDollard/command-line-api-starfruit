@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace System.CommandLine.GeneralAppModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
     /// <summary>
     /// RuleBase defines a single rule - such as an ArgumentAttribute indicating that an item is an argument. 
@@ -43,7 +40,6 @@ namespace System.CommandLine.GeneralAppModel
         /// TODO: Consider supplying a common implementation and making this virtual. 
         /// </remarks>
         /// <returns>All matching items</returns>
-        //protected abstract IEnumerable<object> GetMatchingItems(SymbolDescriptorBase parentSymbolDescriptor, IEnumerable<object> items);
 
         ///// <summary>
         ///// Determines whether any of the items match. 

@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel
         { }
 
         public override string RuleDescription
-            => "Identity Rule";
+            => "Identity Rule: ";
 
         public (bool success, T value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                               IEnumerable<object> items,
@@ -23,32 +23,7 @@ namespace System.CommandLine.GeneralAppModel
             }
             return (false, default);
         }
-
-        //public override bool HasMatch(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    return items
-        //            .Any();
-
-        //}
-
-        //protected override IEnumerable<object> GetMatchingItems(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
-        //        ? Array.Empty<object>()
-        //        : items
-        //            .OfType<IdentityWrapper<T>>()
-        //            .Select(w => w.Value)
-        //            .OfType<object>();
-        //}
     }
-
-    /// <summary>
-    /// The identity wrapper distinguishes the intent of supporting the identity rule from the intent of 
-    /// supporting StringContentRules and supports non-string identity types. "Identity" here is the sense 
-    /// of "Just use this value" not the sense of "This value is the name", although it often is the name.
-    /// </summary>
-    public class IdentityWrapper
-    { }
 
     public class IdentityWrapper<T> : IdentityWrapper
     {

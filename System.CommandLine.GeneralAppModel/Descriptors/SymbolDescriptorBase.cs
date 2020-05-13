@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -48,19 +45,4 @@ namespace System.CommandLine.GeneralAppModel
         public IEnumerable<RuleBase> AppliedIsHiddenRules { get; } = new List<RuleBase>();
 
     }
-
-    //public class AppliedRule
-    //{
-    //    public string SymbolName { get; set; }
-    //    public RuleBase RuleBase { get; set; }
-    //    public DateTime StartTime { get; set; }
-
-    //    public enum Status
-    //    {
-    //        NotApplied = 0, // this is not generally used, rules not tested don't appear. Use the report for full rule list
-    //        MatchAndSuccess = 1,
-    //        MatchAndFail = 2,
-    //        NotMatched
-    //    }
-    //}
 }

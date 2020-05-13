@@ -9,4 +9,9 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20104.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
+    <ProjectReference Include="..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
+  </ItemGroup>
+
 </Project>

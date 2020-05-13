@@ -1,30 +1,38 @@
-﻿using System.CommandLine.GeneralAppModel.Descriptors;
+﻿using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleSetArgument : RuleSetSymbols, IRuleSetArgument
+    public class RuleSetArgument : RuleSetSymbol, IRuleSetArgument
     {
-        public RuleSetArgument OptionArgumentRuleSet { get; } 
-        public RuleSet<IRuleArity> ArityRule { get; } = new RuleSet<IRuleArity>();
-        public RuleSet<IRuleGetValues<bool>> RequiredRule { get; } = new RuleSet<IRuleGetValues<bool>>();
-        public RuleSet<IRuleGetValues<Type>> SpecialArgumentTypeRule { get; } = new RuleSet<IRuleGetValues<Type>>();
+        public RuleSetArgument OptionArgumentRuleSet { get; }
+        public RuleGroup<IRuleArity> ArityRules { get; } = new RuleGroup<IRuleArity>();
+        public RuleGroup<IRuleGetValues<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValues<bool>>();
+        public RuleGroup<IRuleGetValues<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValues<Type>>();
 
         public void AddArityRule(IRuleArity arityRule)
         {
             CheckFrozen();
-            ArityRule.Add( arityRule);
+            ArityRules.Add(arityRule);
         }
 
         public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
         {
             CheckFrozen();
-            RequiredRule.Add(requiredRule);
+            RequiredRules.Add(requiredRule);
         }
 
         public void AddSpecialArgumentTypeRule(IRuleGetValues<Type> specialArgumentType)
         {
             CheckFrozen();
-            SpecialArgumentTypeRule.Add(specialArgumentType);
+            SpecialArgumentTypeRules.Add(specialArgumentType);
+        }
+
+        public override string Report(int tabsCount)
+        {
+            return base.Report(tabsCount) +
+                   $@"{CoreExtensions.NewLineWithTabs(tabsCount)} Required Rules: { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
+                      {CoreExtensions.NewLineWithTabs(tabsCount)} Arity Rules:  { string.Join("", ArityRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
+                      {CoreExtensions.NewLineWithTabs(tabsCount)} SpecialArgumentType Rule:  { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
         }
     }
 }
