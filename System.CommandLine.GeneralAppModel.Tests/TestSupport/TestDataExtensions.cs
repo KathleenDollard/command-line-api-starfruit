@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.Parsing;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -45,7 +46,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static Option CreateOption(this OptionTestData data)
         {
-            var option = new Option(data.Name)
+            var option = new Option("--" + data.Name.ToKebabCase())
             {
                 Description = data.Description,
                 IsHidden = data.IsHidden,
@@ -56,14 +57,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         public static OptionDescriptor CreateDescriptor(this OptionTestData data, SymbolDescriptorBase parentSymbolDescriptor)
-            => new OptionDescriptor(null, data.Raw)
+        {
+            var option = new OptionDescriptor(null, data.Raw)
             {
                 Name = data.Name,
                 Description = data.Description,
                 IsHidden = data.IsHidden,
                 Aliases = data.Aliases,
-                Required = data.Required
+                Required = data.Required,
             };
+            option.Arguments = data.Arguments == null
+                                   ? null
+                                   : data.Arguments.Select(a => CreateDescriptor(a, option));
+            return option;
+        }
 
         public static Argument CreateArgument(this ArgumentTestData data)
         {

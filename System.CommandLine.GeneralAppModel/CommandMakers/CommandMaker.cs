@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.Parsing;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
@@ -34,7 +35,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public static Option MakeOption(OptionDescriptor descriptor)
         {
-            var option = new Option(descriptor.Name, descriptor.Description);
+            var option = new Option("--" + descriptor.Name.ToKebabCase(), descriptor.Description);
             if (!(descriptor.Arguments is null))
             {
                 option.Argument = descriptor

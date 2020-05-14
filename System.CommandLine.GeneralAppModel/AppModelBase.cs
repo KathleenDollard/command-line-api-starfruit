@@ -122,10 +122,10 @@ namespace System.CommandLine.GeneralAppModel
 
         private OptionDescriptor GetOption(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
-            //{
-            //    Arguments = new ArgumentDescriptor[] { BuildArgument(param, parentSymbolDescriptor) }
-            //};
+            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item)
+            {
+                Arguments = new ArgumentDescriptor[] { GetArgument(candidate, parentSymbolDescriptor) }
+            };
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             //descriptor.Aliases = GetMatching(descriptor, Strategy.AliasRules, param, parentSymbolDescriptor);

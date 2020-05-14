@@ -154,6 +154,15 @@ namespace System.CommandLine.ReflectionModel.Tests.ModelCodeForTests
                         {
                             Raw = ReflectionSupport.GetParameterInfo<MethodWithParameterOption>(nameof(DoSomething), "stringParam"),
                             Name = "stringParam",
+                            Arguments = new List<ArgumentTestData>
+                            {
+                                new ArgumentTestData
+                                {
+                                    Raw =  ReflectionSupport.GetParameterInfo<MethodWithParameterOption>(nameof(DoSomething), "stringParam"),
+                                    Name = "stringParam",
+                                    ArgumentType = typeof(string),
+                                }
+                            }
                         }
                     }
                 }

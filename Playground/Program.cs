@@ -1,9 +1,6 @@
 ﻿using System;
-using System.CommandLine;
 using System.CommandLine.GeneralAppModel;
-using System.CommandLine.ReflectionAppModel;
-using System.CommandLine.Invocation;
-using System.CommandLine.Parsing;
+using System.Security.Cryptography.X509Certificates;
 
 namespace UserStudyTest2
 {
@@ -13,26 +10,22 @@ namespace UserStudyTest2
         {
             var strategy = new Strategy("Standard").SetStandardRules();
             //Report(strategy);
-            Run(args, strategy);
+            strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
+            var instance = strategy.CreateInstance <MyClass>(args);
+            Console.WriteLine($"From Type: Name: {instance.Name} A: {instance.A} B: {instance.B} C: {instance.C}");
         }
-
-        private static void Run(string[] args, Strategy strategy)
+ 
+        public static void Test(string name, int a, string b, int c)
         {
-            System.Reflection.MethodInfo entryMethod = typeof(Program).GetMethod("Test");
-            var descriptor = ReflectionAppModel.RootCommandDescriptor(strategy, entryMethod);
-            var command = CommandMaker.MakeCommand(descriptor);
-            //command.Handler = CommandHandler.Create<string, int, int>(Test);
-            command.Invoke(args); 
+            Console.WriteLine($"From Method: Name: {name} A: {a} B: {b} C: {c}");
         }
+    }
 
-        private static void Report(Strategy strategy)
-        {
-            Console.WriteLine(strategy.Report());
-        }
-
-        public static void Test(string nameArg, int A, string B, int C)
-        {
-            Console.WriteLine($"Name: {nameArg} A: {A} B: {B} C: {C}");
-        }
+    public class MyClass
+    {
+        public string Name { get; }
+        public int A { get; }
+        public string B { get; }
+        public int C { get; }
     }
 }
