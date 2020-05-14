@@ -7,6 +7,7 @@
             Name = name;
         }
         public string Name { get; }
+        public RuleSetGetCandidatesRule GetCandidateRules { get; } = new RuleSetGetCandidatesRule();
         public RuleSetSelectSymbols SelectSymbolRules { get; } = new RuleSetSelectSymbols();
         public RuleSetArgument ArgumentRules { get; } = new RuleSetArgument();
         public RuleSetOption OptionRules { get; } = new RuleSetOption();

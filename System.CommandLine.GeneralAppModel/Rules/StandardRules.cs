@@ -1,9 +1,17 @@
 ﻿using System.CommandLine.GeneralAppModel.Rules;
+using System.Data;
 
 namespace System.CommandLine.GeneralAppModel
 {
     public static class StandardRules
     {
+
+
+        public static Strategy SetStandardAvailableCandidatesRules(this Strategy strategy)
+        {
+            strategy.AvailableCandidatesRules.SetStandardSelectSymbolRules();
+            return strategy;
+        }
 
         public static Strategy SetStandardSelectSymbolRules(this Strategy strategy)
         {
@@ -29,15 +37,23 @@ namespace System.CommandLine.GeneralAppModel
             return strategy;
         }
 
+        public static RuleSetGetCandidatesRule AvailableCandidatesRules(this RuleSetGetCandidatesRule rules)
+        {
+            rules.Rules
+                .Add(new DerivedTypeRule())
+                ;
+            return rules;
+        }
+
         public static RuleSetSelectSymbols SetStandardSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
             rules.Rules
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command",SymbolType.Command))
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command", SymbolType.Command))
                .Add(new NamedAttributeRule("Command", "string", "Name", SymbolType.Command))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
                .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Option))
-               .Add(new RemainingSymbolRule ( SymbolType.Option))
+               .Add(new RemainingSymbolRule(SymbolType.Option))
             // TODO: .Add(new LabelRule<string>("ComplexUserType", SymbolType.Command))
             ;
             return rules;
@@ -108,7 +124,7 @@ namespace System.CommandLine.GeneralAppModel
         public static RuleSetArgument SetStandardOptionArgumentRules(this RuleSetArgument rules)
         {
             rules.DescriptionRules
-                .Add(new NamedAttributeRule ("Option", "string", "ArgumentDescription", SymbolType.Option))
+                .Add(new NamedAttributeRule("Option", "string", "ArgumentDescription", SymbolType.Option))
                 ;
             rules.NameRules
                 .Add(new NamedAttributeRule("Option", "string", "ArgumentName", SymbolType.Argument))

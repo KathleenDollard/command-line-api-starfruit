@@ -33,9 +33,9 @@ namespace System.CommandLine.GeneralAppModel
         public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> candidates,
                                           SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var symbolRules = Rules.OfType<IRuleGetItems>();
+            var symbolRules = Rules.OfType<IRuleGetCandidates>();
             var matches = symbolRules
-                            .SelectMany(rule => rule.GetItems(candidates, parentSymbolDescriptor))
+                            .SelectMany(rule => rule.GetCandidates(candidates, parentSymbolDescriptor))
                             .Distinct();
             return matches;
         }

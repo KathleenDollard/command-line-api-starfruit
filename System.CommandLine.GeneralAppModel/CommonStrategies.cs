@@ -4,6 +4,7 @@
     {
         public static Strategy SetStandardRules(this Strategy strategy) 
             => strategy
+                .SetStandardAvailableCandidatesRules()
                 .SetStandardSelectSymbolRules()
                 .SetStandardArgumentRules()
                 .SetStandardCommandRules()
