@@ -54,7 +54,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public static string NewLineWithTabs(int tabsCount)
         {
-            return Environment.NewLine + new string('\x09', tabsCount);
+            return Environment.NewLine + new string(' ', tabsCount) + new string(' ', tabsCount) + new string(' ', tabsCount);
         }
     }
 }

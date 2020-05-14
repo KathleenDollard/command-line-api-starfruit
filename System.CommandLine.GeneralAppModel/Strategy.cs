@@ -16,10 +16,10 @@
         {
             return $@"
 Strategy: {Name}
-   SelectSymbolRules:{ SelectSymbolRules.Report(1)}
-   ArgumentRules:{ ArgumentRules.Report(1)}
-   OptionRules:{ OptionRules.Report(1)}
-   CommandRules:{ CommandRules.Report(1)}
+   SelectSymbolRules:{ SelectSymbolRules.Report(2)}
+   ArgumentRules:{ ArgumentRules.Report(2)}
+   OptionRules:{ OptionRules.Report(2)}
+   CommandRules:{ CommandRules.Report(2)}
 ";
         }
 

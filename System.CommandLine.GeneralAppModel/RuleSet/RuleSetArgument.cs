@@ -30,9 +30,9 @@ namespace System.CommandLine.GeneralAppModel
         public override string Report(int tabsCount)
         {
             return base.Report(tabsCount) +
-                   $@"{CoreExtensions.NewLineWithTabs(tabsCount)} Required Rules: { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
-                      {CoreExtensions.NewLineWithTabs(tabsCount)} Arity Rules:  { string.Join("", ArityRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
-                      {CoreExtensions.NewLineWithTabs(tabsCount)} SpecialArgumentType Rule:  { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
+                   $@"{CoreExtensions.NewLineWithTabs(tabsCount)}Required Rules: { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
+                      {CoreExtensions.NewLineWithTabs(tabsCount)}Arity Rules:  { string.Join("", ArityRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
+                      {CoreExtensions.NewLineWithTabs(tabsCount)}SpecialArgumentType Rule:  { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
         }
     }
 }

@@ -56,10 +56,12 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string Report(int tabsCount)
         {
-            return $@"{CoreExtensions.NewLineWithTabs(tabsCount)} NameRules:  { string.Join("", NameRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
-                     { CoreExtensions.NewLineWithTabs(tabsCount)} DescriptionRules:  { string.Join("", DescriptionRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
-                     { CoreExtensions.NewLineWithTabs(tabsCount)} AliasesRules:  { string.Join("", AliasesRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}
-                     { CoreExtensions.NewLineWithTabs(tabsCount)} IsHiddenRules:  { string.Join("", IsHiddenRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
+            string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
+            string indentedWhitespace = CoreExtensions.NewLineWithTabs(tabsCount + 1);
+            return $@"{whitespace}NameRules:  { string.Join("", NameRules.Select(r => indentedWhitespace + r.RuleDescription))}
+                     { whitespace}DescriptionRules:  { string.Join("", DescriptionRules.Select(r => indentedWhitespace + r.RuleDescription))}
+                     { whitespace}AliasesRules:  { string.Join("", AliasesRules.Select(r => indentedWhitespace + r.RuleDescription))}
+                     { whitespace}IsHiddenRules:  { string.Join("", IsHiddenRules.Select(r => indentedWhitespace + r.RuleDescription))}";
         }
     }
 }

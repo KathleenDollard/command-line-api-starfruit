@@ -29,7 +29,8 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string Report(int tabsCount)
         {
-            return String.Join("", Rules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount) + r.RuleDescription));
+            string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
+            return string.Join("", Rules.Select(r => whitespace + r.RuleDescription));
         }
     }
 }
