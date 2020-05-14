@@ -40,7 +40,7 @@ namespace System.CommandLine.ReflectionAppModel
             {
                 var name = typeItem.Name;
                 var candidate = new Candidate(typeItem);
-                candidate.AddTraitRange(typeItem.GetCustomAttributes(useBaseClassAttributes));
+                candidate.AddTraitRange(typeItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
                 candidate.AddTrait(name);
                 candidate.AddTrait(new IdentityWrapper<string>(name));
                 return candidate;
@@ -57,7 +57,7 @@ namespace System.CommandLine.ReflectionAppModel
         {
             var name = propertyInfo.Name;
             var candidate = new Candidate(propertyInfo);
-            candidate.AddTraitRange(entryType.GetCustomAttributes(useBaseClassAttributes));
+            candidate.AddTraitRange(entryType.GetCustomAttributes(Context.IncludeBaseClassAttributes));
             candidate.AddTrait(name);
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;

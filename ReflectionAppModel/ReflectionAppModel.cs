@@ -10,9 +10,6 @@ namespace System.CommandLine.ReflectionAppModel
 {
     public abstract class ReflectionAppModel : AppModelBase
     {
-        // I'm not sure whether we shoudl inherit custom attributes, but it seems less breaking to later change false->true than the reverse
-        protected readonly bool useBaseClassAttributes = false;
-
         protected ReflectionAppModel(Strategy strategy,
                                      object dataSource,
                                      object parentDataSource = null,

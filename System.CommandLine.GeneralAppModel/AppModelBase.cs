@@ -25,7 +25,7 @@ namespace System.CommandLine.GeneralAppModel
     /// </remarks>
     public abstract class AppModelBase
     {
-        public AppModelBase(Strategy strategy, object dataSource, object parentDataSource = null)
+        protected AppModelBase(Strategy strategy, object dataSource, object parentDataSource = null)
         {
             Strategy = strategy;
             DataSource = dataSource;
@@ -40,7 +40,7 @@ namespace System.CommandLine.GeneralAppModel
         protected object DataSource { get; }
         protected object ParentDataSource { get; }
 
-        protected (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
+        private (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
              ClassifyChildren(SymbolDescriptorBase commandDescriptor)
         {
             IEnumerable<Candidate> optionItems = null;
@@ -84,7 +84,6 @@ namespace System.CommandLine.GeneralAppModel
                 return list;
             }
         }
-
 
         protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
         {

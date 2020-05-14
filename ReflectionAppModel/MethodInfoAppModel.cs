@@ -10,7 +10,7 @@ namespace System.CommandLine.ReflectionAppModel
         private readonly MethodInfo entryMethod;
 
         private MethodInfoAppModel(Strategy strategy,
-                              MethodInfo entryMethod,
+                               MethodInfo entryMethod,
                                object parentDataSource,
                                Type[] ommittedTypes = null)
             : base(strategy, entryMethod, parentDataSource, ommittedTypes)
@@ -31,7 +31,7 @@ namespace System.CommandLine.ReflectionAppModel
             {
                 var name = methodItem.Name;
                 var candidate = new Candidate(methodItem);
-                candidate.AddTraitRange(methodItem.GetCustomAttributes(useBaseClassAttributes));
+                candidate.AddTraitRange(methodItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
                 candidate.AddTrait(name);
                 candidate.AddTrait(new IdentityWrapper<string>(name));
                 return candidate;
@@ -47,7 +47,7 @@ namespace System.CommandLine.ReflectionAppModel
         {
             var name = parameterInfo.Name;
             var candidate = new Candidate(parameterInfo);
-            candidate.AddTraitRange(entryMethod.GetCustomAttributes(useBaseClassAttributes));
+            candidate.AddTraitRange(entryMethod.GetCustomAttributes(Context.IncludeBaseClassAttributes));
             candidate.AddTrait(name);
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;
