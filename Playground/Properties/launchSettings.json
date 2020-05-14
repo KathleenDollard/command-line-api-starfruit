@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Playground": {
+      "commandName": "Project",
+      "commandLineArgs": "--name \"Hello\" --a 7 --b 13 --c 17"
+    }
+  }
+}
