@@ -107,6 +107,7 @@ namespace System.CommandLine.GeneralAppModel
             var descriptor = new CommandDescriptor(parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.CommandRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
+            descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             return descriptor;
 
         }

@@ -66,6 +66,9 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NamedAttributeWithPropertyRule<bool>("Argument",  "Required", SymbolType.Option))
             ;
 
+            rules.IsHiddenRules
+               .Add(new NamedAttributeRule("Hidden"));
+
             //rules.AliasesRules
             //    ;
 
@@ -97,11 +100,12 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NamedAttributeWithPropertyRule<bool>("Option", "OptionRequired", SymbolType.Option))
              ;
 
+            rules.IsHiddenRules
+                .Add(new NamedAttributeRule("Hidden"));
+
             //rules.AliasesRules
             //    ;
 
-            //rules.IsHiddenRules
-            //    ;
 
 
             return rules;
@@ -121,6 +125,7 @@ namespace System.CommandLine.GeneralAppModel
             rules.RequiredRules
                 .Add(new NamedAttributeWithPropertyRule<bool>("Option",  "ArgumentRequired", SymbolType.Option))
             ;
+
 
             //rules.AliasesRules
             //    ;
@@ -147,13 +152,15 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command"))
                 .Add(new IdentityRule<string>())
             ;
-            //rules.IsHiddenRules
-            //    ;
+
+            rules.TreatUnmatchedTokensAsErrorsRules
+                .Add(new NamedAttributeWithPropertyRule<bool>("TreatUnmatchedTokensAsErrors", "Value"));
+
+            rules.IsHiddenRules
+                .Add(new NamedAttributeRule("Hidden"));
+
 
             //rules.AliasesRules
-            //    ;
-
-            //rules.IsHiddenRules
             //    ;
 
 

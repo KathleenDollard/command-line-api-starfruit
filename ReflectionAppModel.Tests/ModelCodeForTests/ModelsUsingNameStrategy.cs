@@ -9,20 +9,23 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
         public void DoSomething() { }
 
         public IEnumerable<CommandTestData> CommandDataFromMethods
-                 => new List<CommandTestData>
-                 {
-                new CommandTestData()
-                {
-                    Name = nameof(DoSomething),
-                    Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething))
-                }
-                 };
+        => new List<CommandTestData>
+        {
+            new CommandTestData()
+            {
+                Name = nameof(DoSomething),
+                Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething)),
+                IsHidden = false
+
+            }
+        };
 
         public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeWithMethodNoAtributes),
-                Raw = typeof(SimpleTypeWithMethodNoAtributes)
+                Raw = typeof(SimpleTypeWithMethodNoAtributes),
+                IsHidden = false
             };
     }
 
@@ -32,7 +35,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeNoAttributes),
-                Raw = typeof(SimpleTypeNoAttributes)
+                Raw = typeof(SimpleTypeNoAttributes),
+                IsHidden = false
             };
     }
 
@@ -48,7 +52,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 {
                     Name = nameof(DoSomething),
                     Description = "This is a great description 1",
-                    Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodWithDescriptionAttribute>(nameof(DoSomething))
+                    Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodWithDescriptionAttribute>(nameof(DoSomething)),
+                    IsHidden = false
                }
             };
 
@@ -56,7 +61,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeWithMethodWithDescriptionAttribute),
-                Raw = typeof(SimpleTypeWithMethodWithDescriptionAttribute)
+                Raw = typeof(SimpleTypeWithMethodWithDescriptionAttribute),
+                IsHidden = false
             };
     }
 
@@ -68,7 +74,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(SimpleTypeWithDescriptionAttribute),
                 Description = "This is a great description 2",
-                Raw = typeof(SimpleTypeWithDescriptionAttribute)
+                Raw = typeof(SimpleTypeWithDescriptionAttribute),
+                IsHidden = false
             };
     }
 
@@ -83,13 +90,15 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 {
                     Raw = ReflectionSupport.GetMethodInfo<MethodWithParameterNamedArgs>(nameof(DoSomething)),
                     Name = nameof(DoSomething),
+                    IsHidden = false,
                     Arguments = new List<ArgumentTestData>
                     {
                         new ArgumentTestData
                         {
                             Raw = ReflectionSupport.GetParameterInfo<MethodWithParameterNamedArgs>(nameof(DoSomething), "stringParamArg"),
                             Name = "stringParam",
-                            ArgumentType = typeof(string)
+                            ArgumentType = typeof(string),
+                            IsHidden = false
                         }
                     }
                 }
@@ -99,7 +108,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             => new CommandTestData()
             {
                 Name = nameof(MethodWithParameterNamedArgs),
-                Raw = typeof(MethodWithParameterNamedArgs)
+                Raw = typeof(MethodWithParameterNamedArgs),
+                IsHidden = false
             };
     }
 
@@ -112,12 +122,14 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(TypeWithPropertyNamedArgs),
                 Raw = typeof(TypeWithPropertyNamedArgs),
+                IsHidden = false,
                 Arguments = new List<ArgumentTestData>
                 { new ArgumentTestData
                     {
                        Name = nameof(StringPropertyArg)[..^3],
                        Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgs>(nameof(StringPropertyArg)),
-                       ArgumentType = typeof(string)
+                       ArgumentType = typeof(string),
+                       IsHidden = false
                     }
                 }
             };
@@ -134,12 +146,14 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 {
                     Raw = ReflectionSupport.GetMethodInfo<MethodWithParameterOption>(nameof(DoSomething)),
                     Name = nameof(DoSomething),
+                    IsHidden = false,
                     Options = new List<OptionTestData>
                     {
                         new OptionTestData
                         {
                             Raw = ReflectionSupport.GetParameterInfo<MethodWithParameterOption>(nameof(DoSomething), "stringParam"),
                             Name = "stringParam",
+                            IsHidden = false,
                             Arguments = new List<ArgumentTestData>
                             {
                                 new ArgumentTestData
@@ -147,6 +161,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                                     Raw =  ReflectionSupport.GetParameterInfo<MethodWithParameterOption>(nameof(DoSomething), "stringParam"),
                                     Name = "stringParam",
                                     ArgumentType = typeof(string),
+                                    IsHidden = false
                                 }
                             }
                         }
@@ -158,7 +173,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             => new CommandTestData()
             {
                 Name = nameof(MethodWithParameterOption),
-                Raw = typeof(MethodWithParameterOption)
+                Raw = typeof(MethodWithParameterOption),
+                IsHidden = false
             };
     }
 
@@ -171,11 +187,13 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(TypeWithPropertyOption),
                 Raw = typeof(TypeWithPropertyOption),
+                IsHidden = false,
                 Options = new List<OptionTestData>
                 { new OptionTestData
                         {
                            Name = nameof(StringProperty),
                            Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                           IsHidden = false
                         }
                 }
             };
@@ -188,6 +206,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(TypeWithDerivedTypeCommands_B),
                 Raw = typeof(TypeWithDerivedTypeCommands_B),
+                IsHidden = false
             };
     }
     public class TypeWithDerivedTypeCommands_C : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
@@ -196,7 +215,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             => new CommandTestData()
             {
                 Name = nameof(TypeWithDerivedTypeCommands_C),
-                Raw = typeof(TypeWithDerivedTypeCommands_C),
+                Raw = typeof(TypeWithDerivedTypeCommands_C), 
+                IsHidden = false
             };
     }
     public class TypeWithDerivedTypeCommands_A : IHaveTypeTestData
@@ -206,6 +226,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(TypeWithDerivedTypeCommands_A),
                 Raw = typeof(TypeWithDerivedTypeCommands_A),
+                IsHidden = false,
                 SubCommands = new List<CommandTestData>
                 {
                     (new TypeWithDerivedTypeCommands_B() as IHaveTypeTestData).CommandDataFromType,
@@ -214,5 +235,51 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
+    [TreatUnmatchedTokensAsErrors(false)]
+    public class TypeWithTreatUnmatchedTokenAsErrors : IHaveTypeTestData
+    {
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithDerivedTypeCommands_A),
+                Raw = typeof(TypeWithDerivedTypeCommands_A),
+                IsHidden = false,
+                TreatUnmatchedTokensAsErrors = false
+            };
+    }
 
+    [Hidden]
+    public class TypeWithThingsSetToHidden : IHaveTypeTestData
+    {
+        [Hidden]
+        public string StringProperty { get; set; }
+
+        [Hidden]
+        public string StringArg { get; set; }
+
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithDerivedTypeCommands_A),
+                Raw = typeof(TypeWithDerivedTypeCommands_A),
+                IsHidden = true,
+                Options = new List<OptionTestData>
+                    { new OptionTestData
+                            {
+                               Name = nameof(StringProperty),
+                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                               IsHidden = true,
+                            }
+                    },
+                 Arguments = new List<ArgumentTestData>
+                    { new ArgumentTestData
+                            {
+                               Name = nameof(StringProperty),
+                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                               IsHidden = true,
+                            }
+                    }
+            };
+    }
 }
+
