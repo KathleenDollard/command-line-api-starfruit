@@ -60,10 +60,6 @@ namespace System.CommandLine.GeneralAppModel
                     + DescriptionRules.ReportRuleGroup(tabsCount, "the description" )
                     + AliasesRules.ReportRuleGroup(tabsCount, "aliases")
                     + IsHiddenRules.ReportRuleGroup(tabsCount, "whether to hide this in the CLI");
-            //return $@"{whitespace}To determine the name:  { string.Join("", NameRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}
-            //         { whitespace}To determine the description:  { string.Join("", DescriptionRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}
-            //         { whitespace}To determine aliases:  { string.Join("", AliasesRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}
-            //         { whitespace}To determine whether to hide this in the CLI:  { string.Join("", IsHiddenRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}";
         }
 
 

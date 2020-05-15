@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Equivalency;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,13 +22,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             strategy = new Strategy().SetStandardRules();
         }
 
-        //[Theory]
-        //[InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the name begins with ""Abc""")]
-        //public void ReportForBoolAttributeRuleIsCorrect(string attributeName, )
-        //{
-        //}
-
-        [Fact(Skip = "")]
+         [Fact(Skip = "")]
         public void ReportForComplexAttributeRuleIsCorrect()
         {
         }
@@ -48,7 +43,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the name begins with ""Abc""")]
+        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the name begins with 'Abc'")]
         public void ReportForNameRuleForGetItemsIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
@@ -59,7 +54,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"If name begins with ""Abc"", remove ""Abc""")]
+        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"If name begins with 'Abc', remove 'Abc'")]
         public void ReportForNameRuleForGetValueIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
@@ -69,9 +64,24 @@ namespace System.CommandLine.GeneralAppModel.Tests
             actual.Should().Be(expected);
         }
 
-        [Fact(Skip = "")]
-        public void ReportForNamedAttributeRuleIsCorrect()
+        [Theory]
+        [InlineData("NamedAttribute" , @"If there is an attribute named 'NamedAttribute'")]
+        public void ReportForNamedAttributeRuleIsCorrect(string attributeName, string expected)
         {
+            var rule = new NamedAttributeRule(attributeName);
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("WithProperty","ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property")]
+        public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
+        {
+            var rule = new NamedAttributeWithPropertyRule<string>(attributeName, propertyName );
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be(expected);
         }
 
         [Fact(Skip = "")]
@@ -80,7 +90,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData (StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the string begins with ""Abc""")]
+        [InlineData (StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the string begins with 'Abc'")]
         public void ReportForStringContentxForGetItemsIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
@@ -91,7 +101,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"If string begins with ""Abc"", remove ""Abc""")]
+        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"If string begins with 'Abc', remove 'Abc'")]
         public void ReportForStringContentsForGetValueIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
