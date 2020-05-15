@@ -1,24 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
 using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class NamedAttributeRule : RuleBase, IRuleGetValue<string>, IRuleGetValues<string>
+    //public class NamedAttributeWithPropertyRule<TValue> : RuleBase, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class NamedAttributeWithPropertyRule<TValue> : AttributeRuleBase<TValue>, IRuleGetValue<TValue>
     {
-        public NamedAttributeRule(string attributeName, string type, string propertyName, SymbolType symbolType = SymbolType.All)
-        : base(symbolType)
+        public NamedAttributeWithPropertyRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+        : base(attributeName,symbolType)
         {
-            AttributeName = attributeName;
-            Type = type;
             PropertyName = propertyName;
         }
 
-        public string AttributeName { get; set; }
-        public string Type { get; set; }
-        public string PropertyName { get; set; }
+        public string PropertyName { get;  }
 
-        public (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public override (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> item,
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -26,38 +24,9 @@ namespace System.CommandLine.GeneralAppModel
                                 .OfType<Attribute>();
             if (attributes.Any())
             {
-                return (true, GetProperty<string>(attributes.FirstOrDefault(), PropertyName));
+                return (true, GetProperty<TValue>(attributes.FirstOrDefault(), PropertyName));
             }
             return (false, default);
-        }
-
-        public IEnumerable<string> GetAllValues(SymbolDescriptorBase symbolDescriptor,
-                                                IEnumerable<object> item,
-                                                SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            return GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
-                                     .OfType<Attribute>()
-                                     .Select(a => GetProperty<string>(a, PropertyName))
-                                     .Where(x => x != default)
-                                     .Distinct();
-        }
-
-        public IEnumerable<T> GetMatches<T>(SymbolDescriptorBase symbolDescriptor,
-                                                     IEnumerable<T> items,
-                                                     SymbolDescriptorBase parentSymbolDescriptor)
-           => items
-                   .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor))
-                   .Where(x => !x.Equals(default));
-
-        public bool IsMatch(SymbolDescriptorBase symbolDescriptor,
-                             object item,
-                             SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            return item switch
-            {
-                Attribute a => DoesAttributeMatch(AttributeName, a),
-                _ => false
-            };
         }
 
         private static T GetProperty<T>(Attribute attribute, string propertyName)
@@ -74,13 +43,6 @@ namespace System.CommandLine.GeneralAppModel
                 ? Array.Empty<Attribute>()
                 : items
                     .Where(a => DoesAttributeMatch(AttributeName, a));
-        }
-
-        private bool DoesAttributeMatch(string attributeName, Attribute a)
-        {
-            var itemName = a.GetType().Name;
-            return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
-                || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
         }
 
         private IEnumerable<Attribute> GetAttributes(ICustomAttributeProvider attributeProvider)
