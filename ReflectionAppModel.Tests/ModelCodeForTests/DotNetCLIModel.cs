@@ -13,7 +13,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
                 Raw = typeof(Dotnet),
                 SubCommands = new List<CommandTestData>
                 {
-                    (new Tool() as IHaveTypeTestData) .CommandDataFromType,
+                    (new Tool() as IHaveTypeTestData).CommandDataFromType,
                 }
             };
     }
