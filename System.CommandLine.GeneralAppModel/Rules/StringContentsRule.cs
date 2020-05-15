@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleMorphValue<string>, IRuleGetItems
+    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleGetItems
     {
         public StringContentsRule(StringPosition position,
                                  string compareTo,
@@ -24,30 +24,13 @@ namespace System.CommandLine.GeneralAppModel
             Contains
         }
 
-        public string MorphValue(SymbolDescriptorBase symbolDescriptor,
-                                object item,
-                                string input,
-                                SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            if (!(input is string s) || s is null)
-            {
-                return null;
-            }
-            if (!DoesStringMatch(input, Position, CompareTo ))
-            {
-                return input;
-            }
-            if (Position == StringPosition.BeginsWith)
-                return s.Substring(CompareTo.Length);
-            else if (Position == StringPosition.EndsWith)
-                return s.Substring(0, s.Length - CompareTo.Length);
-            else if (Position == StringPosition.Contains)
-                return s.Replace(CompareTo, "");
-            else
-                throw new ArgumentException("Unexpected position");
-        }
+        protected virtual string MorphValueInternal(SymbolDescriptorBase symbolDescriptor,
+                         object item,
+                         string input,
+                         SymbolDescriptorBase parentSymbolDescriptor) 
+            => input;
 
-        public (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public virtual (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> items,
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -55,12 +38,16 @@ namespace System.CommandLine.GeneralAppModel
                                .Where(x => DoesStringMatch(x, Position, CompareTo));
             if (matches.Any())
             {
-                return (true, matches.First());
+                return (true, matches
+                               .Select(x => MorphValueInternal(symbolDescriptor, x, x, parentSymbolDescriptor))
+                               .First());
             }
             return (false, default);
 
 
         }
+
+
 
         public bool DoesStringMatch(string value, StringPosition position, string compareTo)
         {
@@ -76,6 +63,7 @@ namespace System.CommandLine.GeneralAppModel
                 _ => throw new ArgumentException("Unexpected position")
             };
         }
+ 
         public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor) 
             => (IEnumerable<Candidate>)items
                             .Where(x=>x.Traits
