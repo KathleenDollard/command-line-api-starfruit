@@ -26,7 +26,8 @@
 
    
         public SymbolType SymbolType { get; private protected  set; }
-        public abstract string RuleDescription { get; }
+
+        public abstract string RuleDescription<TIRuleSet>();
 
         /// <summary>
         /// Returns items where HasMatch is true. This is used for multi-item decision points like Aliases. 

@@ -30,7 +30,7 @@ namespace System.CommandLine.GeneralAppModel
         public override string Report(int tabsCount)
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
-            return string.Join("", Rules.Select(r => whitespace + r.RuleDescription));
+            return string.Join("", Rules.Select(r => whitespace + $"Is {r.SymbolType.ToString().ProperAnOrA()} if {r.RuleDescription<IRuleGetItems>()} ({r.GetType().Name})"));
         }
     }
 }

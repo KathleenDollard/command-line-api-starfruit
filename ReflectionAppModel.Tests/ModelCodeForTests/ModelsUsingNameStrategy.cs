@@ -18,8 +18,6 @@ namespace System.CommandLine.ReflectionModel.Tests.ModelCodeForTests
                 }
             };
 
-
-
         CommandTestData IHasTestData.CommandDataFromType
             => new CommandTestData()
             {

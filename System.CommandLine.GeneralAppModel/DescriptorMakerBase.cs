@@ -23,9 +23,9 @@ namespace System.CommandLine.GeneralAppModel
     /// <br/>
     /// AppModels describe how to read the source, Strategies describe how to interpret that. 
     /// </remarks>
-    public abstract class AppModelBase
+    public abstract class DescriptorMakerBase
     {
-        protected AppModelBase(Strategy strategy, object dataSource, object parentDataSource = null)
+        protected DescriptorMakerBase(Strategy strategy, object dataSource, object parentDataSource = null)
         {
             Strategy = strategy;
             DataSource = dataSource;
@@ -137,8 +137,9 @@ namespace System.CommandLine.GeneralAppModel
 
         private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbol ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.Name = ruleSet.NameRules.MorphValue(descriptor, candidate, name, parentSymbolDescriptor);
+            //var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            //descriptor.Name = ruleSet.NameRules.MorphValue(descriptor, candidate, name, parentSymbolDescriptor);
+            descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }

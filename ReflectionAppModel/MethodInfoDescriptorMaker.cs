@@ -5,11 +5,11 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    internal class MethodInfoAppModel : ReflectionAppModel<MethodInfo>
+    internal class MethodInfoDescriptorMaker : ReflectionAppModel<MethodInfo>
     {
         private readonly MethodInfo entryMethod;
 
-        private MethodInfoAppModel(Strategy strategy,
+        private MethodInfoDescriptorMaker(Strategy strategy,
                                MethodInfo entryMethod,
                                object parentDataSource,
                                Type[] ommittedTypes = null)
@@ -19,7 +19,7 @@ namespace System.CommandLine.ReflectionAppModel
             this.entryMethod = entryMethod;
         }
 
-        public MethodInfoAppModel(Strategy strategy,
+        public MethodInfoDescriptorMaker(Strategy strategy,
                               MethodInfo entryMethod,
                               Type[] ommittedTypes = null)
             : this(strategy, entryMethod, null, ommittedTypes)

@@ -13,7 +13,7 @@
 
         public string Label { get; }
 
-        public override string RuleDescription
-            => $"Label Rule: {Label}";
+        public override string RuleDescription<TIRuleSet>()
+           => $"Label Rule: {Label}";
     }
 }

@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    public abstract class ReflectionAppModel : AppModelBase
+    public abstract class ReflectionAppModel : DescriptorMakerBase
     {
         protected ReflectionAppModel(Strategy strategy,
                                      object dataSource,
@@ -23,7 +23,7 @@ namespace System.CommandLine.ReflectionAppModel
                                      MethodInfo entryMethod,
                                      Type[] ommittedTypes = null)
         {
-            var model = new MethodInfoAppModel(strategy, entryMethod, ommittedTypes);
+            var model = new MethodInfoDescriptorMaker(strategy, entryMethod, ommittedTypes);
             return model.CommandFrom(null);
         }
 
@@ -31,7 +31,7 @@ namespace System.CommandLine.ReflectionAppModel
                                         Type entryType,
                                         Type[] ommittedTypes = null)
         {
-            var model = new TypeAppModel(strategy, entryType, ommittedTypes);
+            var model = new TypeDescriptorMaker(strategy, entryType, ommittedTypes);
             return model.CommandFrom(null);
         }
 
