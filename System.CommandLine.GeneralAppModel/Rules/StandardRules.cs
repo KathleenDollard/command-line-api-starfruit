@@ -32,11 +32,11 @@ namespace System.CommandLine.GeneralAppModel
         public static RuleSetSelectSymbols SetStandardSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
             rules.Rules
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command",SymbolType.Command))
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command",SymbolType.Command))
                .Add(new NamedAttributeRule("Command", "string", "Name", SymbolType.Command))
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument))
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
-               .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Option))
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
+               .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg", SymbolType.Argument))
+               .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Argument))
                .Add(new RemainingSymbolRule ( SymbolType.Option))
             // TODO: .Add(new LabelRule<string>("ComplexUserType", SymbolType.Command))
             ;
@@ -52,8 +52,8 @@ namespace System.CommandLine.GeneralAppModel
             rules.NameRules
                 .Add(new NamedAttributeRule("Name", "string", "Name"))
                 .Add(new NamedAttributeRule("Argument", "string", "Name", SymbolType.Argument))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Arg", SymbolType.Argument))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Argument", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
                 .Add(new IdentityRule<string>())
                 ;
             //rules.IsHiddenRule
@@ -85,7 +85,7 @@ namespace System.CommandLine.GeneralAppModel
                 ;
             rules.NameRules
                 .Add(new NamedAttributeRule("Name", "string", "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Option", SymbolType.Argument))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Option", SymbolType.Argument))
                 .Add(new NamedAttributeRule("Option", "string", "Name", SymbolType.Option));
             //rules.IsHiddenRule
             //    ;
@@ -141,7 +141,7 @@ namespace System.CommandLine.GeneralAppModel
                 ;
             rules.NameRules
                 .Add(new NamedAttributeRule("Name", "string", "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.Suffix, "Command"))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command"))
                 .Add(new NamedAttributeRule("Command", "string", "Name"))
                 .Add(new IdentityRule<string>())
             ;

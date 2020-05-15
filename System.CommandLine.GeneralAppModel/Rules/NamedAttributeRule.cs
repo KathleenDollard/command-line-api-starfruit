@@ -87,7 +87,9 @@ namespace System.CommandLine.GeneralAppModel
             => attributeProvider.GetCustomAttributes(Context.IncludeBaseClassAttributes)
                                         .OfType<Attribute>();
 
-        public override string RuleDescription
-            => $"AttributeName Rule: {AttributeName} PropertyName: {PropertyName}";
+        public override string RuleDescription<TIRuleSet>()
+            => typeof(TIRuleSet) == typeof(IRuleGetItems)
+                ? $"it has an attribute named {AttributeName}"
+                : $"If there is an attribute named {AttributeName}, its {PropertyName} property";
     }
 }

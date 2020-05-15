@@ -9,7 +9,8 @@
                         string compareTo,
                         SymbolType symbolType = SymbolType.All)
              : base(position, compareTo, symbolType) { }
-        public override string RuleDescription
-             => $"Name Pattern Rule: {Position} - '{CompareTo}'";
+
+        protected override string NameOrString => "name";
+
     }
 }

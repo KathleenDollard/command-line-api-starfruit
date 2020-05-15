@@ -9,13 +9,14 @@ namespace System.CommandLine.GeneralAppModel.Rules
         {
         }
 
-        public override string RuleDescription
-            => "RemainingSymbolRule: All not yet matched";
+
 
         public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor)
         {
             return items;
         }
 
+        public override string RuleDescription<TIRuleSet>()
+            => "All remaining items ";
     }
 }

@@ -14,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             PropertyNames = propertyNames;
         }
-        public override string RuleDescription
-            => $"ComplexAttribute Rule: {AttributeName} PropertyNames: {String.Join (", ",PropertyNames)}";
+        public override string RuleDescription<TIRuleSet>()
+          => $"ComplexAttribute Rule: {AttributeName} PropertyNames: {String.Join (", ",PropertyNames)}";
     }
 }

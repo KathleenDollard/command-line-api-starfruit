@@ -9,7 +9,9 @@ namespace UserStudyTest2
         static void Main(string[] args)
         {
             var strategy = new Strategy("Standard").SetStandardRules();
-            //strategy.Report();
+
+            Console.WriteLine(strategy.Report());
+
             strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
 
             var instance = strategy.CreateInstance<MyClass>(args);

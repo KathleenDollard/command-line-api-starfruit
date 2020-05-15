@@ -2,7 +2,9 @@
 {
     public interface IRule
     {
-        string RuleDescription { get; }
+        string RuleDescription<TIRuleSet>();
+ 
+        SymbolType SymbolType { get; }
     }
 
     public interface IRule<T> : IRule

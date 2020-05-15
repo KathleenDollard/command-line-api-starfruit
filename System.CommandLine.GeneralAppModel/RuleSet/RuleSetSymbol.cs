@@ -56,12 +56,16 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string Report(int tabsCount)
         {
-            string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
-            string indentedWhitespace = CoreExtensions.NewLineWithTabs(tabsCount + 1);
-            return $@"{whitespace}NameRules:  { string.Join("", NameRules.Select(r => indentedWhitespace + r.RuleDescription))}
-                     { whitespace}DescriptionRules:  { string.Join("", DescriptionRules.Select(r => indentedWhitespace + r.RuleDescription))}
-                     { whitespace}AliasesRules:  { string.Join("", AliasesRules.Select(r => indentedWhitespace + r.RuleDescription))}
-                     { whitespace}IsHiddenRules:  { string.Join("", IsHiddenRules.Select(r => indentedWhitespace + r.RuleDescription))}";
+            return NameRules.ReportRuleGroup(tabsCount, "the name")
+                    + DescriptionRules.ReportRuleGroup(tabsCount, "the description" )
+                    + AliasesRules.ReportRuleGroup(tabsCount, "aliases")
+                    + IsHiddenRules.ReportRuleGroup(tabsCount, "whether to hide this in the CLI");
+            //return $@"{whitespace}To determine the name:  { string.Join("", NameRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}
+            //         { whitespace}To determine the description:  { string.Join("", DescriptionRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}
+            //         { whitespace}To determine aliases:  { string.Join("", AliasesRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}
+            //         { whitespace}To determine whether to hide this in the CLI:  { string.Join("", IsHiddenRules.Select(r => indentedWhitespace + r.RuleDescription + $" ({r.GetType().Name})"))}";
         }
+
+
     }
 }

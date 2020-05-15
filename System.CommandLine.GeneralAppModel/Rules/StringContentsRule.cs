@@ -19,8 +19,8 @@ namespace System.CommandLine.GeneralAppModel
 
         public enum StringPosition
         {
-            Prefix = 1,
-            Suffix,
+            BeginsWith = 1,
+            EndsWith,
             Contains
         }
 
@@ -37,9 +37,9 @@ namespace System.CommandLine.GeneralAppModel
             {
                 return input;
             }
-            if (Position == StringPosition.Prefix)
+            if (Position == StringPosition.BeginsWith)
                 return s.Substring(CompareTo.Length);
-            else if (Position == StringPosition.Suffix)
+            else if (Position == StringPosition.EndsWith)
                 return s.Substring(0, s.Length - CompareTo.Length);
             else if (Position == StringPosition.Contains)
                 return s.Replace(CompareTo, "");
@@ -70,8 +70,8 @@ namespace System.CommandLine.GeneralAppModel
             }
             return position switch
             {
-                StringPosition.Prefix => value.StartsWith(compareTo),
-                StringPosition.Suffix => value.EndsWith(compareTo),
+                StringPosition.BeginsWith => value.StartsWith(compareTo),
+                StringPosition.EndsWith => value.EndsWith(compareTo),
                 StringPosition.Contains => value.Contains(compareTo),
                 _ => throw new ArgumentException("Unexpected position")
             };
@@ -83,8 +83,13 @@ namespace System.CommandLine.GeneralAppModel
                                         .Where(x => DoesStringMatch(x, Position, CompareTo))
                                         .Any());
 
-        public override string RuleDescription
-            => $"String Contents Rule: {Position} - '{CompareTo}'";
+        public override string RuleDescription<TIRuleSet>()
+          => typeof(TIRuleSet) == typeof(IRuleMorphValue<string>)
+                ? $@"If {NameOrString} {Position.ToString().FriendlyFromPascal()} ""{CompareTo}"", remove ""{CompareTo}"""
+                : $@"If the {NameOrString} {Position.ToString().FriendlyFromPascal()} ""{CompareTo}""";
+
+        protected virtual string NameOrString => "string";
+   
     }
 
 }

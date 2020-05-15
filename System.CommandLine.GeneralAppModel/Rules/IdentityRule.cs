@@ -9,8 +9,6 @@ namespace System.CommandLine.GeneralAppModel
               : base(symbolType)
         { }
 
-        public override string RuleDescription
-            => "Identity Rule: ";
 
         public (bool success, T value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                               IEnumerable<object> items,
@@ -23,7 +21,9 @@ namespace System.CommandLine.GeneralAppModel
             }
             return (false, default);
         }
-    }
+         public override string RuleDescription<TIRuleSet>()
+           => "The identity, usually the name.";
+   }
 
     public class IdentityWrapper<T> : IdentityWrapper
     {

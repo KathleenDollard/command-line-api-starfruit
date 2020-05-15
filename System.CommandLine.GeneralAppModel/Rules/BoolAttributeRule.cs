@@ -8,7 +8,7 @@
         public BoolAttributeRule(string attributeName, string propertyName = null, SymbolType symbolType = SymbolType.All)
             : base(attributeName, "bool", propertyName, symbolType)
         { }
-        public override string RuleDescription
-           => $"Bool Attribute Rule: {AttributeName} PropertyName: {PropertyName}";
+        public override string RuleDescription<TIRuleSet>()
+           => $"If there is an attribute named {AttributeName}";
     }
 }
