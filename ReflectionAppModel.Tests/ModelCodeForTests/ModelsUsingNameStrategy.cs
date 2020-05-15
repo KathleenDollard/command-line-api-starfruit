@@ -206,7 +206,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(TypeWithDerivedTypeCommands_B),
                 Raw = typeof(TypeWithDerivedTypeCommands_B),
-                IsHidden = false
             };
     }
     public class TypeWithDerivedTypeCommands_C : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
@@ -215,8 +214,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             => new CommandTestData()
             {
                 Name = nameof(TypeWithDerivedTypeCommands_C),
-                Raw = typeof(TypeWithDerivedTypeCommands_C), 
-                IsHidden = false
+                Raw = typeof(TypeWithDerivedTypeCommands_C),
             };
     }
     public class TypeWithDerivedTypeCommands_A : IHaveTypeTestData
@@ -226,7 +224,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             {
                 Name = nameof(TypeWithDerivedTypeCommands_A),
                 Raw = typeof(TypeWithDerivedTypeCommands_A),
-                IsHidden = false,
                 SubCommands = new List<CommandTestData>
                 {
                     (new TypeWithDerivedTypeCommands_B() as IHaveTypeTestData).CommandDataFromType,
@@ -271,7 +268,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                                IsHidden = true,
                             }
                     },
-                 Arguments = new List<ArgumentTestData>
+                Arguments = new List<ArgumentTestData>
                     { new ArgumentTestData
                             {
                                Name = nameof(StringProperty),
