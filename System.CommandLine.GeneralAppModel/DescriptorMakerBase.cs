@@ -23,9 +23,9 @@ namespace System.CommandLine.GeneralAppModel
     /// <br/>
     /// AppModels describe how to read the source, Strategies describe how to interpret that. 
     /// </remarks>
-    public abstract class AppModelBase
+    public abstract class DescriptorMakerBase
     {
-        protected AppModelBase(Strategy strategy, object dataSource, object parentDataSource = null)
+        protected DescriptorMakerBase(Strategy strategy, object dataSource, object parentDataSource = null)
         {
             Strategy = strategy;
             DataSource = dataSource;

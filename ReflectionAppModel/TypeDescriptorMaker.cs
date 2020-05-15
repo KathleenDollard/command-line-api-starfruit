@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    internal class TypeAppModel : ReflectionAppModel<Type>
+    internal class TypeDescriptorMaker : ReflectionAppModel<Type>
     {
         private readonly Type entryType;
 
-        private TypeAppModel(Strategy strategy,
+        private TypeDescriptorMaker(Strategy strategy,
                               Type entryType,
                                object parentDataSource,
                                Type[] ommittedTypes = null)
@@ -20,7 +20,7 @@ namespace System.CommandLine.ReflectionAppModel
             this.entryType = entryType;
         }
 
-        public TypeAppModel(Strategy strategy,
+        public TypeDescriptorMaker(Strategy strategy,
                               Type entryType,
                               Type[] ommittedTypes = null)
             : this(strategy, entryType, null, ommittedTypes)
