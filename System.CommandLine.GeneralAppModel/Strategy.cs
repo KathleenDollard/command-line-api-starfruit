@@ -17,10 +17,10 @@
         {
             return $@"
 Strategy: {Name}
-   SelectSymbolRules:{ SelectSymbolRules.Report(2)}
-   ArgumentRules:{ ArgumentRules.Report(2)}
-   OptionRules:{ OptionRules.Report(2)}
-   CommandRules:{ CommandRules.Report(2)}
+   To classify symols:{ SelectSymbolRules.Report(2)}
+   For argument details:{ ArgumentRules.Report(2)}
+   For option details:{ OptionRules.Report(2)}
+   For command details:{ CommandRules.Report(2)}
 ";
         }
 

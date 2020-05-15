@@ -1,8 +1,8 @@
 ﻿using System.CommandLine.GeneralAppModel;
-using System.CommandLine.ReflectionModel.Tests.DotnetModel;
+using System.CommandLine.ReflectionAppModel.Tests.DotnetModel;
 using Xunit;
 
-namespace System.CommandLine.ReflectionModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Tests
 {
     public class DotnetModelTests
     {
@@ -10,7 +10,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         public DotnetModelTests()
         {
             strategy = new Strategy()
-                                .SetStandardRules();
+                                .SetGeneralRules();
             strategy.SelectSymbolRules.NamesToIgnore.AddRange(new string[]{ "CommandDataFromMethods", "CommandDataFromType"});
         }
 

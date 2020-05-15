@@ -14,8 +14,8 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string Report(int tabsCount)
         {
-            return base.Report(tabsCount) +
-                     $@"{CoreExtensions.NewLineWithTabs(tabsCount)}Required Rules: { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
+            return base.Report(tabsCount)
+                    + RequiredRules.ReportRuleGroup(tabsCount, "whether a value is required");      
         }
 
     }

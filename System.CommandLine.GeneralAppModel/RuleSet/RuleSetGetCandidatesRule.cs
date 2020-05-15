@@ -8,17 +8,17 @@ namespace System.CommandLine.GeneralAppModel
         public RuleGroup<IRuleGetAvailableCandidates> Rules { get; } = new RuleGroup<IRuleGetAvailableCandidates>();
 
 
-        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetCandidates(SymbolDescriptorBase commandDescriptor)
         {
             return Rules
                      .OfType<IRuleGetAvailableCandidates>()
-                     .SelectMany(r => r.GetAvailableCandidates( parentSymbolDescriptor))
+                     .SelectMany(r => r.GetAvailableCandidates(commandDescriptor))
                      .ToList();
         }
 
-     public override string Report(int tabsCount)
+        public override string Report(int tabsCount)
         {
-            return   $@"{CoreExtensions.NewLineWithTabs(tabsCount)}Arity Rules:  { string.Join("", Rules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription))}";
+            return $@"{CoreExtensions.NewLineWithTabs(tabsCount)}Arity Rules:  { string.Join("", Rules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription<RuleSetGetCandidatesRule>()))}";
         }
     }
 }

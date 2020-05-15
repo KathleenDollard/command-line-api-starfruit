@@ -2,7 +2,7 @@
 using System.CommandLine.GeneralAppModel.Tests;
 using System.ComponentModel;
 
-namespace System.CommandLine.ReflectionModel.Tests.ModelCodeForTests
+namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
     public class SimpleTypeWithMethodNoAtributes : IHasTestData
     {
@@ -17,8 +17,6 @@ namespace System.CommandLine.ReflectionModel.Tests.ModelCodeForTests
                     Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething))
                 }
             };
-
-
 
         CommandTestData IHasTestData.CommandDataFromType
             => new CommandTestData()

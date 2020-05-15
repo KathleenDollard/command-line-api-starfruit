@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
 
-namespace System.CommandLine.ReflectionModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Tests
 {
     internal  interface IHasTestData
     {

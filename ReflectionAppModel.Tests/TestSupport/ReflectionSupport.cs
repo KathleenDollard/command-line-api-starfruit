@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 
-namespace System.CommandLine.ReflectionModel.Tests.ModelCodeForTests
+namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
     public static class ReflectionSupport
     {

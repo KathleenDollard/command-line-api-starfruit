@@ -5,7 +5,7 @@ using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.Linq;
 
-namespace System.CommandLine.ReflectionModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Tests
 {
 
     internal static class Utils
@@ -45,7 +45,7 @@ namespace System.CommandLine.ReflectionModel.Tests
         {
             var type = typeof(T);
 
-            var actual = ReflectionAppModel.ReflectionAppModel.RootCommandDescriptor(strategy, type);
+            var actual = ReflectionAppModel.RootCommandDescriptor(strategy, type);
             var expected = Utils.FromType<T>().CreateDescriptor();
 
             actual.Should().BeEquivalentTo(expected, symbolOptions);
@@ -58,7 +58,7 @@ namespace System.CommandLine.ReflectionModel.Tests
             var type = typeof(T);
             var method = type.GetMethodsOnDeclaredType().First();
 
-            var actual = ReflectionAppModel.ReflectionAppModel.RootCommandDescriptor(strategy, method);
+            var actual = ReflectionAppModel.RootCommandDescriptor(strategy, method);
             var expected = Utils.FromFirstMethod<T>().CreateDescriptor();
 
             actual.Should().BeEquivalentTo(expected, symbolOptions);

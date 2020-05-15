@@ -5,7 +5,7 @@ using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
 using Xunit;
 
-namespace System.CommandLine.ReflectionModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Tests
 {
 
     public class MakerTests

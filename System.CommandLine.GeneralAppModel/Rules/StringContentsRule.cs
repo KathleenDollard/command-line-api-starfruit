@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleMorphValue<string>, IRuleGetCandidates
+    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleGetCandidates
     {
         public StringContentsRule(StringPosition position,
                                  string compareTo,
@@ -19,35 +19,18 @@ namespace System.CommandLine.GeneralAppModel
 
         public enum StringPosition
         {
-            Prefix = 1,
-            Suffix,
+            BeginsWith = 1,
+            EndsWith,
             Contains
         }
 
-        public string MorphValue(SymbolDescriptorBase symbolDescriptor,
-                                object item,
-                                string input,
-                                SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            if (!(input is string s) || s is null)
-            {
-                return null;
-            }
-            if (!DoesStringMatch(input, Position, CompareTo ))
-            {
-                return input;
-            }
-            if (Position == StringPosition.Prefix)
-                return s.Substring(CompareTo.Length);
-            else if (Position == StringPosition.Suffix)
-                return s.Substring(0, s.Length - CompareTo.Length);
-            else if (Position == StringPosition.Contains)
-                return s.Replace(CompareTo, "");
-            else
-                throw new ArgumentException("Unexpected position");
-        }
+        protected virtual string MorphValueInternal(SymbolDescriptorBase symbolDescriptor,
+                         object item,
+                         string input,
+                         SymbolDescriptorBase parentSymbolDescriptor)
+            => input;
 
-        public (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public virtual (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> items,
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -55,12 +38,16 @@ namespace System.CommandLine.GeneralAppModel
                                .Where(x => DoesStringMatch(x, Position, CompareTo));
             if (matches.Any())
             {
-                return (true, matches.First());
+                return (true, matches
+                               .Select(x => MorphValueInternal(symbolDescriptor, x, x, parentSymbolDescriptor))
+                               .First());
             }
             return (false, default);
 
 
         }
+
+
 
         public bool DoesStringMatch(string value, StringPosition position, string compareTo)
         {
@@ -70,21 +57,26 @@ namespace System.CommandLine.GeneralAppModel
             }
             return position switch
             {
-                StringPosition.Prefix => value.StartsWith(compareTo),
-                StringPosition.Suffix => value.EndsWith(compareTo),
+                StringPosition.BeginsWith => value.StartsWith(compareTo),
+                StringPosition.EndsWith => value.EndsWith(compareTo),
                 StringPosition.Contains => value.Contains(compareTo),
                 _ => throw new ArgumentException("Unexpected position")
             };
         }
         public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor) 
             => (IEnumerable<Candidate>)items
-                            .Where(x=>x.Traits
+                            .Where(x => x.Traits
                                         .OfType<string>()
                                         .Where(x => DoesStringMatch(x, Position, CompareTo))
                                         .Any());
 
-        public override string RuleDescription
-            => $"String Contents Rule: {Position} - '{CompareTo}'";
+        public override string RuleDescription<TIRuleSet>()
+         => typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
+               ? $@"If {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}', remove '{CompareTo}'"
+               : $@"the {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}'";
+
+        protected virtual string NameOrString => "string";
+
     }
 
 }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
-using System.CommandLine.ReflectionModel.Tests.ModelCodeForTests;
+using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 
-namespace System.CommandLine.ReflectionModel.Tests.DotnetModel
+namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
 {
     public abstract class Dotnet : IHasTestData
     {

@@ -1,10 +1,9 @@
 ﻿using System.CommandLine.GeneralAppModel;
 using Xunit;
-using System.CommandLine.ReflectionModel.Tests.ModelCodeForTests;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
+using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
+using System.CommandLine.ReflectionAppModel;
 
-namespace System.CommandLine.ReflectionModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Tests
 {
 
     public class DescriptorMakerTests
@@ -14,7 +13,7 @@ namespace System.CommandLine.ReflectionModel.Tests
 
         public DescriptorMakerTests()
         {
-            strategy = new Strategy().SetStandardRules();
+            strategy = new Strategy().SetReflectionRules();
         }
 
         [Fact]
@@ -27,7 +26,7 @@ namespace System.CommandLine.ReflectionModel.Tests
 
         [Fact]
         public void CanGetCommandDescriptionFromMethodAttribute()
-           => Utils.TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetStandardRules());
+           => Utils.TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetGeneralRules());
 
         [Fact]
         public void CanGetCommandDescriptionFromTypeAttribute()

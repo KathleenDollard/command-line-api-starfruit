@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.ReflectionAppModel
 {
     /// <summary>
     /// This rule returns candidates for all types derived from the parent description type. 
@@ -24,8 +25,7 @@ namespace System.CommandLine.GeneralAppModel
             IgnoreNamespace = ignoreNamespace;
             useTypeAssembly = AssemblyName is null;
         }
-
-        public override string RuleDescription
+        public override string RuleDescription<TIRuleSet>()
             => $"DerivedTypeRule Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
 
         public string NamespaceName { get; }
@@ -33,9 +33,9 @@ namespace System.CommandLine.GeneralAppModel
         public bool IgnoreNamespace { get; }
         private bool useTypeAssembly { get; set; }
 
-        public IEnumerable<Candidate> GetAvailableCandidates(SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetAvailableCandidates(SymbolDescriptorBase desc)
         {
-            if (!(parentSymbolDescriptor.Raw is Type type))
+            if (!(desc.Raw is Type type))
             {
                 return new List<Candidate>();
             }
@@ -81,4 +81,3 @@ namespace System.CommandLine.GeneralAppModel
     }
 }
 
-}

@@ -23,22 +23,26 @@ namespace System.CommandLine.GeneralAppModel
     /// <br/>
     /// AppModels describe how to read the source, Strategies describe how to interpret that. 
     /// </remarks>
-    public abstract class AppModelBase
+    public abstract class DescriptorMakerBase
     {
-        protected AppModelBase(Strategy strategy, object dataSource, object parentDataSource = null)
+        protected DescriptorMakerBase(Strategy strategy, object dataSource, object parentDataSource = null)
         {
             Strategy = strategy;
             DataSource = dataSource;
             ParentDataSource = parentDataSource;
         }
 
-        protected abstract IEnumerable<Candidate> GetChildCandidates(object DataSource);
         protected abstract Candidate GetCandidate(object item);
         protected abstract Type GetArgumentType(Candidate candidate);
 
         protected Strategy Strategy { get; }
         protected object DataSource { get; }
         protected object ParentDataSource { get; }
+
+        protected  IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor)
+        {
+            return Strategy.GetCandidateRules.GetCandidates(commandDescriptor);
+        }
 
         private (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
              ClassifyChildren(SymbolDescriptorBase commandDescriptor)
@@ -47,7 +51,7 @@ namespace System.CommandLine.GeneralAppModel
             IEnumerable<Candidate> subCommandItems = null;
             IEnumerable<Candidate> argumentItems = null;
 
-            var candidates = GetChildCandidates(DataSource);
+            var candidates = GetChildCandidates(commandDescriptor );
             // TODO: Provide way to customize this order since the first match wins
             var symbolSelectionOrder = new SymbolType[] { SymbolType.Argument, SymbolType.Command, SymbolType.Option };
             foreach (var symbolType in symbolSelectionOrder)
@@ -137,8 +141,9 @@ namespace System.CommandLine.GeneralAppModel
 
         private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbol ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.Name = ruleSet.NameRules.MorphValue(descriptor, candidate, name, parentSymbolDescriptor);
+            //var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            //descriptor.Name = ruleSet.NameRules.MorphValue(descriptor, candidate, name, parentSymbolDescriptor);
+            descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }

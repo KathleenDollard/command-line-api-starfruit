@@ -19,7 +19,6 @@ namespace UserStudyTest2
             var command = CommandMaker.MakeCommand(descriptor);
             var binder = new ModelBinder(type);
             var bindingContext = new BindingContext(command.Parse(args));
-            // TODO: Jon: Binder is not filling instance
             return (T)binder.CreateInstance(bindingContext);
         }
 
