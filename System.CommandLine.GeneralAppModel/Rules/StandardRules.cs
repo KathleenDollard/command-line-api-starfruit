@@ -37,7 +37,7 @@ namespace System.CommandLine.GeneralAppModel
                .Add(new NamedAttributeRule("Command",   SymbolType.Command))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg", SymbolType.Argument))
-               .Add(new NamedAttributeWithPropertyRule<string>("Argument",  "Name", SymbolType.Argument))
+               .Add(new NamedAttributeRule("Argument",   SymbolType.Argument))
                .Add(new RemainingSymbolRule ( SymbolType.Option))
             // TODO: .Add(new LabelRule<string>("ComplexUserType", SymbolType.Command))
             ;
@@ -85,9 +85,9 @@ namespace System.CommandLine.GeneralAppModel
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new NamedAttributeWithPropertyRule<string>("Name",  "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Option", SymbolType.Argument))
-                .Add(new NamedAttributeWithPropertyRule<string>("Option",  "Name", SymbolType.Option));
+                .Add(new NamedAttributeWithPropertyRule<string>("Name", "Name"))
+                .Add(new NamedAttributeWithPropertyRule<string>("Option", "Name", SymbolType.Option))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Option", SymbolType.Argument));
             //rules.IsHiddenRule
             //    ;
 
@@ -142,8 +142,8 @@ namespace System.CommandLine.GeneralAppModel
                 ;
             rules.NameRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Name",  "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command"))
                 .Add(new NamedAttributeWithPropertyRule<string>("Command",  "Name"))
+                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command"))
                 .Add(new IdentityRule<string>())
             ;
             //rules.IsHiddenRules

@@ -74,7 +74,7 @@ namespace System.CommandLine.GeneralAppModel
         public override string RuleDescription<TIRuleSet>()
          => typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
                ? $@"If {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}', remove '{CompareTo}'"
-               : $@"if the {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}'";
+               : $@"the {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}'";
 
         protected virtual string NameOrString => "string";
 

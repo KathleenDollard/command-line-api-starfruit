@@ -9,9 +9,9 @@ namespace System.CommandLine.GeneralAppModel
     /// </summary>
     public class NamedAttributeRule : AttributeRuleBase<bool>
     {
-        public NamedAttributeRule(string attributeName,  SymbolType symbolType = SymbolType.All)
+        public NamedAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, symbolType)
-        {   }
+        { }
 
         public override (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                  IEnumerable<object> item,
@@ -26,6 +26,8 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-           => $"If there is an attribute named '{AttributeName}'";
+           => (typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
+                ? "If " : "")
+            + $"there is an attribute named '{AttributeName}'";
     }
 }

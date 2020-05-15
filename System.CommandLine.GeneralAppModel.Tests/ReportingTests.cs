@@ -3,6 +3,7 @@ using FluentAssertions.Equivalency;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel.Rules;
 using System.Text;
 using Xunit;
 
@@ -43,7 +44,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the name begins with 'Abc'")]
+        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"the name begins with 'Abc'")]
         public void ReportForNameRuleForGetItemsIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
@@ -84,13 +85,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
             actual.Should().Be(expected);
         }
 
-        [Fact(Skip = "")]
+        [Fact()]
         public void ReportForRemainingSymbolRuleIsCorrect()
         {
+            var rule = new RemainingSymbolRule(SymbolType.Argument);
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be("not already matched");
         }
 
         [Theory]
-        [InlineData (StringContentsRule.StringPosition.BeginsWith, "Abc", @"if the string begins with 'Abc'")]
+        [InlineData (StringContentsRule.StringPosition.BeginsWith, "Abc", @"the string begins with 'Abc'")]
         public void ReportForStringContentxForGetItemsIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
@@ -115,7 +120,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void FullStrategyReportIsAboutTheRightLength()
         {
-
             var report = strategy.Report();
             report.Length.Should().BeGreaterThan(3000).And.BeLessThan(4000);
         }
