@@ -2,7 +2,7 @@
 {
     public static class CommonStrategies
     {
-        public static Strategy SetStandardRules(this Strategy strategy) 
+        public static Strategy SetGeneralRules(this Strategy strategy) 
             => strategy
                 .SetStandardSelectSymbolRules()
                 .SetStandardArgumentRules()

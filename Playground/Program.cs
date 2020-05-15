@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CommandLine.GeneralAppModel;
+using System.CommandLine.ReflectionAppModel;
 using System.Security.Cryptography.X509Certificates;
 
 namespace UserStudyTest2
@@ -8,7 +9,7 @@ namespace UserStudyTest2
     {
         static void Main(string[] args)
         {
-            var strategy = new Strategy("Standard").SetStandardRules();
+            var strategy = new Strategy("Standard").SetReflectionRules();
 
             Console.WriteLine(strategy.Report());
 

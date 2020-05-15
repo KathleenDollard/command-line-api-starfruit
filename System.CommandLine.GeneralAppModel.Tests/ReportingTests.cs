@@ -20,7 +20,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             AssertionOptions.AssertEquivalencyUsing(o => o.ExcludingFields().IgnoringCyclicReferences());
             //argumentOptions = o => o.Excluding(ctx => ctx.SelectedMemberInfo.MemberName =="TryConvertArgument");
             symbolOptions = o => o.Excluding(ctx => ctx.SelectedMemberPath.EndsWith("ConvertArguments"));
-            strategy = new Strategy().SetStandardRules();
+            strategy = new Strategy().SetGeneralRules();
         }
 
          [Fact(Skip = "")]
@@ -49,7 +49,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             string compareTo, string expected)
         {
             var rule = new NamePatternRule(position, compareTo);
-            var actual = rule.RuleDescription<IRuleGetItems>();
+            var actual = rule.RuleDescription<IRuleGetCandidates>();
 
             actual.Should().Be(expected);
         }
@@ -100,7 +100,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             string compareTo, string expected)
         {
             var rule = new StringContentsRule(position , compareTo );
-            var actual = rule.RuleDescription< IRuleGetItems>();
+            var actual = rule.RuleDescription<IRuleGetCandidates>();
 
             actual.Should().Be(expected);
         }

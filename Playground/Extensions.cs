@@ -15,7 +15,7 @@ namespace UserStudyTest2
             where T : new()
         {
             var type = typeof(T);
-            var descriptor = ReflectionAppModel.RootCommandDescriptor(strategy, type);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type);
             var command = CommandMaker.MakeCommand(descriptor);
             var binder = new ModelBinder(type);
             var bindingContext = new BindingContext(command.Parse(args));
@@ -25,7 +25,7 @@ namespace UserStudyTest2
         public static int InvokeMethod(this Strategy strategy, MethodInfo methodInfo, string[] args)
         {
             System.Reflection.MethodInfo entryMethod = typeof(Program).GetMethod("Test");
-            var descriptor = ReflectionAppModel.RootCommandDescriptor(strategy, entryMethod);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, entryMethod);
             var command = CommandMaker.MakeCommand(descriptor);
             command.Handler = CommandHandler.Create(methodInfo);
             command.Invoke(args);

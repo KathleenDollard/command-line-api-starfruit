@@ -13,7 +13,7 @@ namespace System.CommandLine.GeneralAppModel
     public class RuleSetSelectSymbols : RuleSetBase
     {
         public List<string> NamesToIgnore { get; } = new List<string>();
-        public RuleGroup<IRuleGetItems> Rules { get; private set; } = new RuleGroup<IRuleGetItems>();
+        public RuleGroup<IRuleGetCandidates> Rules { get; private set; } = new RuleGroup<IRuleGetCandidates>();
 
 
         public IEnumerable<Candidate> GetItems(SymbolType symbolType,
@@ -21,16 +21,16 @@ namespace System.CommandLine.GeneralAppModel
                                                IEnumerable<Candidate> candidates)
         {
             return Rules
-                    .OfType<IRuleGetItems>()
+                    .OfType<IRuleGetCandidates>()
                     .Where(x => x.SymbolType == symbolType)
-                    .SelectMany(r => r.GetItems(candidates, commandDescriptor))
+                    .SelectMany(r => r.GetCandidates(candidates, commandDescriptor))
                     .ToList();
         }
 
         public override string Report(int tabsCount)
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
-            return string.Join("", Rules.Select(r => whitespace + $"Is {r.SymbolType.ToString().ProperAnOrA()} if {r.RuleDescription<IRuleGetItems>()} ({r.GetType().Name})"));
+            return string.Join("", Rules.Select(r => whitespace + $"Is {r.SymbolType.ToString().ProperAnOrA()} if {r.RuleDescription<IRuleGetCandidates>()} ({r.GetType().Name})"));
         }
     }
 }

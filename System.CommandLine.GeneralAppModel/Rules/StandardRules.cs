@@ -1,4 +1,5 @@
 ﻿using System.CommandLine.GeneralAppModel.Rules;
+using System.Data;
 using System.Threading;
 
 namespace System.CommandLine.GeneralAppModel

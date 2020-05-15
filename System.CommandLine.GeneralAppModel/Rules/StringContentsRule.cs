@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleGetItems
+    public class StringContentsRule : RuleBase, IRuleGetValue<string>, IRuleGetCandidates
     {
         public StringContentsRule(StringPosition position,
                                  string compareTo,
@@ -63,8 +63,7 @@ namespace System.CommandLine.GeneralAppModel
                 _ => throw new ArgumentException("Unexpected position")
             };
         }
-
-        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor) 
             => (IEnumerable<Candidate>)items
                             .Where(x => x.Traits
                                         .OfType<string>()
