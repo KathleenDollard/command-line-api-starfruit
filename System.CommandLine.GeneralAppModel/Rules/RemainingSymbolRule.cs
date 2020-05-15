@@ -17,6 +17,6 @@ namespace System.CommandLine.GeneralAppModel.Rules
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => "All remaining items ";
+            => "not already matched";
     }
 }

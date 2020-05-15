@@ -29,14 +29,11 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string Report(int tabsCount)
         {
-            return RequiredRules.ReportRuleGroup(tabsCount, "whether a value is required")
+            return base.Report(tabsCount)
+                    + RequiredRules.ReportRuleGroup(tabsCount, "whether a value is required")
                     + ArityRules.ReportRuleGroup(tabsCount, "the arity (number of values allowed)")
                     + SpecialArgumentTypeRules.ReportRuleGroup(tabsCount, "argument type in a special way");
 
-            //return base.Report(tabsCount) +
-            //       $@"{CoreExtensions.NewLineWithTabs(tabsCount)}To determine whether the option is required: { string.Join("", RequiredRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription + $" ({r.GetType().Name})"))}
-            //          {CoreExtensions.NewLineWithTabs(tabsCount)}To determine the arity (number of values allowed):  { string.Join("", ArityRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription + $" ({r.GetType().Name})"))}
-            //          {CoreExtensions.NewLineWithTabs(tabsCount)}Special way to determine the argument type:  { string.Join("", SpecialArgumentTypeRules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription + $" ({r.GetType().Name})"))}";
         }
     }
 }

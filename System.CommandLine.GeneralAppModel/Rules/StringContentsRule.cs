@@ -27,7 +27,7 @@ namespace System.CommandLine.GeneralAppModel
         protected virtual string MorphValueInternal(SymbolDescriptorBase symbolDescriptor,
                          object item,
                          string input,
-                         SymbolDescriptorBase parentSymbolDescriptor) 
+                         SymbolDescriptorBase parentSymbolDescriptor)
             => input;
 
         public virtual (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
@@ -63,21 +63,21 @@ namespace System.CommandLine.GeneralAppModel
                 _ => throw new ArgumentException("Unexpected position")
             };
         }
- 
-        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor) 
+
+        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor)
             => (IEnumerable<Candidate>)items
-                            .Where(x=>x.Traits
+                            .Where(x => x.Traits
                                         .OfType<string>()
                                         .Where(x => DoesStringMatch(x, Position, CompareTo))
                                         .Any());
 
         public override string RuleDescription<TIRuleSet>()
-          => typeof(TIRuleSet) == typeof(IRuleMorphValue<string>)
-                ? $@"If {NameOrString} {Position.ToString().FriendlyFromPascal()} ""{CompareTo}"", remove ""{CompareTo}"""
-                : $@"If the {NameOrString} {Position.ToString().FriendlyFromPascal()} ""{CompareTo}""";
+         => typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
+               ? $@"If {NameOrString} {Position.ToString().FriendlyFromPascal()} ""{CompareTo}"", remove ""{CompareTo}"""
+               : $@"if the {NameOrString} {Position.ToString().FriendlyFromPascal()} ""{CompareTo}""";
 
         protected virtual string NameOrString => "string";
-   
+
     }
 
 }
