@@ -9,12 +9,13 @@ namespace UserStudyTest2
         static void Main(string[] args)
         {
             var strategy = new Strategy("Standard").SetStandardRules();
-            //Report(strategy);
+            //strategy.Report();
             strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
-            var instance = strategy.CreateInstance <MyClass>(args);
+
+            var instance = strategy.CreateInstance<MyClass>(args);
             Console.WriteLine($"From Type: Name: {instance.Name} A: {instance.A} B: {instance.B} C: {instance.C}");
         }
- 
+
         public static void Test(string name, int a, string b, int c)
         {
             Console.WriteLine($"From Method: Name: {name} A: {a} B: {b} C: {c}");
@@ -23,9 +24,9 @@ namespace UserStudyTest2
 
     public class MyClass
     {
-        public string Name { get; }
-        public int A { get; }
-        public string B { get; }
-        public int C { get; }
+        public string Name { get; set; }
+        public int A { get; set; }
+        public string B { get; set; }
+        public string C { get; set; }
     }
 }
