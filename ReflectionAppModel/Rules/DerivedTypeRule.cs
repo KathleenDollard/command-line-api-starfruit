@@ -33,7 +33,7 @@ namespace System.CommandLine.ReflectionAppModel
         public bool IgnoreNamespace { get; }
         private bool useTypeAssembly { get; set; }
 
-        public IEnumerable<Candidate> GetAvailableCandidates(SymbolDescriptorBase desc)
+        public IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase desc)
         {
             if (!(desc.Raw is Type type))
             {

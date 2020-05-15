@@ -12,7 +12,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             return Rules
                      .OfType<IRuleGetAvailableCandidates>()
-                     .SelectMany(r => r.GetAvailableCandidates(commandDescriptor))
+                     .SelectMany(r => r.GetChildCandidates(commandDescriptor))
                      .ToList();
         }
 

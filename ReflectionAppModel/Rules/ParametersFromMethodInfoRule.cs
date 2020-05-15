@@ -15,7 +15,7 @@ namespace System.CommandLine.ReflectionAppModel
         public override string RuleDescription<TIRuleSet>()
                 => $"Not yet implemented";
 
-        public IEnumerable<Candidate> GetAvailableCandidates(SymbolDescriptorBase desc)
+        public IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase desc)
         {
             if (!(desc.Raw is MethodInfo methodInfo))
             {
@@ -23,7 +23,6 @@ namespace System.CommandLine.ReflectionAppModel
             }
 
             return methodInfo.GetParameters().Select(p => new Candidate(p));
-        }
-
+        }      
     }
 }

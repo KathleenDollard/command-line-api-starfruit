@@ -12,7 +12,7 @@ namespace System.CommandLine.GeneralAppModel
 
     public interface IRuleGetAvailableCandidates : IRule
     {
-        IEnumerable<Candidate> GetAvailableCandidates(SymbolDescriptorBase parentSymbolDescriptor); 
+        IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase parentSymbolDescriptor);
     }
 
 }

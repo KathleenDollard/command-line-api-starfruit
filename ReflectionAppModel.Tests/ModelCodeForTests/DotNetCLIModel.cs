@@ -4,41 +4,56 @@ using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
 {
-    public abstract class Dotnet : IHasTestData
+    public class Dotnet : IHaveTypeTestData
     {
-        public abstract IEnumerable<CommandTestData> CommandDataFromMethods { get; }
-        public abstract CommandTestData CommandDataFromType { get; }
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(Dotnet),
+                Raw = typeof(Dotnet),
+                SubCommands = new List<CommandTestData>
+                {
+                    (new Tool() as IHaveTypeTestData) .CommandDataFromType,
+                }
+            };
     }
 
-    public abstract class Tool : Dotnet
-    { }
+    public class Tool : Dotnet, IHaveTypeTestData
+    {
+        public new CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(Tool),
+                Raw = typeof(Tool),
+                SubCommands = new List<CommandTestData>
+                {
+                    (new Install() as IHaveTypeTestData) .CommandDataFromType,
+                }
+            };
+    }
 
-    public class Install : Tool
+    public class Install : Tool, IHaveTypeTestData
     {
         public bool Global { get; set; }
         public bool Local { get; set; }
         public string ToolPath { get; set; }
         public string PackageIdArg { get; set; }
 
-        public override IEnumerable<CommandTestData> CommandDataFromMethods
-            => new List<CommandTestData>
-            { };
-
-        public override CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(Install),
-                Raw = typeof(Install),
-                Arguments  = new List<ArgumentTestData>
-                { new ArgumentTestData
+        public new CommandTestData CommandDataFromType
+           => new CommandTestData()
+           {
+               Name = nameof(Install),
+               Raw = typeof(Install),
+               Arguments = new List<ArgumentTestData>
+               { new ArgumentTestData
                     {
                        Name = nameof(PackageIdArg)[..^3],
                        Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(PackageIdArg)),
                        ArgumentType = typeof(string)
                     }
-                } ,            
-                Options = new List<OptionTestData>
-                { new OptionTestData
+               },
+               Options = new List<OptionTestData>
+               { new OptionTestData
                     {
                         Name = nameof(Global),
                         Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(Global)),
@@ -54,8 +69,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
                         Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(ToolPath)),
                     },
 
-                }
-            };
+               }
+           };
     }
 
     //    Usage: dotnet tool install[options] <PACKAGE_ID>

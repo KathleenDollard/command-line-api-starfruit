@@ -12,5 +12,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
         public IEnumerable<ArgumentTestData> Arguments { get; set; }
         public IEnumerable<OptionTestData> Options { get; set; }
+        public IEnumerable<CommandTestData> SubCommands { get; set; }
     }
 }

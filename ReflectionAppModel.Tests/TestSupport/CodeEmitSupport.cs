@@ -40,7 +40,7 @@ namespace ReflectionAppModel.Tests.TestSupport
                 MetadataReference.CreateFromFile(typeof(Uri).GetTypeInfo().Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Command).GetTypeInfo().Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Strategy).GetTypeInfo().Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(System.CommandLine.ReflectionAppModel.ReflectionAppModel).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.CommandLine.ReflectionAppModel.ReflectionDescriptorMaker).GetTypeInfo().Assembly.Location),
                 MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
                 MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll")
                 )

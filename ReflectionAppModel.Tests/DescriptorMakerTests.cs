@@ -48,7 +48,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         public void CanGetOptionFromPropertyProperty()
             => Utils.TestType<TypeWithPropertyOption>(strategy);
 
+        [Fact]
+        public void CanGetSubCommandFromInheritedType()
+        => Utils.TestType<TypeWithDerivedTypeCommands_A>(strategy);
 
-  
     }
 }

@@ -4,21 +4,21 @@ using System.ComponentModel;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
-    public class SimpleTypeWithMethodNoAtributes : IHasTestData
+    public class SimpleTypeWithMethodNoAtributes : IHaveMethodTestData, IHaveTypeTestData
     {
         public void DoSomething() { }
 
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
-            => new List<CommandTestData>
-            {
+        public IEnumerable<CommandTestData> CommandDataFromMethods
+                 => new List<CommandTestData>
+                 {
                 new CommandTestData()
                 {
                     Name = nameof(DoSomething),
                     Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething))
                 }
-            };
+                 };
 
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeWithMethodNoAtributes),
@@ -26,13 +26,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    public class SimpleTypeNoAttributes : IHasTestData
+    public class SimpleTypeNoAttributes : IHaveTypeTestData
     {
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
-            => new List<CommandTestData>
-            { };
-
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeNoAttributes),
@@ -40,12 +36,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    public class SimpleTypeWithMethodWithDescriptionAttribute : IHasTestData
+    public class SimpleTypeWithMethodWithDescriptionAttribute : IHaveMethodTestData, IHaveTypeTestData
     {
         [Description("This is a great description 1")]
         public void DoSomething() { }
 
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
+        public IEnumerable<CommandTestData> CommandDataFromMethods
             => new List<CommandTestData>
             {
                 new CommandTestData()
@@ -56,7 +52,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                }
             };
 
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeWithMethodWithDescriptionAttribute),
@@ -65,13 +61,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
     }
 
     [Description("This is a great description 2")]
-    public class SimpleTypeWithDescriptionAttribute : IHasTestData
+    public class SimpleTypeWithDescriptionAttribute : IHaveTypeTestData
     {
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
-            => new List<CommandTestData>
-            { };
-
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(SimpleTypeWithDescriptionAttribute),
@@ -80,11 +72,11 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    public class MethodWithParameterNamedArgs : IHasTestData
+    public class MethodWithParameterNamedArgs : IHaveMethodTestData, IHaveTypeTestData
     {
         public void DoSomething(string stringParamArg) { }
 
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
+        public IEnumerable<CommandTestData> CommandDataFromMethods
             => new List<CommandTestData>
             {
                 new CommandTestData()
@@ -103,7 +95,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 }
             };
 
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(MethodWithParameterNamedArgs),
@@ -111,15 +103,11 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    public class TypeWithPropertyNamedArgs : IHasTestData
+    public class TypeWithPropertyNamedArgs : IHaveTypeTestData
     {
         public string StringPropertyArg { get; set; }
 
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
-            => new List<CommandTestData>
-            { };
-
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(TypeWithPropertyNamedArgs),
@@ -135,11 +123,11 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    public class MethodWithParameterOption : IHasTestData
+    public class MethodWithParameterOption : IHaveMethodTestData, IHaveTypeTestData
     {
         public void DoSomething(string stringParam) { }
 
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
+        public IEnumerable<CommandTestData> CommandDataFromMethods
             => new List<CommandTestData>
             {
                 new CommandTestData()
@@ -166,7 +154,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 }
             };
 
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(MethodWithParameterOption),
@@ -174,25 +162,54 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    public class TypeWithPropertyOption : IHasTestData
+    public class TypeWithPropertyOption : IHaveTypeTestData
     {
         public string StringProperty { get; set; }
 
-        IEnumerable<CommandTestData> IHasTestData.CommandDataFromMethods
-            => new List<CommandTestData>
-            { };
-
-        CommandTestData IHasTestData.CommandDataFromType
+        public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(TypeWithPropertyOption),
                 Raw = typeof(TypeWithPropertyOption),
                 Options = new List<OptionTestData>
                 { new OptionTestData
-                    {
-                       Name = nameof(StringProperty),
-                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
-                    }
+                        {
+                           Name = nameof(StringProperty),
+                           Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                        }
+                }
+            };
+    }
+
+    public class TypeWithDerivedTypeCommands_B : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
+    {
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithDerivedTypeCommands_B),
+                Raw = typeof(TypeWithDerivedTypeCommands_B),
+            };
+    }
+    public class TypeWithDerivedTypeCommands_C : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
+    {
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithDerivedTypeCommands_C),
+                Raw = typeof(TypeWithDerivedTypeCommands_C),
+            };
+    }
+    public class TypeWithDerivedTypeCommands_A : IHaveTypeTestData
+    {
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithDerivedTypeCommands_A),
+                Raw = typeof(TypeWithDerivedTypeCommands_A),
+                SubCommands = new List<CommandTestData>
+                {
+                    (new TypeWithDerivedTypeCommands_B() as IHaveTypeTestData).CommandDataFromType,
+                    (new TypeWithDerivedTypeCommands_C() as IHaveTypeTestData).CommandDataFromType
                 }
             };
     }

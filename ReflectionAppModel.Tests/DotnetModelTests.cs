@@ -17,5 +17,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         [Fact]
         public void CanMakeDotnetInstall()
             => Utils.TestType<Install>(strategy);
+
+        [Fact]
+        public void CanMakeDotnet()
+            => Utils.TestType<Dotnet>(strategy);
     }
 }
