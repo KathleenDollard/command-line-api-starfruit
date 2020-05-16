@@ -54,45 +54,54 @@ namespace System.CommandLine.ReflectionAppModel
                 _ => null
             };
 
-        protected override Candidate GetCandidate(object item)
+        protected override Candidate GetCandidate(object item) 
+           => item switch
+           {
+               Type typeItem => GetCandidateInternal(typeItem),
+               MethodInfo methodItem => GetCandidateInternal(methodItem),
+               ParameterInfo parameterInfo => GetCandidateInternal(parameterInfo),
+               PropertyInfo propertyInfo => GetCandidateInternal(propertyInfo),
+               _ => null
+           };
+
+        private static Candidate GetCandidateInternal(PropertyInfo propertyInfo)
         {
-            if (item is Type typeItem)
-            {
-                var name = typeItem.Name;
-                var candidate = new Candidate(typeItem);
-                candidate.AddTraitRange(typeItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
-                candidate.AddTrait(name);
-                candidate.AddTrait(new IdentityWrapper<string>(name));
-                return candidate;
-            }
-            if (item is MethodInfo methodItem)
-            {
-                var name = methodItem.Name;
-                var candidate = new Candidate(methodItem);
-                candidate.AddTraitRange(methodItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
-                candidate.AddTrait(name);
-                candidate.AddTrait(new IdentityWrapper<string>(name));
-                return candidate;
-            }
-            if (item is ParameterInfo parameterInfo)
-            {
-                var name = parameterInfo.Name;
-                var candidate = new Candidate(parameterInfo);
-                candidate.AddTraitRange(parameterInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
-                candidate.AddTrait(name);
-                candidate.AddTrait(new IdentityWrapper<string>(name));
-                return candidate;
-            }
-            if (item is PropertyInfo propertyInfo)
-            {
-                var name = propertyInfo.Name;
-                var candidate = new Candidate(propertyInfo);
-                candidate.AddTraitRange(propertyInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
-                candidate.AddTrait(name);
-                candidate.AddTrait(new IdentityWrapper<string>(name));
-                return candidate;
-            }
-            return null;
+            var name = propertyInfo.Name;
+            var candidate = new Candidate(propertyInfo);
+            candidate.AddTraitRange(propertyInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            candidate.AddTrait(name);
+            candidate.AddTrait(new IdentityWrapper<string>(name));
+            return candidate;
+        }
+
+        private static Candidate GetCandidateInternal(ParameterInfo parameterInfo)
+        {
+            var name = parameterInfo.Name;
+            var candidate = new Candidate(parameterInfo);
+            candidate.AddTraitRange(parameterInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            candidate.AddTrait(name);
+            candidate.AddTrait(new IdentityWrapper<string>(name));
+            return candidate;
+        }
+
+        private static Candidate GetCandidateInternal(MethodInfo methodItem)
+        {
+            var name = methodItem.Name;
+            var candidate = new Candidate(methodItem);
+            candidate.AddTraitRange(methodItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            candidate.AddTrait(name);
+            candidate.AddTrait(new IdentityWrapper<string>(name));
+            return candidate;
+        }
+
+        private static Candidate GetCandidateInternal(Type typeItem)
+        {
+            var name = typeItem.Name;
+            var candidate = new Candidate(typeItem);
+            candidate.AddTraitRange(typeItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            candidate.AddTrait(name);
+            candidate.AddTrait(new IdentityWrapper<string>(name));
+            return candidate;
         }
     }
 
