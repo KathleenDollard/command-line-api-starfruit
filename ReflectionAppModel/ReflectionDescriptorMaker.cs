@@ -125,21 +125,4 @@ namespace System.CommandLine.ReflectionAppModel
             return candidate;
         }
     }
-
-    public abstract class ReflectionDescriptorMaker<T> : ReflectionDescriptorMaker
-        where T : ICustomAttributeProvider
-    {
-        private readonly object target;
-        private readonly T entryPoint;
-
-        protected ReflectionDescriptorMaker(Strategy strategy,
-                                  T dataSource,
-                                  object parentDataSource,
-                                  Type[] ommittedTypes = null)
-               : base(strategy, dataSource, parentDataSource, ommittedTypes)
-        {
-            entryPoint = dataSource;
-        }
-
-    }
 }

@@ -29,28 +29,6 @@ namespace System.CommandLine.GeneralAppModel
                 command.Add(argument);
             }
         }
-        public static string Description<T>(this Expression<Func<Attribute, T>> expression)
-        {
-            var comma = ", ";
-            return expression.Body switch
-            {
-                UnaryExpression _ => "",
-                NewExpression newExpr => $"new {newExpr.Type.Name}({string.Join(comma, GetCtorArguments(newExpr))})",
-                MemberExpression member => $"attribute.{member.Member.Name}",
-                _ => "<Unknown>"
-            };
-
-            static IEnumerable<string> GetCtorArguments(NewExpression newExpr)
-            {
-                var ret = newExpr.Arguments
-                            .Select(a => a switch
-                                            { 
-                                                MemberExpression member => "attribute." + member.Member.Name,
-                                                _ => "<Unknown>"
-                                            });
-                return ret;
-            }
-        }
 
         public static string NewLineWithTabs(int tabsCount)
         {
