@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.CommandLine.GeneralAppModel.Rules
+namespace System.CommandLine.GeneralAppModel
 {
     public class RemainingSymbolRule : RuleBase, IRuleGetCandidates
     {

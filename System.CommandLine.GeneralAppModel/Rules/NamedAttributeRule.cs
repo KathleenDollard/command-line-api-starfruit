@@ -9,13 +9,13 @@ namespace System.CommandLine.GeneralAppModel
     /// By implication this only works if the attribute's default is false, and it is never logical to use the 
     /// attribute to clarify the default. Otherwise, use NamedAttributeWithPropertyRule
     /// </summary>
-    public class NamedAttributeRule : AttributeRuleBase<bool>
+    public class NamedAttributeRule : AttributeRuleBase
     {
         public NamedAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, symbolType)
         { }
 
-        public override (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                  IEnumerable<object> item,
                                                                  SymbolDescriptorBase parentSymbolDescriptor)
         {

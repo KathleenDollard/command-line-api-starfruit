@@ -3,10 +3,13 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
+
+
     public class RuleSetGetCandidatesRule : RuleSetBase
     {
         public RuleGroup<IRuleGetAvailableCandidates> Rules { get; } = new RuleGroup<IRuleGetAvailableCandidates>();
 
+        public List<string> NamesToIgnore { get; } = new List<string>();
 
         public IEnumerable<Candidate> GetCandidates(SymbolDescriptorBase commandDescriptor)
         {

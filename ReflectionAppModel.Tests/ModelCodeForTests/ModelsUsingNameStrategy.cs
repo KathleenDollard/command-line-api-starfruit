@@ -190,11 +190,20 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 IsHidden = false,
                 Options = new List<OptionTestData>
                 { new OptionTestData
-                        {
-                           Name = nameof(StringProperty),
-                           Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
-                           IsHidden = false
+                    {
+                        Name = nameof(StringProperty),
+                        Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                        IsHidden = false,
+                        Arguments = new List<ArgumentTestData >
+                        { new ArgumentTestData
+                            {
+                               Name = nameof(StringProperty),
+                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                               ArgumentType = typeof(string),
+                               IsHidden = false
+                            }
                         }
+                    }
                 }
             };
     }

@@ -76,7 +76,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData("WithProperty","ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property")]
+        [InlineData("WithProperty","ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
         public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
         {
             var rule = new NamedAttributeWithPropertyRule<string>(attributeName, propertyName );

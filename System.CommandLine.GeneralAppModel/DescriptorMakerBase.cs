@@ -39,19 +39,15 @@ namespace System.CommandLine.GeneralAppModel
         protected object DataSource { get; }
         protected object ParentDataSource { get; }
 
-        protected  IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor)
-        {
-            return Strategy.GetCandidateRules.GetCandidates(commandDescriptor);
-        }
+        protected abstract IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor);
 
         private (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
-             ClassifyChildren(SymbolDescriptorBase commandDescriptor)
+             ClassifyChildren(IEnumerable<Candidate> candidates, SymbolDescriptorBase commandDescriptor)
         {
             IEnumerable<Candidate> optionItems = null;
             IEnumerable<Candidate> subCommandItems = null;
             IEnumerable<Candidate> argumentItems = null;
 
-            var candidates = GetChildCandidates(commandDescriptor );
             // TODO: Provide way to customize this order since the first match wins
             var symbolSelectionOrder = new SymbolType[] { SymbolType.Argument, SymbolType.Command, SymbolType.Option };
             foreach (var symbolType in symbolSelectionOrder)
@@ -89,18 +85,8 @@ namespace System.CommandLine.GeneralAppModel
             }
         }
 
-        protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            var candidate = GetCandidate(DataSource);
-            var commandDescriptor = GetCommand(candidate, parentSymbolDescriptor);
-            var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(commandDescriptor);
-
-            commandDescriptor.Arguments.AddRange(argumentItems.Select(i => GetArgument(i, commandDescriptor)));
-            commandDescriptor.Options.AddRange(optionItems.Select(i => GetOption(i, commandDescriptor)));
-            commandDescriptor.SubCommands.AddRange(subCommandItems.Select(i => GetCommand(i, commandDescriptor)));
-
-            return commandDescriptor;
-        }
+        protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor) 
+            => GetCommand(GetCandidate(DataSource), parentSymbolDescriptor);
 
         protected CommandDescriptor GetCommand(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -108,8 +94,14 @@ namespace System.CommandLine.GeneralAppModel
             var ruleSet = Strategy.CommandRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
-            return descriptor;
+            var candidates = GetChildCandidates(descriptor);
+            candidates = candidates.Where(c => !Strategy.GetCandidateRules.NamesToIgnore.Contains(c.Name));
+            var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(candidates, descriptor);
 
+            descriptor.Arguments.AddRange(argumentItems.Select(i => GetArgument(i, descriptor)));
+            descriptor.Options.AddRange(optionItems.Select(i => GetOption(i, descriptor)));
+            descriptor.SubCommands.AddRange(subCommandItems.Select(i => GetCommand(i, descriptor)));
+            return descriptor;
         }
 
         private ArgumentDescriptor GetArgument(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
@@ -126,10 +118,8 @@ namespace System.CommandLine.GeneralAppModel
 
         private OptionDescriptor GetOption(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item)
-            {
-                Arguments = new ArgumentDescriptor[] { GetArgument(candidate, parentSymbolDescriptor) }
-            };
+            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
+            descriptor.Arguments = new ArgumentDescriptor[] { GetArgument(candidate, descriptor) };
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             //descriptor.Aliases = GetMatching(descriptor, Strategy.AliasRules, param, parentSymbolDescriptor);

@@ -1,7 +1,6 @@
 ﻿using System.CommandLine.GeneralAppModel;
 using Xunit;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
-using System.CommandLine.ReflectionAppModel;
 
 namespace System.CommandLine.ReflectionAppModel.Tests
 {
@@ -13,7 +12,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests
 
         public DescriptorMakerTests()
         {
-            strategy = new Strategy().SetReflectionRules();
+            strategy = new Strategy()
+                            .SetReflectionRules()
+                            .CandidateNamesToIgnore("CommandDataFromMethods", "CommandDataFromType");
         }
 
         [Fact]

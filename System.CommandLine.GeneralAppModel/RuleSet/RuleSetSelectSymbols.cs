@@ -12,7 +12,6 @@ namespace System.CommandLine.GeneralAppModel
     /// </remarks>
     public class RuleSetSelectSymbols : RuleSetBase
     {
-        public List<string> NamesToIgnore { get; } = new List<string>();
         public RuleGroup<IRuleGetCandidates> Rules { get; private set; } = new RuleGroup<IRuleGetCandidates>();
 
 
@@ -20,9 +19,10 @@ namespace System.CommandLine.GeneralAppModel
                                                SymbolDescriptorBase commandDescriptor,
                                                IEnumerable<Candidate> candidates)
         {
-            return Rules
-                    .OfType<IRuleGetCandidates>()
-                    .Where(x => x.SymbolType == symbolType)
+            IEnumerable<IRuleGetCandidates> rules = Rules
+                                .OfType<IRuleGetCandidates>()
+                                .Where(x => x.SymbolType == symbolType);
+            return rules                 
                     .SelectMany(r => r.GetCandidates(candidates, commandDescriptor))
                     .ToList();
         }

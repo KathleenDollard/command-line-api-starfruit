@@ -8,6 +8,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public static class TestDataExtensions
     {
+        /// <summary>
+        /// To be used in MakerTests that test the translation of a 
+        /// descriptor into a System.CommandLine Symbol
+        /// </summary>
+        /// <param name="data">Test data for the command. This is hard coded somewhere</param>
+        /// <returns>A System.CommandLine command</returns>
         public static Command CreateCommand(this CommandTestData data)
         {
             var command = new Command(data.Name)
@@ -20,28 +26,26 @@ namespace System.CommandLine.GeneralAppModel.Tests
             {
                 command.AddArguments(data.Arguments.Select(x => CreateArgument(x)));
             }
+            if (!(data.Options is null))
+            {
+                command.AddOptions(data.Options.Select(x => CreateOption(x)));
+            }
+            if (!(data.SubCommands is null))
+            {
+                command.AddCommands (data.SubCommands.Select(x => CreateCommand(x)));
+            }
             return command;
-        }
+       }
 
+        /// <summary>
+        /// To be used in DescriptorMakerTests that test the creation of a
+        /// descriptor from raw data like reflection
+        /// </summary>
+        /// <param name="data">Test data for the command. This is hard coded somewhere</param>
+        /// <returns>An AppModel descriptor</returns>
         public static CommandDescriptor CreateDescriptor(this CommandTestData data)
         {
-
-            var command = new CommandDescriptor(null, data.Raw)
-            {
-                Name = data.Name,
-                Description = data.Description,
-                IsHidden = data.IsHidden,
-                Aliases = data.Aliases,
-            };
-            if (!(data.Arguments is null))
-                command.Arguments.AddRange(data
-                                    .Arguments
-                                    .Select(a => CreateDescriptor(a, command)));
-            if (!(data.Options is null))
-                command.Options.AddRange(data
-                                    .Options
-                                    .Select(a => CreateDescriptor(a, command)));
-            return command;
+            return CreateDescriptor(data, null);
         }
 
         public static Option CreateOption(this OptionTestData data)
@@ -118,6 +122,30 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 };
             }
             return arg;
+        }
+
+         public static CommandDescriptor CreateDescriptor(this CommandTestData data, SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var command = new CommandDescriptor(parentSymbolDescriptor, data.Raw)
+            {
+                Name = data.Name,
+                Description = data.Description,
+                IsHidden = data.IsHidden,
+                Aliases = data.Aliases,
+            };
+           if (!(data.Arguments is null))
+                command.Arguments.AddRange(data
+                                    .Arguments
+                                    .Select(a => CreateDescriptor(a, command)));
+            if (!(data.Options is null))
+                command.Options.AddRange(data
+                                    .Options
+                                    .Select(a => CreateDescriptor(a, command)));
+            if (!(data.SubCommands is null))
+                command.SubCommands.AddRange(data
+                                    .SubCommands
+                                    .Select(a => CreateDescriptor(a, command)));    
+            return command;
         }
 
         public static void AddAliases(this Symbol symbol, IEnumerable<string> aliases)

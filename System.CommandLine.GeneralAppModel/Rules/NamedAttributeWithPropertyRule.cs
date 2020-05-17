@@ -5,18 +5,39 @@ using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    //public class NamedAttributeWithPropertyRule<TValue> : RuleBase, IRuleGetValue<TValue>, IRuleGetValues<TValue>
-    public class NamedAttributeWithPropertyRule<TValue> : AttributeRuleBase<TValue>, IRuleGetValue<TValue>
+    public abstract class NamedAttributeWithPropertyRule : AttributeRuleBase
     {
-        public NamedAttributeWithPropertyRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+        public NamedAttributeWithPropertyRule(string attributeName, string propertyName, Type type, SymbolType symbolType = SymbolType.All)
         : base(attributeName,symbolType)
         {
             PropertyName = propertyName;
+            Type = type;
         }
 
         public string PropertyName { get;  }
+        public Type Type { get; }
 
-        public override (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        private IEnumerable<Attribute> GetMatchingAttributes(SymbolDescriptorBase symbolDescriptor, IEnumerable<Attribute> items)
+        {
+            return SymbolType != SymbolType.All && SymbolType != symbolDescriptor.SymbolType
+                ? Array.Empty<Attribute>()
+                : items
+                    .Where(a => DoesAttributeMatch(AttributeName, a));
+        }
+
+        private IEnumerable<Attribute> GetAttributes(ICustomAttributeProvider attributeProvider)
+            => attributeProvider.GetCustomAttributes(Context.IncludeBaseClassAttributes)
+                                        .OfType<Attribute>();
+
+    }
+
+    public class NamedAttributeWithPropertyRule<TValue> : NamedAttributeWithPropertyRule, IRuleGetValue<TValue>
+    {
+        public NamedAttributeWithPropertyRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+        : base(attributeName, propertyName, typeof(TValue), symbolType)
+        {   }
+
+        public (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> item,
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -50,6 +71,6 @@ namespace System.CommandLine.GeneralAppModel
                                         .OfType<Attribute>();
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{AttributeName}', its '{PropertyName}' property";
+            => $"If there is an attribute named '{AttributeName}', its '{PropertyName}' property, with type {typeof(TValue)}";
     }
 }

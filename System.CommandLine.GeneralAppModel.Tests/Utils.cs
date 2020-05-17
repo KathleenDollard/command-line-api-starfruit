@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
 using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public  static class  Utils
+    public static class Utils
     {
         public static string CompareLists<T>(this IEnumerable<T> list1, IEnumerable<T> list2, string name)
         {
@@ -27,6 +29,77 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static IEnumerable<MethodInfo> GetMethodsOnDeclaredType(this Type type)
            => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public static void CheckRule<TRule>(this IRule rule, SymbolType symbolType)
+            where TRule : IRule
+        {
+            rule.Should().BeOfType<TRule>();
+            rule.SymbolType.Should().IncludeSymbolType(symbolType);
+        }
+
+        public static void CheckNamePatternRule(this IRule rule, SymbolType symbolType, StringContentsRule.StringPosition position, string compareTo)
+        {
+            rule.CheckRule<NamePatternRule>(symbolType);
+            var typeRule = rule as NamePatternRule;
+            typeRule.Position.Should().Be(position);
+            typeRule.CompareTo.Should().Be(compareTo);
+        }
+
+        public static void CheckNamedAttributeRule(this IRule rule, SymbolType symbolType, string attributeName)
+        {
+            rule.CheckRule<NamedAttributeRule>(symbolType);
+            var typeRule = rule as NamedAttributeRule;
+            typeRule.AttributeName.Should().Be(attributeName);
+        }
+
+        public static void CheckNamedAttributeWithPropertyRule(this IRule rule, SymbolType symbolType, string attributeName, string propertyName, Type type)
+        {
+            rule.Should().BeAssignableTo<NamedAttributeWithPropertyRule>( );
+            rule.SymbolType.Should().IncludeSymbolType(symbolType);
+            var typedRule = rule as NamedAttributeWithPropertyRule;
+            typedRule.AttributeName.Should().Be(attributeName);
+            typedRule.PropertyName.Should().Be(propertyName);
+            typedRule.Type.Should().Be(type);
+        }
+
+        public static void CheckIsOfTypeRule(this IRule rule, SymbolType symbolType, Type type)
+        {
+            rule.Should().BeAssignableTo<IsOfTypeRule>();
+            rule.SymbolType.Should().IncludeSymbolType(symbolType);
+            var typedRule = rule as IsOfTypeRule;
+            typedRule.Type.Should().Be(type);
+
+        }
+
+        public static  void CheckRules( this IRule[] actual, RuleGroupTestData descriptionData)
+        {
+            var symbolType = descriptionData.SymbolType;
+            var expectedRules = descriptionData.Rules.ToArray();
+            actual.Should().HaveCount(expectedRules.Length);
+            for (int i = 0; i < actual.Length; i++)
+            {
+                switch (actual[i])
+                {
+                    case NamePatternRule r:
+                        var np = expectedRules[i] as NamePatternTestData;
+                        r.CheckNamePatternRule(symbolType, np.Position, np.CompareTo);
+                        break;
+                    case NamedAttributeRule r:
+                        var na = expectedRules[i] as NamedAttributeTestData;
+                        r.CheckNamedAttributeRule(symbolType, na.AttributeName);
+                        break;
+                    case NamedAttributeWithPropertyRule<string> r:
+                        var naps = expectedRules[i] as NamedAttributeWithPropertyTestData;
+                        r.CheckNamedAttributeWithPropertyRule(symbolType, naps.AttributeName, naps.PropertyName, typeof(string));
+                        break;
+                    case NamedAttributeWithPropertyRule<bool> r:
+                        var rapb = expectedRules[i] as NamedAttributeWithPropertyTestData;
+                        r.CheckNamedAttributeWithPropertyRule(symbolType, rapb.AttributeName, rapb.PropertyName, typeof(bool));
+                        break;
+
+                }
+            }
+        }
 
     }
 }

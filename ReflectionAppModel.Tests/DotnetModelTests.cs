@@ -10,8 +10,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         public DotnetModelTests()
         {
             strategy = new Strategy()
-                                .SetGeneralRules();
-            strategy.SelectSymbolRules.NamesToIgnore.AddRange(new string[]{ "CommandDataFromMethods", "CommandDataFromType"});
+                           .SetReflectionRules()
+                           .CandidateNamesToIgnore( "CommandDataFromMethods", "CommandDataFromType");
         }
 
         [Fact]
