@@ -12,7 +12,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public int MinArityValues { get; set; }
         public int MaxArityValues { get; set; }
         public bool HasArity { get; set; }
-        //public ArityDescriptor Arity { get; set; }
         public HashSet<string> AllowedValues { get; } = new HashSet<string>();
         public Type ArgumentType { get; set; }
         public object DefaultValue { get; set; }

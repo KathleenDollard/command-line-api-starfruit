@@ -1,4 +1,6 @@
-﻿using System.CommandLine.GeneralAppModel.Rules;
+﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.GeneralAppModel.Rules;
 using System.Data;
 using System.Threading;
 
@@ -73,10 +75,23 @@ namespace System.CommandLine.GeneralAppModel
             //rules.AliasesRules
             //    ;
 
-            //rules.ArityRule
-            //    .Add(new ComplexAttributeRule<ArityDescriptor>(
-            //               "Arity", new string[] { "MinArgCount", "MaxArgCount" }));
-            // ;
+            rules.ArityRules
+                .Add(new ComplexAttributeRule("Arity", SymbolType.Argument)
+                {
+                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                    { 
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName,propertyName: "MinCount", propertyType: typeof(int)),
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName,propertyName: "MaxCount", propertyType: typeof(int))
+                    }
+                })
+                .Add(new ComplexAttributeRule("Arity", SymbolType.Argument)
+                {
+                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                    {
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName, propertyName: "MinimumCount", propertyType: typeof(int)),
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName, propertyName: "MaximumCount", propertyType: typeof(int))
+                    }
+                 });
 
             return rules;
         }

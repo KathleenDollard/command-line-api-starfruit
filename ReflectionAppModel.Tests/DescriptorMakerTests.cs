@@ -37,9 +37,18 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         public void CanGetArgumentFromNamedMethodParam()
            => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgs>(strategy);
 
+
         [Fact]
-        public void CanGetArgumentFromNamedPropertyProperty()
+        public void CanGetArgumentWithArityFromNamedMethodParam()
+           => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgsWithArity>(strategy);
+
+        [Fact]
+        public void CanGetArgumentFromNamedProperty()
             => Utils.TestType<TypeWithPropertyNamedArgs>(strategy);
+
+        [Fact]
+        public void CanGetArgumentWithArityFromNamedProperty()
+        => Utils.TestType<TypeWithPropertyNamedArgsWithArity>(strategy);
 
         [Fact]
         public void CanGetOptionFromMethodParam()

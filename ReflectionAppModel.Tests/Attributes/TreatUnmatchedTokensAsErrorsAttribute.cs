@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace System.CommandLine.GeneralAppModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Tests
 {
     public class TreatUnmatchedTokensAsErrorsAttribute : Attribute 
     {

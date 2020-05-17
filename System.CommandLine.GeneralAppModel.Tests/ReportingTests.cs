@@ -23,7 +23,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             strategy = new Strategy().SetGeneralRules();
         }
 
-         [Fact(Skip = "")]
+        [Fact(Skip = "")]
         public void ReportForComplexAttributeRuleIsCorrect()
         {
         }
@@ -66,7 +66,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData("NamedAttribute" , @"If there is an attribute named 'NamedAttribute'")]
+        [InlineData("NamedAttribute", @"If there is an attribute named 'NamedAttribute'")]
         public void ReportForNamedAttributeRuleIsCorrect(string attributeName, string expected)
         {
             var rule = new NamedAttributeRule(attributeName);
@@ -76,10 +76,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData("WithProperty","ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
+        [InlineData("WithProperty", "ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
         public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
         {
-            var rule = new NamedAttributeWithPropertyRule<string>(attributeName, propertyName );
+            var rule = new NamedAttributeWithPropertyRule<string>(attributeName, propertyName);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -95,11 +95,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData (StringContentsRule.StringPosition.BeginsWith, "Abc", @"the string begins with 'Abc'")]
+        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"the string begins with 'Abc'")]
         public void ReportForStringContentxForGetItemsIsCorrect(StringContentsRule.StringPosition position,
             string compareTo, string expected)
         {
-            var rule = new StringContentsRule(position , compareTo );
+            var rule = new StringContentsRule(position, compareTo);
             var actual = rule.RuleDescription<IRuleGetCandidates>();
 
             actual.Should().Be(expected);
@@ -116,12 +116,30 @@ namespace System.CommandLine.GeneralAppModel.Tests
             actual.Should().Be(expected);
         }
 
+        [Theory]
+        [InlineData("Abc", "Def", typeof(int), "Ghi", typeof(string), "If there is an attribute named 'Abc': Def as System.Int32, Ghi as System.String")]
+        public void ReportForComplexAttributeRuleGetValueIsCorrect(string attributeName,
+                    string propName1, Type type1, string propName2, Type type2, string expected)
+        {
+            var rule = new ComplexAttributeRule(attributeName)
+            {
+                PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                    {
+                        new ComplexAttributeRule.NameAndType(propName1, propName1, propertyType: type1),
+                        new ComplexAttributeRule.NameAndType(propName2, propName2, propertyType: type2)
+                    }
+            };
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be(expected);
+        }
+
 
         [Fact]
         public void FullStrategyReportIsAboutTheRightLength()
         {
             var report = strategy.Report();
-            report.Length.Should().BeGreaterThan(3000).And.BeLessThan(4000);
+            report.Length.Should().BeGreaterThan(3500).And.BeLessThan(4500);
         }
     }
 }
