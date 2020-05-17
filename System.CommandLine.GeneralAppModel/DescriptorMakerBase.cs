@@ -85,7 +85,7 @@ namespace System.CommandLine.GeneralAppModel
             }
         }
 
-        protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor) 
+        protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
             => GetCommand(GetCandidate(DataSource), parentSymbolDescriptor);
 
         protected CommandDescriptor GetCommand(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
@@ -109,11 +109,41 @@ namespace System.CommandLine.GeneralAppModel
             var descriptor = new ArgumentDescriptor(parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
-            //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            SetArityIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.ArgumentType = GetArgumentType(candidate);
             return descriptor;
+        }
+
+        private void SetArityIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var data = ruleSet.ArityRules.GetFirstOrDefaultValue<Dictionary<string, object>>(descriptor, candidate, parentSymbolDescriptor);
+            if (data is null || !data.Any())
+            {
+                return;
+            }
+            descriptor.Arity = new ArityDescriptor();
+            if (data.TryGetValue(ArityDescriptor.MinimumCountName, out var objMinCount))
+            {
+                // this is ugly, I'm open to better ideas
+                try
+                {
+                    var minCount = (int)objMinCount;
+                    descriptor.Arity.MinimumNumberOfValues = minCount;
+                }
+                catch { } // just don't set anything
+            }
+            if (data.TryGetValue(ArityDescriptor.MaximumCountName, out var objMaxCount))
+            {
+                // this is ugly, I'm open to better ideas
+                try
+                {
+                    var maxCount = (int)objMaxCount;
+                    descriptor.Arity.MaximumNumberOfValues = maxCount;
+                }
+                catch { } // just don't set anything
+            }
         }
 
         private OptionDescriptor GetOption(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)

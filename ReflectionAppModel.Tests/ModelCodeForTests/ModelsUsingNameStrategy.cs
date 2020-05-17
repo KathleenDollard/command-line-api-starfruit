@@ -113,6 +113,44 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
+
+    public class MethodWithParameterNamedArgsWithArity : IHaveMethodTestData, IHaveTypeTestData
+    {
+        public void DoSomething([Arity(MinimumCount = 1, MaximumCount = 3)] string stringParamArg) { }
+
+        public IEnumerable<CommandTestData> CommandDataFromMethods
+            => new List<CommandTestData>
+            {
+                new CommandTestData()
+                {
+                    Raw = ReflectionSupport.GetMethodInfo<MethodWithParameterNamedArgsWithArity>(nameof(DoSomething)),
+                    Name = nameof(DoSomething),
+                    IsHidden = false,
+                    Arguments = new List<ArgumentTestData>
+                    {
+                        new ArgumentTestData
+                        {
+                            Raw = ReflectionSupport.GetParameterInfo<MethodWithParameterNamedArgsWithArity>(nameof(DoSomething), "stringParamArg"),
+                            Name = "stringParam",
+                            HasArity  = true,
+                            MinArityValues = 1,
+                            MaxArityValues = 3,
+                            ArgumentType = typeof(string),
+                            IsHidden = false
+                        }
+                    }
+                }
+            };
+
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(MethodWithParameterNamedArgs),
+                Raw = typeof(MethodWithParameterNamedArgs),
+                IsHidden = false
+            };
+    }
+
     public class TypeWithPropertyNamedArgs : IHaveTypeTestData
     {
         public string StringPropertyArg { get; set; }
@@ -128,6 +166,32 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                     {
                        Name = nameof(StringPropertyArg)[..^3],
                        Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgs>(nameof(StringPropertyArg)),
+                       ArgumentType = typeof(string),
+                       IsHidden = false
+                    }
+                }
+            };
+    }
+
+    public class TypeWithPropertyNamedArgsWithArity : IHaveTypeTestData
+    {
+        [Arity(MinimumCount = 0, MaximumCount = 2)]
+        public string StringPropertyArg { get; set; }
+
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithPropertyNamedArgsWithArity),
+                Raw = typeof(TypeWithPropertyNamedArgsWithArity),
+                IsHidden = false,
+                Arguments = new List<ArgumentTestData>
+                { new ArgumentTestData
+                    {
+                       Name = nameof(StringPropertyArg)[..^3],
+                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgsWithArity>(nameof(StringPropertyArg)),
+                       HasArity  = true,
+                       MinArityValues = 0,
+                       MaxArityValues = 2,
                        ArgumentType = typeof(string),
                        IsHidden = false
                     }

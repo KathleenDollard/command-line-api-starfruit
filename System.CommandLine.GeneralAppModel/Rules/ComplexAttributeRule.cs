@@ -1,20 +1,77 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
 
     /// <summary>
-    /// This will be important for multi-part attributes like arity
+    /// This type of rule supports attributes with multiple properties. The first usage was Arity. 
+    /// A dictionary is returned, which contains the _Name_, not the _PropertyName_ of each expected item.
+    /// The Name is consistent, the PropertyName can be whatever that particular strategy wants. 
     /// </summary>
-    public class ComplexAttributeRule : NamedAttributeWithPropertyRule<string>
+    public class ComplexAttributeRule : NamedAttributeRule, IRuleGetValue<Dictionary<string, object>>
     {
-        public IEnumerable<string> PropertyNames { get; }
-        public ComplexAttributeRule(string attributeName,  string[] propertyNames = null, SymbolType symbolType = SymbolType.All)
-            : base(attributeName,  null, symbolType)
+
+        public ComplexAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
+            : base(attributeName, symbolType)
         {
-            PropertyNames = propertyNames;
         }
+        public IEnumerable<NameAndType> PropertyNamesAndTypes { get; set; }
+
+ 
+        (bool success, Dictionary<string, object> value) IRuleGetValue<Dictionary<string, object>>.GetFirstOrDefaultValue(
+                SymbolDescriptorBase symbolDescriptor, IEnumerable<object> item, SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
+                                .OfType<Attribute>()
+                                .ToList();
+            if (attributes.Any(a => HasAtLeastOneProperty(a)))
+            {
+                var dictionary = new Dictionary<string, object>();
+                foreach (var attribute in attributes)
+                {
+                    var propertyInfos = attribute.GetType().GetProperties();
+                    foreach (var nameAndType in PropertyNamesAndTypes)
+                    {
+                        var info = propertyInfos.Where(p => p.Name == nameAndType.PropertyName).FirstOrDefault();
+                        if (info != null)
+                        {
+                            var value = info.GetValue(attribute);
+                            dictionary.Add(nameAndType.Name, value);
+                        }
+                    }
+                }
+                return (true, dictionary);
+            }
+            return (false, default);
+        }
+
+        private bool HasAtLeastOneProperty(Attribute attribute)
+        {
+            var propertyNames = PropertyNamesAndTypes.Select(p => p.PropertyName);
+            return attribute.GetType().GetProperties().Any(p => propertyNames.Contains(p.Name));
+        }
+
         public override string RuleDescription<TIRuleSet>()
-          => $"ComplexAttribute Rule: {AttributeName} PropertyNames: {String.Join (", ",PropertyNames)}";
+            => $"If there is an attribute named '{AttributeName}': {string.Join(", ", PropertyNamesAndTypes.Select(p => ReportNameAndType(p)))}";
+ 
+        private string ReportNameAndType(NameAndType p)
+        {
+            return $"{p.PropertyName } as {p.PropertyType }";
+        }
+
+        public class NameAndType
+        {
+            public NameAndType(string name, string propertyName, Type propertyType)
+            {
+                PropertyName = propertyName;
+                PropertyType = propertyType;
+                Name = name;
+            }
+            public string Name { get; set; }
+            public string PropertyName { get; set; }
+            public Type PropertyType { get; set; }
+        }
     }
 }

@@ -24,8 +24,10 @@ namespace System.CommandLine.GeneralAppModel.Rules
                                              IEnumerable<T> items,
                                              SymbolDescriptorBase parentSymbolDescriptor)
            => items
-                   .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor))
-                   .Where(x => !x.Equals(default));
+                   .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor));
+        //=> items
+        //        .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor))
+        //        .Where(x => !x.Equals(default));
 
         protected bool IsMatch(SymbolDescriptorBase symbolDescriptor,
                       object item,

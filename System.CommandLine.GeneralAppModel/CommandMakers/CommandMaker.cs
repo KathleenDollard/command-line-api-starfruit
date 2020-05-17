@@ -7,13 +7,6 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class CommandMaker
     {
-        public static Command Make(CommandDescriptor commandDescriptor)
-        {
-            var command = new RootCommand(commandDescriptor.Description);
-            FillCommand(command, commandDescriptor);
-            return command;
-        }
-
         public static Command MakeCommand(CommandDescriptor descriptor)
         {
             var subCommand = new Command(descriptor.Name, descriptor.Description);

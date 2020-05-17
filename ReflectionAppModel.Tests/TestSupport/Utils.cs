@@ -52,12 +52,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
             var expected = Utils.FromType<T>().CreateDescriptor();
 
             actual.Should().BeEquivalentTo(expected, symbolOptions);
-            actual.Options.Should().BeEquivalentTo(expected.Options, symbolOptions);
-            actual.Arguments.Should().BeEquivalentTo(expected.Arguments, symbolOptions);
-            actual.SubCommands.Should().BeEquivalentTo(expected.SubCommands, symbolOptions);
-
-            //actual.Should().CheckSubCommandDescriptors(expected)
-            //      .And.Should().BeEquivalentTo(expected, symbolOptions);
+            WhyDoWeNeedTheseExtraChecks(actual, expected);
         }
 
         internal static void TestFirstMethodOnType<T>(this Strategy strategy)
@@ -71,14 +66,22 @@ namespace System.CommandLine.ReflectionAppModel.Tests
             var expected = Utils.FromFirstMethod<T>().CreateDescriptor();
 
             actual.Should().BeEquivalentTo(expected, symbolOptions);
-            actual.Options.Should().BeEquivalentTo(expected.Options, symbolOptions);
-            actual.Arguments.Should().BeEquivalentTo(expected.Arguments, symbolOptions);
-            actual.SubCommands.Should().BeEquivalentTo(expected.SubCommands, symbolOptions);
+            WhyDoWeNeedTheseExtraChecks(actual, expected);
 
-            //actual.Should().CheckSubCommandDescriptors(expected)
-            //      .And.Should().BeEquivalentTo(expected, symbolOptions);
         }
 
+        private static void WhyDoWeNeedTheseExtraChecks(CommandDescriptor actual, CommandDescriptor expected)
+        {
+            actual.Options.Should().BeEquivalentTo(expected.Options, symbolOptions);
+            actual.Arguments.Should().BeEquivalentTo(expected.Arguments, symbolOptions);
+            var actualArgs = actual.Arguments.ToArray();
+            var expectedArgs = expected.Arguments.ToArray();
+            for (int i = 0; i < actualArgs.Length; i++)
+            {
+                actualArgs[i].Arity.Should().BeEquivalentTo(expectedArgs[i].Arity);
+            }
+            actual.SubCommands.Should().BeEquivalentTo(expected.SubCommands, symbolOptions);
+        }
 
         public static IEnumerable<Command> SubCommands (this Command command)
         {

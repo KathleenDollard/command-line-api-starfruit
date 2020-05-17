@@ -2,6 +2,8 @@
 {
     public class ArityDescriptor
     {
+        public static readonly string MinimumCountName = nameof(MinimumNumberOfValues);
+        public static readonly string MaximumCountName = nameof(MaximumNumberOfValues);
         private int minimumNumberOfValues;
         private int maximumNumberOfValues;
 

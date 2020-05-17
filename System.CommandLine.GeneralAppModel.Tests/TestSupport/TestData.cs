@@ -8,7 +8,9 @@
                 Name = "Fred",
                 Description = "This is a description",
                 IsHidden = false,
-                //Arity  = asdf,
+                HasArity = true,
+                MinArityValues = 1,
+                MaxArityValues = 3,
                 //AllowedValues { get; } = new HashSet<string>();
                 ArgumentType = typeof(string),
                 //DefaultValue  = asdf,

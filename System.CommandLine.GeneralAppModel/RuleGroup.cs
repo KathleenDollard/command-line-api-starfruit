@@ -30,16 +30,6 @@ namespace System.CommandLine.GeneralAppModel
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<IRule>)_rules).GetEnumerator();
 
-        public IEnumerable<Candidate> GetItems(IEnumerable<Candidate> candidates,
-                                          SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            var symbolRules = Rules.OfType<IRuleGetCandidates>();
-            var matches = symbolRules
-                            .SelectMany(rule => rule.GetCandidates(candidates, parentSymbolDescriptor))
-                            .Distinct();
-            return matches;
-        }
-
         public virtual T GetFirstOrDefaultValue<T>(SymbolDescriptorBase symbolDescriptor,
                                                    Candidate candidate,
                                                    SymbolDescriptorBase parentSymbolDescriptor)

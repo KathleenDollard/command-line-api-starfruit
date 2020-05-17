@@ -40,7 +40,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         }
 
         [Fact]
-        public void CanMakeSimpleArgument()
+        public void CanMakeArgument()
         {
             var descriptor = TestData.ArgData1.CreateDescriptor(null);
             var argument = CommandMaker.MakeArgument(descriptor);
