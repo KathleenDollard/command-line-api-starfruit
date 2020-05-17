@@ -160,10 +160,8 @@ namespace System.CommandLine.GeneralAppModel
             rules.IsHiddenRules
                 .Add(new NamedAttributeRule("Hidden"));
 
-
             //rules.AliasesRules
             //    ;
-
 
             return rules;
         }
