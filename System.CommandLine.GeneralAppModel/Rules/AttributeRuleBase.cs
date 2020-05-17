@@ -5,7 +5,7 @@ using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Rules
 {
-    public abstract class AttributeRuleBase<TValue> : RuleBase, IRuleGetValue<TValue>
+    public abstract class AttributeRuleBase : RuleBase
     {
         public AttributeRuleBase(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(symbolType)
@@ -15,9 +15,9 @@ namespace System.CommandLine.GeneralAppModel.Rules
 
         public string AttributeName { get; }
 
-        public abstract (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
-                                                                 IEnumerable<object> item,
-                                                                 SymbolDescriptorBase parentSymbolDescriptor);
+        //public abstract (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        //                                                         IEnumerable<object> item,
+        //                                                         SymbolDescriptorBase parentSymbolDescriptor);
 
 
         protected IEnumerable<T> GetMatches<T>(SymbolDescriptorBase symbolDescriptor,

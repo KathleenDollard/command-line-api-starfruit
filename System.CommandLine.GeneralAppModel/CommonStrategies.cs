@@ -8,5 +8,11 @@
                 .SetStandardArgumentRules()
                 .SetStandardCommandRules()
                 .SetStandardOptionRules();
+
+        public static Strategy CandidateNamesToIgnore(this Strategy strategy, params string[] namesToIgnore)
+        {
+            strategy.GetCandidateRules.NamesToIgnore.AddRange(namesToIgnore);
+            return strategy;
+        }
     }
 }

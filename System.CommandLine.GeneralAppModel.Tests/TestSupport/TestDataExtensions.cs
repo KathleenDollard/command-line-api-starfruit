@@ -45,27 +45,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         /// <returns>An AppModel descriptor</returns>
         public static CommandDescriptor CreateDescriptor(this CommandTestData data)
         {
-
-            var command = new CommandDescriptor(null, data.Raw)
-            {
-                Name = data.Name,
-                Description = data.Description,
-                IsHidden = data.IsHidden,
-                Aliases = data.Aliases,
-            };
-            if (!(data.Arguments is null))
-                command.Arguments.AddRange(data
-                                    .Arguments
-                                    .Select(a => CreateDescriptor(a, command)));
-            if (!(data.Options is null))
-                command.Options.AddRange(data
-                                    .Options
-                                    .Select(a => CreateDescriptor(a, command)));
-            if (!(data.SubCommands is null))
-                command.SubCommands.AddRange(data
-                                    .SubCommands
-                                    .Select(a => CreateDescriptor(a, command)));
-            return command;
+            return CreateDescriptor(data, null);
         }
 
         public static Option CreateOption(this OptionTestData data)
@@ -153,6 +133,18 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 IsHidden = data.IsHidden,
                 Aliases = data.Aliases,
             };
+           if (!(data.Arguments is null))
+                command.Arguments.AddRange(data
+                                    .Arguments
+                                    .Select(a => CreateDescriptor(a, command)));
+            if (!(data.Options is null))
+                command.Options.AddRange(data
+                                    .Options
+                                    .Select(a => CreateDescriptor(a, command)));
+            if (!(data.SubCommands is null))
+                command.SubCommands.AddRange(data
+                                    .SubCommands
+                                    .Select(a => CreateDescriptor(a, command)));    
             return command;
         }
 

@@ -1,14 +1,16 @@
-﻿using System.CommandLine.Binding;
+﻿using System.Collections.Generic;
+using System.CommandLine.Binding;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    public  class ReflectionDescriptorMaker : DescriptorMakerBase
+    public class ReflectionDescriptorMaker : DescriptorMakerBase
     {
         protected ReflectionDescriptorMaker(Strategy strategy,
                                      object dataSource,
@@ -46,6 +48,25 @@ namespace System.CommandLine.ReflectionAppModel
 
         protected Type[] OmmittedTypes { get; }
 
+        protected override IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor)
+        {
+            var item = commandDescriptor.Raw;
+            return item switch
+            {
+                MethodInfo m => m.GetParameters().Select(p => GetCandidateInternal(p)),
+                Type t => GetTypeChildren(Strategy, commandDescriptor, t),
+                _ => new List<Candidate>(),
+
+            };
+
+            static IEnumerable<Candidate> GetTypeChildren(Strategy strategy, SymbolDescriptorBase commandDescriptor, Type t)
+            {
+                var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor);
+                return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
+            }
+        }
+
+
         protected override Type GetArgumentType(Candidate candidate)
             => candidate.Item switch
             {
@@ -54,7 +75,7 @@ namespace System.CommandLine.ReflectionAppModel
                 _ => null
             };
 
-        protected override Candidate GetCandidate(object item) 
+        protected override Candidate GetCandidate(object item)
            => item switch
            {
                Type typeItem => GetCandidateInternal(typeItem),
@@ -67,7 +88,7 @@ namespace System.CommandLine.ReflectionAppModel
         private static Candidate GetCandidateInternal(PropertyInfo propertyInfo)
         {
             var name = propertyInfo.Name;
-            var candidate = new Candidate(propertyInfo);
+            var candidate = new Candidate(propertyInfo, propertyInfo.Name);
             candidate.AddTraitRange(propertyInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
             candidate.AddTrait(name);
             candidate.AddTrait(new IdentityWrapper<string>(name));
@@ -77,28 +98,28 @@ namespace System.CommandLine.ReflectionAppModel
         private static Candidate GetCandidateInternal(ParameterInfo parameterInfo)
         {
             var name = parameterInfo.Name;
-            var candidate = new Candidate(parameterInfo);
+            var candidate = new Candidate(parameterInfo, parameterInfo.Name );
             candidate.AddTraitRange(parameterInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
             candidate.AddTrait(name);
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;
         }
 
-        private static Candidate GetCandidateInternal(MethodInfo methodItem)
+        private static Candidate GetCandidateInternal(MethodInfo methodInfo)
         {
-            var name = methodItem.Name;
-            var candidate = new Candidate(methodItem);
-            candidate.AddTraitRange(methodItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            var name = methodInfo.Name;
+            var candidate = new Candidate(methodInfo, methodInfo.Name);
+            candidate.AddTraitRange(methodInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
             candidate.AddTrait(name);
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;
         }
 
-        private static Candidate GetCandidateInternal(Type typeItem)
+        private static Candidate GetCandidateInternal(Type type)
         {
-            var name = typeItem.Name;
-            var candidate = new Candidate(typeItem);
-            candidate.AddTraitRange(typeItem.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            var name = type.Name;
+            var candidate = new Candidate(type, type.Name);
+            candidate.AddTraitRange(type.GetCustomAttributes(Context.IncludeBaseClassAttributes));
             candidate.AddTrait(name);
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;
@@ -119,6 +140,6 @@ namespace System.CommandLine.ReflectionAppModel
         {
             entryPoint = dataSource;
         }
- 
+
     }
 }
