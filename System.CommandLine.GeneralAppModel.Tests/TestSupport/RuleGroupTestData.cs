@@ -7,7 +7,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
     public class RuleGroupTestData
     {
         public SymbolType SymbolType { get; set; }
-        public List<RuleBaseTestData> Rules {get; set;}
+        public List<RuleBaseTestData> Rules { get; set; }
 
     }
 
@@ -15,7 +15,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
     {
     }
 
-    public class NamedAttributeTestData:RuleBaseTestData
+    public class NamedAttributeTestData : RuleBaseTestData
     {
         public NamedAttributeTestData(string attributeName)
         {
@@ -23,19 +23,19 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
         public string AttributeName { get; set; }
 
- 
+
     }
 
     public class NamedAttributeWithPropertyTestData : NamedAttributeTestData
     {
-       public NamedAttributeWithPropertyTestData(string attributeName, string propertyName, Type type) : base(attributeName)
+        public NamedAttributeWithPropertyTestData(string attributeName, string propertyName, Type valueType) : base(attributeName)
         {
             PropertyName = propertyName;
-            Type = type;
-        }  
-        
-        public string PropertyName { get;  }
-        public Type Type { get; }
+            ValueType = valueType;
+        }
+
+        public string PropertyName { get; }
+        public Type ValueType { get; }
     }
 
     public class NamePatternTestData : RuleBaseTestData
@@ -48,6 +48,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
             Position = position;
         }
 
-        public StringContentsRule.StringPosition Position  { get; set; }
+        public StringContentsRule.StringPosition Position { get; set; }
+    }
+
+    public class IdentityRuleTestData : RuleBaseTestData
+    {
+        public IdentityRuleTestData(Type valueType) : base()
+        {
+            ValueType = valueType;
+        }
+
+        public Type ValueType { get; }
     }
 }

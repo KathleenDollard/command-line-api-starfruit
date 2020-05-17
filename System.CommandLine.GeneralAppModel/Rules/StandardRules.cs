@@ -36,6 +36,7 @@ namespace System.CommandLine.GeneralAppModel
             rules.Rules
                .Add(new NamedAttributeRule("Command", SymbolType.Command))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command", SymbolType.Command))
+               .Add(new IsOfTypeRule<Type>(SymbolType.Command))
                .Add(new NamedAttributeRule("Argument", SymbolType.Argument))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg", SymbolType.Argument))

@@ -54,14 +54,14 @@ namespace System.CommandLine.ReflectionAppModel
             return item switch
             {
                 MethodInfo m => m.GetParameters().Select(p => GetCandidateInternal(p)),
-                Type t => GetTypeChildren(Strategy, commandDescriptor, t),
+                Type t => GetTypeChildren(Strategy, commandDescriptor, t, c => GetCandidate(c.Item)),
                 _ => new List<Candidate>(),
 
             };
 
-            static IEnumerable<Candidate> GetTypeChildren(Strategy strategy, SymbolDescriptorBase commandDescriptor, Type t)
+            static IEnumerable<Candidate> GetTypeChildren(Strategy strategy, SymbolDescriptorBase commandDescriptor, Type t, Func<Candidate, Candidate> fillCandidate)
             {
-                var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor);
+                var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor).Select(c=> fillCandidate(c));
                 return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
             }
         }
