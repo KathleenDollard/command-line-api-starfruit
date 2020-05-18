@@ -51,6 +51,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             rules.DescriptionRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Description", "Description"))
+                .Add(new NamedAttributeWithPropertyRule<string>("Description", "Value"))
                 .Add(new NamedAttributeWithPropertyRule<string>("Argument", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;

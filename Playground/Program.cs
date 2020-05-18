@@ -30,6 +30,6 @@ namespace UserStudyTest2
         public string Name { get; set; }
         public int A { get; set; }
         public string B { get; set; }
-        public string C { get; set; }
+        public int C { get; set; }
     }
 }
