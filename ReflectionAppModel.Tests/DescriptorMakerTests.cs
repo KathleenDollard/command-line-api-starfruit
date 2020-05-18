@@ -48,7 +48,11 @@ namespace System.CommandLine.ReflectionAppModel.Tests
 
         [Fact]
         public void CanGetArgumentWithArityFromNamedProperty()
-        => Utils.TestType<TypeWithPropertyNamedArgsWithArity>(strategy);
+            => Utils.TestType<TypeWithPropertyNamedArgsWithArity>(strategy);
+
+        [Fact]
+        public void CanGetArgumentWithDefaultFromNamedProperty()
+            => Utils.TestType<TypeWithPropertyNamedArgsWithDefault>(strategy);
 
         [Fact]
         public void CanGetOptionFromMethodParam()

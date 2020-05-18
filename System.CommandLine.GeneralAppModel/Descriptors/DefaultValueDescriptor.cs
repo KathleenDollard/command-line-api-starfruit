@@ -4,6 +4,11 @@
     {
         private object defaultValue;
 
+        public DefaultValueDescriptor(object defaultValue)
+        {
+            DefaultValue = defaultValue;
+        }
+
         public object DefaultValue
         {
             get => defaultValue; 
@@ -13,6 +18,7 @@
                 HasDefaultValue = true;
             }
         }
+
         public bool HasDefaultValue { get; private set; }
     }
 }
