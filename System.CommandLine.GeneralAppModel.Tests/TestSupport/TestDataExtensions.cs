@@ -116,10 +116,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             }
             if (data.HasDefault)
             {
-                arg.DefaultValue = new DefaultValueDescriptor
-                {
-                    DefaultValue = data.DefaultValue
-                };
+                arg.DefaultValue = new DefaultValueDescriptor(data.DefaultValue);
             }
             return arg;
         }

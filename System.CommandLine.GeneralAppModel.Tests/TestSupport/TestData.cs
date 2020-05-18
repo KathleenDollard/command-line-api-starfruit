@@ -13,7 +13,8 @@
                 MaxArityValues = 3,
                 //AllowedValues { get; } = new HashSet<string>();
                 ArgumentType = typeof(string),
-                //DefaultValue  = asdf,
+                HasDefault = true,
+                DefaultValue = "asdf",
                 Required = false,
             };
         public static readonly ArgumentTestData ArgData2= new ArgumentTestData

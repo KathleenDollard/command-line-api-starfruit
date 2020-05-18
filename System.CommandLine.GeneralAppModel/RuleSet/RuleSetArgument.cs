@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.CommandLine.GeneralAppModel.Rules;
+using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -6,6 +7,7 @@ namespace System.CommandLine.GeneralAppModel
     {
         public RuleSetArgument OptionArgumentRuleSet { get; }
         public RuleGroup<IRuleArity> ArityRules { get; } = new RuleGroup<IRuleArity>();
+        public RuleGroup<IRuleOptionalValue<object>> DefaultRules { get; } = new RuleGroup<IRuleOptionalValue<object>>();
         public RuleGroup<IRuleGetValues<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValues<bool>>();
         public RuleGroup<IRuleGetValues<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValues<Type>>();
 

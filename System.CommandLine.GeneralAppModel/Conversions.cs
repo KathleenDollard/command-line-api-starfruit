@@ -5,44 +5,48 @@
 
         public static T To<T>(object rawValue)
         {
-            if (typeof(T) == typeof(bool))
+            return rawValue switch
             {
-                // surely there is a better way to do this
-                return (T)(object)Conversions.ToBool(rawValue);
-            }
-            if (typeof(T) == typeof(int))
-            {
-                // surely there is a better way to do this
-                return (T)(object)Conversions.ToInt(rawValue);
-            }
-            if (typeof(T) == typeof(string))
-            {
-                // surely there is a better way to do this
-                return (T)(object)rawValue.ToString();
-            }
-            throw new InvalidOperationException("Unexpected type requestd");
-        }
-
-        public static  bool ToBool(object rawValue)
-            => rawValue switch
-            {
-                bool value => value,
-                int intValue => intValue != 0,
-                string stringValue => bool.TryParse(stringValue, out var value)
-                                                    ? value
-                                                    : false,
-                _ => false
+                bool b => (T)(object)b,
+                int i => (T)(object)i,
+                string s => (T)(object)s,
+                _ => Force(rawValue)
             };
 
-        public static int ToInt(object rawValue)
-             => rawValue switch
-             {
-                 bool _ => 1,
-                 int value => value,
-                 string stringValue => int.TryParse(stringValue, out var value)
-                                                     ? value
-                                                     : 0,
-                 _ => 0
-             };
+            static T Force(object raw)
+            {
+                try
+                {
+                    return (T)raw;
+                }
+                catch
+                {
+                    return default;
+                }
+            }
+        }
+
+        public static (bool success, T value) TryTo<T>(object rawValue)
+        {
+            return rawValue switch
+            {
+                bool b => (true, (T)(object)b),
+                int i => (true, (T)(object)i),
+                string s => (true, (T)(object)s),
+                _ => Force(rawValue)
+            };
+
+            static (bool, T) Force(object raw)
+            {
+                try
+                {
+                    return (true, (T)raw);
+                }
+                catch
+                {
+                    return (false, default);
+                }
+            }
+        }
     }
 }

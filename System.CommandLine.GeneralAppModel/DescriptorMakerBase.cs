@@ -110,10 +110,21 @@ namespace System.CommandLine.GeneralAppModel
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             SetArityIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
+            SetDefaultIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.ArgumentType = GetArgumentType(candidate);
             return descriptor;
+        }
+
+        private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        {
+           var  (  success,   value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
+            if (!success)
+            {
+                return;
+            }
+            descriptor.DefaultValue = new DefaultValueDescriptor(value);
         }
 
         private void SetArityIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
@@ -123,27 +134,16 @@ namespace System.CommandLine.GeneralAppModel
             {
                 return;
             }
-            descriptor.Arity = new ArityDescriptor();
+            var arity = new ArityDescriptor();
             if (data.TryGetValue(ArityDescriptor.MinimumCountName, out var objMinCount))
             {
-                // this is ugly, I'm open to better ideas
-                try
-                {
-                    var minCount = (int)objMinCount;
-                    descriptor.Arity.MinimumNumberOfValues = minCount;
-                }
-                catch { } // just don't set anything
+                arity.MinimumNumberOfValues = Conversions.To<int>(objMinCount);
             }
             if (data.TryGetValue(ArityDescriptor.MaximumCountName, out var objMaxCount))
             {
-                // this is ugly, I'm open to better ideas
-                try
-                {
-                    var maxCount = (int)objMaxCount;
-                    descriptor.Arity.MaximumNumberOfValues = maxCount;
-                }
-                catch { } // just don't set anything
+                arity.MaximumNumberOfValues = Conversions.To<int>(objMaxCount);
             }
+            descriptor.Arity = arity;
         }
 
         private OptionDescriptor GetOption(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)

@@ -61,8 +61,11 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
                 .Add(new IdentityRule<string>())
                 ;
-            //rules.IsHiddenRule
-            //    ;
+            rules.DefaultRules
+                .Add(new OptionalValueAttributeRule<object>("Default", "Value", SymbolType.Argument))
+                .Add(new OptionalValueAttributeRule<object>("Argument", "Default", SymbolType.Argument))
+                .Add(new OptionalValueAttributeRule<object>("Argument", "DefaultValue", SymbolType.Argument))
+                ;
 
             rules.RequiredRules
                 .Add(new NamedAttributeRule("Required"))

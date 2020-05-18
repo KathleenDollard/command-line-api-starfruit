@@ -16,10 +16,10 @@ namespace System.CommandLine.GeneralAppModel
         { }
 
         public (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
-                                                                 IEnumerable<object> item,
+                                                                 IEnumerable<object> items,
                                                                  SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
+            var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor)
                                 .OfType<Attribute>();
 
             return attributes.Any()

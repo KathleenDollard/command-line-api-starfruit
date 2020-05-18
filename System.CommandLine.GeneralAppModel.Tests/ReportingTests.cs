@@ -134,6 +134,18 @@ namespace System.CommandLine.GeneralAppModel.Tests
             actual.Should().Be(expected);
         }
 
+        [Theory]
+        [InlineData("Abc", "Def",  "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
+        public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
+            string propName1,   string expected)
+        {
+            var rule = new OptionalValueAttributeRule<int>(attributeName, propName1);
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be(expected);
+        }
+
+
 
         [Fact]
         public void FullStrategyReportIsAboutTheRightLength()

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.ComponentModel;
+using System.Linq.Expressions;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
@@ -199,6 +200,31 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
+    public class TypeWithPropertyNamedArgsWithDefault : IHaveTypeTestData
+    {
+        [Default("xyz")]
+        public string StringPropertyArg { get; set; }
+
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithPropertyNamedArgsWithDefault),
+                Raw = typeof(TypeWithPropertyNamedArgsWithDefault),
+                IsHidden = false,
+                Arguments = new List<ArgumentTestData>
+                { new ArgumentTestData
+                    {
+                       Name = nameof(StringPropertyArg)[..^3],
+                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgsWithDefault>(nameof(StringPropertyArg)),
+                       HasDefault=true,
+                       DefaultValue = "xyz",
+                       ArgumentType = typeof(string),
+                       IsHidden = false
+                    }
+                }
+            };
+    }
+
     public class MethodWithParameterOption : IHaveMethodTestData, IHaveTypeTestData
     {
         public void DoSomething(string stringParam) { }
@@ -274,7 +300,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class TypeWithDerivedTypeCommands_B : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
     {
-        public CommandTestData CommandDataFromType
+        public new CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(TypeWithDerivedTypeCommands_B),
@@ -283,7 +309,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
     }
     public class TypeWithDerivedTypeCommands_C : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
     {
-        public CommandTestData CommandDataFromType
+        public new CommandTestData CommandDataFromType
             => new CommandTestData()
             {
                 Name = nameof(TypeWithDerivedTypeCommands_C),

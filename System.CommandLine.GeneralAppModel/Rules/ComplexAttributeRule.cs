@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
@@ -19,11 +18,10 @@ namespace System.CommandLine.GeneralAppModel
         }
         public IEnumerable<NameAndType> PropertyNamesAndTypes { get; set; }
 
- 
-        (bool success, Dictionary<string, object> value) IRuleGetValue<Dictionary<string, object>>.GetFirstOrDefaultValue(
-                SymbolDescriptorBase symbolDescriptor, IEnumerable<object> item, SymbolDescriptorBase parentSymbolDescriptor)
+        public new(bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(
+                  SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
+            var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor)
                                 .OfType<Attribute>()
                                 .ToList();
             if (attributes.Any(a => HasAtLeastOneProperty(a)))
@@ -55,11 +53,12 @@ namespace System.CommandLine.GeneralAppModel
 
         public override string RuleDescription<TIRuleSet>()
             => $"If there is an attribute named '{AttributeName}': {string.Join(", ", PropertyNamesAndTypes.Select(p => ReportNameAndType(p)))}";
- 
+
         private string ReportNameAndType(NameAndType p)
         {
             return $"{p.PropertyName } as {p.PropertyType }";
         }
+
 
         public class NameAndType
         {
