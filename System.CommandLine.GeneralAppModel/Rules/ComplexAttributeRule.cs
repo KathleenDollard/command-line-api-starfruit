@@ -9,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel
     /// A dictionary is returned, which contains the _Name_, not the _PropertyName_ of each expected item.
     /// The Name is consistent, the PropertyName can be whatever that particular strategy wants. 
     /// </summary>
-    public class ComplexAttributeRule : NamedAttributeRule, IRule
+    public class ComplexAttributeRule : NamedAttributeRule, IRuleGetValue<Dictionary<string, object>>
     {
 
         public ComplexAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
@@ -18,10 +18,8 @@ namespace System.CommandLine.GeneralAppModel
         }
         public IEnumerable<NameAndType> PropertyNamesAndTypes { get; set; }
 
-        public (bool success, Dictionary<string, object> value) GetComplexValue(
-                SymbolDescriptorBase symbolDescriptor,
-                IEnumerable<object> items,
-                SymbolDescriptorBase parentSymbolDescriptor)
+        public new(bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(
+                  SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items, SymbolDescriptorBase parentSymbolDescriptor)
         {
             var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor)
                                 .OfType<Attribute>()

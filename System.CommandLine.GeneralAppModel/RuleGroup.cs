@@ -30,16 +30,32 @@ namespace System.CommandLine.GeneralAppModel
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<IRule>)_rules).GetEnumerator();
 
+        public virtual (bool, TValue) TryGetFirstValue<TValue>(SymbolDescriptorBase symbolDescriptor,
+                                                   Candidate candidate,
+                                                   SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var traits = candidate.Traits;
+            var flattenedItems = FlattenItems(traits);
+           // var rules = Rules.OfType<IRuleGetValue>();
+            var getValueRules = Rules.OfType<IRuleGetValue<TValue>>();
+            var results = getValueRules
+                             .Select(r => r.GetFirstOrDefaultValue(symbolDescriptor, flattenedItems, parentSymbolDescriptor))
+                             .Where(x=>x.success);
+            return results.Any()
+                        ? results.First()
+                        : (false, default(TValue));
+        }
+
         public virtual T GetFirstOrDefaultValue<T>(SymbolDescriptorBase symbolDescriptor,
                                                    Candidate candidate,
                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
             var flattenedItems = FlattenItems(traits);
-            var valueRules = Rules.OfType<IRuleGetValue<T>>();
+            var valueRules = Rules.OfType<IRuleGetValue<T>>().ToList();
             foreach (var rule in valueRules)
             {
-                var (Success, Value) = rule.GetFirstOrDefaultValue(symbolDescriptor, flattenedItems, parentSymbolDescriptor );
+                var (Success, Value) = rule.GetFirstOrDefaultValue(symbolDescriptor, flattenedItems, parentSymbolDescriptor);
                 if (Success)
                 {
                     return Value;
@@ -56,8 +72,8 @@ namespace System.CommandLine.GeneralAppModel
             T retValue = value;
             foreach (var rule in Rules.OfType<IRuleMorphValue<T>>())
             {
-                retValue  = rule.MorphValue(symbolDescriptor, candidate, value, parentSymbolDescriptor);
-                if (!value .Equals( retValue))
+                retValue = rule.MorphValue(symbolDescriptor, candidate, value, parentSymbolDescriptor);
+                if (!value.Equals(retValue))
                 {
                     return retValue;
                 }

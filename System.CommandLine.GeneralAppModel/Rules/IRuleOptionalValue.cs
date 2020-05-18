@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace System.CommandLine.GeneralAppModel.Rules
+namespace System.CommandLine.GeneralAppModel
 {
-   public  interface IRuleOptionalValue<T> : IRule
+    public interface IRuleOptionalValue<T>
     {
         (bool success, T value) GetOptionalValue(SymbolDescriptorBase symbolDescriptor,
-                           IEnumerable<object> item,
-                           SymbolDescriptorBase parentSymbolDescriptor);
+                                                 IEnumerable<object> item,
+                                                 SymbolDescriptorBase parentSymbolDescriptor);
     }
 }

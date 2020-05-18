@@ -119,7 +119,7 @@ namespace System.CommandLine.GeneralAppModel
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var(  success,   value) = ruleSet.DefaultRules.GetFirstOrDefaultValue<(bool, object)>(descriptor, candidate, parentSymbolDescriptor);
+           var  (  success,   value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
             if (!success)
             {
                 return;
