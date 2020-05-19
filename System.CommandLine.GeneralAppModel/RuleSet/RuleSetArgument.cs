@@ -5,11 +5,10 @@ namespace System.CommandLine.GeneralAppModel
 {
     public class RuleSetArgument : RuleSetSymbol, IRuleSetArgument
     {
-        public RuleSetArgument OptionArgumentRuleSet { get; }
         public RuleGroup<IRuleArity> ArityRules { get; } = new RuleGroup<IRuleArity>();
         public RuleGroup<IRuleOptionalValue<object>> DefaultRules { get; } = new RuleGroup<IRuleOptionalValue<object>>();
-        public RuleGroup<IRuleGetValues<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValues<bool>>();
-        public RuleGroup<IRuleGetValues<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValues<Type>>();
+        public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
+        public RuleGroup<IRuleGetValue<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValue<Type>>();
 
         public void AddArityRule(IRuleArity arityRule)
         {

@@ -18,7 +18,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public ReportingTests()
         {
             AssertionOptions.AssertEquivalencyUsing(o => o.ExcludingFields().IgnoringCyclicReferences());
-            //argumentOptions = o => o.Excluding(ctx => ctx.SelectedMemberInfo.MemberName =="TryConvertArgument");
             symbolOptions = o => o.Excluding(ctx => ctx.SelectedMemberPath.EndsWith("ConvertArguments"));
             strategy = new Strategy().SetGeneralRules();
         }
@@ -151,7 +150,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void FullStrategyReportIsAboutTheRightLength()
         {
             var report = strategy.Report();
-            report.Length.Should().BeGreaterThan(3500).And.BeLessThan(4500);
+            report.Length.Should().BeGreaterThan(4500);
         }
     }
 }

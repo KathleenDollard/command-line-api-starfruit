@@ -24,8 +24,8 @@
             SymbolType = symbolType;
         }
 
-   
-        public SymbolType SymbolType { get; private protected  set; }
+
+        public SymbolType SymbolType { get; private protected set; }
 
         public abstract string RuleDescription<TIRuleSet>();
 
@@ -42,61 +42,5 @@
         /// </remarks>
         /// <returns>All matching items</returns>
 
-        ///// <summary>
-        ///// Determines whether any of the items match. 
-        ///// </summary>
-        ///// <param name="symbolDescriptor">The SymbolDescriptor for the thing the items belong to</param>
-        ///// <param name="items"> The items to evaluate.
-        ///// Some decision points (RuleSet usage) have a single item - such as a MethodInfo. Others have multiples,
-        ///// like Attributes. Thus, it's a collection. 
-        ///// </param>
-        ///// <returns>True if any matches were found.</returns>
-        //public abstract bool HasMatch(SymbolDescriptorBase parentSymbolDescriptor, IEnumerable<object> items);
-
-        ///// <summary>
-        ///// Returns matching items that are not the default. It is particularly important in attributes where 
-        ///// it is hard to tell whether a parameter was actually set - like "name" in [Option(name)]
-        ///// </summary>
-        ///// <param name="symbolDescriptor">The SymbolDescriptor for the thing the items belong to</param>
-        ///// <param name="items"> The items to evaluate.
-        ///// Some decision points (RuleSet usage) have a single item - such as a MethodInfo. Others have multiples,
-        ///// like Attributes. Thus, it's a collection. 
-        ///// </param>
-        ///// <returns>All matches that were not equal to the default for the type</returns>
-        //public virtual IEnumerable<object> GetAllNonDefault(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //      => GetMatchingItems(symbolDescriptor, items)
-        //               .Where(v => !v.Equals(default));
-
-        //public RuleBase WithSymbolType(SymbolType symbolType)
-        //{
-        //    var ret = (RuleBase)MemberwiseClone();
-        //    ret.SymbolType = symbolType;
-        //    return ret;
-        //}
-
-        ///// <summary>
-        ///// Returns a tuple with success indicator and the value if found. 
-        ///// </summary>
-        ///// <param name="symbolDescriptor">The SymbolDescriptor for the thing the items belong to</param>
-        ///// <param name="items"> The items to evaluate.
-        ///// Some decision points (RuleSet usage) have a single item - such as a MethodInfo. Others have multiples,
-        ///// like Attributes. Thus, it's a collection. 
-        ///// </param>
-        ///// <returns>
-        ///// A tuple of (true, value) if an item was found. Otherwise a tuple (false, value). This lets you distinguish 
-        ///// between an item that is found and returns default, and not found. 
-        ///// </returns>
-        //public virtual (bool Success, T Value) GetFirstOrDefaultValue<T>(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items)
-        //{
-        //    var matches = GetMatchingItems(symbolDescriptor, items)
-        //                        .Where(v => !v.Equals(default));
-        //    return matches.Any()
-        //               ? (true, (T)matches.FirstOrDefault())
-        //               : (false, default);
-        //}
-    }
-
-    //public abstract class RuleBase<T> : RuleBase
-    //{
-    //}
+    } 
 }

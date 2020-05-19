@@ -15,20 +15,12 @@ namespace System.CommandLine.GeneralAppModel.Rules
 
         public string AttributeName { get; }
 
-        //public abstract (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
-        //                                                         IEnumerable<object> item,
-        //                                                         SymbolDescriptorBase parentSymbolDescriptor);
-
-
         protected IEnumerable<T> GetMatches<T>(SymbolDescriptorBase symbolDescriptor,
                                              IEnumerable<T> items,
                                              SymbolDescriptorBase parentSymbolDescriptor)
            => items
                    .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor));
-        //=> items
-        //        .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor))
-        //        .Where(x => !x.Equals(default));
-
+  
         protected bool IsMatch(SymbolDescriptorBase symbolDescriptor,
                       object item,
                       SymbolDescriptorBase parentSymbolDescriptor)

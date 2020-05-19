@@ -15,7 +15,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         public MakerTests()
         {
             AssertionOptions.AssertEquivalencyUsing(o => o.ExcludingFields().IgnoringCyclicReferences());
-            //argumentOptions = o => o.Excluding(ctx => ctx.SelectedMemberInfo.MemberName =="TryConvertArgument");
             symbolOptions = o => o.Excluding(ctx => ctx.SelectedMemberPath.EndsWith( "ConvertArguments"));
         }
 

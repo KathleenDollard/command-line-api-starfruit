@@ -57,18 +57,50 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
                     {
                         Name = nameof(Global),
                         Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(Global)),
-                    },
+                        IsHidden = false,
+                        Arguments = new List<ArgumentTestData>
+                        {
+                            new ArgumentTestData
+                            {
+                                Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(Global)),
+                                Name = nameof(Global),
+                                ArgumentType = typeof(bool),
+                                IsHidden = false
+                            }
+                        }
+                   },
                     new OptionTestData
                     {
                         Name = nameof(Local),
                         Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(Local)),
-                    },
+                        IsHidden = false,
+                        Arguments = new List<ArgumentTestData>
+                        {
+                            new ArgumentTestData
+                            {
+                                Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(Local)),
+                                Name = nameof(Local),
+                                ArgumentType = typeof(bool),
+                                IsHidden = false
+                            }
+                        }
+                   },
                     new OptionTestData
                     {
                         Name = nameof(ToolPath),
                         Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(ToolPath)),
+                        IsHidden = false,
+                        Arguments = new List<ArgumentTestData>
+                        {
+                            new ArgumentTestData
+                            {
+                                Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(ToolPath)),
+                                Name = nameof(ToolPath),
+                                ArgumentType = typeof(string),
+                                IsHidden = false
+                            }
+                        }
                     },
-
                }
            };
     }

@@ -55,6 +55,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests
             => Utils.TestType<TypeWithPropertyNamedArgsWithDefault>(strategy);
 
         [Fact]
+        public void CanGetCommandWithAliasesFromNamedProperty()
+            => Utils.TestType<TypeWithPropertyNamedArgsWithAliases>(strategy);
+
+        [Fact]
         public void CanGetOptionFromMethodParam()
             => Utils.TestFirstMethodOnType<MethodWithParameterOption>(strategy);
 

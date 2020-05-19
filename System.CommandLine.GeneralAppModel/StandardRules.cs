@@ -51,7 +51,6 @@ namespace System.CommandLine.GeneralAppModel
         {
             rules.DescriptionRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Description", "Description"))
-                .Add(new NamedAttributeWithPropertyRule<string>("Description", "Value"))
                 .Add(new NamedAttributeWithPropertyRule<string>("Argument", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
@@ -76,8 +75,9 @@ namespace System.CommandLine.GeneralAppModel
             rules.IsHiddenRules
                .Add(new NamedAttributeRule("Hidden"));
 
-            //rules.AliasesRules
-            //    ;
+            rules.AliasRules
+                .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))
+                ;
 
             rules.ArityRules
                 .Add(new ComplexAttributeRule("Arity", SymbolType.Argument)
@@ -112,8 +112,6 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NamedAttributeWithPropertyRule<string>("Name", "Name"))
                 .Add(new NamedAttributeWithPropertyRule<string>("Option", "Name", SymbolType.Option))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Option", SymbolType.Argument));
-            //rules.IsHiddenRule
-            //    ;
 
             rules.RequiredRules
                 .Add(new NamedAttributeRule("Required"))
@@ -123,10 +121,9 @@ namespace System.CommandLine.GeneralAppModel
             rules.IsHiddenRules
                 .Add(new NamedAttributeRule("Hidden"));
 
-            //rules.AliasesRules
-            //    ;
-
-
+            rules.AliasRules
+                .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))
+                ;
 
             return rules;
         }
@@ -139,16 +136,10 @@ namespace System.CommandLine.GeneralAppModel
             rules.NameRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Option", "ArgumentName", SymbolType.Argument))
                 ;
-            //rules.IsHiddenRule
-            //    ;
 
             rules.RequiredRules
                 .Add(new NamedAttributeWithPropertyRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
             ;
-
-
-            //rules.AliasesRules
-            //    ;
 
             //rules.ArityRule
             //    .Add(new ComplexAttributeRule<ArityDescriptor>(
@@ -179,8 +170,9 @@ namespace System.CommandLine.GeneralAppModel
             rules.IsHiddenRules
                 .Add(new NamedAttributeRule("Hidden"));
 
-            //rules.AliasesRules
-            //    ;
+            rules.AliasRules
+                .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))
+                ;
 
             return rules;
         }

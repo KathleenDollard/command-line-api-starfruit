@@ -67,7 +67,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 Name = data.Name,
                 Description = data.Description,
                 IsHidden = data.IsHidden,
-                Aliases = data.Aliases,
+                Aliases = data.Aliases ?? new List<string>(),
                 Required = data.Required,
             };
             option.Arguments = data.Arguments == null
@@ -104,7 +104,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 ArgumentType = data.ArgumentType,
                 Description = data.Description,
                 IsHidden = data.IsHidden,
-                Aliases = data.Aliases,
+                Aliases = data.Aliases ?? new List<string>(),
             };
             if (data.HasArity)
             {
@@ -128,7 +128,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 Name = data.Name,
                 Description = data.Description,
                 IsHidden = data.IsHidden,
-                Aliases = data.Aliases,
+                Aliases = data.Aliases ?? new List<string>(),
             };
            if (!(data.Arguments is null))
                 command.Arguments.AddRange(data
