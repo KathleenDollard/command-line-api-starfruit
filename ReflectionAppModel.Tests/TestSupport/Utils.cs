@@ -16,7 +16,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests
 
         static Utils()
         {
-            //symbolOptions = o => o.Excluding(x => x.ParentSymbolDescriptorBase);
             symbolOptions = o => o.Excluding(ctx => ctx.SelectedMemberPath.EndsWith("ParentSymbolDescriptorBase"));
         }
 
@@ -73,6 +72,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         private static void WhyDoWeNeedTheseExtraChecks(CommandDescriptor actual, CommandDescriptor expected)
         {
             actual.Options.Should().BeEquivalentTo(expected.Options, symbolOptions);
+            var actualOptions = actual.Options.ToArray();
+            var expectedOptions = expected.Options.ToArray();
+            for (int i = 0; i < actualOptions.Length; i++)
+            {
+                actualOptions[i].Should().BeEquivalentTo(expectedOptions[i], symbolOptions);
+            }
             actual.Arguments.Should().BeEquivalentTo(expected.Arguments, symbolOptions);
             var actualArgs = actual.Arguments.ToArray();
             var expectedArgs = expected.Arguments.ToArray();
@@ -83,10 +88,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests
             actual.SubCommands.Should().BeEquivalentTo(expected.SubCommands, symbolOptions);
         }
 
-        public static IEnumerable<Command> SubCommands (this Command command)
+        public static IEnumerable<Command> SubCommands(this Command command)
         {
             return command.Children.OfType<Command>();
-        } 
+        }
     }
 }
 

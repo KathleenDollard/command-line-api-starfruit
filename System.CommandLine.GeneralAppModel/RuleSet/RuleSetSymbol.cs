@@ -15,15 +15,15 @@ namespace System.CommandLine.GeneralAppModel
             => Frozen
                 ? throw new InvalidOperationException("This operation can't be done at this time.")
                 : true;
-
-        public RuleGroup<IRuleGetValues<string>> DescriptionRules { get; } = new RuleGroup<IRuleGetValues<string>>();
+        
+        public RuleGroup<IRuleGetValue<string>> DescriptionRules { get; } = new RuleGroup<IRuleGetValue<string>>();
 
         /// <summary>
         /// Some NameRules will also morph the names. When morphing names, only those name rules with IRuleMorphValue<string>  will be used
         /// </summary>
-        public RuleGroup<IRuleGetValues<string>> NameRules { get; } = new RuleGroup<IRuleGetValues<string>>();
-        public RuleGroup<IRuleAliases> AliasesRules { get; } = new RuleGroup<IRuleAliases>();
-        public RuleGroup<IRuleGetValues<bool>> IsHiddenRules { get; } = new RuleGroup<IRuleGetValues<bool>>();
+        public RuleGroup<IRuleGetValue<string>> NameRules { get; } = new RuleGroup<IRuleGetValue<string>>();
+        public RuleGroup<IRuleAliases> AliasRules { get; } = new RuleGroup<IRuleAliases>();
+        public RuleGroup<IRuleGetValue<bool>> IsHiddenRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 
         public IEnumerable<T> GetSymbols<T>(SymbolType requestedSymbolType, IEnumerable<T> items, SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -45,7 +45,7 @@ namespace System.CommandLine.GeneralAppModel
         public void AddAliasesRule(IRuleAliases aliasesRule)
         {
             CheckFrozen();
-            AliasesRules.Add(aliasesRule);
+            AliasRules.Add(aliasesRule);
         }
 
         public void AddHiddenRule(IRuleGetValues<bool> isHiddenRule)
@@ -58,7 +58,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             return NameRules.ReportRuleGroup(tabsCount, "the name")
                     + DescriptionRules.ReportRuleGroup(tabsCount, "the description" )
-                    + AliasesRules.ReportRuleGroup(tabsCount, "aliases")
+                    + AliasRules.ReportRuleGroup(tabsCount, "aliases")
                     + IsHiddenRules.ReportRuleGroup(tabsCount, "whether to hide this in the CLI");
         }
 

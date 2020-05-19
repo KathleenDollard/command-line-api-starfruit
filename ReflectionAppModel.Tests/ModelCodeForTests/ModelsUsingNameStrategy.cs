@@ -225,6 +225,33 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
+    [Aliases("x", "y", "z")]
+    public class TypeWithPropertyNamedArgsWithAliases : IHaveTypeTestData
+    {
+        public string StringPropertyArg { get; set; }
+
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
+            {
+                Name = nameof(TypeWithPropertyNamedArgsWithAliases),
+                Raw = typeof(TypeWithPropertyNamedArgsWithAliases),
+                IsHidden = false,
+                Aliases = new string[] { "x", "y", "z" },
+                Arguments = new List<ArgumentTestData>
+                { new ArgumentTestData
+                    {
+                       Name = nameof(StringPropertyArg)[..^3],
+                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgsWithAliases>(nameof(StringPropertyArg)),
+                       HasDefault=true,
+                       DefaultValue = "xyz",
+                       ArgumentType = typeof(string),
+                       IsHidden = false
+                    }
+                }
+            };
+    }
+
+
     public class MethodWithParameterOption : IHaveMethodTestData, IHaveTypeTestData
     {
         public void DoSomething(string stringParam) { }

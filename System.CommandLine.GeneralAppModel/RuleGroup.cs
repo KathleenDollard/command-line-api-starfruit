@@ -36,11 +36,10 @@ namespace System.CommandLine.GeneralAppModel
         {
             var traits = candidate.Traits;
             var flattenedItems = FlattenItems(traits);
-           // var rules = Rules.OfType<IRuleGetValue>();
             var getValueRules = Rules.OfType<IRuleGetValue<TValue>>();
             var results = getValueRules
                              .Select(r => r.GetFirstOrDefaultValue(symbolDescriptor, flattenedItems, parentSymbolDescriptor))
-                             .Where(x=>x.success);
+                             .Where(x => x.success);
             return results.Any()
                         ? results.First()
                         : (false, default(TValue));
@@ -64,23 +63,20 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
-        public virtual T MorphValue<T>(SymbolDescriptorBase symbolDescriptor,
-                                       Candidate candidate,
-                                       T value,
-                                       SymbolDescriptorBase parentSymbolDescriptor)
+        public virtual IEnumerable<T> GetAllValues<T>(SymbolDescriptorBase symbolDescriptor,
+                                            Candidate candidate,
+                                            SymbolDescriptorBase parentSymbolDescriptor)
         {
-            T retValue = value;
-            foreach (var rule in Rules.OfType<IRuleMorphValue<T>>())
+            var traits = candidate.Traits;
+            var flattenedItems = FlattenItems(traits);
+            var valueRules = Rules.OfType<IRuleGetValues<T>>().ToList();
+            var values = new List<T>();
+            foreach (var rule in valueRules)
             {
-                retValue = rule.MorphValue(symbolDescriptor, candidate, value, parentSymbolDescriptor);
-                if (!value.Equals(retValue))
-                {
-                    return retValue;
-                }
+                values.AddRange(rule.GetAllValues(symbolDescriptor, flattenedItems, parentSymbolDescriptor));
             }
-            return value;
+            return values;
         }
-
 
         private IEnumerable<object> FlattenItems(IEnumerable<object> items)
         {

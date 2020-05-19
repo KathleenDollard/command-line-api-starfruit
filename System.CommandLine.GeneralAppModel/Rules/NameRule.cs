@@ -5,7 +5,7 @@ namespace System.CommandLine.GeneralAppModel
     /// <summary>
     /// This class exists to give a better name for the StringContentsRule
     /// </summary>
-    public class NamePatternRule : StringContentsRule, IRuleMorphValue<string>
+    public class NamePatternRule : StringContentsRule
     {
         public NamePatternRule(StringPosition position,
                         string compareTo,
