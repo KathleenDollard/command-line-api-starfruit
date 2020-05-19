@@ -35,10 +35,9 @@ namespace System.CommandLine.GeneralAppModel
                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
-            var flattenedItems = FlattenItems(traits);
             var getValueRules = Rules.OfType<IRuleGetValue<TValue>>();
             var results = getValueRules
-                             .Select(r => r.GetFirstOrDefaultValue(symbolDescriptor, flattenedItems, parentSymbolDescriptor))
+                             .Select(r => r.GetFirstOrDefaultValue(symbolDescriptor, traits, parentSymbolDescriptor))
                              .Where(x => x.success);
             return results.Any()
                         ? results.First()
@@ -50,11 +49,10 @@ namespace System.CommandLine.GeneralAppModel
                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
-            var flattenedItems = FlattenItems(traits);
             var valueRules = Rules.OfType<IRuleGetValue<T>>().ToList();
             foreach (var rule in valueRules)
             {
-                var (Success, Value) = rule.GetFirstOrDefaultValue(symbolDescriptor, flattenedItems, parentSymbolDescriptor);
+                var (Success, Value) = rule.GetFirstOrDefaultValue(symbolDescriptor, traits, parentSymbolDescriptor);
                 if (Success)
                 {
                     return Value;
@@ -68,44 +66,13 @@ namespace System.CommandLine.GeneralAppModel
                                             SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
-            var flattenedItems = FlattenItems(traits);
             var valueRules = Rules.OfType<IRuleGetValues<T>>().ToList();
             var values = new List<T>();
             foreach (var rule in valueRules)
             {
-                values.AddRange(rule.GetAllValues(symbolDescriptor, flattenedItems, parentSymbolDescriptor));
+                values.AddRange(rule.GetAllValues(symbolDescriptor, traits, parentSymbolDescriptor));
             }
             return values;
-        }
-
-        private IEnumerable<object> FlattenItems(IEnumerable<object> items)
-        {
-            if (items.Any(i => ShouldFlatten(i)))
-            {
-                var list = new List<object>();
-                foreach (var item in items)
-                {
-                    if (ShouldFlatten(item))
-                    {
-                        var subItems = item as IEnumerable;
-                        foreach (var subItem in subItems)
-                        {
-                            list.Add(subItem);
-                        }
-                    }
-                    else
-                    {
-                        list.Add(item);
-                    }
-                }
-                return list.ToArray();
-            }
-            return items;
-
-            static bool ShouldFlatten(object i)
-            {
-                return (i is IEnumerable) && i.GetType() != typeof(string);
-            }
         }
 
     }

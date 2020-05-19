@@ -29,13 +29,11 @@ namespace System.CommandLine.GeneralAppModel
                 var dictionary = new Dictionary<string, object>();
                 foreach (var attribute in attributes)
                 {
-                    var propertyInfos = attribute.GetType().GetProperties();
                     foreach (var nameAndType in PropertyNamesAndTypes)
                     {
-                        var info = propertyInfos.Where(p => p.Name == nameAndType.PropertyName).FirstOrDefault();
-                        if (info != null)
+                        var (success, value) = SpecificSource.Tools.GetAttributePropertyValue(attribute, nameAndType.PropertyName);
+                        if (success)
                         {
-                            var value = info.GetValue(attribute);
                             dictionary.Add(nameAndType.Name, value);
                         }
                     }

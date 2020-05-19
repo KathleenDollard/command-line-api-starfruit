@@ -25,5 +25,7 @@ namespace System.CommandLine.GeneralAppModel
         public abstract bool DoesAttributeMatch(string attributeName, object a);
         public abstract  T GetAttributeProperty<T>(object attribute, string propertyName);
         public abstract  IEnumerable<T> GetAttributeProperties<T>(object attribute, string propertyName);
+        public abstract (bool success, object value) GetAttributePropertyValue(object attribute, string propertyName);
+
     }
 }
