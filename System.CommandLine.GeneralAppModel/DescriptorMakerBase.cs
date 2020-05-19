@@ -25,16 +25,17 @@ namespace System.CommandLine.GeneralAppModel
     /// </remarks>
     public abstract class DescriptorMakerBase
     {
-        protected DescriptorMakerBase(Strategy strategy, object dataSource, object parentDataSource = null)
+        protected DescriptorMakerBase(Strategy strategy, SpecificSource tools, object dataSource, object parentDataSource = null)
         {
+            SpecificSource.Tools = tools;
             Strategy = strategy;
             DataSource = dataSource;
             ParentDataSource = parentDataSource;
         }
 
-        protected abstract Candidate GetCandidate(object item);
-        protected abstract Type GetArgumentType(Candidate candidate);
-        protected abstract IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor);
+        //protected abstract Candidate GetCandidate(object item);
+        //protected abstract Type GetArgumentType(Candidate candidate);
+        //protected abstract IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor);
 
         protected Strategy Strategy { get; }
         protected object DataSource { get; }
@@ -86,7 +87,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
-            => GetCommand(GetCandidate(DataSource), parentSymbolDescriptor);
+            => GetCommand(SpecificSource.Tools.GetCandidate(DataSource), parentSymbolDescriptor);
 
         protected CommandDescriptor GetCommand(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -94,7 +95,7 @@ namespace System.CommandLine.GeneralAppModel
             var ruleSet = Strategy.CommandRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
-            var candidates = GetChildCandidates(descriptor);
+            var candidates = SpecificSource.Tools.GetChildCandidates(Strategy, descriptor);
             candidates = candidates.Where(c => !Strategy.GetCandidateRules.NamesToIgnore.Contains(c.Name));
             var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(candidates, descriptor);
 
@@ -113,13 +114,13 @@ namespace System.CommandLine.GeneralAppModel
             SetDefaultIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.ArgumentType = GetArgumentType(candidate);
+            descriptor.ArgumentType = SpecificSource.Tools.GetArgumentType(candidate);
             return descriptor;
         }
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-           var  (  success,   value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
+            var (success, value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
             if (!success)
             {
                 return;
