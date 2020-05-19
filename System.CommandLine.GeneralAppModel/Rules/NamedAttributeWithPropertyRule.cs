@@ -31,13 +31,19 @@ namespace System.CommandLine.GeneralAppModel
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor);
-
-            return attributes.Any()
-                ? (true, SpecificSource.Tools.GetAttributeProperty<TValue>(attributes.FirstOrDefault(), PropertyName))
-                : ((bool success, TValue value))(false, default);
+            var values = GetAllValues(symbolDescriptor, item, parentSymbolDescriptor);
+            values = values.Where(x => !x.Equals(default));
+            return values.Any()
+                    ? (true, values.FirstOrDefault())
+                    : (false, default);
+            //var values = attributes
+            //    .Select(x => SpecificSource.Tools.GetAttributeProperty<TValue>(attributes.FirstOrDefault(), PropertyName));
+            //return attributes.Any()
+            //    ? (true, values.Where(x=>!x.Equals(default(TValue))).FirstOrDefault())
+            //    : ((bool success, TValue value))(false, default);
         }
 
-        public IEnumerable<TValue> GetAllValues(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> item, SymbolDescriptorBase parentSymbolDescriptor) 
+        public IEnumerable<TValue> GetAllValues(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> item, SymbolDescriptorBase parentSymbolDescriptor)
             => GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
                 .SelectMany(a => SpecificSource.Tools.GetAttributeProperties<TValue>(a, PropertyName));
 

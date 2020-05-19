@@ -108,7 +108,6 @@ namespace System.CommandLine.GeneralAppModel
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             SetArityIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             SetDefaultIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
-            //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.ArgumentType = SpecificSource.Tools.GetArgumentType(candidate);
             return descriptor;

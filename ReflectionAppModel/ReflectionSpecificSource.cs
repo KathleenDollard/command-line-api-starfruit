@@ -50,8 +50,8 @@ namespace System.CommandLine.ReflectionAppModel
         public override bool ComplexAttributeHasAtLeastOneProperty(IEnumerable<ComplexAttributeRule.NameAndType> propertyNamesAndTypes, object attribute)
         {
 
-                var propertyNames = propertyNamesAndTypes.Select(p => p.PropertyName);
-                return attribute.GetType().GetProperties().Any(p => propertyNames.Contains(p.Name));
+            var propertyNames = propertyNamesAndTypes.Select(p => p.PropertyName);
+            return attribute.GetType().GetProperties().Any(p => propertyNames.Contains(p.Name));
         }
 
         public override bool IsAttributeAMatch(string attributeName, SymbolDescriptorBase symbolDescriptor,
@@ -72,18 +72,26 @@ namespace System.CommandLine.ReflectionAppModel
                 || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
         }
 
-        public override  T GetAttributeProperty<T>(object attribute, string propertyName)
-        {
-            var raw = attribute.GetType()
-                              .GetProperty(propertyName)
-                              .GetValue(attribute);
-            return Conversions.To<T>(raw);
-        }
-
-        public override  IEnumerable<T> GetAttributeProperties<T>(object attribute, string propertyName)
+        public override T GetAttributeProperty<T>(object attribute, string propertyName)
         {
             var property = attribute.GetType()
                               .GetProperty(propertyName);
+            if (!(property is null))
+            {
+                var raw = property.GetValue(attribute);
+                return Conversions.To<T>(raw);
+            }
+            return default;
+        }
+
+        public override IEnumerable<T> GetAttributeProperties<T>(object attribute, string propertyName)
+        {
+            var property = attribute.GetType()
+                              .GetProperty(propertyName);
+            if (property is null)
+            {
+                return new List<T>();
+            }
             var raw = property.GetValue(attribute);
             if (typeof(T).IsAssignableFrom(property.PropertyType))
             {
@@ -102,6 +110,7 @@ namespace System.CommandLine.ReflectionAppModel
                 }
                 return list;
             }
+            // Throwing an exception here so during alpha we can figure out what is missing
             throw new InvalidOperationException("Unhandled Attribute PropertyType");
         }
 
