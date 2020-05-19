@@ -31,18 +31,16 @@ namespace System.CommandLine.GeneralAppModel
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor);
-            if (attributes.Any())
-            {
-                return (true, SpecificSource.Tools.GetAttributeProperty<TValue>(attributes.FirstOrDefault(), PropertyName));
-            }
-            return (false, default);
+
+            return attributes.Any()
+                ? (true, SpecificSource.Tools.GetAttributeProperty<TValue>(attributes.FirstOrDefault(), PropertyName))
+                : ((bool success, TValue value))(false, default);
         }
 
-        public IEnumerable<TValue> GetAllValues(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> item, SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor);
-            return attributes.SelectMany(a => SpecificSource.Tools. GetAttributeProperties<TValue>(a, PropertyName));
-        }
+        public IEnumerable<TValue> GetAllValues(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> item, SymbolDescriptorBase parentSymbolDescriptor) 
+            => GetMatches(symbolDescriptor, item, parentSymbolDescriptor)
+                .SelectMany(a => SpecificSource.Tools.GetAttributeProperties<TValue>(a, PropertyName));
+
 
         public override string RuleDescription<TIRuleSet>()
             => $"If there is an attribute named '{AttributeName}', its '{PropertyName}' property, with type {typeof(TValue)}";

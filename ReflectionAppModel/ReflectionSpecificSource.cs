@@ -105,6 +105,12 @@ namespace System.CommandLine.ReflectionAppModel
             throw new InvalidOperationException("Unhandled Attribute PropertyType");
         }
 
+        public override (bool success, object value) GetAttributePropertyValue(object attribute, string propertyName)
+        {
+            var info = attribute.GetType().GetProperties().Where(p => p.Name == propertyName).FirstOrDefault();
+            return (info != null, info.GetValue(attribute));
+        }
+
         private static Candidate GetCandidateInternal(PropertyInfo propertyInfo)
         {
             var name = propertyInfo.Name;
