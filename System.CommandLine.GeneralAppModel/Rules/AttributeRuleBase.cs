@@ -19,24 +19,25 @@ namespace System.CommandLine.GeneralAppModel.Rules
                                              IEnumerable<T> items,
                                              SymbolDescriptorBase parentSymbolDescriptor)
            => items
-                   .Where(item => IsMatch(symbolDescriptor, item, parentSymbolDescriptor));
-  
-        protected bool IsMatch(SymbolDescriptorBase symbolDescriptor,
-                      object item,
-                      SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            return item switch
-            {
-                Attribute a => DoesAttributeMatch(AttributeName, a),
-                _ => false
-            };
-        }
+                   .Where(item => SpecificSource.Tools.IsAttributeAMatch(AttributeName, symbolDescriptor, item,
+                                                                         parentSymbolDescriptor));
 
-        protected bool DoesAttributeMatch(string attributeName, Attribute a)
-        {
-            var itemName = a.GetType().Name;
-            return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
-                || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
-        }
+        //protected bool IsMatch(SymbolDescriptorBase symbolDescriptor,
+        //              object item,
+        //              SymbolDescriptorBase parentSymbolDescriptor)
+        //{
+        //    return item switch
+        //    {
+        //        Attribute a => DoesAttributeMatch(AttributeName, a),
+        //        _ => false
+        //    };
+        //}
+
+        //protected bool DoesAttributeMatch(string attributeName, Attribute a)
+        //{
+        //    var itemName = a.GetType().Name;
+        //    return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
+        //        || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
+        //}
     }
 }

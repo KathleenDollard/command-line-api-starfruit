@@ -15,12 +15,11 @@ namespace System.CommandLine.GeneralAppModel
             : base(attributeName, symbolType)
         { }
 
-        public (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public virtual (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                  IEnumerable<object> items,
                                                                  SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor)
-                                .OfType<Attribute>();
+            var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor);
 
             return attributes.Any()
                     ? (true, true)

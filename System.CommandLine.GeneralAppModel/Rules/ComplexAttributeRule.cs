@@ -21,10 +21,10 @@ namespace System.CommandLine.GeneralAppModel
         public new(bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(
                   SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items, SymbolDescriptorBase parentSymbolDescriptor)
         {
+            SpecificSource tools = SpecificSource.Tools;
             var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor)
-                                .OfType<Attribute>()
                                 .ToList();
-            if (attributes.Any(a => HasAtLeastOneProperty(a)))
+            if (attributes.Any(a => tools.ComplexAttributeHasAtLeastOneProperty(PropertyNamesAndTypes, a)))
             {
                 var dictionary = new Dictionary<string, object>();
                 foreach (var attribute in attributes)
@@ -43,12 +43,6 @@ namespace System.CommandLine.GeneralAppModel
                 return (true, dictionary);
             }
             return (false, default);
-        }
-
-        private bool HasAtLeastOneProperty(Attribute attribute)
-        {
-            var propertyNames = PropertyNamesAndTypes.Select(p => p.PropertyName);
-            return attribute.GetType().GetProperties().Any(p => propertyNames.Contains(p.Name));
         }
 
         public override string RuleDescription<TIRuleSet>()

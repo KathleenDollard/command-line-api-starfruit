@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.Linq;
@@ -45,6 +46,69 @@ namespace System.CommandLine.ReflectionAppModel
                PropertyInfo propertyInfo => GetCandidateInternal(propertyInfo),
                _ => null
            };
+
+        //public override IEnumerable<T> GetMachingAttributes<T>(SymbolDescriptorBase symbolDescriptor, IEnumerable<T> items, SymbolDescriptorBase parentSymbolDescriptor)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public override bool ComplexAttributeHasAtLeastOneProperty(IEnumerable<ComplexAttributeRule.NameAndType> propertyNamesAndTypes, object attribute)
+        {
+
+                var propertyNames = propertyNamesAndTypes.Select(p => p.PropertyName);
+                return attribute.GetType().GetProperties().Any(p => propertyNames.Contains(p.Name));
+        }
+
+        public override bool IsAttributeAMatch(string attributeName, SymbolDescriptorBase symbolDescriptor,
+              object item,
+              SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            return item switch
+            {
+                Attribute a => DoesAttributeMatch(attributeName, a),
+                _ => false
+            };
+        }
+
+        public override bool DoesAttributeMatch(string attributeName, object a)
+        {
+            var itemName = a.GetType().Name;
+            return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
+                || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override  T GetAttributeProperty<T>(object attribute, string propertyName)
+        {
+            var raw = attribute.GetType()
+                              .GetProperty(propertyName)
+                              .GetValue(attribute);
+            return Conversions.To<T>(raw);
+        }
+
+        public override  IEnumerable<T> GetAttributeProperties<T>(object attribute, string propertyName)
+        {
+            var property = attribute.GetType()
+                              .GetProperty(propertyName);
+            var raw = property.GetValue(attribute);
+            if (typeof(T).IsAssignableFrom(property.PropertyType))
+            {
+                return new T[] { Conversions.To<T>(raw) };
+            }
+            if (typeof(IEnumerable<T>).IsAssignableFrom(property.PropertyType) && raw is IEnumerable<T> x)
+            {
+                return x.Select(xx => Conversions.To<T>(xx));
+            }
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && raw is IEnumerable y)
+            {
+                var list = new List<T>();
+                foreach (var item in y)
+                {
+                    list.Add(Conversions.To<T>(item));
+                }
+                return list;
+            }
+            throw new InvalidOperationException("Unhandled Attribute PropertyType");
+        }
 
         private static Candidate GetCandidateInternal(PropertyInfo propertyInfo)
         {
