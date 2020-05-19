@@ -21,23 +21,5 @@ namespace System.CommandLine.GeneralAppModel.Rules
            => items
                    .Where(item => SpecificSource.Tools.IsAttributeAMatch(AttributeName, symbolDescriptor, item,
                                                                          parentSymbolDescriptor));
-
-        //protected bool IsMatch(SymbolDescriptorBase symbolDescriptor,
-        //              object item,
-        //              SymbolDescriptorBase parentSymbolDescriptor)
-        //{
-        //    return item switch
-        //    {
-        //        Attribute a => DoesAttributeMatch(AttributeName, a),
-        //        _ => false
-        //    };
-        //}
-
-        //protected bool DoesAttributeMatch(string attributeName, Attribute a)
-        //{
-        //    var itemName = a.GetType().Name;
-        //    return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
-        //        || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
-        //}
     }
 }

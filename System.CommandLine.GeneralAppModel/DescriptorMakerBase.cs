@@ -33,10 +33,6 @@ namespace System.CommandLine.GeneralAppModel
             ParentDataSource = parentDataSource;
         }
 
-        //protected abstract Candidate GetCandidate(object item);
-        //protected abstract Type GetArgumentType(Candidate candidate);
-        //protected abstract IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase commandDescriptor);
-
         protected Strategy Strategy { get; }
         protected object DataSource { get; }
         protected object ParentDataSource { get; }

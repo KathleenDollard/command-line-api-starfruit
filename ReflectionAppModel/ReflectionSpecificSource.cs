@@ -47,11 +47,6 @@ namespace System.CommandLine.ReflectionAppModel
                _ => null
            };
 
-        //public override IEnumerable<T> GetMachingAttributes<T>(SymbolDescriptorBase symbolDescriptor, IEnumerable<T> items, SymbolDescriptorBase parentSymbolDescriptor)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public override bool ComplexAttributeHasAtLeastOneProperty(IEnumerable<ComplexAttributeRule.NameAndType> propertyNamesAndTypes, object attribute)
         {
 

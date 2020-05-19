@@ -15,10 +15,7 @@ namespace System.CommandLine.GeneralAppModel
         public abstract IEnumerable<Candidate> GetChildCandidates(Strategy strategy,
                                                                   SymbolDescriptorBase commandDescriptor);
 
-        //public abstract IEnumerable<T> GetMachingAttributes<T>(SymbolDescriptorBase symbolDescriptor,
-        //                                                       IEnumerable<T> items,
-        //                                                       SymbolDescriptorBase parentSymbolDescriptor);
-        public abstract bool ComplexAttributeHasAtLeastOneProperty(IEnumerable<ComplexAttributeRule.NameAndType> propertyNamesAndTypes,
+         public abstract bool ComplexAttributeHasAtLeastOneProperty(IEnumerable<ComplexAttributeRule.NameAndType> propertyNamesAndTypes,
                                                                    object attribute);
         public abstract bool IsAttributeAMatch(string attributeName,
                                                SymbolDescriptorBase symbolDescriptor,
