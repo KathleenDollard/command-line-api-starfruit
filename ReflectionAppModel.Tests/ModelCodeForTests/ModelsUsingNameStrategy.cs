@@ -1,44 +1,64 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
+using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using FluentAssertions;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
-    public class SimpleTypeWithMethodNoAtributes : IHaveMethodTestData, IHaveTypeTestData
+    public class SimpleTypeWithMethodNoAtributes //: IHaveMethodTestData, IHaveTypeTestData
     {
         public void DoSomething() { }
 
-        public IEnumerable<CommandTestData> CommandDataFromMethods
-        => new List<CommandTestData>
-        {
-            new CommandTestData()
-            {
-                Name = nameof(DoSomething),
-                Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething)),
-                IsHidden = false
+        //public static IEnumerable<Action<CommandDescriptor>> GetAssertions()
+        //{
+        //   yield return x=> x.Should().BeOfType<CommandDescriptor>("Command");
+        //   yield return x=> x.Aliases.Should().BeEmpty("Aliases");
+        //   yield return x=> x.Arguments.Should().BeEmpty("Arguments");
+        //   yield return x=> x.Description.Should().BeNull("Description");
+        //   yield return x=> x.IsHidden.Should().BeFalse("IsHidden");
+        //   yield return x=> x.Name.Should().Be(nameof(SimpleTypeWithMethodNoAtributes.DoSomething) + "X", "Name");
+        //   yield return x=> x.Options.Should().BeEmpty();
+        //   yield return x=> x.ParentSymbolDescriptorBase.Should().NotBeNull();
+        //   yield return x=> x.Raw.Should().BeOfType<SimpleTypeWithMethodNoAtributes>("Raw");
+        //   yield return x=> x.SubCommands.Should().BeEmpty("SubCommands");
+        //  // yield return x=> x.SymbolType.Should().Be(SymbolType.Command, "SymbolType");
+        //   yield return x=> x.TreatUnmatchedTokensAsErrors.Should().BeFalse("TreatUnmatchedTokensAsErrors");
 
-            }
-        };
+        //}
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(SimpleTypeWithMethodNoAtributes),
-                Raw = typeof(SimpleTypeWithMethodNoAtributes),
-                IsHidden = false
-            };
+        //public IEnumerable<CommandTestData> CommandDataFromMethods
+        //=> new List<CommandTestData>
+        //{
+        //    new CommandTestData()
+        //    {
+        //        Name = nameof(DoSomething),
+        //        Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething)),
+        //        IsHidden = false
+
+        //    }
+        //};
+
+        //public CommandTestData CommandDataFromType
+        //    => new CommandTestData()
+        //    {
+        //        Name = nameof(SimpleTypeWithMethodNoAtributes),
+        //        Raw = typeof(SimpleTypeWithMethodNoAtributes),
+        //        IsHidden = false
+        //    };
     }
 
-    public class SimpleTypeNoAttributes : IHaveTypeTestData
+    public class SimpleTypeNoAttributes //: IHaveTypeTestData
     {
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(SimpleTypeNoAttributes),
-                Raw = typeof(SimpleTypeNoAttributes),
-                IsHidden = false
-            };
+        //public CommandTestData CommandDataFromType
+        //    => new CommandTestData()
+        //    {
+        //        Name = nameof(SimpleTypeNoAttributes),
+        //        Raw = typeof(SimpleTypeNoAttributes),
+        //        IsHidden = false
+        //    };
     }
 
     public class SimpleTypeWithMethodWithDescriptionAttribute : IHaveMethodTestData, IHaveTypeTestData
