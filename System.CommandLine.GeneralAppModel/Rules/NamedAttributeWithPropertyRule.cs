@@ -32,7 +32,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             var attributes = GetMatches(symbolDescriptor, item, parentSymbolDescriptor);
             var values = GetAllValues(symbolDescriptor, item, parentSymbolDescriptor);
-            values = values.Where(x => !x.Equals(default));
+            values = values.Where(x => !Equals(x, default));
             return values.Any()
                     ? (true, values.FirstOrDefault())
                     : (false, default);

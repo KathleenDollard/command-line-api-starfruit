@@ -165,7 +165,9 @@ namespace System.CommandLine.GeneralAppModel
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules
-                .Add(new NamedAttributeWithPropertyRule<bool>("TreatUnmatchedTokensAsErrors", "Value"));
+                .Add(new NamedAttributeRule("TreatUnmatchedTokensAsErrors"))
+                .Add(new NamedAttributeWithPropertyRule<bool>("TreatUnmatchedTokensAsErrors", "Value"))
+                .Add(new NamedAttributeWithPropertyRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
 
             rules.IsHiddenRules
                 .Add(new NamedAttributeRule("Hidden"));

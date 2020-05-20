@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using static System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests.ClassData;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
@@ -49,39 +50,81 @@ namespace System.CommandLine.GeneralAppModel.Tests
         /// <param name="because">Fluent feature, we're not generally using it</param>
         /// <param name="becauseArgs">Fluent feature, we're not generally using it</param>
         /// <returns></returns>
-        public AndConstraint<CommandDescriptorAssertions> BeEmpty(string because = "", string becauseArgs = "")
+        public AndConstraint<CommandDescriptorAssertions> BeSameAs(CommandData commandData, string because = "", string becauseArgs = "")
         {
             using var _ = new AssertionScope();
             Subject.Should().HaveType<CommandDescriptor>();
-            Subject.Should().HaveAliases();
-            Subject.Should().HaveDescription(null);
-            Subject.Should().HaveIsHidden(false);
-            Subject.Should().HaveRawOfType(typeof(object));
-            Subject.Should().HaveSymbolType(SymbolType.Command);
-            Subject.Should().HaveTreatUnmatchedTokensAsErrors(false);
-            Subject.Should().HaveEmptyOptions();
-            Subject.Should().HaveEmptySubCommands();
-            Subject.Should().HaveEmptyArguments()
+            CheckIfNotNull(commandData.AliasesWrapper, a => HaveAliases(a != null ? a.ToArray() : new string[] { }));
 
-
-            //var x =   Execute.Assertion
-            //       .BecauseOf(because, becauseArgs)
-            //.Should().BeOfType<AssertionScope >().And.Should()  // The need of this implies something isn't quite right here
-            //     .HaveType<CommandDescriptor>()
-            //.HaveAliases().And
-            //.HaveDescription("").And
-            //.HaveIsHidden(false).And
-            //.HaveNonNullParent().And
-            //.HaveRawOfType(typeof(object)).And
-            //.HaveSymbolType(SymbolType.Command).And
-            //.HaveTreatUnmatchedTokensAsErrors(false).And
-            //.HaveEmptyOptions().And
-            //.HaveEmptySubCommands().And
-            //.HaveEmptyArguments()
-            ;
+            CheckWithNullCheck(commandData.NameWrapper, a => HaveName(a), ()=>HaveName(commandData.AltName));
+            Check(commandData.DescriptionWrapper, a => HaveDescription(a));
+            Check(commandData.IsHiddenWrapper, a => HaveIsHidden(a));
+            CheckIfNotNull(commandData.RawWrapper, a => HaveRawOfType(a.GetType()));
+            Check(commandData.SymbolTypeWrapper, _=> HaveSymbolType(SymbolType.Command));
+            Check(commandData.TreatUnmatchedTokensAsErrorsWrapper, a => HaveTreatUnmatchedTokensAsErrors(a));
+            CheckIfNotNull(commandData.OptionsWrapper, a => HaveOptions(a));
+            CheckIfNotNull(commandData.SubCommandsWrapper, a => HaveSubCommands(a));
+            CheckIfNotNull(commandData.ArgumentsWrapper, a => HaveArguments(a));
 
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
+
+        private void Check<T>(Wrapper<T> wrapper, Action<T> check)
+        {
+            if (!(wrapper is null))
+            {
+                check(wrapper.Value);
+            }
+            else
+            {
+                check(default);
+            }
+        }
+
+        private void CheckIfNotNull<T>(Wrapper<T> wrapper, Action<T> check)
+        {
+            if (!(wrapper is null))
+            {
+                check(wrapper.Value);
+            }
+        }
+
+        private void CheckWithNullCheck<T>(Wrapper<T> wrapper, Action<T> check, Action checkIfWrapperNull)
+        {
+            if (!(wrapper is null))
+            {
+                check(wrapper.Value);
+            }
+            else
+            {
+                checkIfWrapperNull();
+            }
+        }
+
+        /// <summary>
+        /// This determines if the object is in the initial state. "Empty" is a bit of a misnomer
+        /// because Name and Raw should not be empty and are tested not being empty and ParentSymbolDescriptor is ignored
+        /// </summary>
+        /// <param name="because">Fluent feature, we're not generally using it</param>
+        /// <param name="becauseArgs">Fluent feature, we're not generally using it</param>
+        /// <returns></returns>
+        //public AndConstraint<CommandDescriptorAssertions> BeEmpty(string because = "", string becauseArgs = "")
+        //{
+        //    using var _ = new AssertionScope();
+        //    Subject.Should().HaveType<CommandDescriptor>();
+        //    Subject.Should().HaveAliases();
+        //    Subject.Should().HaveDescription(null);
+        //    Subject.Should().HaveIsHidden(false);
+        //    Subject.Should().HaveRawOfType(typeof(object));
+        //    Subject.Should().HaveSymbolType(SymbolType.Command);
+        //    Subject.Should().HaveTreatUnmatchedTokensAsErrors(false);
+        //    Subject.Should().HaveEmptyOptions();
+        //    Subject.Should().HaveEmptySubCommands();
+        //    Subject.Should().HaveEmptyArguments()
+        //    ;
+
+        //    return new AndConstraint<CommandDescriptorAssertions>(this);
+        //}
 
         public AndConstraint<CommandDescriptorAssertions> HaveType<T>()
         {
@@ -105,19 +148,19 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
+        public AndConstraint<CommandDescriptorAssertions> HaveName(string name)
+        {
+            Execute.Assertion
+                  .ForCondition(Subject.Name == name)
+                  .FailWith($@"Expected Name to be {DisplayString(name)}, but found {DisplayString(Subject.Name)}");
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+        }
+
         public AndConstraint<CommandDescriptorAssertions> HaveDescription(string description)
         {
             Execute.Assertion
                   .ForCondition(Subject.Description == description)
                   .FailWith($@"Expected Description to be {DisplayString(description)}, but found {DisplayString(Subject.Description)}");
-            return new AndConstraint<CommandDescriptorAssertions>(this);
-        }
-
-        public AndConstraint<CommandDescriptorAssertions> HaveName(string name)
-        {
-            Execute.Assertion
-                .ForCondition(Subject.Name == name)
-                .FailWith($@"Expected Name to be {DisplayString(name)}, but found {DisplayString(Subject.Name)}");
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
@@ -169,11 +212,27 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public AndConstraint<CommandDescriptorAssertions> HaveEmptyOptions()
+        public AndConstraint<CommandDescriptorAssertions> HaveOptions(IEnumerable<Option > options)
         {
             Execute.Assertion
-                 .ForCondition(!Subject.Options.Any())
-                 .FailWith($@"Expected Options to be empty, but found {Subject.Options.Count()} items");
+                 .ForCondition(Subject.Options.Count()==options.Count())
+                 .FailWith($@"Expected Options to have count  {options.Count()}, but found count {Subject.Options.Count()} items");
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveArguments(IEnumerable<Argument> arguments)
+        {
+            Execute.Assertion
+                 .ForCondition(Subject.Arguments.Count() == arguments.Count())
+                 .FailWith($@"Expected Arguments to have count  {arguments.Count()}, but found count {Subject.Arguments.Count()} items");
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveSubCommands(IEnumerable<Command> subCommands)
+        {
+            Execute.Assertion
+                 .ForCondition(Subject.SubCommands.Count() == subCommands.Count())
+                 .FailWith($@"Expected SubCommands to have count  {subCommands.Count()}, but found count {Subject.SubCommands.Count()} items");
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 

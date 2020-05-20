@@ -2,103 +2,192 @@
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests;
+using System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using FluentAssertions;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
-    public class SimpleTypeWithMethodNoAtributes //: IHaveMethodTestData, IHaveTypeTestData
+
+    public class EmptyCommand : ClassData
     {
-        public void DoSomething() { }
+        public EmptyCommand()
+            : base(
+                  new CommandData
+                  { },
+                  new For[]
+                  {
+                      new ForType(typeof(FromEmptyType)),
+                      new ForMethod(typeof(FromMethodNoParameters),nameof(FromMethodNoParameters.DoSomething ))
+                  })
+        { }
 
-        //public static IEnumerable<Action<CommandDescriptor>> GetAssertions()
-        //{
-        //   yield return x=> x.Should().BeOfType<CommandDescriptor>("Command");
-        //   yield return x=> x.Aliases.Should().BeEmpty("Aliases");
-        //   yield return x=> x.Arguments.Should().BeEmpty("Arguments");
-        //   yield return x=> x.Description.Should().BeNull("Description");
-        //   yield return x=> x.IsHidden.Should().BeFalse("IsHidden");
-        //   yield return x=> x.Name.Should().Be(nameof(SimpleTypeWithMethodNoAtributes.DoSomething) + "X", "Name");
-        //   yield return x=> x.Options.Should().BeEmpty();
-        //   yield return x=> x.ParentSymbolDescriptorBase.Should().NotBeNull();
-        //   yield return x=> x.Raw.Should().BeOfType<SimpleTypeWithMethodNoAtributes>("Raw");
-        //   yield return x=> x.SubCommands.Should().BeEmpty("SubCommands");
-        //  // yield return x=> x.SymbolType.Should().Be(SymbolType.Command, "SymbolType");
-        //   yield return x=> x.TreatUnmatchedTokensAsErrors.Should().BeFalse("TreatUnmatchedTokensAsErrors");
+        public class FromMethodNoParameters
+        {
+            public void DoSomething() { }
+        }
 
-        //}
-
-        //public IEnumerable<CommandTestData> CommandDataFromMethods
-        //=> new List<CommandTestData>
-        //{
-        //    new CommandTestData()
-        //    {
-        //        Name = nameof(DoSomething),
-        //        Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodNoAtributes>(nameof(DoSomething)),
-        //        IsHidden = false
-
-        //    }
-        //};
-
-        //public CommandTestData CommandDataFromType
-        //    => new CommandTestData()
-        //    {
-        //        Name = nameof(SimpleTypeWithMethodNoAtributes),
-        //        Raw = typeof(SimpleTypeWithMethodNoAtributes),
-        //        IsHidden = false
-        //    };
+        public class FromEmptyType { }
     }
 
-    public class SimpleTypeNoAttributes //: IHaveTypeTestData
+    public class CommandWithDescription : ClassData
     {
-        //public CommandTestData CommandDataFromType
-        //    => new CommandTestData()
-        //    {
-        //        Name = nameof(SimpleTypeNoAttributes),
-        //        Raw = typeof(SimpleTypeNoAttributes),
-        //        IsHidden = false
-        //    };
+        const string desc = "This is a great description";
+        public CommandWithDescription()
+            : base(
+                  new CommandData
+                  {
+                      Description = desc
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromTypeWithDescriptionAttribute)),
+                      new ForMethod(typeof(FromMethodWithDescriptionAttribute),nameof(FromMethodWithDescriptionAttribute.DoSomething )),
+                      new ForType(typeof(FromTypeWithCommandAttribute)),
+                      new ForMethod(typeof(FromMethodWithCommandAttribute),nameof(FromMethodWithCommandAttribute.DoSomething ))
+                 })
+        { }
+
+        public class FromMethodWithDescriptionAttribute
+        {
+            [Description(desc)]
+            public void DoSomething() { }
+        }
+
+        [Description(desc)]
+        public class FromTypeWithDescriptionAttribute { }
+
+        public class FromMethodWithCommandAttribute
+        {
+            [Command(Description = desc)]
+            public void DoSomething() { }
+        }
+
+        [Command(Description = desc)]
+        public class FromTypeWithCommandAttribute { }
     }
 
-    public class SimpleTypeWithMethodWithDescriptionAttribute : IHaveMethodTestData, IHaveTypeTestData
+    public class CommandWithSpecifiedName : ClassData
     {
-        [Description("This is a great description 1")]
-        public void DoSomething() { }
+        const string name = "Fred";
+        public CommandWithSpecifiedName()
+            : base(
+                  new CommandData
+                  {
+                      Name = name
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromTypeWithCommandAttribute)),
+                      new ForMethod(typeof(FromMethodWithCommandAttribute),nameof(FromMethodWithCommandAttribute.DoSomething ))
+                  })
+        { }
 
-        public IEnumerable<CommandTestData> CommandDataFromMethods
-            => new List<CommandTestData>
+        public class FromMethodWithCommandAttribute
+        {
+            [Command(Name = name)]
+            public void DoSomething() { }
+        }
+
+        [Command(Name = name)]
+        public class FromTypeWithCommandAttribute { }
+    }
+
+    public class CommandWithTreatUnmatchedTokensAsErrors : ClassData
+    {
+        public CommandWithTreatUnmatchedTokensAsErrors()
+            : base(
+                  new CommandData
+                  {
+                      TreatUnmatchedTokensAsErrors = true
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromTypeWithAttribute)),
+                      new ForMethod(typeof(FromMethodWithAttribute),nameof(FromMethodWithAttribute.DoSomething )),
+                      new ForType(typeof(FromTypeWithAttributeValue)),
+                      new ForMethod(typeof(FromMethodWithAttributeValue),nameof(FromMethodWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromTypeWithCommandAttribute)),
+                      new ForMethod(typeof(FromMethodWithCommandAttribute),nameof(FromMethodWithCommandAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromMethodWithAttribute
+        {
+            [TreatUnmatchedTokensAsErrors]
+            public void DoSomething() { }
+        }
+
+        [TreatUnmatchedTokensAsErrors]
+        public class FromTypeWithAttribute { }
+
+        public class FromMethodWithAttributeValue
+        {
+            [TreatUnmatchedTokensAsErrors(Value = true)]
+            public void DoSomething() { }
+        }
+
+        [TreatUnmatchedTokensAsErrors(Value = true)]
+        public class FromTypeWithAttributeValue { }
+
+        public class FromMethodWithCommandAttribute
+        {
+            [Command(TreatUnmatchedTokensAsErrors=true)]
+            public void DoSomething() { }
+        }
+
+        [Command(TreatUnmatchedTokensAsErrors = true)]
+        public class FromTypeWithCommandAttribute { }
+    }
+
+    [TreatUnmatchedTokensAsErrors(Value = false)]
+    public class TypeWithTreatUnmatchedTokenAsErrors : IHaveTypeTestData
+    {
+        public CommandTestData CommandDataFromType
+            => new CommandTestData()
             {
-                new CommandTestData()
-                {
-                    Name = nameof(DoSomething),
-                    Description = "This is a great description 1",
-                    Raw = ReflectionSupport.GetMethodInfo<SimpleTypeWithMethodWithDescriptionAttribute>(nameof(DoSomething)),
-                    IsHidden = false
-               }
+                Name = nameof(TypeWithDerivedTypeCommands_A),
+                Raw = typeof(TypeWithDerivedTypeCommands_A),
+                IsHidden = false,
+                TreatUnmatchedTokensAsErrors = false
             };
+    }
+
+    [Hidden]
+    public class TypeWithThingsSetToHidden : IHaveTypeTestData
+    {
+        [Hidden]
+        public string StringProperty { get; set; }
+
+        [Hidden]
+        public string StringArg { get; set; }
 
         public CommandTestData CommandDataFromType
             => new CommandTestData()
             {
-                Name = nameof(SimpleTypeWithMethodWithDescriptionAttribute),
-                Raw = typeof(SimpleTypeWithMethodWithDescriptionAttribute),
-                IsHidden = false
+                Name = nameof(TypeWithDerivedTypeCommands_A),
+                Raw = typeof(TypeWithDerivedTypeCommands_A),
+                IsHidden = true,
+                Options = new List<OptionTestData>
+                    { new OptionTestData
+                            {
+                               Name = nameof(StringProperty),
+                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                               IsHidden = true,
+                            }
+                    },
+                Arguments = new List<ArgumentTestData>
+                    { new ArgumentTestData
+                            {
+                               Name = nameof(StringProperty),
+                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
+                               IsHidden = true,
+                            }
+                    }
             };
     }
 
-    [Description("This is a great description 2")]
-    public class SimpleTypeWithDescriptionAttribute : IHaveTypeTestData
-    {
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(SimpleTypeWithDescriptionAttribute),
-                Description = "This is a great description 2",
-                Raw = typeof(SimpleTypeWithDescriptionAttribute),
-                IsHidden = false
-            };
-    }
 
     public class MethodWithParameterNamedArgs : IHaveMethodTestData, IHaveTypeTestData
     {
@@ -133,7 +222,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                 IsHidden = false
             };
     }
-
 
     public class MethodWithParameterNamedArgsWithArity : IHaveMethodTestData, IHaveTypeTestData
     {
@@ -378,51 +466,5 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             };
     }
 
-    [TreatUnmatchedTokensAsErrors(false)]
-    public class TypeWithTreatUnmatchedTokenAsErrors : IHaveTypeTestData
-    {
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithDerivedTypeCommands_A),
-                Raw = typeof(TypeWithDerivedTypeCommands_A),
-                IsHidden = false,
-                TreatUnmatchedTokensAsErrors = false
-            };
-    }
-
-    [Hidden]
-    public class TypeWithThingsSetToHidden : IHaveTypeTestData
-    {
-        [Hidden]
-        public string StringProperty { get; set; }
-
-        [Hidden]
-        public string StringArg { get; set; }
-
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithDerivedTypeCommands_A),
-                Raw = typeof(TypeWithDerivedTypeCommands_A),
-                IsHidden = true,
-                Options = new List<OptionTestData>
-                    { new OptionTestData
-                            {
-                               Name = nameof(StringProperty),
-                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
-                               IsHidden = true,
-                            }
-                    },
-                Arguments = new List<ArgumentTestData>
-                    { new ArgumentTestData
-                            {
-                               Name = nameof(StringProperty),
-                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
-                               IsHidden = true,
-                            }
-                    }
-            };
-    }
 }
 
