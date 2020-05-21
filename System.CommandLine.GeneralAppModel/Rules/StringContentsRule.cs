@@ -63,12 +63,13 @@ namespace System.CommandLine.GeneralAppModel
                 _ => throw new ArgumentException("Unexpected position")
             };
         }
-        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor) 
-            => (IEnumerable<Candidate>)items
-                            .Where(x => x.Traits
-                                        .OfType<string>()
-                                        .Where(x => DoesStringMatch(x, Position, CompareTo))
-                                        .Any());
+    
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor) 
+            => candidates
+                    .Where(x => x.Traits
+                                .OfType<string>()
+                                .Where(x => DoesStringMatch(x, Position, CompareTo))
+                                .Any());
 
         public override string RuleDescription<TIRuleSet>()
          => typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))

@@ -212,7 +212,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public AndConstraint<CommandDescriptorAssertions> HaveOptions(IEnumerable<Option > options)
+        public AndConstraint<CommandDescriptorAssertions> HaveOptions(IEnumerable<OptionData > options)
         {
             Execute.Assertion
                  .ForCondition(Subject.Options.Count()==options.Count())
@@ -220,7 +220,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public AndConstraint<CommandDescriptorAssertions> HaveArguments(IEnumerable<Argument> arguments)
+        public AndConstraint<CommandDescriptorAssertions> HaveArguments(IEnumerable<ArgumentData> arguments)
         {
             Execute.Assertion
                  .ForCondition(Subject.Arguments.Count() == arguments.Count())
@@ -228,7 +228,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public AndConstraint<CommandDescriptorAssertions> HaveSubCommands(IEnumerable<Command> subCommands)
+        public AndConstraint<CommandDescriptorAssertions> HaveSubCommands(IEnumerable<CommandData> subCommands)
         {
             Execute.Assertion
                  .ForCondition(Subject.SubCommands.Count() == subCommands.Count())

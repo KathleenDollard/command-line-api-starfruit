@@ -165,12 +165,12 @@ namespace System.CommandLine.GeneralAppModel
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules
-                .Add(new NamedAttributeRule("TreatUnmatchedTokensAsErrors"))
                 .Add(new NamedAttributeWithPropertyRule<bool>("TreatUnmatchedTokensAsErrors", "Value"))
                 .Add(new NamedAttributeWithPropertyRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
 
             rules.IsHiddenRules
-                .Add(new NamedAttributeRule("Hidden"));
+                .Add(new NamedAttributeWithPropertyRule<bool>("Hidden", "Value"))
+                .Add(new NamedAttributeWithPropertyRule<bool>("Command", "IsHidden"));
 
             rules.AliasRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))

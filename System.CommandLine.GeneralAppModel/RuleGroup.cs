@@ -49,6 +49,10 @@ namespace System.CommandLine.GeneralAppModel
                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
+
+            // A frequent trouble spot for strategies is that their rules don't match OfType in the following line. 
+            // This can be because they inadvertently have the wrong T, or they don't support IRuleGetValue.
+            // Strong typing in strategies is planned to reduce this issue.
             var valueRules = Rules.OfType<IRuleGetValue<T>>().ToList();
             foreach (var rule in valueRules)
             {

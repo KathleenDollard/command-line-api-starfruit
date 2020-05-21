@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
+using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
@@ -17,7 +18,14 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
         }
 
         public IEnumerable<object[]> AsObjectArray
-            => _data.Select(x => new object[] { _commandData, x });
+            => _data.Select(forSource => new object[] { MakeId(forSource), forSource, _commandData });
+
+        private string MakeId(For forSource)
+        {
+            var name = forSource.Type.FullName;
+            var posLast = name.LastIndexOf(".");
+            return name[(posLast+1)..];
+        }
 
         public IEnumerator<object[]> GetEnumerator() => AsObjectArray.GetEnumerator();
 
@@ -59,25 +67,60 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
             {
                 AltName = altName;
             }
+
+            public string Id { get; private set; }
+            protected void SetId(string id)
+            {
+                Id = id;
+            }
         }
 
         public class CommandData : SymbolData
         {
-            public Wrapper<IEnumerable<Option>> OptionsWrapper { get; private set; }
-            public Wrapper<IEnumerable<Argument>> ArgumentsWrapper { get; private set; }
-            public Wrapper<IEnumerable<Command>> SubCommandsWrapper { get; private set; }
+            public Wrapper<IEnumerable<OptionData>> OptionsWrapper { get; private set; }
+            public Wrapper<IEnumerable<ArgumentData>> ArgumentsWrapper { get; private set; }
+            public Wrapper<IEnumerable<CommandData>> SubCommandsWrapper { get; private set; }
             public Wrapper<bool> TreatUnmatchedTokensAsErrorsWrapper { get; private set; }
 
-            public IEnumerable<Option> Options { set { OptionsWrapper = Wrap(value); } }
-            public IEnumerable<Argument> Arguments { set { ArgumentsWrapper = Wrap(value); } }
-            public IEnumerable<Command> SubCommands { set { SubCommandsWrapper = Wrap(value); } }
+            public IEnumerable<OptionData> Options { set { OptionsWrapper = Wrap(value); } }
+            public IEnumerable<ArgumentData> Arguments { set { ArgumentsWrapper = Wrap(value); } }
+            public IEnumerable<CommandData> SubCommands { set { SubCommandsWrapper = Wrap(value); } }
             public bool TreatUnmatchedTokensAsErrors { set { TreatUnmatchedTokensAsErrorsWrapper = Wrap(value); } }
 
+            // This allows return type to be specifically CommandData. We could probably 
+            // clean this up, but extension methods would require expanding scope of property
+            // and this is a stop gap until we can use C# 9 features
             public CommandData WithAltName(string altName)
             {
                 SetAltName(altName);
                 return this;
             }
+            public CommandData WithId(string id)
+            {
+                SetId(id);
+                return this;
+            }
+        }
+
+        public class ArgumentData : SymbolData
+        {
+            public Wrapper<ArityDescriptor> ArityWrapper { get; private set; }
+            public Wrapper<Type> ArgumentTypeWrapper { get; private set; }
+            public Wrapper<HashSet<string>> AllowedValuesWrapper { get; private set; }
+            public Wrapper<DefaultValueDescriptor> DefaultValueWrapper { get; private set; }
+            public Wrapper<bool> RequiredWrapper { get; private set; }
+
+            public ArityDescriptor Arity { set { ArityWrapper = Wrap(value); } }
+            public Type ArgumentType { set { ArgumentTypeWrapper = Wrap(value); } }
+            public HashSet<string> AllowedValues { set { AllowedValuesWrapper = Wrap(value); } }
+            public DefaultValueDescriptor DefaultValue { set { DefaultValueWrapper = Wrap(value); } }
+            public bool Required { set { RequiredWrapper = Wrap(value); } }
+
+
+        }
+
+        public class OptionData : SymbolData
+        {
         }
 
         public class For

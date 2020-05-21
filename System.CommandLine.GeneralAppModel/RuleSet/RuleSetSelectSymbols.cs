@@ -21,9 +21,14 @@ namespace System.CommandLine.GeneralAppModel
         {
             IEnumerable<IRuleGetCandidates> rules = Rules
                                 .OfType<IRuleGetCandidates>()
-                                .Where(x => x.SymbolType == symbolType);
+                                .Where(x => x.SymbolType == symbolType)
+                                .ToList();
+            //var temp = rules.First().GetCandidates(candidates, commandDescriptor);
+            //var temp2 = rules.Skip(1).First().GetCandidates(candidates, commandDescriptor);
+            //var temp3 = rules.Skip(2).First().GetCandidates(candidates, commandDescriptor);
             return rules                 
                     .SelectMany(r => r.GetCandidates(candidates, commandDescriptor))
+                    .Distinct()
                     .ToList();
         }
 

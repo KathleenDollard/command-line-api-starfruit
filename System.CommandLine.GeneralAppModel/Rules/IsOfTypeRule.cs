@@ -25,7 +25,11 @@ namespace System.CommandLine.GeneralAppModel.Rules
         { }
 
         public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor)
-            => candidates.Where(c => c.Item is TType);
-
+        {
+            IEnumerable<Candidate> commandCandidates = candidates
+                                            .Where(c => !c.Item.Equals(parentSymbolDescriptor.Raw) && c.Item is TType)
+                                            .ToList();
+            return commandCandidates;
+        }
     }
 }

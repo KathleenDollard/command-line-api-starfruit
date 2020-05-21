@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.CommandLine.ReflectionAppModel.Tests
+﻿namespace System.CommandLine.ReflectionAppModel.Tests
 {
     public class TreatUnmatchedTokensAsErrorsAttribute : Attribute
     {

@@ -5,16 +5,12 @@ using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.Linq;
 using FluentAssertions;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using FluentAssertions.Execution;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests
 {
 
-    public class DescriptorMakerTests
+    public class DescriptorTests
     {
 
         private readonly Strategy strategy;
@@ -22,7 +18,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         private const string Method = "Method";
         private const string Type = "Type";
 
-        public DescriptorMakerTests()
+        public DescriptorTests()
         {
             strategy = new Strategy()
                             .SetReflectionRules()
@@ -34,7 +30,29 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         [ClassData(typeof(CommandWithDescription))]
         [ClassData(typeof(CommandWithSpecifiedName))]
         [ClassData(typeof(CommandWithTreatUnmatchedTokensAsErrors))]
-        public void CommandViaClassData(ClassData.CommandData commandData, ClassData.For forSource)
+        [ClassData(typeof(CommandWithIsHidden))]
+        [ClassData(typeof(CommandWithOneArg))]
+        [ClassData(typeof(CommandWithOneOption))]
+        public void CommandViaClassData(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            RunCommandTests(id, forSource, commandData);
+        }
+
+        [Theory]
+        [ClassData(typeof(CommandWithOneSubCommand), Skip ="Need ComplexType parameter evaluation")]
+        public void CommandViaClassDataBrokenTests(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            RunCommandTests(id, forSource, commandData);
+        }
+
+        /// <summary>
+        /// The Visual Studio test runner groups xUnit ClassData tests as one test. This is
+        /// a pain when doing new tests. So I created the ability to group tests for no reason other
+        /// than to make VS Test Runner use easier. Yeah, I know.
+        /// </summary>
+        /// <param name="forSource"></param>
+        /// <param name="commandData"></param>
+        private void RunCommandTests(string id, ClassData.For forSource, ClassData.CommandData commandData)
         {
             var actual = forSource switch
             {
@@ -50,7 +68,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
                 _ => "<Invalid Name>"
             };
 
-                actual.Should().BeSameAs(commandData.WithAltName(altName));
+            actual.Should().BeSameAs(commandData.WithAltName(altName).WithId(id));
         }
 
         //[Theory]
@@ -98,9 +116,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         //public void CanGetCommandDescriptionFromMethodAttribute()
         //   => Utils.TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetGeneralRules());
 
-        [Fact]
-        public void CanGetArgumentFromNamedMethodParam()
-           => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgs>(strategy);
+        //[Fact]
+        //public void CanGetArgumentFromNamedMethodParam()
+        //   => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgs>(strategy);
 
         [Fact]
         public void CanGetArgumentWithArityFromNamedMethodParam()

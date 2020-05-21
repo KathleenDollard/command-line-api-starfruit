@@ -52,7 +52,8 @@ namespace System.CommandLine.GeneralAppModel
                 switch (symbolType)
                 {
                     case SymbolType.Option:
-                        optionItems = Strategy.SelectSymbolRules.GetItems(SymbolType.Option, commandDescriptor, candidates);
+                        optionItems = Strategy.SelectSymbolRules
+                                        .GetItems(SymbolType.Option, commandDescriptor, candidates);
                         candidates = Remove(candidates, optionItems);
                         break;
                     case SymbolType.Command:

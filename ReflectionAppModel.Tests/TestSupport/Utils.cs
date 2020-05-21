@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Equivalency;
 using System.Collections.Generic;
-using System.CommandLine.Collections;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests;
