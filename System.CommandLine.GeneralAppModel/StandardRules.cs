@@ -63,8 +63,7 @@ namespace System.CommandLine.GeneralAppModel
                 ;
             rules.DefaultRules
                 .Add(new OptionalValueAttributeRule<object>("Default", "Value", SymbolType.Argument))
-                .Add(new OptionalValueAttributeRule<object>("Argument", "Default", SymbolType.Argument))
-                .Add(new OptionalValueAttributeRule<object>("Argument", "DefaultValue", SymbolType.Argument))
+                // Default on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
                 ;
 
             rules.RequiredRules
@@ -73,10 +72,13 @@ namespace System.CommandLine.GeneralAppModel
             ;
 
             rules.IsHiddenRules
-               .Add(new NamedAttributeRule("Hidden"));
+                .Add(new NamedAttributeRule("Hidden"))
+                .Add(new NamedAttributeWithPropertyRule<bool>("Argument", "IsHidden", SymbolType.Argument))
+                ;
 
             rules.AliasRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))
+                .Add(new NamedAttributeWithPropertyRule<string>("Argument", "Aliases", SymbolType.Argument))
                 ;
 
             rules.ArityRules
@@ -119,10 +121,13 @@ namespace System.CommandLine.GeneralAppModel
              ;
 
             rules.IsHiddenRules
-                .Add(new NamedAttributeRule("Hidden"));
+                .Add(new NamedAttributeRule("Hidden"))
+                .Add(new NamedAttributeWithPropertyRule<bool>("Option", "IsHidden", SymbolType.Argument))
+                ;
 
             rules.AliasRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))
+                .Add(new NamedAttributeWithPropertyRule<string>("Option", "Aliases", SymbolType.Argument))
                 ;
 
             return rules;
@@ -174,7 +179,8 @@ namespace System.CommandLine.GeneralAppModel
 
             rules.AliasRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Aliases", "Aliases", SymbolType.Argument))
-                ;
+                 .Add(new NamedAttributeWithPropertyRule<string>("Command", "Aliases", SymbolType.Argument))
+               ;
 
             return rules;
         }

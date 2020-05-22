@@ -23,13 +23,19 @@ namespace System.CommandLine.GeneralAppModel
                                 .OfType<IRuleGetCandidates>()
                                 .Where(x => x.SymbolType == symbolType)
                                 .ToList();
-            //var temp = rules.First().GetCandidates(candidates, commandDescriptor);
-            //var temp2 = rules.Skip(1).First().GetCandidates(candidates, commandDescriptor);
-            //var temp3 = rules.Skip(2).First().GetCandidates(candidates, commandDescriptor);
             return rules                 
                     .SelectMany(r => r.GetCandidates(candidates, commandDescriptor))
-                    .Distinct()
+                    .Distinct(new CompareRaw())
                     .ToList();
+        }
+
+        private class CompareRaw : IEqualityComparer<Candidate>
+        {
+            public bool Equals(Candidate x, Candidate y) 
+                => x.Item == y.Item;
+
+            public int GetHashCode(Candidate obj) 
+                => obj.Item.GetHashCode();
         }
 
         public override string Report(int tabsCount)

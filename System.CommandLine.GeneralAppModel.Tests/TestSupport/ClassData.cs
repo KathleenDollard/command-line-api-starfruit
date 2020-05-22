@@ -24,7 +24,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
         {
             var name = forSource.Type.FullName;
             var posLast = name.LastIndexOf(".");
-            return name[(posLast+1)..];
+            return name[(posLast + 1)..];
         }
 
         public IEnumerator<object[]> GetEnumerator() => AsObjectArray.GetEnumerator();
@@ -104,23 +104,52 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
 
         public class ArgumentData : SymbolData
         {
-            public Wrapper<ArityDescriptor> ArityWrapper { get; private set; }
+            public Wrapper<int> ArityMinWrapper { get; private set; }
+            public Wrapper<int> ArityMaxWrapper { get; private set; }
+            public Wrapper<bool> HasArityWrapper { get; private set; }
+            public Wrapper<object> DefaultValueWrapper { get; private set; }
+            public Wrapper<bool> HasDefaultWrapper { get; private set; }
             public Wrapper<Type> ArgumentTypeWrapper { get; private set; }
             public Wrapper<HashSet<string>> AllowedValuesWrapper { get; private set; }
-            public Wrapper<DefaultValueDescriptor> DefaultValueWrapper { get; private set; }
             public Wrapper<bool> RequiredWrapper { get; private set; }
 
-            public ArityDescriptor Arity { set { ArityWrapper = Wrap(value); } }
+            public int ArityMin
+            {
+                set
+                {
+                    ArityMinWrapper = Wrap(value);
+                    HasArityWrapper = Wrap(true);
+                }
+            }
+            public int ArityMax
+            {
+                set
+                {
+                    ArityMaxWrapper = Wrap(value);
+                    HasArityWrapper = Wrap(true);
+                }
+            }
+            public object DefaultValue
+            {
+                set
+                {
+                    DefaultValueWrapper = Wrap(value);
+                    HasDefaultWrapper = Wrap(true);
+                }
+            }
             public Type ArgumentType { set { ArgumentTypeWrapper = Wrap(value); } }
             public HashSet<string> AllowedValues { set { AllowedValuesWrapper = Wrap(value); } }
-            public DefaultValueDescriptor DefaultValue { set { DefaultValueWrapper = Wrap(value); } }
             public bool Required { set { RequiredWrapper = Wrap(value); } }
-
-
         }
 
         public class OptionData : SymbolData
         {
+            public Wrapper<IEnumerable<ArgumentData>> ArgumentsWrapper { get; private set; }
+            public Wrapper<bool> RequiredWrapper { get; private set; }
+
+
+            public IEnumerable<ArgumentData> Arguments { set { ArgumentsWrapper = Wrap(value); } }
+            public bool Required { set { RequiredWrapper = Wrap(value); } }
         }
 
         public class For

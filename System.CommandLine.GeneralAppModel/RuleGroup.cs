@@ -65,13 +65,13 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
-        public virtual IEnumerable<T> GetAllValues<T>(SymbolDescriptorBase symbolDescriptor,
+        public virtual IEnumerable<TValue> GetAllValues<TValue>(SymbolDescriptorBase symbolDescriptor,
                                             Candidate candidate,
                                             SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
-            var valueRules = Rules.OfType<IRuleGetValues<T>>().ToList();
-            var values = new List<T>();
+            var valueRules = Rules.OfType<IRuleGetValues<TValue>>().ToList();
+            var values = new List<TValue>();
             foreach (var rule in valueRules)
             {
                 values.AddRange(rule.GetAllValues(symbolDescriptor, traits, parentSymbolDescriptor));

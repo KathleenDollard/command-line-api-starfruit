@@ -116,12 +116,17 @@ namespace System.CommandLine.GeneralAppModel
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var (success, value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
-            if (!success)
+            //var (success, value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
+            //if (!success)
+            var data = ruleSet.DefaultRules.GetFirstOrDefaultValue<Dictionary<string, object>>(descriptor, candidate, parentSymbolDescriptor);
+            if (data is null || !data.Any())
             {
                 return;
             }
-            descriptor.DefaultValue = new DefaultValueDescriptor(value);
+            if (data.TryGetValue("Value", out var value))// && data.TryGetValue("Value", out var value))
+            {
+                descriptor.DefaultValue = new DefaultValueDescriptor(value);
+            }
         }
 
         private void SetArityIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)

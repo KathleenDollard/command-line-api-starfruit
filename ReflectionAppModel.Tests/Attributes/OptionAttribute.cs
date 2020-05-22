@@ -2,9 +2,9 @@
 
 namespace System.CommandLine.ReflectionAppModel.Tests
 {
-    public class CommandAttribute : Attribute
+    public class OptionAttribute : Attribute
     {
-        public CommandAttribute()
+        public OptionAttribute()
         {
         }
 
@@ -12,6 +12,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         public string[] Aliases { get; set; }
         public string Name { get; set; }
         public bool IsHidden { get; set; }
-        public bool TreatUnmatchedTokensAsErrors { get; set; }
+        public bool OptionRequired { get; set; }
+        public bool ArgumentRequired { get; set; }
     }
 }

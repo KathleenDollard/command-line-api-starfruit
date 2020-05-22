@@ -31,9 +31,35 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         [ClassData(typeof(CommandWithSpecifiedName))]
         [ClassData(typeof(CommandWithTreatUnmatchedTokensAsErrors))]
         [ClassData(typeof(CommandWithIsHidden))]
+        [ClassData(typeof(CommandWithOneAlias))]
+        [ClassData(typeof(CommandWithMultipleAliases))]
         [ClassData(typeof(CommandWithOneArg))]
         [ClassData(typeof(CommandWithOneOption))]
+        //[ClassData(typeof(CommandWithOneSubCommand))]
+
+        [ClassData(typeof(OptionWithSpecifiedName))]
+        [ClassData(typeof(OptionWithDescription))]
+        [ClassData(typeof(OptionWithIsHidden))]
+        [ClassData(typeof(OptionWithRequired))]
+        [ClassData(typeof(OptionWithOneAlias))]
+        [ClassData(typeof(OptionWithMultipleAliases))]
+        [ClassData(typeof(ArgumentWithSpecifiedName))]
+        [ClassData(typeof(ArgumentWithDescription))]
+        [ClassData(typeof(ArgumentWithIsHidden))]
+        [ClassData(typeof(ArgumentWithRequired))]
+        [ClassData(typeof(ArgumentWithNonStringArgumentType))]
+        [ClassData(typeof(ArgumentWithArity))]
+        [ClassData(typeof(ArgumentWithDefaultValue))]
+        [ClassData(typeof(ArgumentWithOneAlias))]
+        [ClassData(typeof(ArgumentWithMultipleAliases))]
         public void CommandViaClassData(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            RunCommandTests(id, forSource, commandData);
+        }
+
+        [Theory]
+        [ClassData(typeof(ArgumentWithMultipleAliases))]
+        public void CommandInProcess(string id, ClassData.For forSource, ClassData.CommandData commandData)
         {
             RunCommandTests(id, forSource, commandData);
         }
@@ -71,94 +97,5 @@ namespace System.CommandLine.ReflectionAppModel.Tests
             actual.Should().BeSameAs(commandData.WithAltName(altName).WithId(id));
         }
 
-        //[Theory]
-        //[InlineData(Method, typeof(SimpleTypeWithMethodNoAtributes), nameof(SimpleTypeWithMethodNoAtributes.DoSomething))]
-        //[InlineData(Type, typeof(SimpleTypeNoAttributes))]
-        //public void SimplestCommandDescriptorIsEmpty(string methodOrType, Type type, string name = null)
-        //{
-        //    var actual = methodOrType == Method
-        //                 ? ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type.GetMethodsOnDeclaredType().First())
-        //                 : ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type);
-        //    name ??= type.Name;
-        //    var sourceType = methodOrType == Method
-        //                 ? typeof(MethodInfo)
-        //                 : typeof(Type);
-
-        //    actual.Should().BeEmpty()
-        //                   .And.HaveName(name)
-        //                   .And.HaveRawOfType(sourceType);
-        //}
-
-
-
-        //[Fact]
-        //public void EmptyCommandDescriptorFromMethodIsEmpty()
-        //{
-        //    CommandDescriptor actual = GetFirstMethodDescriptor<SimpleTypeWithMethodNoAtributes>();
-
-        //    // Jon: This approach to "Because" has some kind of weird output. Do you live with that or do something more here?
-        //    //using var _ = new AssertionScope();
-        //    actual.Should().BeOfType<CommandDescriptor>("Command");
-        //    actual.Aliases.Should().BeEmpty("Aliases");
-        //    actual.Arguments.Should().BeEmpty("Arguments");
-        //    actual.Description.Should().BeNull("Description");
-        //    actual.IsHidden.Should().BeFalse("IsHidden");
-        //    actual.Name.Should().Be(nameof(SimpleTypeWithMethodNoAtributes.DoSomething) + "X", "Name");
-        //    actual.Options.Should().BeEmpty();
-        //    actual.ParentSymbolDescriptorBase.Should().NotBeNull();
-        //    actual.Raw.Should().BeOfType<SimpleTypeWithMethodNoAtributes>("Raw");
-        //    actual.SubCommands.Should().BeEmpty("SubCommands");
-        //    //   actual.SymbolType.Should().Be(SymbolType.Command, "SymbolType");
-        //    actual.TreatUnmatchedTokensAsErrors.Should().BeFalse("TreatUnmatchedTokensAsErrors");
-        //}
-
-        //[Fact]
-        //public void CanGetCommandDescriptionFromMethodAttribute()
-        //   => Utils.TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetGeneralRules());
-
-        //[Fact]
-        //public void CanGetArgumentFromNamedMethodParam()
-        //   => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgs>(strategy);
-
-        [Fact]
-        public void CanGetArgumentWithArityFromNamedMethodParam()
-           => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgsWithArity>(strategy);
-
-        [Fact]
-        public void CanGetArgumentFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgs>(strategy);
-
-        [Fact]
-        public void CanGetArgumentWithArityFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgsWithArity>(strategy);
-
-        [Fact]
-        public void CanGetArgumentWithDefaultFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgsWithDefault>(strategy);
-
-        [Fact]
-        public void CanGetCommandWithAliasesFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgsWithAliases>(strategy);
-
-        [Fact]
-        public void CanGetOptionFromMethodParam()
-            => Utils.TestFirstMethodOnType<MethodWithParameterOption>(strategy);
-
-        [Fact]
-        public void CanGetOptionFromPropertyProperty()
-            => Utils.TestType<TypeWithPropertyOption>(strategy);
-
-        [Fact]
-        public void CanGetSubCommandFromInheritedType()
-        => Utils.TestType<TypeWithDerivedTypeCommands_A>(strategy);
-
-
-        private CommandDescriptor GetFirstMethodDescriptor<T>()
-        {
-            var type = typeof(T);
-            var method = type.GetMethodsOnDeclaredType().First();
-            var actual = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
-            return actual;
-        }
     }
 }

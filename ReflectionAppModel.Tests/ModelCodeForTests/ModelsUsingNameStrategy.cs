@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests;
 using System.ComponentModel;
@@ -191,6 +192,79 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
         public class FromTypeWithCommandAttribute { }
     }
 
+    public class CommandWithOneAlias : ClassData
+    {
+        public CommandWithOneAlias()
+            : base(
+                  new CommandData
+                  {
+                      Aliases = new string[] { "x" }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromTypeWithCommandAttributeValue)),
+                      new ForMethod(typeof(FromMethodWithCommandAttributeValue),nameof(FromMethodWithCommandAttributeValue.DoSomething )),
+                      new ForType(typeof(FromTypeWithAttribute)),
+                      new ForMethod(typeof(FromMethodWithAttribute),nameof(FromMethodWithAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromMethodWithAttribute
+        {
+            [Aliases("x")]
+            public void DoSomething() { }
+        }
+
+        [Aliases("x")]
+        public class FromTypeWithAttribute { }
+
+        public class FromMethodWithCommandAttributeValue
+        {
+            [Command(Aliases = new string[] { "x" })]
+            public void DoSomething() { }
+        }
+
+        [Command(Aliases = new string[] { "x" })]
+        public class FromTypeWithCommandAttributeValue { }
+
+    }
+
+    public class CommandWithMultipleAliases : ClassData
+    {
+        public CommandWithMultipleAliases()
+             : base(
+                   new CommandData
+                   {
+                       Aliases = new string[] { "x", "y", "zed" }
+                   },
+                   new For[]
+                   {
+                      new ForType(typeof(FromTypeWithCommandAttributeValue)),
+                      new ForMethod(typeof(FromMethodWithCommandAttributeValue),nameof(FromMethodWithCommandAttributeValue.DoSomething )),
+                      new ForType(typeof(FromTypeWithAttribute)),
+                      new ForMethod(typeof(FromMethodWithAttribute),nameof(FromMethodWithAttribute.DoSomething ))
+                   })
+        { }
+
+        public class FromMethodWithAttribute
+        {
+            [Aliases("x", "y", "zed")]
+            public void DoSomething() { }
+        }
+
+        [Aliases("x", "y", "zed")]
+        public class FromTypeWithAttribute { }
+
+        public class FromMethodWithCommandAttributeValue
+        {
+            [Command(Aliases = new string[] { "x", "y", "zed" })]
+            public void DoSomething() { }
+        }
+
+        [Command(Aliases = new string[] { "x", "y", "zed" })]
+        public class FromTypeWithCommandAttributeValue { }
+    }
+
     public class CommandWithOneArg : ClassData
     {
         public CommandWithOneArg()
@@ -313,251 +387,782 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
 
 
-
-
-
-
-    public class MethodWithParameterNamedArgsWithArity : IHaveMethodTestData, IHaveTypeTestData
+    public class OptionWithSpecifiedName : ClassData
     {
-        public void DoSomething([Arity(MinimumCount = 1, MaximumCount = 3)] string stringParamArg) { }
+        const string name = "George";
+        public OptionWithSpecifiedName()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Name = name
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                      new ForType(typeof(FromPropertyWithNameAttribute)),
+                      new ForMethod(typeof(FromParameterWithNameAttribute),nameof(FromParameterWithOptionAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithOptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithOptionAttribute),nameof(FromParameterWithOptionAttribute.DoSomething ))
+                 })
+        { }
 
-        public IEnumerable<CommandTestData> CommandDataFromMethods
-            => new List<CommandTestData>
-            {
-                new CommandTestData()
-                {
-                    Raw = ReflectionSupport.GetMethodInfo<MethodWithParameterNamedArgsWithArity>(nameof(DoSomething)),
-                    Name = nameof(DoSomething),
-                    IsHidden = false,
-                    Arguments = new List<ArgumentTestData>
-                    {
-                        new ArgumentTestData
-                        {
-                            Raw = ReflectionSupport.GetParameterInfo<MethodWithParameterNamedArgsWithArity>(nameof(DoSomething), "stringParamArg"),
-                            Name = "stringParam",
-                            HasArity  = true,
-                            MinArityValues = 1,
-                            MaxArityValues = 3,
-                            ArgumentType = typeof(string),
-                            IsHidden = false
-                        }
-                    }
-                }
-            };
+        public class FromParameterName
+        {
+            public void DoSomething(string george) { }
+        }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(MethodWithParameterNamedArgsWithArity),
-                Raw = typeof(MethodWithParameterNamedArgsWithArity),
-                IsHidden = false
-            };
+        public class FromPropertyName
+
+        {
+            public string George { get; set; }
+
+        }
+
+        public class FromParameterWithNameAttribute
+        {
+            public void DoSomething([Name(name)] string george) { }
+        }
+
+        public class FromPropertyWithNameAttribute
+
+        {
+            [Name(name)]
+
+            public string George { get; set; }
+
+        }
+
+        public class FromParameterWithOptionAttribute
+        {
+            public void DoSomething([Option(Name = name)] string george) { }
+        }
+
+        public class FromPropertyWithOptionAttribute
+
+        {
+            [Option(Name = name)]
+
+            public string George { get; set; }
+
+        }
     }
 
-    public class TypeWithPropertyNamedArgs : IHaveTypeTestData
+    public class OptionWithDescription : ClassData
     {
-        public string StringPropertyArg { get; set; }
+        const string desc = "This is a great description";
+        public OptionWithDescription()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Description = desc
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithDescriptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithDescriptionAttribute),nameof(FromParameterWithDescriptionAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithOptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithOptionAttribute),nameof(FromParameterWithOptionAttribute.DoSomething ))
+                 })
+        { }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithPropertyNamedArgs),
-                Raw = typeof(TypeWithPropertyNamedArgs),
-                IsHidden = false,
-                Arguments = new List<ArgumentTestData>
-                { new ArgumentTestData
-                    {
-                       Name = nameof(StringPropertyArg)[..^3],
-                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgs>(nameof(StringPropertyArg)),
-                       ArgumentType = typeof(string),
-                       IsHidden = false
-                    }
-                }
-            };
+        public class FromParameterWithDescriptionAttribute
+        {
+            
+            public void DoSomething([Description(desc)]string stringValue) { }
+        }
+
+        public class FromPropertyWithDescriptionAttribute
+        {
+            [Description(desc)]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithOptionAttribute
+        {
+            [Option(Description = desc)]
+            public void DoSomething(string stringValue) { }
+        }
+
+        public class FromPropertyWithOptionAttribute
+        {
+            [Option(Description = desc)]
+            public string StringProperty { get; set; }
+        }
     }
 
-    public class TypeWithPropertyNamedArgsWithArity : IHaveTypeTestData
+    public class OptionWithIsHidden : ClassData
     {
-        [Arity(MinimumCount = 0, MaximumCount = 2)]
-        public string StringPropertyArg { get; set; }
+        public OptionWithIsHidden()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              IsHidden = true
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      // TODO: Reenable these tests after BoolAttributes are complete
+                      //new ForType(typeof(FromPropertyWithAttribute)),
+                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithOptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithOptionAttribute),nameof(FromParameterWithOptionAttribute.DoSomething ))
+                  })
+        { }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithPropertyNamedArgsWithArity),
-                Raw = typeof(TypeWithPropertyNamedArgsWithArity),
-                IsHidden = false,
-                Arguments = new List<ArgumentTestData>
-                { new ArgumentTestData
-                    {
-                       Name = nameof(StringPropertyArg)[..^3],
-                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgsWithArity>(nameof(StringPropertyArg)),
-                       HasArity  = true,
-                       MinArityValues = 0,
-                       MaxArityValues = 2,
-                       ArgumentType = typeof(string),
-                       IsHidden = false
-                    }
-                }
-            };
+        public class FromParameterWithAttribute
+        {
+
+            public void DoSomething([Hidden] string stringValue) { }
+        }
+
+        public class FromPropertyWithAttribute
+        {
+            [Hidden]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Hidden(Value = true)] string stringValue) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Hidden(Value = true)]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithOptionAttribute
+        {
+            public void DoSomething([Option(IsHidden = true)] string stringValue) { }
+        }
+
+        public class FromPropertyWithOptionAttribute
+        {
+            [Option(IsHidden = true)]
+            public string StringProperty { get; set; }
+        }
     }
 
-    public class TypeWithPropertyNamedArgsWithDefault : IHaveTypeTestData
+    public class OptionWithRequired : ClassData
     {
-        [Default("xyz")]
-        public string StringPropertyArg { get; set; }
+        public OptionWithRequired()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Required = true
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      // TODO: Reenable these tests after BoolAttributes are complete
+                      //new ForType(typeof(FromPropertyWithAttribute)),
+                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithOptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithOptionAttribute),nameof(FromParameterWithOptionAttribute.DoSomething ))
+                  })
+        { }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithPropertyNamedArgsWithDefault),
-                Raw = typeof(TypeWithPropertyNamedArgsWithDefault),
-                IsHidden = false,
-                Arguments = new List<ArgumentTestData>
-                { new ArgumentTestData
-                    {
-                       Name = nameof(StringPropertyArg)[..^3],
-                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgsWithDefault>(nameof(StringPropertyArg)),
-                       HasDefault=true,
-                       DefaultValue = "xyz",
-                       ArgumentType = typeof(string),
-                       IsHidden = false
-                    }
-                }
-            };
+        public class FromParameterWithAttribute
+        {
+
+            public void DoSomething([Required] string stringValue) { }
+        }
+
+        public class FromPropertyWithAttribute
+        {
+            [Required]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Required(Value = true)] string stringValue) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Required(Value = true)]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithOptionAttribute
+        {
+            public void DoSomething([Option(OptionRequired = true)] string stringValue) { }
+        }
+
+        public class FromPropertyWithOptionAttribute
+        {
+            [Option(OptionRequired = true)]
+            public string StringProperty { get; set; }
+        }
+    }
+   
+    public class OptionWithOneAlias : ClassData
+    {
+        public OptionWithOneAlias()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Aliases = new string[] { "x" }
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithOptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithOptionAttribute),nameof(FromParameterWithOptionAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Aliases("x")] string stringValue) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Aliases("x")]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithOptionAttribute
+        {
+            public void DoSomething([Option(Aliases = new string[] { "x" })] string stringValue) { }
+        }
+
+        public class FromPropertyWithOptionAttribute
+        {
+            [Option(Aliases = new string[] { "x" })]
+            public string StringProperty { get; set; }
+        }
     }
 
-    [Aliases("x", "y", "z")]
-    public class TypeWithPropertyNamedArgsWithAliases : IHaveTypeTestData
+    public class OptionWithMultipleAliases : ClassData
     {
-        public string StringPropertyArg { get; set; }
+        public OptionWithMultipleAliases()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Aliases = new string[] { "x" , "y", "zed" }
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithOptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithOptionAttribute),nameof(FromParameterWithOptionAttribute.DoSomething ))
+                  })
+        { }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithPropertyNamedArgsWithAliases),
-                Raw = typeof(TypeWithPropertyNamedArgsWithAliases),
-                IsHidden = false,
-                Aliases = new string[] { "x", "y", "z" },
-                Arguments = new List<ArgumentTestData>
-                { new ArgumentTestData
-                    {
-                       Name = nameof(StringPropertyArg)[..^3],
-                       Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyNamedArgsWithAliases>(nameof(StringPropertyArg)),
-                       HasDefault=true,
-                       DefaultValue = "xyz",
-                       ArgumentType = typeof(string),
-                       IsHidden = false
-                    }
-                }
-            };
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Aliases("x", "y", "zed")] string stringValue) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Aliases("x", "y", "zed")]
+            public string StringProperty { get; set; }
+        }
+
+        public class FromParameterWithOptionAttribute
+        {
+            public void DoSomething([Option(Aliases = new string[] { "x", "y", "zed" })] string stringValue) { }
+        }
+
+        public class FromPropertyWithOptionAttribute
+        {
+            [Option(Aliases = new string[] { "x", "y", "zed" })]
+            public string StringProperty { get; set; }
+        }
     }
 
 
-    public class MethodWithParameterOption : IHaveMethodTestData, IHaveTypeTestData
+
+
+    public class ArgumentWithSpecifiedName : ClassData
     {
-        public void DoSomething(string stringParam) { }
+        const string name = "Ron";
+        public ArgumentWithSpecifiedName()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              Name = name
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
 
-        public IEnumerable<CommandTestData> CommandDataFromMethods
-            => new List<CommandTestData>
-            {
-                new CommandTestData()
-                {
-                    Raw = ReflectionSupport.GetMethodInfo<MethodWithParameterOption>(nameof(DoSomething)),
-                    Name = nameof(DoSomething),
-                    IsHidden = false,
-                    Options = new List<OptionTestData>
-                    {
-                        new OptionTestData
-                        {
-                            Raw = ReflectionSupport.GetParameterInfo<MethodWithParameterOption>(nameof(DoSomething), "stringParam"),
-                            Name = "stringParam",
-                            IsHidden = false,
-                            Arguments = new List<ArgumentTestData>
-                            {
-                                new ArgumentTestData
-                                {
-                                    Raw =  ReflectionSupport.GetParameterInfo<MethodWithParameterOption>(nameof(DoSomething), "stringParam"),
-                                    Name = "stringParam",
-                                    ArgumentType = typeof(string),
-                                    IsHidden = false
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+        public class FromParameterName
+        {
+            public void DoSomething(string ronArg) { }
+        }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(MethodWithParameterOption),
-                Raw = typeof(MethodWithParameterOption),
-                IsHidden = false
-            };
+        public class FromPropertyName
+
+        {
+            public string RonArg { get; set; }
+
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+
+            public void DoSomething([Argument(Name = name)] string stringValue) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(Name = name)]
+            public string StringProperty { get; set; }
+        }
     }
 
-    public class TypeWithPropertyOption : IHaveTypeTestData
+    public class ArgumentWithDescription : ClassData
     {
-        public string StringProperty { get; set; }
+        const string desc = "This is a great description";
+        public ArgumentWithDescription()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              Description = desc
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithDescriptionAttribute)),
+                      new ForMethod(typeof(FromParameterWithDescriptionAttribute),nameof(FromParameterWithDescriptionAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                 })
+        { }
 
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithPropertyOption),
-                Raw = typeof(TypeWithPropertyOption),
-                IsHidden = false,
-                Options = new List<OptionTestData>
-                { new OptionTestData
-                    {
-                        Name = nameof(StringProperty),
-                        Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
-                        IsHidden = false,
-                        Arguments = new List<ArgumentTestData >
-                        { new ArgumentTestData
-                            {
-                               Name = nameof(StringProperty),
-                               Raw = ReflectionSupport.GetPropertyInfo<TypeWithPropertyOption>(nameof(StringProperty)),
-                               ArgumentType = typeof(string),
-                               IsHidden = false
-                            }
-                        }
-                    }
-                }
-            };
+        public class FromParameterWithDescriptionAttribute
+        {
+            
+            public void DoSomething([Description(desc)]string stringValueArg) { }
+        }
+
+        public class FromPropertyWithDescriptionAttribute
+        {
+            [Description(desc)]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+            
+            public void DoSomething([Command(Description = desc)]string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Command(Description = desc)]
+            public string StringPropertyArg { get; set; }
+        }
     }
 
-    public class TypeWithDerivedTypeCommands_B : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
+    public class ArgumentWithIsHidden : ClassData
     {
-        public new CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithDerivedTypeCommands_B),
-                Raw = typeof(TypeWithDerivedTypeCommands_B),
-            };
+        public ArgumentWithIsHidden()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              IsHidden = true
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      // TODO: Reenable these tests after BoolAttributes are complete
+                      //new ForType(typeof(FromPropertyWithAttribute)),
+                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttribute
+        {
+
+            public void DoSomething([Hidden] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttribute
+        {
+            [Hidden]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Hidden(Value = true)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Hidden(Value = true)]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+            public void DoSomething([Argument(IsHidden = true)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(IsHidden = true)]
+            public string StringPropertyArg { get; set; }
+        }
     }
-    public class TypeWithDerivedTypeCommands_C : TypeWithDerivedTypeCommands_A, IHaveTypeTestData
+
+    public class ArgumentWithRequired : ClassData
     {
-        public new CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithDerivedTypeCommands_C),
-                Raw = typeof(TypeWithDerivedTypeCommands_C),
-            };
+        public ArgumentWithRequired()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              Required = true
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      // TODO: Reenable these tests after BoolAttributes are complete
+                      //new ForType(typeof(FromPropertyWithAttribute)),
+                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttribute
+        {
+
+            public void DoSomething([Required] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttribute
+        {
+            [Required]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Required(Value = true)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Required(Value = true)]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+            public void DoSomething([Argument(Required = true)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(Required = true)]
+            public string StringPropertyArg { get; set; }
+        }
     }
-    public class TypeWithDerivedTypeCommands_A : IHaveTypeTestData
+
+    public class ArgumentWithNonStringArgumentType : ClassData
     {
-        public CommandTestData CommandDataFromType
-            => new CommandTestData()
-            {
-                Name = nameof(TypeWithDerivedTypeCommands_A),
-                Raw = typeof(TypeWithDerivedTypeCommands_A),
-                SubCommands = new List<CommandTestData>
-                {
-                    (new TypeWithDerivedTypeCommands_B() as IHaveTypeTestData).CommandDataFromType,
-                    (new TypeWithDerivedTypeCommands_C() as IHaveTypeTestData).CommandDataFromType
-                }
-            };
+        public ArgumentWithNonStringArgumentType()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              ArgumentType =  typeof(System.IO.FileInfo)
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromProperty)),
+                      new ForMethod(typeof(FromParameter),nameof(FromParameter.DoSomething )),
+                  })
+        { }
+
+        public class FromParameter
+        {
+            public void DoSomething(System.IO.FileInfo fileValueArg) { }
+        }
+
+        public class FromProperty
+        {
+            public System.IO.FileInfo filePropertyArg { get; set; }
+        }
+
+    }
+
+    public class ArgumentWithArity : ClassData
+    {
+        private const int min = 1;
+        private const int max = 5;
+
+        public ArgumentWithArity()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              ArityMin=min,
+                              ArityMax=max
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Arity(MinimumCount = min, MaximumCount = max)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Arity(MinimumCount = min, MaximumCount = max)]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+            public void DoSomething([Argument(MinimumValuesAllowed = min, MaximumValuesAllowed = max)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(MinimumValuesAllowed = min, MaximumValuesAllowed = max)]
+            public string StringPropertyArg { get; set; }
+        }
+    }
+
+    public class ArgumentWithDefaultValue : ClassData
+    {
+        private const string value = "Percy";
+        public ArgumentWithDefaultValue()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              DefaultValue=value
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Default(value)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Default(value)]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+
+            public void DoSomething([Argument(DefaultValue = value)] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(DefaultValue = value)]
+            public string StringPropertyArg { get; set; }
+        }
+    }
+
+    public class ArgumentWithOneAlias : ClassData
+    {
+        public ArgumentWithOneAlias()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+                              Aliases = new string[] { "x" }
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Aliases("x")] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Aliases("x")]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+            public void DoSomething([Argument(Aliases = new string[] { "x" })] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(Aliases = new string[] { "x" })]
+            public string StringPropertyArg { get; set; }
+        }
+    }
+
+    public class ArgumentWithMultipleAliases : ClassData
+    {
+        public ArgumentWithMultipleAliases()
+            : base(
+                  new CommandData
+                  {
+                      Arguments = new List<ArgumentData>
+                      {
+                          new ArgumentData
+                          {
+
+                              Aliases = new string[] { "x", "y", "zed" }
+                          }
+                      }
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyWithAttributeValue)),
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
+                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
+                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                  })
+        { }
+
+        public class FromParameterWithAttributeValue
+        {
+            public void DoSomething([Aliases("x", "y", "zed")] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithAttributeValue
+        {
+            [Aliases("x", "y", "zed")]
+            public string StringPropertyArg { get; set; }
+        }
+
+        public class FromParameterWithArgumentAttribute
+        {
+            public void DoSomething([Argument(Aliases = new string[] { "x", "y", "zed" })] string stringValueArg) { }
+        }
+
+        public class FromPropertyWithArgumentAttribute
+        {
+            [Argument(Aliases = new string[] { "x", "y", "zed" })]
+            public string StringPropertyArg { get; set; }
+        }
     }
 
 }

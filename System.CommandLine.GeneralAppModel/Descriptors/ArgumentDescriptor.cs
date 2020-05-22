@@ -9,6 +9,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
             : base(parentSymbolDescriptorBase, raw, SymbolType.Argument ) { }
 
         public ArityDescriptor Arity { get; set; }
+        //TODO: AllowedValues aren't supported in DescriptorMakerBase or tests
         public HashSet<string> AllowedValues { get; } = new HashSet<string>();
         // TODO: Consider how ArgumentType works when coming from JSON. 
         public Type ArgumentType { get; set; }

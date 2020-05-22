@@ -1,11 +1,12 @@
-﻿namespace System.CommandLine.ReflectionAppModel.Tests.Attributes
+﻿namespace System.CommandLine.ReflectionAppModel.Tests
 {
-    public   class NameAttribute
+    public   class NameAttribute : Attribute
     {
-        public NameAttribute()
+        public NameAttribute(string name)
         {
+            Name = name;
         }
 
-        public string Name { get; set; }
+        public string Name { get;  }
     }
 }
