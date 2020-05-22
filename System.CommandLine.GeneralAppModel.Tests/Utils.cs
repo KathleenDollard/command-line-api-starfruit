@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
-using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
@@ -27,10 +26,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return null;
         }
 
-        public static IEnumerable<MethodInfo> GetMethodsOnDeclaredType(this Type type)
-           => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-        public static void CheckRule<TRule>(this IRule rule, SymbolType symbolType)
+         public static void CheckRule<TRule>(this IRule rule, SymbolType symbolType)
             where TRule : IRule
         {
             rule.Should().BeOfType<TRule>();

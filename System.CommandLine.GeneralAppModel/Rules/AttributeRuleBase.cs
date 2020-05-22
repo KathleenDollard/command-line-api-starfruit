@@ -19,7 +19,8 @@ namespace System.CommandLine.GeneralAppModel.Rules
                                              IEnumerable<T> items,
                                              SymbolDescriptorBase parentSymbolDescriptor)
            => items
-                   .Where(item => SpecificSource.Tools.IsAttributeAMatch(AttributeName, symbolDescriptor, item,
-                                                                         parentSymbolDescriptor));
+                   .Where(item => SpecificSource.Tools
+                                        .IsAttributeAMatch(AttributeName, symbolDescriptor, item,
+                                                           parentSymbolDescriptor));
     }
 }

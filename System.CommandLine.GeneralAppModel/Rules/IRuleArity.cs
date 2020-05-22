@@ -7,6 +7,8 @@ namespace System.CommandLine.GeneralAppModel
         (uint MinimumCount, uint MaximumCount) GetArity(SymbolDescriptorBase symbolDescriptor,
                                                         IEnumerable<object> item,
                                                         SymbolDescriptorBase parentSymbolDescriptor);
+
+        interface IFoo { }
     }
 
 }

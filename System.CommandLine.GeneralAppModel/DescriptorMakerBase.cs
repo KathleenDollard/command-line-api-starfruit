@@ -52,7 +52,8 @@ namespace System.CommandLine.GeneralAppModel
                 switch (symbolType)
                 {
                     case SymbolType.Option:
-                        optionItems = Strategy.SelectSymbolRules.GetItems(SymbolType.Option, commandDescriptor, candidates);
+                        optionItems = Strategy.SelectSymbolRules
+                                        .GetItems(SymbolType.Option, commandDescriptor, candidates);
                         candidates = Remove(candidates, optionItems);
                         break;
                     case SymbolType.Command:
@@ -115,12 +116,17 @@ namespace System.CommandLine.GeneralAppModel
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var (success, value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
-            if (!success)
+            //var (success, value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
+            //if (!success)
+            var data = ruleSet.DefaultRules.GetFirstOrDefaultValue<Dictionary<string, object>>(descriptor, candidate, parentSymbolDescriptor);
+            if (data is null || !data.Any())
             {
                 return;
             }
-            descriptor.DefaultValue = new DefaultValueDescriptor(value);
+            if (data.TryGetValue("Value", out var value))// && data.TryGetValue("Value", out var value))
+            {
+                descriptor.DefaultValue = new DefaultValueDescriptor(value);
+            }
         }
 
         private void SetArityIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
@@ -146,7 +152,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
             descriptor.Arguments = new ArgumentDescriptor[] { GetArgument(candidate, descriptor) };
-            var ruleSet = Strategy.ArgumentRules;
+            var ruleSet = Strategy.OptionRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);

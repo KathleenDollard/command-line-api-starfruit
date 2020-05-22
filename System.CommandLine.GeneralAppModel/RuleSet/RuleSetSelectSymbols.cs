@@ -21,10 +21,21 @@ namespace System.CommandLine.GeneralAppModel
         {
             IEnumerable<IRuleGetCandidates> rules = Rules
                                 .OfType<IRuleGetCandidates>()
-                                .Where(x => x.SymbolType == symbolType);
+                                .Where(x => x.SymbolType == symbolType)
+                                .ToList();
             return rules                 
                     .SelectMany(r => r.GetCandidates(candidates, commandDescriptor))
+                    .Distinct(new CompareRaw())
                     .ToList();
+        }
+
+        private class CompareRaw : IEqualityComparer<Candidate>
+        {
+            public bool Equals(Candidate x, Candidate y) 
+                => x.Item == y.Item;
+
+            public int GetHashCode(Candidate obj) 
+                => obj.Item.GetHashCode();
         }
 
         public override string Report(int tabsCount)

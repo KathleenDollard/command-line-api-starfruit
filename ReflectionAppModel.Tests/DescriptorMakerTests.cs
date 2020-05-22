@@ -1,74 +1,101 @@
 ﻿using System.CommandLine.GeneralAppModel;
+using System.CommandLine.GeneralAppModel.Tests;
 using Xunit;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
+using System.Linq;
+using FluentAssertions;
+using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests
 {
 
-    public class DescriptorMakerTests
+    public class DescriptorTests
     {
 
-        private readonly Strategy strategy ;
+        private readonly Strategy strategy;
 
-        public DescriptorMakerTests()
+        private const string Method = "Method";
+        private const string Type = "Type";
+
+        public DescriptorTests()
         {
             strategy = new Strategy()
                             .SetReflectionRules()
                             .CandidateNamesToIgnore("CommandDataFromMethods", "CommandDataFromType");
         }
 
-        [Fact]
-        public void CanMakeSimplestCommandDescriptorFromMethodOnNamedModel() 
-            => Utils.TestFirstMethodOnType<SimpleTypeWithMethodNoAtributes>(strategy);
+        [Theory]
+        [ClassData(typeof(EmptyCommand))]
+        [ClassData(typeof(CommandWithDescription))]
+        [ClassData(typeof(CommandWithSpecifiedName))]
+        [ClassData(typeof(CommandWithTreatUnmatchedTokensAsErrors))]
+        [ClassData(typeof(CommandWithIsHidden))]
+        [ClassData(typeof(CommandWithOneAlias))]
+        [ClassData(typeof(CommandWithMultipleAliases))]
+        [ClassData(typeof(CommandWithOneArg))]
+        [ClassData(typeof(CommandWithOneOption))]
+        //[ClassData(typeof(CommandWithOneSubCommand))]
 
-        [Fact]
-        public void CanMakeSimplestCommandDescriptorFromTypeOnNamedModel()
-            => Utils.TestType<SimpleTypeNoAttributes>(strategy);
+        [ClassData(typeof(OptionWithSpecifiedName))]
+        [ClassData(typeof(OptionWithDescription))]
+        [ClassData(typeof(OptionWithIsHidden))]
+        [ClassData(typeof(OptionWithRequired))]
+        [ClassData(typeof(OptionWithOneAlias))]
+        [ClassData(typeof(OptionWithMultipleAliases))]
+        [ClassData(typeof(ArgumentWithSpecifiedName))]
+        [ClassData(typeof(ArgumentWithDescription))]
+        [ClassData(typeof(ArgumentWithIsHidden))]
+        [ClassData(typeof(ArgumentWithRequired))]
+        [ClassData(typeof(ArgumentWithNonStringArgumentType))]
+        [ClassData(typeof(ArgumentWithArity))]
+        [ClassData(typeof(ArgumentWithDefaultValue))]
+        [ClassData(typeof(ArgumentWithOneAlias))]
+        [ClassData(typeof(ArgumentWithMultipleAliases))]
+        public void CommandViaClassData(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            RunCommandTests(id, forSource, commandData);
+        }
 
-        [Fact]
-        public void CanGetCommandDescriptionFromMethodAttribute()
-           => Utils.TestFirstMethodOnType<SimpleTypeWithMethodWithDescriptionAttribute>(new Strategy().SetGeneralRules());
+        [Theory]
+        [ClassData(typeof(OptionWithSpecifiedName))]
+        public void CommandInProcess(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            RunCommandTests(id, forSource, commandData);
+        }
 
-        [Fact]
-        public void CanGetCommandDescriptionFromTypeAttribute()
-            => Utils.TestType<SimpleTypeWithDescriptionAttribute>(strategy);
+        [Theory]
+        [ClassData(typeof(CommandWithOneSubCommand), Skip ="Need ComplexType parameter evaluation")]
+        public void CommandViaClassDataBrokenTests(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            RunCommandTests(id, forSource, commandData);
+        }
 
-        [Fact]
-        public void CanGetArgumentFromNamedMethodParam()
-           => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgs>(strategy);
+        /// <summary>
+        /// The Visual Studio test runner groups xUnit ClassData tests as one test. This is
+        /// a pain when doing new tests. So I created the ability to group tests for no reason other
+        /// than to make VS Test Runner use easier. Yeah, I know.
+        /// </summary>
+        /// <param name="forSource"></param>
+        /// <param name="commandData"></param>
+        private void RunCommandTests(string id, ClassData.For forSource, ClassData.CommandData commandData)
+        {
+            var actual = forSource switch
+            {
+                ClassData.ForMethod _ => ReflectionDescriptorMaker.RootCommandDescriptor(strategy, forSource.Type.GetMethodsOnDeclaredType().First()),
+                ClassData.ForType t => ReflectionDescriptorMaker.RootCommandDescriptor(strategy, t.Type),
+                _ => throw new InvalidOperationException("Unexpected data source for test")
+            };
 
+            var altName = forSource switch
+            {
+                ClassData.ForMethod m => m.MethodName,
+                ClassData.ForType t => t.Type.Name,
+                _ => "<Invalid Name>"
+            };
 
-        [Fact]
-        public void CanGetArgumentWithArityFromNamedMethodParam()
-           => Utils.TestFirstMethodOnType<MethodWithParameterNamedArgsWithArity>(strategy);
-
-        [Fact]
-        public void CanGetArgumentFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgs>(strategy);
-
-        [Fact]
-        public void CanGetArgumentWithArityFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgsWithArity>(strategy);
-
-        [Fact]
-        public void CanGetArgumentWithDefaultFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgsWithDefault>(strategy);
-
-        [Fact]
-        public void CanGetCommandWithAliasesFromNamedProperty()
-            => Utils.TestType<TypeWithPropertyNamedArgsWithAliases>(strategy);
-
-        [Fact]
-        public void CanGetOptionFromMethodParam()
-            => Utils.TestFirstMethodOnType<MethodWithParameterOption>(strategy);
-
-        [Fact]
-        public void CanGetOptionFromPropertyProperty()
-            => Utils.TestType<TypeWithPropertyOption>(strategy);
-
-        [Fact]
-        public void CanGetSubCommandFromInheritedType()
-        => Utils.TestType<TypeWithDerivedTypeCommands_A>(strategy);
+            actual.Should().BeSameAs(commandData.WithAltName(altName).WithId(id));
+        }
 
     }
 }

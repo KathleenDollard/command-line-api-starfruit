@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel;
+﻿using System.CommandLine.GeneralAppModel;
 using A = System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.MissingPropertyNotBlockingOtherAttributes;
-using System.Text;
 using Xunit;
 using FluentAssertions;
 

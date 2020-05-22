@@ -9,11 +9,21 @@ namespace System.CommandLine.GeneralAppModel
     /// By implication this only works if the attribute's default is false, and it is never logical to use the 
     /// attribute to clarify the default. Otherwise, use NamedAttributeWithPropertyRule
     /// </summary>
-    public class NamedAttributeRule : AttributeRuleBase
+    public class NamedAttributeRule : AttributeRuleBase, IRuleGetCandidates
     {
         public NamedAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, symbolType)
         { }
+
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates,
+                                                    SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            return candidates
+                             .Where(x => x.Traits
+                                         .Where(x => SpecificSource.Tools
+                                                         .DoesAttributeMatch(AttributeName, x))
+                                         .Any());
+        }
 
         public virtual (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                  IEnumerable<object> items,

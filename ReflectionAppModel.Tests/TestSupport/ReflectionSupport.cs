@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
@@ -22,6 +23,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                     .GetParameters()
                     .Where(p => p.Name == parameterName)
                     .FirstOrDefault();
+
+        public static IEnumerable<MethodInfo> GetMethodsOnDeclaredType(this Type type)
+            => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
 
     }
 }

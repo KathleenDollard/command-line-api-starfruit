@@ -49,6 +49,10 @@ namespace System.CommandLine.GeneralAppModel
                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
+
+            // A frequent trouble spot for strategies is that their rules don't match OfType in the following line. 
+            // This can be because they inadvertently have the wrong T, or they don't support IRuleGetValue.
+            // Strong typing in strategies is planned to reduce this issue.
             var valueRules = Rules.OfType<IRuleGetValue<T>>().ToList();
             foreach (var rule in valueRules)
             {
@@ -61,13 +65,13 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
-        public virtual IEnumerable<T> GetAllValues<T>(SymbolDescriptorBase symbolDescriptor,
+        public virtual IEnumerable<TValue> GetAllValues<TValue>(SymbolDescriptorBase symbolDescriptor,
                                             Candidate candidate,
                                             SymbolDescriptorBase parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
-            var valueRules = Rules.OfType<IRuleGetValues<T>>().ToList();
-            var values = new List<T>();
+            var valueRules = Rules.OfType<IRuleGetValues<TValue>>().ToList();
+            var values = new List<TValue>();
             foreach (var rule in valueRules)
             {
                 values.AddRange(rule.GetAllValues(symbolDescriptor, traits, parentSymbolDescriptor));

@@ -93,6 +93,10 @@ namespace System.CommandLine.ReflectionAppModel
                 return new List<T>();
             }
             var raw = property.GetValue(attribute);
+            if (raw is null)
+            {
+                return new List<T>();
+            }
             if (typeof(T).IsAssignableFrom(property.PropertyType))
             {
                 return new T[] { Conversions.To<T>(raw) };
@@ -101,7 +105,7 @@ namespace System.CommandLine.ReflectionAppModel
             {
                 return x.Select(xx => Conversions.To<T>(xx));
             }
-            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && raw is IEnumerable y)
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && raw is IEnumerable<T> y )
             {
                 var list = new List<T>();
                 foreach (var item in y)

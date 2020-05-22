@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.CommandLine.ReflectionAppModel.Tests
+﻿namespace System.CommandLine.ReflectionAppModel.Tests
 {
-    public class TreatUnmatchedTokensAsErrorsAttribute : Attribute 
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Struct)]
+    public class TreatUnmatchedTokensAsErrorsAttribute : Attribute
     {
-        public TreatUnmatchedTokensAsErrorsAttribute(bool value)
+        public TreatUnmatchedTokensAsErrorsAttribute()
         {
-            Value = value;
+            Value = true;
         }
 
-        public bool Value { get; }
+        public bool Value { get; set; }
     }
 }

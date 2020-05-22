@@ -1,13 +1,13 @@
 ﻿namespace System.CommandLine.ReflectionAppModel.Tests
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
-    public class DefaultAttribute : Attribute
+    public class RequiredAttribute : Attribute 
     {
-        public DefaultAttribute(string value)
+        public RequiredAttribute()
         {
-            Value = value;
+            Value = true;
         }
 
-        public string Value { get; }
+        public bool Value { get; set; }
     }
 }
