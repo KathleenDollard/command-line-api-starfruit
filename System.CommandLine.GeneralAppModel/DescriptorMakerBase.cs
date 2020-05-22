@@ -152,7 +152,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
             descriptor.Arguments = new ArgumentDescriptor[] { GetArgument(candidate, descriptor) };
-            var ruleSet = Strategy.ArgumentRules;
+            var ruleSet = Strategy.OptionRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             //descriptor.Arity = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             //descriptor.DefaultValue = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);

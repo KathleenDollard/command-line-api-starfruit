@@ -1,5 +1,6 @@
 ﻿namespace System.CommandLine.ReflectionAppModel.Tests
 {
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class ArgumentAttribute : Attribute
     {
         private int minimumCount;
@@ -19,39 +20,36 @@
 
         public bool IsAritySet { get; private set; }
 
-        public int MinimumValuesAllowed
-        {
-            get => minimumCount;
-            set
-            {
-                IsAritySet = true;
-                minimumCount = value;
-            }
-        }
-        public int MaximumValuesAllowed
-        {
-            get => maximumCount;
-            set
-            {
-                IsAritySet = true;
-                maximumCount = value;
-            }
-        }
+        //public int MinimumValuesAllowed
+        //{
+        //    get => minimumCount;
+        //    set
+        //    {
+        //        IsAritySet = true;
+        //        minimumCount = value;
+        //    }
+        //}
+        //public int MaximumValuesAllowed
+        //{
+        //    get => maximumCount;
+        //    set
+        //    {
+        //        IsAritySet = true;
+        //        maximumCount = value;
+        //    }
+        //}
 
-        public bool IsDefaultSet { get; private set; }
+        //public bool IsDefaultSet { get; private set; }
 
-        public object DefaultValue
-        {
-            get => defaultValue;
-            set
-            {
-                IsDefaultSet = true;
-                defaultValue = value;
-            }
-        }
-        //public ArityDescriptor Arity { get; set; }
-        //public HashSet<string> AllowedValues { get; } = new HashSet<string>();
-        //// TODO: Consider how ArgumentType works when coming from JSON. 
-        //public DefaultValueDescriptor DefaultValue { get; set; }
+        //public object DefaultValue
+        //{
+        //    get => defaultValue;
+        //    set
+        //    {
+        //        IsDefaultSet = true;
+        //        defaultValue = value;
+        //    }
+        //}
+ 
     }
 }

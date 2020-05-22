@@ -58,7 +58,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         }
 
         [Theory]
-        [ClassData(typeof(ArgumentWithMultipleAliases))]
+        [ClassData(typeof(OptionWithSpecifiedName))]
         public void CommandInProcess(string id, ClassData.For forSource, ClassData.CommandData commandData)
         {
             RunCommandTests(id, forSource, commandData);

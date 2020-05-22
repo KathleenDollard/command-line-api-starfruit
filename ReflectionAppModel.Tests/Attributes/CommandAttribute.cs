@@ -2,6 +2,7 @@
 
 namespace System.CommandLine.ReflectionAppModel.Tests
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Struct)]
     public class CommandAttribute : Attribute
     {
         public CommandAttribute()

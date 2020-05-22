@@ -1,5 +1,6 @@
 ﻿namespace System.CommandLine.ReflectionAppModel.Tests
 {
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class ArityAttribute : Attribute
     {
         private int minimumCount;

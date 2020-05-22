@@ -481,7 +481,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
         public class FromParameterWithDescriptionAttribute
         {
             
-            public void DoSomething([Description(desc)]string stringValue) { }
+            public void DoSomething([Description(desc)]string stringValue) {  }
         }
 
         public class FromPropertyWithDescriptionAttribute
@@ -492,8 +492,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         public class FromParameterWithOptionAttribute
         {
-            [Option(Description = desc)]
-            public void DoSomething(string stringValue) { }
+            
+            public void DoSomething([Option(Description = desc)]string stringValue) { }
         }
 
         public class FromPropertyWithOptionAttribute
@@ -809,12 +809,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
         public class FromParameterWithArgumentAttribute
         {
             
-            public void DoSomething([Command(Description = desc)]string stringValueArg) { }
+            public void DoSomething([Argument(Description = desc)]string stringValueArg) { }
         }
 
         public class FromPropertyWithArgumentAttribute
         {
-            [Command(Description = desc)]
+            [Argument(Description = desc)]
             public string StringPropertyArg { get; set; }
         }
     }
@@ -995,9 +995,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   new For[]
                   {
                       new ForType(typeof(FromPropertyWithAttributeValue)),
-                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
-                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
-                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething ))
                   })
         { }
 
@@ -1012,16 +1010,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             public string StringPropertyArg { get; set; }
         }
 
-        public class FromParameterWithArgumentAttribute
-        {
-            public void DoSomething([Argument(MinimumValuesAllowed = min, MaximumValuesAllowed = max)] string stringValueArg) { }
-        }
-
-        public class FromPropertyWithArgumentAttribute
-        {
-            [Argument(MinimumValuesAllowed = min, MaximumValuesAllowed = max)]
-            public string StringPropertyArg { get; set; }
-        }
+  
     }
 
     public class ArgumentWithDefaultValue : ClassData
@@ -1042,9 +1031,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   new For[]
                   {
                       new ForType(typeof(FromPropertyWithAttributeValue)),
-                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
-                      new ForType(typeof(FromPropertyWithArgumentAttribute)),
-                      new ForMethod(typeof(FromParameterWithArgumentAttribute),nameof(FromParameterWithArgumentAttribute.DoSomething ))
+                      new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething ))
                   })
         { }
 
@@ -1056,18 +1043,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
         public class FromPropertyWithAttributeValue
         {
             [Default(value)]
-            public string StringPropertyArg { get; set; }
-        }
-
-        public class FromParameterWithArgumentAttribute
-        {
-
-            public void DoSomething([Argument(DefaultValue = value)] string stringValueArg) { }
-        }
-
-        public class FromPropertyWithArgumentAttribute
-        {
-            [Argument(DefaultValue = value)]
             public string StringPropertyArg { get; set; }
         }
     }

@@ -67,14 +67,32 @@ namespace System.CommandLine.GeneralAppModel.Tests
             CheckType<TDescriptor>(actual);
             CheckIfNotNullWrapper(expected.AliasesWrapper, expectedValue => HaveAliases(symbolType, expectedValue, actual.Aliases));
 
-            //CheckWithNullCheck(expected.NameWrapper, expectedValue => HaveName(symbolType, expectedValue, actual.Name), () => HaveName(symbolType, expected.AltName, actual.Name));
-            CheckIfNotNullWrapper(expected.NameWrapper, expectedValue => AreSame(symbolType, "Name", expectedValue.ToUpperInvariant(), actual.Name.ToUpperInvariant()));
+
+            CheckName(symbolType, expected, actual);
 
             CheckValueOrDefault(expected.DescriptionWrapper, expectedValue => AreSame(symbolType, "Description", expectedValue, actual.Description));
             CheckValueOrDefault(expected.IsHiddenWrapper, expectedValue => AreSame(symbolType, "IsHidden", expectedValue, actual.IsHidden));
             CheckIfNotNullWrapper(expected.RawWrapper, expectedValue => AreSame(symbolType, "Raw type", expectedValue.GetType(), actual.Raw.GetType()));
             AreSame(symbolType, "SymbolType", symbolType, actual.SymbolType);
         }
+
+        private void CheckName(SymbolType symbolType, SymbolData expected, SymbolDescriptorBase actual)
+        {
+    
+            CheckIfNotNullWrapper(expected.NameWrapper, expectedValue =>
+                {
+                    if (actual.Name is null)
+                    {
+                        // If the parent symbol is null, then this is the root and all is well 
+                        Execute.Assertion
+                                        .ForCondition((actual.ParentSymbolDescriptorBase is null))
+                                        .FailWith($@"Name cannot be null for {symbolType}");
+                        return;
+                    }
+                    AreSame(symbolType, "Name", expectedValue.ToUpperInvariant(), actual.Name.ToUpperInvariant());
+                });
+        }
+
 
         private void CheckValueOrDefault<T>(Wrapper<T> wrapper, Action<T> check)
         {
@@ -130,13 +148,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public AndConstraint<CommandDescriptorAssertions> HaveName(SymbolType symbol, string expected, string actual)
-        {
-            Execute.Assertion
-                  .ForCondition(actual == expected)
-                  .FailWith($@"Expected Name for {symbol} to be {DisplayString(expected)}, but found {DisplayString(actual)}");
-            return new AndConstraint<CommandDescriptorAssertions>(this);
-        }
+        //public AndConstraint<CommandDescriptorAssertions> HaveName(SymbolType symbol, string expected, string actual)
+        //{
+        //    Execute.Assertion
+        //          .ForCondition(actual == expected)
+        //          .FailWith($@"Expected Name for {symbol} to be {DisplayString(expected)}, but found {DisplayString(actual)}");
+        //    return new AndConstraint<CommandDescriptorAssertions>(this);
+        //}
 
         //public AndConstraint<CommandDescriptorAssertions> HaveDescription(SymbolType symbol, string description)
         //{
@@ -264,7 +282,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             Execute.Assertion
                  .ForCondition(Equals(expected, actual))
-                 .FailWith($@"Expected {valueName} for {symbol} to be {expected}, but found {actual}");
+                 .FailWith($@"Expected {valueName} for {symbol} to be {DisplayString(expected)}, but found {DisplayString(actual)}");
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
@@ -300,7 +318,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                                 : expectedArgument.HasDefaultWrapper.Value;
             Execute.Assertion
                 .ForCondition(expectDefault != (actual is null))
-                .FailWith(expectDefault 
+                .FailWith(expectDefault
                             ? $@"Expected a Default for {symbol}, but one was not found"
                             : $@"No Default was expected for {symbol}, but one was found");
             if (expectDefault)
@@ -315,43 +333,15 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        //public AndConstraint<CommandDescriptorAssertions> CheckArguments(IEnumerable<ArgumentData> expected, IEnumerable<ArgumentDescriptor > actual)
-        //{
-        //    Execute.Assertion
-        //         .ForCondition(actual.Count() == expected.Count())
-        //         .FailWith($@"Expected Arguments to have count  {expected.Count()}, but found count {actual.Count()} items");
-        //    return new AndConstraint<CommandDescriptorAssertions>(this);
-        //}
-
-        //public AndConstraint<CommandDescriptorAssertions> CheckSubCommands(IEnumerable<CommandData> expected, IEnumerable<CommandDescriptor> actual)
-        //{
-        //    Execute.Assertion
-        //         .ForCondition(actual.Count() == expected.Count())
-        //         .FailWith($@"Expected SubCommands to have count  {expected.Count()}, but found count {actual.Count()} items");
-        //    return new AndConstraint<CommandDescriptorAssertions>(this);
-        //}
-
-        //public AndConstraint<CommandDescriptorAssertions> HaveEmptyArguments()
-        //{
-        //    Execute.Assertion
-        //         .ForCondition(!Subject.Arguments.Any())
-        //         .FailWith($@"Expected Arguments to be empty, but found {Subject.Arguments.Count()} items");
-        //    return new AndConstraint<CommandDescriptorAssertions>(this);
-        //}
-
-        //public AndConstraint<CommandDescriptorAssertions> HaveEmptySubCommands()
-        //{
-        //    Execute.Assertion
-        //         .ForCondition(!Subject.SubCommands.Any())
-        //         .FailWith($@"Expected SubCommands to be empty, but found {Subject.SubCommands.Count()} items");
-        //    return new AndConstraint<CommandDescriptorAssertions>(this);
-        //}
-
-        public string DisplayString(string input)
+        public string DisplayString<T>(T input)
         {
-            return input is null
-                    ? "<null>"
-                    : $@"""{input}""";
+            return input switch
+            {
+                null => "<null>",
+                string s => $@"""{s}""",
+                _ => input.ToString()
+            };
+
         }
     }
 }
