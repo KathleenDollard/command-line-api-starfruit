@@ -64,7 +64,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         }
 
         [Theory]
-        [ClassData(typeof(OptionWithSpecifiedName))]
+        [ClassData(typeof(CommandWithIsHidden))]
         public void CommandInProcess(string id, ClassData.For forSource, ClassData.CommandData commandData)
         {
             RunCommandTests(id, forSource, commandData);
