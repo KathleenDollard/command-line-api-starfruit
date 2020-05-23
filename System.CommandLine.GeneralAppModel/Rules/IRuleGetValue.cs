@@ -14,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel
     {
 
         IEnumerable<T> GetAllValues(SymbolDescriptorBase symbolDescriptor,
-                                    IEnumerable<object> item,
+                                    IEnumerable<object> traits,
                                     SymbolDescriptorBase parentSymbolDescriptor);
     }
 

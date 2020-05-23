@@ -305,8 +305,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
                        ? 0
                        : expectedArgument.ArityMaxWrapper.Value;
                 Execute.Assertion
-                    .ForCondition(actual.MinimumNumberOfValues == min && actual.MaximumNumberOfValues == max)
-                    .FailWith($@"Expected Arity for {symbol} to be {min} to {max}, but found {actual.MinimumNumberOfValues} to {actual.MaximumNumberOfValues}");
+                    .ForCondition(actual.MinimumCount == min && actual.MaximumCount == max)
+                    .FailWith($@"Expected Arity for {symbol} to be {min} to {max}, but found {actual.MinimumCount} to {actual.MaximumCount}");
             }
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace System.CommandLine.GeneralAppModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
     /// <summary>
     /// This class exists to give a better name for the StringContentsRule

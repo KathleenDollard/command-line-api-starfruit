@@ -1138,6 +1138,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
     }
 
 
+
     public class OptionWithOneArgument: ClassData
     {
         public OptionWithOneArgument()

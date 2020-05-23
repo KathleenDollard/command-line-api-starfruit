@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using System.CommandLine.GeneralAppModel.Rules;
-using System.Data;
-using System.Threading;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -36,10 +33,10 @@ namespace System.CommandLine.GeneralAppModel
         public static RuleSetSelectSymbols SetStandardSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
             rules.Rules
-               .Add(new NamedAttributeRule("Command", SymbolType.Command))
+               .Add(new AttributeRule("Command", SymbolType.Command))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command", SymbolType.Command))
                .Add(new IsOfTypeRule<Type>(SymbolType.Command))
-               .Add(new NamedAttributeRule("Argument", SymbolType.Argument))
+               .Add(new AttributeRule("Argument", SymbolType.Argument))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg", SymbolType.Argument))
                .Add(new RemainingSymbolRule(SymbolType.Option))
