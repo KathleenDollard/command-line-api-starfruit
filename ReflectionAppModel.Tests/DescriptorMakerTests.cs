@@ -52,6 +52,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         [ClassData(typeof(ArgumentWithDefaultValue))]
         [ClassData(typeof(ArgumentWithOneAlias))]
         [ClassData(typeof(ArgumentWithMultipleAliases))]
+        [ClassData(typeof(OptionWithOneArgument))]
+        [ClassData(typeof(OptionArgumentWithSpecifiedName))]
+        [ClassData(typeof(OptionArgumentWithDescription))]
+        [ClassData(typeof(OptionArgumentWithIsHidden))]
+        [ClassData(typeof(OptionArgumentWithRequired))]
+        [ClassData(typeof(OptionArgumentWithNonStringArgumentType))]
         public void CommandViaClassData(string id, ClassData.For forSource, ClassData.CommandData commandData)
         {
             RunCommandTests(id, forSource, commandData);

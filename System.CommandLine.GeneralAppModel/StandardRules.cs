@@ -140,6 +140,8 @@ namespace System.CommandLine.GeneralAppModel
             rules.DescriptionRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Option", "ArgumentDescription", SymbolType.Argument))
                 ;
+
+            // The name is used for help
             rules.NameRules
                 .Add(new NamedAttributeWithPropertyRule<string>("Option", "ArgumentName", SymbolType.Argument))
                 ;
@@ -148,11 +150,33 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NamedAttributeWithPropertyRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
             ;
 
-            //rules.ArityRule
-            //    .Add(new ComplexAttributeRule<ArityDescriptor>(
-            //               "Arity", new string[] { "MinArgCount", "MaxArgCount" }));
-            // ;
+            rules.RequiredRules
+                .Add(new NamedAttributeWithPropertyRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
+            ;
 
+            rules.DefaultRules
+                .Add(new OptionalValueAttributeRule<object>("Default", "Value"))
+                ;
+ 
+            // Never hidden, no aliases
+
+            rules.ArityRules
+                .Add(new ComplexAttributeRule("Arity")
+                {
+                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                    {
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName,propertyName: "MinCount", propertyType: typeof(int)),
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName,propertyName: "MaxCount", propertyType: typeof(int))
+                    }
+                })
+                .Add(new ComplexAttributeRule("Arity")
+                {
+                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                    {
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName, propertyName: "MinimumCount", propertyType: typeof(int)),
+                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName, propertyName: "MaximumCount", propertyType: typeof(int))
+                    }
+                });
             return rules;
         }
 

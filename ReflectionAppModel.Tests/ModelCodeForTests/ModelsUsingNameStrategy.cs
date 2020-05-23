@@ -480,8 +480,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         public class FromParameterWithDescriptionAttribute
         {
-            
-            public void DoSomething([Description(desc)]string stringValue) {  }
+
+            public void DoSomething([Description(desc)] string stringValue) { }
         }
 
         public class FromPropertyWithDescriptionAttribute
@@ -492,8 +492,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         public class FromParameterWithOptionAttribute
         {
-            
-            public void DoSomething([Option(Description = desc)]string stringValue) { }
+
+            public void DoSomething([Option(Description = desc)] string stringValue) { }
         }
 
         public class FromPropertyWithOptionAttribute
@@ -624,7 +624,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             public string StringProperty { get; set; }
         }
     }
-   
+
     public class OptionWithOneAlias : ClassData
     {
         public OptionWithOneAlias()
@@ -796,8 +796,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         public class FromParameterWithDescriptionAttribute
         {
-            
-            public void DoSomething([Description(desc)]string stringValueArg) { }
+
+            public void DoSomething([Description(desc)] string stringValueArg) { }
         }
 
         public class FromPropertyWithDescriptionAttribute
@@ -808,8 +808,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         public class FromParameterWithArgumentAttribute
         {
-            
-            public void DoSomething([Argument(Description = desc)]string stringValueArg) { }
+
+            public void DoSomething([Argument(Description = desc)] string stringValueArg) { }
         }
 
         public class FromPropertyWithArgumentAttribute
@@ -1010,7 +1010,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             public string StringPropertyArg { get; set; }
         }
 
-  
+
     }
 
     public class ArgumentWithDefaultValue : ClassData
@@ -1138,6 +1138,248 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             [Argument(Aliases = new string[] { "x", "y", "zed" })]
             public string StringPropertyArg { get; set; }
         }
+    }
+
+
+    public class OptionWithOneArgument: ClassData
+    {
+        public OptionWithOneArgument()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Arguments = new List<ArgumentData>
+                              {
+                                  new ArgumentData
+                                  {
+                                  }
+                              }
+                          }
+                      }
+
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                  })
+        { }
+
+        public class FromParameterName
+        {
+            public void DoSomething( string stringOption) { }
+        }
+
+        public class FromPropertyName
+        {
+            public string StringOption { get; set; }
+        }
+    }
+
+    public class OptionArgumentWithSpecifiedName : ClassData
+    {
+        const string name = "Bill";
+        public OptionArgumentWithSpecifiedName()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Arguments = new List<ArgumentData>
+                              {
+                                  new ArgumentData
+                                  {
+                                      Name = name
+                                  }
+                              }
+                          }
+                      }
+
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                  })
+        { }
+
+        public class FromParameterName
+        {
+            public void DoSomething([Option(ArgumentName=name)]string stringOption) { }
+        }
+
+        public class FromPropertyName
+        {
+            [Option(ArgumentName = name)]
+            public string StringOption { get; set; }
+        }
+
+    }
+
+    public class OptionArgumentWithDescription : ClassData
+    {
+        const string desc = "This is a great description";
+        public OptionArgumentWithDescription()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Arguments = new List<ArgumentData>
+                              {
+                                  new ArgumentData
+                                  {
+                                      Description = desc
+                                  }
+                              }
+                          }
+                      }
+
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                  })
+        { }
+
+        public class FromParameterName
+        {
+            public void DoSomething([Option(ArgumentDescription = desc)] string stringOption) { }
+        }
+
+        public class FromPropertyName
+        {
+            [Option(ArgumentDescription = desc)]
+            public string StringOption { get; set; }
+        }
+    }
+
+    public class OptionArgumentWithIsHidden : ClassData
+    {
+        public OptionArgumentWithIsHidden()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Arguments = new List<ArgumentData>
+                              {
+                                  new ArgumentData
+                                  {
+                                      IsHidden = true
+                                  }
+                              }
+                          }
+                      }
+
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                  })
+        { }
+
+        public class FromParameterName
+        {
+            public void DoSomething([Option(ArgumentIsHidden = true)] string stringOption) { }
+        }
+
+        public class FromPropertyName
+        {
+            [Option(ArgumentIsHidden = true)]
+            public string StringOption { get; set; }
+        }
+    }
+
+    public class OptionArgumentWithRequired : ClassData
+    {
+        public OptionArgumentWithRequired()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Arguments = new List<ArgumentData>
+                              {
+                                  new ArgumentData
+                                  {
+                                      Required = true
+                                  }
+                              }
+                          }
+                      }
+
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                  })
+        { }
+
+        public class FromParameterName
+        {
+            public void DoSomething([Option(ArgumentRequired = true)] string stringOption) { }
+        }
+
+        public class FromPropertyName
+        {
+            [Option(ArgumentRequired = true)]
+            public string StringOption { get; set; }
+        }
+    }
+
+    public class OptionArgumentWithNonStringArgumentType : ClassData
+    {
+          public OptionArgumentWithNonStringArgumentType()
+            : base(
+                  new CommandData
+                  {
+                      Options = new List<OptionData>
+                      {
+                          new OptionData
+                          {
+                              Arguments = new List<ArgumentData>
+                              {
+                                  new ArgumentData
+                                  {
+                                      ArgumentType = typeof(int)
+                                  }
+                              }
+                          }
+                      }
+
+                  },
+                  new For[]
+                  {
+                      new ForType(typeof(FromPropertyName)),
+                      new ForMethod(typeof(FromParameterName),nameof(FromParameterName.DoSomething )),
+                  })
+        { }
+
+        public class FromParameterName
+        {
+            public void DoSomething(int intOption) { }
+        }
+
+        public class FromPropertyName
+        {
+            public string IntOption { get; set; }
+        }
+
     }
 
 }
