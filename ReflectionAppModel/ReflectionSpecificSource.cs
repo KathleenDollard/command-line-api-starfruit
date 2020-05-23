@@ -164,6 +164,7 @@ namespace System.CommandLine.ReflectionAppModel
 
             var attributeType = attribute.GetType();
             var pairs = attributeType.GetProperties()
+                                .Where(prop => prop.Name != "TypeId")
                                 .Select(prop => new { prop.Name, Value = prop.GetValue(trait) });
             return pairs.Select(pair => (pair.Name, (TValue)pair.Value));
         }

@@ -12,8 +12,8 @@ namespace System.CommandLine.ReflectionAppModel
         {
             var strategy = new Strategy();
             strategy.CommandRules.DescriptionRules
-                .Add(new NamedAttributeWithPropertyRule<string>("Command", "Description", SymbolType.Command))
-                .Add(new NamedAttributeWithPropertyRule<string>("Description", "Description"))
+                .Add(new AttributeWithPropertyRule<string>("Command", "Description", SymbolType.Command))
+                .Add(new AttributeWithPropertyRule<string>("Description", "Description"))
                 ;
             var actual = ReflectionDescriptorMaker
                 .RootCommandDescriptor(strategy, typeof(A.SpecialScenarioModels));

@@ -23,17 +23,16 @@ namespace System.CommandLine.GeneralAppModel
                   SymbolDescriptorBase symbolDescriptor, IEnumerable<object> traits, SymbolDescriptorBase parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
-            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor)
-                                             .ToList();
+            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
             var complexValues = matchingTraits.SelectMany(trait =>
                     tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor)
-                            .Where(keyPair => PropertyNamesAndTypes.Any(nameAndType => nameAndType.PropertyName == keyPair.key ))
+                            .Where(keyPair => PropertyNamesAndTypes.Any(nameAndType => nameAndType.PropertyName == keyPair.key))
                     );
 
             return complexValues.Any()
                 ? (true, complexValues.ToDictionary(pair => pair.key, pair => pair.value))
                 : (false, new Dictionary<string, object>());
-;
+            ;
         }
 
         public override string RuleDescription<TIRuleSet>()
