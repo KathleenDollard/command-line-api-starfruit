@@ -110,8 +110,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
             {
                 arg.Arity = new ArityDescriptor
                 {
-                    MinimumNumberOfValues = data.MinArityValues,
-                    MaximumNumberOfValues = data.MaxArityValues
+                    MinimumCount = data.MinArityValues,
+                    MaximumCount = data.MaxArityValues
                 };
             }
             if (data.HasDefault)

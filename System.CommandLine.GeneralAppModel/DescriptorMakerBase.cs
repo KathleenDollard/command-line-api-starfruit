@@ -84,7 +84,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
-            => GetCommand(SpecificSource.Tools.GetCandidate(DataSource), parentSymbolDescriptor);
+            => GetCommand(SpecificSource.Tools.CreateCandidate(DataSource), parentSymbolDescriptor);
 
         protected CommandDescriptor GetCommand(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
@@ -139,11 +139,11 @@ namespace System.CommandLine.GeneralAppModel
             var arity = new ArityDescriptor();
             if (data.TryGetValue(ArityDescriptor.MinimumCountName, out var objMinCount))
             {
-                arity.MinimumNumberOfValues = Conversions.To<int>(objMinCount);
+                arity.MinimumCount = Conversions.To<int>(objMinCount);
             }
             if (data.TryGetValue(ArityDescriptor.MaximumCountName, out var objMaxCount))
             {
-                arity.MaximumNumberOfValues = Conversions.To<int>(objMaxCount);
+                arity.MaximumCount = Conversions.To<int>(objMaxCount);
             }
             descriptor.Arity = arity;
         }

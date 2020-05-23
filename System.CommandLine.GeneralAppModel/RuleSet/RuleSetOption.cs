@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace System.CommandLine.GeneralAppModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
     public class RuleSetOption : RuleSetSymbol, IRuleSetOption
     {

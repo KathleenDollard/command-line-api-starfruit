@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel.Rules
+namespace System.CommandLine.GeneralAppModel
 {
     public abstract class IsOfTypeRule : RuleBase
     {

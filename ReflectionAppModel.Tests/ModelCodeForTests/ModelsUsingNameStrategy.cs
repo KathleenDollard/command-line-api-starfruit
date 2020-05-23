@@ -154,9 +154,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   },
                   new For[]
                   {
-                      // TODO: Reenable these tests after BoolAttributes are complete
-                      //new ForType(typeof(FromTypeWithAttribute)),
-                      //new ForMethod(typeof(FromMethodWithAttribute),nameof(FromMethodWithAttribute.DoSomething )),
+                      new ForType(typeof(FromTypeWithAttribute)),
+                      new ForMethod(typeof(FromMethodWithAttribute),nameof(FromMethodWithAttribute.DoSomething )),
                       new ForType(typeof(FromTypeWithAttributeValue)),
                       new ForMethod(typeof(FromMethodWithAttributeValue),nameof(FromMethodWithAttributeValue.DoSomething )),
                       new ForType(typeof(FromTypeWithCommandAttribute)),
@@ -190,6 +189,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         [Command(IsHidden = true)]
         public class FromTypeWithCommandAttribute { }
+
+  
     }
 
     public class CommandWithOneAlias : ClassData
@@ -519,9 +520,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   },
                   new For[]
                   {
-                      // TODO: Reenable these tests after BoolAttributes are complete
-                      //new ForType(typeof(FromPropertyWithAttribute)),
-                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttribute)),
+                      new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
                       new ForType(typeof(FromPropertyWithAttributeValue)),
                       new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
                       new ForType(typeof(FromPropertyWithOptionAttribute)),
@@ -580,9 +580,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   },
                   new For[]
                   {
-                      // TODO: Reenable these tests after BoolAttributes are complete
-                      //new ForType(typeof(FromPropertyWithAttribute)),
-                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttribute)),
+                      new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
                       new ForType(typeof(FromPropertyWithAttributeValue)),
                       new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
                       new ForType(typeof(FromPropertyWithOptionAttribute)),
@@ -835,9 +834,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   },
                   new For[]
                   {
-                      // TODO: Reenable these tests after BoolAttributes are complete
-                      //new ForType(typeof(FromPropertyWithAttribute)),
-                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttribute)),
+                      new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
                       new ForType(typeof(FromPropertyWithAttributeValue)),
                       new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
                       new ForType(typeof(FromPropertyWithArgumentAttribute)),
@@ -896,9 +894,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
                   },
                   new For[]
                   {
-                      // TODO: Reenable these tests after BoolAttributes are complete
-                      //new ForType(typeof(FromPropertyWithAttribute)),
-                      //new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
+                      new ForType(typeof(FromPropertyWithAttribute)),
+                      new ForMethod(typeof(FromParameterWithAttribute),nameof(FromParameterWithAttribute.DoSomething )),
                       new ForType(typeof(FromPropertyWithAttributeValue)),
                       new ForMethod(typeof(FromParameterWithAttributeValue),nameof(FromParameterWithAttributeValue.DoSomething )),
                       new ForType(typeof(FromPropertyWithArgumentAttribute)),
@@ -1139,6 +1136,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
             public string StringPropertyArg { get; set; }
         }
     }
+
 
 
     public class OptionWithOneArgument: ClassData

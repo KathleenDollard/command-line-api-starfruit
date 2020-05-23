@@ -9,38 +9,30 @@ namespace System.CommandLine.GeneralAppModel
     /// A dictionary is returned, which contains the _Name_, not the _PropertyName_ of each expected item.
     /// The Name is consistent, the PropertyName can be whatever that particular strategy wants. 
     /// </summary>
-    public class ComplexAttributeRule : NamedAttributeRule, IRuleGetValue<Dictionary<string, object>>
+    public class ComplexAttributeRule : AttributeRule, IRuleGetValue<Dictionary<string, object>>
     {
 
         public ComplexAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, symbolType)
         {
         }
+
         public IEnumerable<NameAndType> PropertyNamesAndTypes { get; set; }
 
-        public new(bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(
-                  SymbolDescriptorBase symbolDescriptor, IEnumerable<object> items, SymbolDescriptorBase parentSymbolDescriptor)
+        public (bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(
+                  SymbolDescriptorBase symbolDescriptor, IEnumerable<object> traits, SymbolDescriptorBase parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
-            var attributes = GetMatches(symbolDescriptor, items, parentSymbolDescriptor)
-                                .ToList();
-            if (attributes.Any(a => tools.ComplexAttributeHasAtLeastOneProperty(PropertyNamesAndTypes, a)))
-            {
-                var dictionary = new Dictionary<string, object>();
-                foreach (var attribute in attributes)
-                {
-                    foreach (var nameAndType in PropertyNamesAndTypes)
-                    {
-                        var (success, value) = SpecificSource.Tools.GetAttributePropertyValue(attribute, nameAndType.PropertyName);
-                        if (success)
-                        {
-                            dictionary.Add(nameAndType.Name, value);
-                        }
-                    }
-                }
-                return (true, dictionary);
-            }
-            return (false, default);
+            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
+            var complexValues = matchingTraits.SelectMany(trait =>
+                    tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor)
+                            .Where(keyPair => PropertyNamesAndTypes.Any(nameAndType => nameAndType.PropertyName == keyPair.key))
+                    );
+
+            return complexValues.Any()
+                ? (true, complexValues.ToDictionary(pair => pair.key, pair => pair.value))
+                : (false, new Dictionary<string, object>());
+            ;
         }
 
         public override string RuleDescription<TIRuleSet>()

@@ -1,7 +1,4 @@
-﻿using System.CommandLine.GeneralAppModel.Rules;
-using System.Linq;
-
-namespace System.CommandLine.GeneralAppModel
+﻿namespace System.CommandLine.GeneralAppModel
 {
     public class RuleSetArgument : RuleSetSymbol, IRuleSetArgument
     {

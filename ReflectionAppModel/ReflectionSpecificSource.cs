@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 
@@ -16,7 +17,7 @@ namespace System.CommandLine.ReflectionAppModel
             return item switch
             {
                 MethodInfo m => m.GetParameters().Select(p => GetCandidateInternal(p)),
-                Type t => GetTypeChildren(strategy, commandDescriptor, t, c => GetCandidate(c.Item)),
+                Type t => GetTypeChildren(strategy, commandDescriptor, t, c => CreateCandidate(c.Item)),
                 _ => new List<Candidate>(),
 
             };
@@ -28,7 +29,6 @@ namespace System.CommandLine.ReflectionAppModel
             }
         }
 
-
         public override Type GetArgumentType(Candidate candidate)
             => candidate.Item switch
             {
@@ -37,7 +37,7 @@ namespace System.CommandLine.ReflectionAppModel
                 _ => null
             };
 
-        public override Candidate GetCandidate(object item)
+        public override Candidate CreateCandidate(object item)
            => item switch
            {
                Type typeItem => GetCandidateInternal(typeItem),
@@ -47,81 +47,126 @@ namespace System.CommandLine.ReflectionAppModel
                _ => null
            };
 
-        public override bool ComplexAttributeHasAtLeastOneProperty(IEnumerable<ComplexAttributeRule.NameAndType> propertyNamesAndTypes, object attribute)
+        public override bool DoesTraitMatch<TTraitType>(string attributeName,
+                                                        string propertyName,
+                                                        SymbolDescriptorBase symbolDescriptor,
+                                                        TTraitType trait,
+                                                        SymbolDescriptorBase parentSymbolDescriptor)
         {
-
-            var propertyNames = propertyNamesAndTypes.Select(p => p.PropertyName);
-            return attribute.GetType().GetProperties().Any(p => propertyNames.Contains(p.Name));
-        }
-
-        public override bool IsAttributeAMatch(string attributeName, SymbolDescriptorBase symbolDescriptor,
-              object item,
-              SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            return item switch
+            if (!(trait is Attribute attribute))
             {
-                Attribute a => DoesAttributeMatch(attributeName, a),
-                _ => false
-            };
-        }
-
-        public override bool DoesAttributeMatch(string attributeName, object a)
-        {
-            var itemName = a.GetType().Name;
+                return false;
+            }
+            var itemName = attribute.GetType().Name;
             return itemName.Equals(attributeName, StringComparison.OrdinalIgnoreCase)
                 || itemName.Equals(attributeName + "Attribute", StringComparison.OrdinalIgnoreCase);
         }
 
-        public override T GetAttributeProperty<T>(object attribute, string propertyName)
+        public override (bool success, TValue value) GetValue<TValue>(string attributeName,
+                                                                      string propertyName,
+                                                                      SymbolDescriptorBase symbolDescriptor,
+                                                                      object trait,
+                                                                      SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var property = attribute.GetType()
-                              .GetProperty(propertyName);
-            if (!(property is null))
+            if (!(trait is Attribute attribute) ||
+                !DoesTraitMatch(attributeName, propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
             {
-                var raw = property.GetValue(attribute);
-                return Conversions.To<T>(raw);
+                return (false, default);
             }
-            return default;
+            var propInfo = attribute.GetType().GetProperties().Where(p => p.Name == propertyName).FirstOrDefault();
+            if (propInfo is null)
+            {
+                return (false, default);
+            }
+            if (!typeof(TValue).IsAssignableFrom(propInfo.PropertyType))
+            {
+                // This is a bit strict as it doesn't handle numeric widening conversions
+                return (false, default);
+            }
+            var obj = propInfo.GetValue(attribute);
+            return (obj is TValue tValue)
+                    ? (true, tValue)
+                    : (false, default);
         }
 
-        public override IEnumerable<T> GetAttributeProperties<T>(object attribute, string propertyName)
+        public override IEnumerable<TValue> GetAllValues<TValue>(string attributeName,
+                                                                 string propertyName,
+                                                                 SymbolDescriptorBase symbolDescriptor,
+                                                                 object trait,
+                                                                 SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var property = attribute.GetType()
-                              .GetProperty(propertyName);
-            if (property is null)
+            var (singleSuccess, single) = GetValue<TValue>(attributeName, propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            if (singleSuccess)
             {
-                return new List<T>();
+                return new List<TValue> { single };
             }
-            var raw = property.GetValue(attribute);
-            if (raw is null)
+            var (multipleSuccess, multiple) = GetValue<IEnumerable<TValue>>(attributeName, propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            if (multipleSuccess)
             {
-                return new List<T>();
+                return multiple;
             }
-            if (typeof(T).IsAssignableFrom(property.PropertyType))
-            {
-                return new T[] { Conversions.To<T>(raw) };
-            }
-            if (typeof(IEnumerable<T>).IsAssignableFrom(property.PropertyType) && raw is IEnumerable<T> x)
-            {
-                return x.Select(xx => Conversions.To<T>(xx));
-            }
-            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && raw is IEnumerable<T> y )
-            {
-                var list = new List<T>();
-                foreach (var item in y)
-                {
-                    list.Add(Conversions.To<T>(item));
-                }
-                return list;
-            }
-            // Throwing an exception here so during alpha we can figure out what is missing
-            throw new InvalidOperationException("Unhandled Attribute PropertyType");
+            return new List<TValue>();
         }
 
-        public override (bool success, object value) GetAttributePropertyValue(object attribute, string propertyName)
+        /// <summary>
+        /// Adust the type. We work at this so traits like attributes can be flexible. 
+        /// For exmple, a design might be to put each alias in a separate attribute. 
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private TValue FixType<TValue>(object value)
         {
-            var info = attribute.GetType().GetProperties().Where(p => p.Name == propertyName).FirstOrDefault();
-            return (info != null, info.GetValue(attribute));
+            // We can just cast
+            if (value is TValue tValue)
+            {
+                // no further conversion needed
+                return tValue;
+            }
+
+            // We need to move a single value into an IEnumerable - this happens for aliases
+            if (typeof(IEnumerable<>).IsAssignableFrom(typeof(TValue)) && !typeof(IEnumerable<>).IsAssignableFrom(value.GetType()))
+            {
+                // Wrap the value in an Enumerable. This could use some type checking
+                var innerType = typeof(TValue).GenericTypeArguments.First();
+                return (TValue)MakeEnumerable(typeof(TValue), innerType, value);
+            }
+
+            // throwing an exception here so during alpha we can figure out what is missing
+            throw new InvalidOperationException("Unhandled attribute propertytype");
+        }
+
+        private object MakeEnumerable(Type type, Type innerType, object value)
+        {
+            var bindingFlags = BindingFlags.NonPublic | BindingFlags.Static;
+            var method = GetType().GetMethod(nameof(MakeGenericEnumerable), bindingFlags);
+            var constructed = method.MakeGenericMethod(innerType);
+            return constructed.Invoke(null, new object[] { value });
+        }
+
+        internal static IEnumerable<TValue> MakeGenericEnumerable<TValue>(object value)
+        {
+            var list = new List<TValue> { (TValue)value };
+            return list;
+        }
+
+        public override IEnumerable<(string key, TValue value)> GetComplexValue<TValue>(
+                                                                      string attributeName,
+                                                                      SymbolDescriptorBase symbolDescriptor,
+                                                                      object trait,
+                                                                      SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            if (!(trait is Attribute attribute) ||
+                !DoesTraitMatch(attributeName, symbolDescriptor, trait, parentSymbolDescriptor))
+            {
+                return new List<(string, TValue)>();
+            }
+
+            var attributeType = attribute.GetType();
+            var pairs = attributeType.GetProperties()
+                                .Where(prop => prop.Name != "TypeId")
+                                .Select(prop => new { prop.Name, Value = prop.GetValue(trait) });
+            return pairs.Select(pair => (pair.Name, (TValue)pair.Value));
         }
 
         private static Candidate GetCandidateInternal(PropertyInfo propertyInfo)
@@ -163,5 +208,6 @@ namespace System.CommandLine.ReflectionAppModel
             candidate.AddTrait(new IdentityWrapper<string>(name));
             return candidate;
         }
+
     }
 }

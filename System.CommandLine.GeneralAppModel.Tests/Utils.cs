@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests
@@ -26,8 +25,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return null;
         }
 
-         public static void CheckRule<TRule>(this IRule rule, SymbolType symbolType)
-            where TRule : IRule
+        public static void CheckRule<TRule>(this IRule rule, SymbolType symbolType)
+           where TRule : IRule
         {
             rule.Should().BeOfType<TRule>();
             rule.SymbolType.Should().IncludeSymbolType(symbolType);
@@ -43,16 +42,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static void CheckNamedAttributeRule(this IRule rule, SymbolType symbolType, string attributeName)
         {
-            rule.CheckRule<NamedAttributeRule>(symbolType);
-            var typeRule = rule as NamedAttributeRule;
+            rule.CheckRule<AttributeRule>(symbolType);
+            var typeRule = rule as AttributeRule;
             typeRule.AttributeName.Should().Be(attributeName);
         }
 
         public static void CheckNamedAttributeWithPropertyRule(this IRule rule, SymbolType symbolType, string attributeName, string propertyName, Type type)
         {
-            rule.Should().BeAssignableTo<NamedAttributeWithPropertyRule>( );
+            rule.Should().BeAssignableTo<AttributeWithPropertyRule>();
             rule.SymbolType.Should().IncludeSymbolType(symbolType);
-            var typedRule = rule as NamedAttributeWithPropertyRule;
+            var typedRule = rule as AttributeWithPropertyRule;
             typedRule.AttributeName.Should().Be(attributeName);
             typedRule.PropertyName.Should().Be(propertyName);
             typedRule.Type.Should().Be(type);
@@ -67,7 +66,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         }
 
-        public static  void CheckRules( this IRule[] actual, RuleGroupTestData descriptionData)
+        public static void CheckRules(this IRule[] actual, RuleGroupTestData descriptionData)
         {
             var symbolType = descriptionData.SymbolType;
             var expectedRules = descriptionData.Rules.ToArray();
@@ -80,17 +79,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
                         var np = expectedRules[i] as NamePatternTestData;
                         r.CheckNamePatternRule(symbolType, np.Position, np.CompareTo);
                         break;
-                    case NamedAttributeRule r:
-                        var na = expectedRules[i] as NamedAttributeTestData;
-                        r.CheckNamedAttributeRule(symbolType, na.AttributeName);
-                        break;
-                    case NamedAttributeWithPropertyRule<string> r:
+                    case AttributeWithPropertyRule<string> r:
                         var naps = expectedRules[i] as NamedAttributeWithPropertyTestData;
                         r.CheckNamedAttributeWithPropertyRule(symbolType, naps.AttributeName, naps.PropertyName, typeof(string));
                         break;
-                    case NamedAttributeWithPropertyRule<bool> r:
+                    case AttributeWithPropertyRule<bool> r:
                         var rapb = expectedRules[i] as NamedAttributeWithPropertyTestData;
                         r.CheckNamedAttributeWithPropertyRule(symbolType, rapb.AttributeName, rapb.PropertyName, typeof(bool));
+                        break;
+                    case AttributeRule r:
+                        var na = expectedRules[i] as NamedAttributeTestData;
+                        r.CheckNamedAttributeRule(symbolType, na.AttributeName);
                         break;
 
                 }

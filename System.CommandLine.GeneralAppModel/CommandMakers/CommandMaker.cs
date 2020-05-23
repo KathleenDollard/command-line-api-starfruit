@@ -62,7 +62,7 @@ namespace System.CommandLine.GeneralAppModel
             AddAliases(arg, descriptor.Aliases);
             if (descriptor.Arity != null)
             {
-                arg.Arity = new ArgumentArity(descriptor.Arity.MinimumNumberOfValues, descriptor.Arity.MaximumNumberOfValues);
+                arg.Arity = new ArgumentArity(descriptor.Arity.MinimumCount, descriptor.Arity.MaximumCount);
             }
             arg.Description = descriptor.Description;
             arg.IsHidden = descriptor.IsHidden;
