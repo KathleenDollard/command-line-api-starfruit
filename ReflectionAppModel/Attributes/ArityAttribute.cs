@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.ReflectionAppModel.Tests
+﻿namespace System.CommandLine.ReflectionAppModel.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class ArityAttribute : Attribute

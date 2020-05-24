@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests;
+using System.CommandLine.ReflectionAppModel.Attributes;
 using System.ComponentModel;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
