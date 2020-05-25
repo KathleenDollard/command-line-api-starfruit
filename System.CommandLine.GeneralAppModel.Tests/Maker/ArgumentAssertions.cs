@@ -72,6 +72,22 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
             return new AndConstraint<ArgumentAssertions>(this);
         }
 
+        public AndConstraint<ArgumentAssertions> HaveDefaultValue(bool isSet, object defaultValue, string because = "", string becauseArgs = "")
+        {
+            Execute.Assertion
+                 .ForCondition(!isSet ? !Subject.HasDefaultValue  : true)
+                 .FailWith("Expected the default value not to be set, but found that it was set")
+                 .Then
+                 .ForCondition(isSet ? Subject.HasDefaultValue  : true)
+                 .FailWith("Expected the default value to be set, but found it was not")
+                 .Then
+                 .ForCondition(isSet ? Subject.GetDefaultValue().Equals(defaultValue) : true)
+                 .FailWith($"Expected DefaultValue to be {defaultValue}, but found {(isSet ? Subject.GetDefaultValue() : "<wat?>")}" );
+
+            return new AndConstraint<ArgumentAssertions>(this);
+        }
+
+
         public AndConstraint<ArgumentAssertions> HaveArgumentType(Type expected, string because = "", string becauseArgs = "")
         {
             Execute.Assertion

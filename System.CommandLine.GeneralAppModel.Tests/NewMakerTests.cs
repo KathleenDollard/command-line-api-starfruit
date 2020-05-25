@@ -64,5 +64,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
+
+        [Theory]
+        [InlineData(true, 42)]
+        [InlineData(true, "Fred")]
+        [InlineData(false, null)]
+        public void ArgumentDefaultValueTests(bool isSet, object defaultValue)
+        {
+            var data = new ArgumentDefaultValueTestData(isSet, defaultValue);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
     }
 }

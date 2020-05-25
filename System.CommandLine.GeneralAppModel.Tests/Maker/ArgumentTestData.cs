@@ -46,16 +46,14 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
     public class ArgumentArityTestData : MakerCommandTestDataBase
     {
-        private const string DummyArgumentName = "DummyArgumentName";
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
             var argDescriptor = new ArgumentDescriptor(null, null)
-                                {
-                                    Name = DummyArgumentName,
-                               
-                               };
-            
+            {
+                Name = DummyArgumentName,
+            };
+
             if (isSet)
             {
                 var _ = !minValue.HasValue || !maxValue.HasValue
@@ -87,41 +85,33 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
     public class ArgumentDefaultValueTestData : MakerCommandTestDataBase
     {
-        public ArgumentDefaultValueTestData(string name, string description, string[] aliases, bool isHidden, Type argumentType)
+        public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
-            base.Descriptor.Arguments.Add(
-                new ArgumentDescriptor(null, null)
-                {
-                    Name = name,
-                    Description = description,
-                    Aliases = aliases,
-                    IsHidden = isHidden,
-                    ArgumentType = argumentType
-                });
-            Name = name;
-            Description = description;
-            Aliases = aliases;
-            IsHidden = isHidden;
-            ArgumentType = argumentType;
+            var argDescriptor = new ArgumentDescriptor(null, null)
+            {
+                Name = DummyArgumentName,
+            };
+
+            if (isSet)
+            {
+                argDescriptor.DefaultValue  = new DefaultValueDescriptor(defaultValue)
+                { };
+            }
+            Descriptor.Arguments.Add(argDescriptor);
+            IsSet = isSet;
+            DefaultValue = defaultValue;
         }
 
-        public string Name { get; }
-        public string Description { get; }
-        public string[] Aliases { get; }
-        public bool IsHidden { get; }
-        public Type ArgumentType { get; }
+        public bool IsSet { get; }
+        public object DefaultValue { get; }
 
         public override void Check(Command command)
         {
             var actual = command.Arguments.FirstOrDefault();
 
             using var scope = new AssertionScope();
-            actual.Should().HaveName(Name)
-                       .And.HaveDescription(Description)
-                       .And.HaveAliases(Aliases)
-                       .And.HaveIsHidden(IsHidden)
-                       .And.HaveArgumentType(ArgumentType);
+            actual.Should().HaveDefaultValue(IsSet, DefaultValue );
         }
     }
 }
