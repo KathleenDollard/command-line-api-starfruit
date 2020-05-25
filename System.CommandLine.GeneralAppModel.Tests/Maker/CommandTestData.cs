@@ -45,5 +45,31 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         }
     }
 
+    public class CommandOneSubCommandTestData : MakerCommandTestDataBase
+    {
+        // Option and ArgumentTestData of necessity test adding a single option and argument
+        public CommandOneSubCommandTestData(string subCommandName)
+              : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
+        {
+            Descriptor.SubCommands.Add(
+                new CommandDescriptor(null, null)
+                {
+                    Name = subCommandName
+                });
+            SubCommandName = subCommandName;
+        }
+
+        public string SubCommandName { get; }
+
+        public override void Check(Command parentCommand)
+        {
+            var actual = parentCommand.Children.OfType<Command>().SingleOrDefault();
+
+            using var scope = new AssertionScope();
+            actual.Should().NotBeNull()
+                .And.HaveName(SubCommandName);
+        }
+    }
+
 }
 

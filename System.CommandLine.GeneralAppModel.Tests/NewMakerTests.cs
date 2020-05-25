@@ -75,5 +75,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
+
+        [Fact]
+        public void CommandWithOneSubCommandTests()
+        {
+            var data = new CommandOneSubCommandTestData(name);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
     }
 }
