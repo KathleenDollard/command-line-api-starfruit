@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
+using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
@@ -43,7 +44,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public AndConstraint<OptionAssertions> HaveAliases(string[] expected, string because = "", string becauseArgs = "")
         {
             Execute.Assertion
-                 .ForCondition(Utils.CompareDistinctEnumerable(expected, Subject.Aliases))
+                 .ForCondition(Utils.CompareDistinctEnumerable(expected.Select(x=>x.ToLowerInvariant()), Subject.Aliases))
                  .FailWith(Utils.DisplayEqualsFailure(SymbolType.Option, "Aliases", expected, Subject.Aliases));
 
             return new AndConstraint<OptionAssertions>(this);

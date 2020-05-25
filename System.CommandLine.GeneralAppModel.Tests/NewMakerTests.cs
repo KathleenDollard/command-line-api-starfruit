@@ -1,9 +1,4 @@
-﻿using FluentAssertions;
-using FluentAssertions.Equivalency;
-using System.CommandLine.GeneralAppModel;
-using System.CommandLine.GeneralAppModel.Descriptors;
-using System.CommandLine.GeneralAppModel.Tests;
-using System.CommandLine.GeneralAppModel.Tests.Maker;
+﻿using System.CommandLine.GeneralAppModel.Tests.Maker;
 using System.Linq;
 using Xunit;
 
@@ -27,6 +22,34 @@ namespace System.CommandLine.GeneralAppModel.Tests
                           ? null
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Theory]
+        [InlineData(name, desc, aliasAsStringMuitple, true, true)]
+        [InlineData(name, desc, aliasAsStringSingle, false, false)]
+        [InlineData(nameForEmpty, null, null, false, false)]
+        public void OptionBasicsTests(string name, string description, string aliasesAsString, bool isHidden, bool required)
+        {
+            var aliases = aliasesAsString is null
+                          ? null
+                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+            var data = new OptionBasicsTestData(name, description, aliases, isHidden, required);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Theory]
+        [InlineData(name, desc, aliasAsStringMuitple, true, typeof(string))]
+        [InlineData(name, desc, aliasAsStringSingle, false, typeof(string))]
+        [InlineData(nameForEmpty, null, null, false, null)]
+        public void ArgumentBasicsTests(string name, string description, string aliasesAsString, bool isHidden, Type argumentType)
+        {
+            var aliases = aliasesAsString is null
+                          ? null
+                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+            var data = new ArgumentBasicsTestData(name, description, aliases, isHidden, argumentType);
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }

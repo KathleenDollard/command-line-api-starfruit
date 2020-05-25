@@ -1,11 +1,6 @@
-﻿using FluentAssertions;
-using FluentAssertions.Equivalency;
-using FluentAssertions.Execution;
-using System.CommandLine.GeneralAppModel;
+﻿using FluentAssertions.Execution;
 using System.CommandLine.GeneralAppModel.Descriptors;
-using System.CommandLine.GeneralAppModel.Tests;
 using System.Linq;
-using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {

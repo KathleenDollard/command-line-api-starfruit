@@ -43,7 +43,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public AndConstraint<ArgumentAssertions> HaveAliases(string[] expected, string because = "", string becauseArgs = "")
         {
             Execute.Assertion
-                 .ForCondition(Utils.CompareDistinctEnumerable(expected, Subject.Aliases))
+                 .ForCondition(Utils.CompareDistinctEnumerable(expected, Subject.Aliases, nullAndEmptyRelaxed: true))
                  .FailWith(Utils.DisplayEqualsFailure(SymbolType.Argument, "Aliases", expected, Subject.Aliases));
 
             return new AndConstraint<ArgumentAssertions>(this);

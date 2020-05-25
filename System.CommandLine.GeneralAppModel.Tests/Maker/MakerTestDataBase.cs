@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Linq;
-using System.Text;
+﻿using System.CommandLine.GeneralAppModel.Descriptors;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
@@ -20,17 +15,17 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
     }
 
-    public abstract class MakerOptionTestDataBase
-    {
+    //public abstract class MakerOptionTestDataBase
+    //{
 
-        public MakerOptionTestDataBase(OptionDescriptor descriptor)
-        {
-            Descriptor = descriptor;
-        }
+    //    public MakerOptionTestDataBase(OptionDescriptor descriptor)
+    //    {
+    //        Descriptor = descriptor;
+    //    }
 
-        public OptionDescriptor Descriptor { get; }
-        public abstract void Check(Option actual);
-    }
+    //    public CommandDescriptor Descriptor { get; }
+    //    public abstract void Check(Option actual);
+    //}
 
     public abstract class MakerArgumentTestDataBase
     {
