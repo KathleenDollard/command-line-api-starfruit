@@ -5,7 +5,7 @@ using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
 using System.Text;
 
-namespace System.CommandLine.GeneralAppModel.Tests
+namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
     public abstract class MakerCommandTestDataBase
     {

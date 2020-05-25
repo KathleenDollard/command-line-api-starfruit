@@ -108,6 +108,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
             }
         }
 
+        public static string DisplayEqualsFailure<T>(SymbolType symbolType, string name,T expected, T actual  )
+        {
+               return ($@"Expected {name} for {symbolType} to be {DisplayString(expected)}, but found {DisplayString(actual)}");
+        }
+
         public static string DisplayString<T>(T input)
         {
             return input switch
