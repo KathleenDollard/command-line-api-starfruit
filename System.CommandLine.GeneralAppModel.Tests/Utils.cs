@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,6 +58,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
             typedRule.Type.Should().Be(type);
         }
 
+        public static bool CompareDistinctEnumerable<T>(IEnumerable<T> expected, IEnumerable<T> actual)
+        {
+            var expectedCount = expected.Count();
+            if ((expectedCount != actual.Count()) || (expectedCount != actual.Distinct().Count()) || (expectedCount != expected.Distinct().Count()))
+            {
+                return false;
+            }
+            var matchFailures = expected.Where(x => !actual.Where(y => y.Equals(x)).Any());
+            return !matchFailures.Any();
+        }
+
         public static void CheckIsOfTypeRule(this IRule rule, SymbolType symbolType, Type type)
         {
             rule.Should().BeAssignableTo<IsOfTypeRule>();
@@ -96,5 +108,25 @@ namespace System.CommandLine.GeneralAppModel.Tests
             }
         }
 
+        public static string DisplayString<T>(T input)
+        {
+            return input switch
+            {
+                null => "<null>",
+                string s => $@"""{s}""",
+                IEnumerable e => "\n" + string.Join('\n', Members(e)),
+                _ => input.ToString()
+            };
+
+            static IEnumerable<string> Members(IEnumerable list)
+            {
+                var ret = new List<string>();
+                foreach (var item in list)
+                {
+                    ret.Add(DisplayString(item));
+                }
+                return ret;
+            }
+        }
     }
 }

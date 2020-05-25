@@ -16,7 +16,8 @@ namespace System.CommandLine.GeneralAppModel
 
         private static void FillCommand(Command command, CommandDescriptor descriptor)
         {
-            command.IsHidden = true;
+            command.IsHidden = descriptor.IsHidden;
+            command.TreatUnmatchedTokensAsErrors  = descriptor.TreatUnmatchedTokensAsErrors;
             AddAliases(command, descriptor.Aliases);
             command.AddArguments(descriptor.Arguments
                                     .Select(a => MakeArgument(a)));
