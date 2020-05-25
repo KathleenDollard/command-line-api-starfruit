@@ -8,7 +8,6 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
     public class OptionBasicsTestData : MakerCommandTestDataBase
     {
-        private const string DummyCommandName = "DummyCommandName";
         public OptionBasicsTestData(string name, string description, string[] aliases, bool isHidden, bool required)
               : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {

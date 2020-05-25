@@ -5,6 +5,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public abstract class MakerCommandTestDataBase
     {
 
+        protected const string DummyCommandName = "DummyCommandName";
         public MakerCommandTestDataBase(CommandDescriptor descriptor)
         {
             Descriptor = descriptor;

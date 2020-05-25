@@ -53,5 +53,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
+
+        [Theory]
+        [InlineData(true, 0, 5)]
+        [InlineData(false, null, null)]
+        [InlineData(true, 2, 2)]
+        public void ArgumentArityTests(bool isSet, int? minValue, int? maxValue)
+        {
+            var data = new ArgumentArityTestData(isSet, minValue, maxValue);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
     }
 }

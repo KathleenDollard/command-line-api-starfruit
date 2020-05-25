@@ -49,18 +49,24 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
             return new AndConstraint<ArgumentAssertions>(this);
         }
 
-        public AndConstraint<ArgumentAssertions> HaveArity(IArgumentArity expected, string because = "", string becauseArgs = "")
+        public AndConstraint<ArgumentAssertions> HaveArity(bool isSet, int? minValue, int? maxValue, string because = "", string becauseArgs = "")
         {
+            if (isSet)
+            {
+                var _ = !minValue.HasValue || !maxValue.HasValue
+                       ? throw new InvalidOperationException("MinValue and MaxValue must be set when IsSet is true. For no maxValue, use Int32.Max") 
+                       : 0;
+            }
             Execute.Assertion
-                 .ForCondition(expected is null ? Subject.Arity is null : true)
+                 .ForCondition(!isSet ? Subject.Arity is null : true)
                  .FailWith("Expected there not to be an Arity, but found one")
                  .Then
-                 .ForCondition(!(expected is null) ? !(Subject.Arity is null) : true)
+                 .ForCondition(isSet ? !(Subject.Arity is null) : true)
                  .FailWith("Expected to be an Arity, but did not find one")
                  .Then
-                 .ForCondition(expected.MinimumNumberOfValues != Subject.Arity.MinimumNumberOfValues ||
-                               expected.MaximumNumberOfValues != Subject.Arity.MaximumNumberOfValues)
-                 .FailWith($"Expected Arity to be {expected.MinimumNumberOfValues} to {expected.MaximumNumberOfValues}, " +
+                 .ForCondition(minValue.Value == Subject.Arity.MinimumNumberOfValues &&
+                               maxValue.Value == Subject.Arity.MaximumNumberOfValues)
+                 .FailWith($"Expected Arity to be {minValue.Value} to {maxValue.Value}, " +
                             $"but found {Subject.Arity.MinimumNumberOfValues} to {Subject.Arity.MaximumNumberOfValues}");
 
             return new AndConstraint<ArgumentAssertions>(this);
