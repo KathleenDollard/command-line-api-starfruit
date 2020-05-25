@@ -16,7 +16,8 @@ namespace System.CommandLine.GeneralAppModel
 
         private static void FillCommand(Command command, CommandDescriptor descriptor)
         {
-            command.IsHidden = true;
+            command.IsHidden = descriptor.IsHidden;
+            command.TreatUnmatchedTokensAsErrors  = descriptor.TreatUnmatchedTokensAsErrors;
             AddAliases(command, descriptor.Aliases);
             command.AddArguments(descriptor.Arguments
                                     .Select(a => MakeArgument(a)));
@@ -60,7 +61,7 @@ namespace System.CommandLine.GeneralAppModel
             var arg = new Argument(descriptor.Name);
             arg.ArgumentType = descriptor.ArgumentType;
             AddAliases(arg, descriptor.Aliases);
-            if (descriptor.Arity != null)
+            if (descriptor.Arity != null && descriptor.Arity.IsSet)
             {
                 arg.Arity = new ArgumentArity(descriptor.Arity.MinimumCount, descriptor.Arity.MaximumCount);
             }
