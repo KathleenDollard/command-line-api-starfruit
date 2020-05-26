@@ -13,7 +13,7 @@ namespace UserStudyTest2
         {
             return ManageGlobalJsonProgram.Main2(args);
 
-            //var strategy = new Strategy("Standard").SetReflectionRules();
+            //var strategy = new Strategy("Full").SetReflectionRules();
 
             //Console.WriteLine(strategy.Report());
 
