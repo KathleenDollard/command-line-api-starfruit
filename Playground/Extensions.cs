@@ -22,6 +22,16 @@ namespace UserStudyTest2
             return (T)binder.CreateInstance(bindingContext);
         }
 
+        public static int Invoke<T>(this Strategy strategy, Func<T, int> toRun, string[] args)
+            where T : new()
+        {
+            var type = typeof(T);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type);
+            var command = CommandMaker.MakeCommand(descriptor);
+            command.Handler = CommandHandler.Create(toRun);
+            return command.Invoke(args);
+        }
+
         public static int InvokeMethod(this Strategy strategy, MethodInfo methodInfo, string[] args)
         {
             System.Reflection.MethodInfo entryMethod = typeof(Program).GetMethod("Test");

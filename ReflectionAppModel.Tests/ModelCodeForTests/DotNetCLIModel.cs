@@ -30,9 +30,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
                     (new Install() as IHaveTypeTestData) .CommandDataFromType,
                 }
             };
-    }
-
-    public class Install : Tool, IHaveTypeTestData
+   public class Install : Tool, IHaveTypeTestData
     {
         public bool Global { get; set; }
         public bool Local { get; set; }
@@ -103,7 +101,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
                     },
                }
            };
-    }
+    }    }
+
+ 
 
     //    Usage: dotnet tool install[options] <PACKAGE_ID>
 
