@@ -3,7 +3,7 @@
 This project provide a modeling layer on top of [System.CommandLine](https://github.com/dotnet/command-line-api) so you don't have to worry about the System.CommandLine API. You'll need a little code in your startup for now (we'll work on reducing this). For a tool named ManageGlobalJson your entry point might look like:
 
 ```c#
-     public static int Main2(string[] args)
+     public static int Main(string[] args)
         {
             Strategy strategy = new Strategy("Full").SetReflectionRules();
             return strategy.Invoke((Func<ManageGlobalJson, int>)(args
