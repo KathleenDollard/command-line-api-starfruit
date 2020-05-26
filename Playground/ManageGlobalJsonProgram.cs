@@ -23,8 +23,9 @@ namespace Playground
         // So, thoughts? We either have coupling between the CLI definition and implementation, we're going to have a nasty list of paramters somewhere (or reflection). No? Where shoudl that be?
         public static int Main2(string[] args)
         {
-            return new Strategy("Standard").SetReflectionRules().Invoke<ManageGlobalJson >(args
-                => args switch
+            Strategy strategy = new Strategy("Standard").SetReflectionRules();
+            return strategy.Invoke((Func<ManageGlobalJson, int>)(args
+                => (args switch
                     {
                         ManageGlobalJson.Find find => ManageGlobalJsonImplementation.Find(find.StartPathArg, find.Verbosity),
                         ManageGlobalJson.List list => list.MapAndRun(Utils.MethodInfo<ManageGlobalJsonImplementation>("List")),
@@ -32,7 +33,7 @@ namespace Playground
                         ManageGlobalJson.Check check => Check(check.StartPathArg, check.Verbosity),
                         ManageGlobalJson entry => Error("You must use a subcommand"),
                         _ => throw new InvalidOperationException("Unexpected args type")
-                    }, 
+                    })), 
                     args);
         }
 
