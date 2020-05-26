@@ -14,9 +14,9 @@ namespace System.CommandLine.ReflectionAppModel.Tests
                            .CandidateNamesToIgnore( "CommandDataFromMethods", "CommandDataFromType");
         }
 
-        [Fact]
-        public void CanMakeDotnetInstall()
-            => Utils.TestType<Install>(strategy);
+        //[Fact]
+        //public void CanMakeDotnetInstall()
+        //    => Utils.TestType<Install>(strategy);
 
         [Fact]
         public void CanMakeDotnet()

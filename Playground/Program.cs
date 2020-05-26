@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Playground;
+using System;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionAppModel;
 using System.Security.Cryptography.X509Certificates;
@@ -7,16 +8,19 @@ namespace UserStudyTest2
 {
     class Program
     {
-        static void Main(string[] args)
+        // Old debug: --name "Hello" --a 7 --b 13 --c 17
+        static int Main(string[] args)
         {
-            var strategy = new Strategy("Standard").SetReflectionRules();
+            return ManageGlobalJsonProgram.Main2(args);
 
-            Console.WriteLine(strategy.Report());
+            //var strategy = new Strategy("Standard").SetReflectionRules();
 
-            strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
+            //Console.WriteLine(strategy.Report());
 
-            var instance = strategy.CreateInstance<MyClass>(args);
-            Console.WriteLine($"From Type: Name: {instance.Name} A: {instance.A} B: {instance.B} C: {instance.C}");
+            //strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
+
+            //var instance = strategy.CreateInstance<MyClass>(args);
+            //Console.WriteLine($"From Type: Name: {instance.Name} A: {instance.A} B: {instance.B} C: {instance.C}");
         }
 
         public static void Test(string name, int a, string b, int c)

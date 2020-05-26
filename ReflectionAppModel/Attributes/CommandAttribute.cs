@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.CommandLine.ReflectionAppModel.Tests
+namespace System.CommandLine.ReflectionAppModel.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Struct)]
     public class CommandAttribute : Attribute
