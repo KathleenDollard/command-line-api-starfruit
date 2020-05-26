@@ -47,6 +47,7 @@ You can define subcommands with derived classes. These derived classes have acce
             [Aliases("o")]
             public FileInfo Output { get; set; }
         }
+     }
 
 ```
 
