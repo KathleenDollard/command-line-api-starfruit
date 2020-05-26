@@ -4,10 +4,10 @@
     {
         public static Strategy SetGeneralRules(this Strategy strategy) 
             => strategy
-                .SetStandardSelectSymbolRules()
-                .SetStandardArgumentRules()
-                .SetStandardCommandRules()
-                .SetStandardOptionRules();
+                .SetFullSelectSymbolRules()
+                .SetFullArgumentRules()
+                .SetFullCommandRules()
+                .SetFullOptionRules();
 
         public static Strategy CandidateNamesToIgnore(this Strategy strategy, params string[] namesToIgnore)
         {

@@ -3,34 +3,34 @@ using System.CommandLine.GeneralAppModel.Descriptors;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public static class StandardRules
+    public static class FullRules
     {
 
-        public static Strategy SetStandardSelectSymbolRules(this Strategy strategy)
+        public static Strategy SetFullSelectSymbolRules(this Strategy strategy)
         {
-            strategy.SelectSymbolRules.SetStandardSelectSymbolRules();
+            strategy.SelectSymbolRules.SetFullSelectSymbolRules();
             return strategy;
         }
 
-        public static Strategy SetStandardArgumentRules(this Strategy strategy)
+        public static Strategy SetFullArgumentRules(this Strategy strategy)
         {
-            strategy.ArgumentRules.SetStandardArgumentRules();
+            strategy.ArgumentRules.SetFullArgumentRules();
             return strategy;
         }
 
-        public static Strategy SetStandardCommandRules(this Strategy strategy)
+        public static Strategy SetFullCommandRules(this Strategy strategy)
         {
-            strategy.CommandRules.SetStandardCommandRules();
+            strategy.CommandRules.SetFullCommandRules();
             return strategy;
         }
 
-        public static Strategy SetStandardOptionRules(this Strategy strategy)
+        public static Strategy SetFullOptionRules(this Strategy strategy)
         {
-            strategy.OptionRules.SetStandardOptionRules();
+            strategy.OptionRules.SetFullOptionRules();
             return strategy;
         }
 
-        public static RuleSetSelectSymbols SetStandardSelectSymbolRules(this RuleSetSelectSymbols rules)
+        public static RuleSetSelectSymbols SetFullSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
             rules.Rules
                .Add(new AttributeRule("Command", SymbolType.Command))
@@ -45,7 +45,7 @@ namespace System.CommandLine.GeneralAppModel
             return rules;
         }
  
-        public static RuleSetArgument SetStandardArgumentRules(this RuleSetArgument rules)
+        public static RuleSetArgument SetFullArgumentRules(this RuleSetArgument rules)
         {
             rules.DescriptionRules
                 .Add(new AttributeWithPropertyRule<string>("Description", "Description"))
@@ -100,7 +100,7 @@ namespace System.CommandLine.GeneralAppModel
             return rules;
         }
 
-        public static RuleSetOption SetStandardOptionRules(this RuleSetOption rules)
+        public static RuleSetOption SetFullOptionRules(this RuleSetOption rules)
         {
 
             rules.DescriptionRules
@@ -177,7 +177,7 @@ namespace System.CommandLine.GeneralAppModel
             return rules;
         }
 
-        public static RuleSetCommand SetStandardCommandRules(this RuleSetCommand rules)
+        public static RuleSetCommand SetFullCommandRules(this RuleSetCommand rules)
         {
 
             rules.DescriptionRules
