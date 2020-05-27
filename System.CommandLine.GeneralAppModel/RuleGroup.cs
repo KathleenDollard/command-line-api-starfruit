@@ -4,19 +4,20 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleGroup<T> : IEnumerable<IRule>
+    public class RuleGroup<TRule> : IEnumerable<TRule>
+        where TRule : IRule
     {
 
-        private readonly List<IRule> _rules = new List<IRule>();
-        public IEnumerable<IRule> Rules => _rules;
+        private readonly List<TRule> _rules = new List<TRule>();
+        public IEnumerable<TRule> Rules => _rules;
 
-        public RuleGroup<T> Add(IRule rule)
+        public RuleGroup<TRule> Add(TRule rule)
         {
             _rules.Add(rule);
             return this;
         }
 
-        public RuleGroup<T> AddRange(IEnumerable<IRule> rules)
+        public RuleGroup<TRule> AddRange(IEnumerable<TRule> rules)
         {
             foreach (var rule in rules)
             {
@@ -24,11 +25,11 @@ namespace System.CommandLine.GeneralAppModel
             }
             return this;
         }
-        public IEnumerator<IRule> GetEnumerator()
-            => ((IEnumerable<IRule>)_rules).GetEnumerator();
+        public IEnumerator<TRule> GetEnumerator()
+            => ((IEnumerable<TRule>)_rules).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => ((IEnumerable<IRule>)_rules).GetEnumerator();
+            => ((IEnumerable<TRule>)_rules).GetEnumerator();
 
         public virtual (bool, TValue) TryGetFirstValue<TValue>(SymbolDescriptorBase symbolDescriptor,
                                                    Candidate candidate,

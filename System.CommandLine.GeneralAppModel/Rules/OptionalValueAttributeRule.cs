@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class OptionalValueAttributeRule <T>: ComplexAttributeRule//, IRuleGetValue<T>
+    public class OptionalValueAttributeRule <T>: ComplexAttributeRule
     {
         public OptionalValueAttributeRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All) 
             : base(attributeName, symbolType)
