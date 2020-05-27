@@ -52,4 +52,5 @@ public class ManageGlobalJson
 
 For this example, I elected to store the descriptions used for help elsewhere to keep things clear, but you could also use attributes to include the descriptions inline. From classes like this you can get all the goodness of System.CommandLine. 
 
-See the wiki for more about how you get to make up the rules used to build the System.CommandLine semantic tree from your classes. 
+See the wiki for more about how you get to make up the rules used to build the System.CommandLine semantic tree from your classes. If you find a concept missing, please create an issue.
+
