@@ -3,9 +3,9 @@
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class RequiredAttribute : Attribute 
     {
-        public RequiredAttribute()
+        public RequiredAttribute(bool value = true)
         {
-            Value = true;
+            Value = value;
         }
 
         public bool Value { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
@@ -8,11 +9,11 @@ namespace System.CommandLine.GeneralAppModel
     /// you don't want to declare what that property might be named. This is useful for 
     /// rules for Description or Name, for example.
     /// </summary>
-    public  class AttributeWithImpliedPropertyRule<TValue> : AttributeRule, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class AttributeWithImpliedPropertyRule<TValue> : AttributeRule, IRuleGetValue<TValue>, IRuleGetValues<TValue>
     {
-        public AttributeWithImpliedPropertyRule(string attributeName,  SymbolType symbolType = SymbolType.All)
+        public AttributeWithImpliedPropertyRule(string attributeName, SymbolType symbolType = SymbolType.All)
         : base(attributeName, symbolType)
-        {  }
+        { }
 
         public (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> traits,
@@ -39,6 +40,7 @@ namespace System.CommandLine.GeneralAppModel
 
             var complexValues = matchingTraits.SelectMany(trait =>
                                          tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
+
             return complexValues.Count() switch
             {
                 // If a trait is found, but no property says otherwise, set to true

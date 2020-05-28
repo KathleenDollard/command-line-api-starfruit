@@ -4,6 +4,7 @@ using FluentAssertions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.Linq;
 using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Tests
@@ -58,8 +59,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<TAssert> HaveAliases(string[] expected)
         {
+            var expectedAliases = expected is null
+                                    ? null
+                                    : string.Join(",", expected);
+            var actualAliases = expected is null
+                          ? null
+                          : string.Join(",", Subject.Aliases);
             Execute.Assertion
-                     .ForCondition(Subject.Aliases == expected)
+                     .ForCondition(expectedAliases == actualAliases)
                      .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Aliases", expected, Subject.Aliases));
 
             return new AndConstraint<TAssert>((TAssert)this);
