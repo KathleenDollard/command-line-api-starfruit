@@ -40,6 +40,48 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
+        public AndConstraint<CommandDescriptorAssertions> HaveTreatUnmatchedTokensAsErrors(bool expected)
+        {
+            Execute.Assertion
+                     .ForCondition(Subject.TreatUnmatchedTokensAsErrors == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "TreatUnmatchedTokensAsErrors", expected, Subject.TreatUnmatchedTokensAsErrors));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveSubCommandsNamed(IEnumerable<string> expected)
+        {
+            var actual = Subject.SubCommands.Select(sub => sub.Name);
+            Execute.Assertion
+                     .ForCondition(actual == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "SubCommands", expected, actual));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveOptionsNamed(IEnumerable<string> expected)
+        {
+            var actual = Subject.Options.Select(sub => sub.Name);
+            Execute.Assertion
+                     .ForCondition(actual == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Options", expected, actual));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveArgumentsNamed(IEnumerable<string> expected)
+        {
+            var actual = Subject.Arguments.Select(sub => sub.Name);
+            Execute.Assertion
+                     .ForCondition(actual == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Arguments", expected, actual));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+
+        }
+
         /// <summary>
         /// This determines if the object is in the initial state. "Empty" is a bit of a misnomer
         /// because Name and Raw should not be empty and are tested not being empty and ParentSymbolDescriptor is ignored
