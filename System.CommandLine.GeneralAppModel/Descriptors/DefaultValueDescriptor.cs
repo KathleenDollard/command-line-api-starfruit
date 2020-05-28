@@ -15,10 +15,10 @@
             set
             {
                 defaultValue = value;
-                HasDefaultValue = true;
+               // HasDefaultValue = true;
             }
         }
 
-        public bool HasDefaultValue { get; private set; }
+       // public bool HasDefaultValue { get; private set; }
     }
 }

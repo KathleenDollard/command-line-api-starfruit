@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
-    public class OptionBasicsTestData : MakerCommandTestDataBase
+    public class OptionBasicsTestData : MakerCommandTestData
     {
         public OptionBasicsTestData(string name, string description, string[] aliases, bool isHidden, bool required)
               : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
-            base.Descriptor.Options.Add(
+            Descriptor.Options.Add(
                         new OptionDescriptor(null, null)
                         {
                             Name = name,
