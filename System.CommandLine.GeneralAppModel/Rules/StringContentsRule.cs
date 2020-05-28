@@ -31,15 +31,15 @@ namespace System.CommandLine.GeneralAppModel
             => input;
 
         public virtual (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
-                                                                   IEnumerable<object> items,
+                                                                   IEnumerable<object> traits,
                                                                    SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var matches = items.OfType<string>()
-                               .Where(x => DoesStringMatch(x, Position, CompareTo));
+            var matches = traits.OfType<IdentityWrapper<string>>()
+                               .Where(x => DoesStringMatch(x.Value, Position, CompareTo));
             if (matches.Any())
             {
                 return (true, matches
-                               .Select(x => MorphValueInternal(symbolDescriptor, x, x, parentSymbolDescriptor))
+                               .Select(x => MorphValueInternal(symbolDescriptor, x, x.Value, parentSymbolDescriptor))
                                .First());
             }
             return (false, default);
@@ -49,7 +49,7 @@ namespace System.CommandLine.GeneralAppModel
 
 
 
-        public bool DoesStringMatch(string value, StringPosition position, string compareTo)
+        protected bool DoesStringMatch(string value, StringPosition position, string compareTo)
         {
             if (value is null)
             {
@@ -63,12 +63,12 @@ namespace System.CommandLine.GeneralAppModel
                 _ => throw new ArgumentException("Unexpected position")
             };
         }
-    
-        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor) 
+
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor)
             => candidates
                     .Where(x => x.Traits
-                                .OfType<string>()
-                                .Where(x => DoesStringMatch(x, Position, CompareTo))
+                                .OfType<IdentityWrapper<string>>()
+                                .Where(x => DoesStringMatch(x.Value, Position, CompareTo))
                                 .Any());
 
         public override string RuleDescription<TIRuleSet>()
