@@ -20,7 +20,7 @@ namespace System.CommandLine.GeneralAppModel
         /// Some NameRules will also morph the names. When morphing names, only those name rules with IRuleMorphValue<string>  will be used
         /// </summary>
         public RuleGroup<IRuleGetValue<string>> NameRules { get; } = new RuleGroup<IRuleGetValue<string>>();
-        public RuleGroup<IRuleGetValues<string>> AliasRules { get; } = new RuleGroup<IRuleGetValues<string>>();
+        public RuleGroup<IRuleGetValues<string[]>> AliasRules { get; } = new RuleGroup<IRuleGetValues<string[]>>();
         public RuleGroup<IRuleGetValue<bool>> IsHiddenRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 
         public IEnumerable<T> GetSymbols<T>(SymbolType requestedSymbolType, IEnumerable<T> items, SymbolDescriptorBase parentSymbolDescriptor)
@@ -40,7 +40,7 @@ namespace System.CommandLine.GeneralAppModel
             NameRules.Add(nameRule);
         }
 
-        public void AddAliasesRule(IRuleGetValues<string> aliasesRule)
+        public void AddAliasesRule(IRuleGetValues<string[]> aliasesRule)
         {
             CheckFrozen();
             AliasRules.Add(aliasesRule);

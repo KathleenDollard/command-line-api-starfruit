@@ -75,7 +75,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("WithProperty", "ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
         public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
         {
-            var rule = new AttributeWithPropertyRule<string>(attributeName, propertyName);
+            var rule = new AttributeWithPropertyValueRule<string>(attributeName, propertyName);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -117,12 +117,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void ReportForComplexAttributeRuleGetValueIsCorrect(string attributeName,
                     string propName1, Type type1, string propName2, Type type2, string expected)
         {
-            var rule = new ComplexAttributeRule(attributeName)
+            var rule = new AttributeWithComplexValueRule(attributeName)
             {
-                PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                PropertyNamesAndTypes = new List<AttributeWithComplexValueRule.NameAndType>()
                     {
-                        new ComplexAttributeRule.NameAndType(propName1, propName1, propertyType: type1),
-                        new ComplexAttributeRule.NameAndType(propName2, propName2, propertyType: type2)
+                        new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1),
+                        new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2)
                     }
             };
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
@@ -135,7 +135,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
             string propName1,   string expected)
         {
-            var rule = new OptionalValueAttributeRule<int>(attributeName, propName1);
+            var rule = new AttributeWithOptionalValueRule<int>(attributeName, propName1);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);

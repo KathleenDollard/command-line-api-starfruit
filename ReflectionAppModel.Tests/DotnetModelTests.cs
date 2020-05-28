@@ -11,7 +11,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         {
             strategy = new Strategy()
                            .SetReflectionRules()
-                           .CandidateNamesToIgnore( "CommandDataFromMethods", "CommandDataFromType");
+                           .SymbolCandidateNamesToIgnore( "CommandDataFromMethods", "CommandDataFromType");
         }
 
         //[Fact]

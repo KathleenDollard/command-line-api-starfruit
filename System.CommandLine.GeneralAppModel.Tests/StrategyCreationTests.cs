@@ -14,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             generalStrategy = new Strategy(generalStrategyName)
                             .SetGeneralRules()
-                            .CandidateNamesToIgnore("CommandDataFromMethods", "CommandDataFromType");
+                            .SymbolCandidateNamesToIgnore("CommandDataFromMethods", "CommandDataFromType");
         }
 
         [Fact]

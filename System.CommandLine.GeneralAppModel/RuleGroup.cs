@@ -66,6 +66,27 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
+        public virtual (bool success, T value) GetOptionalValue<T>(SymbolDescriptorBase symbolDescriptor,
+                                             Candidate candidate,
+                                             SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var traits = candidate.Traits;
+
+            // A frequent trouble spot for strategies is that their rules don't match OfType in the following line. 
+            // This can be because they inadvertently have the wrong T, or they don't support IRuleGetValue.
+            // Strong typing in strategies is planned to reduce this issue.
+            var valueRules = Rules.OfType<IRuleOptionalValue<T>>().ToList();
+            foreach (var rule in valueRules)
+            {
+                var (success, value) = rule.GetOptionalValue(symbolDescriptor, traits, parentSymbolDescriptor);
+                if (success)
+                {
+                    return (success, value);
+                }
+            }
+            return default;
+        }
+
         public virtual IEnumerable<TValue> GetAllValues<TValue>(SymbolDescriptorBase symbolDescriptor,
                                             Candidate candidate,
                                             SymbolDescriptorBase parentSymbolDescriptor)

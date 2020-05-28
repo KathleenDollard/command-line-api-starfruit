@@ -102,11 +102,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
                         var np = expectedRules[i] as NamePatternTestData;
                         r.CheckNamePatternRule(symbolType, np.Position, np.CompareTo);
                         break;
-                    case AttributeWithPropertyRule<string> r:
+                    case AttributeWithPropertyValueRule<string> r:
                         var naps = expectedRules[i] as NamedAttributeWithPropertyTestData;
                         r.CheckNamedAttributeWithPropertyRule(symbolType, naps.AttributeName, naps.PropertyName, typeof(string));
                         break;
-                    case AttributeWithPropertyRule<bool> r:
+                    case AttributeWithPropertyValueRule<bool> r:
                         var rapb = expectedRules[i] as NamedAttributeWithPropertyTestData;
                         r.CheckNamedAttributeWithPropertyRule(symbolType, rapb.AttributeName, rapb.PropertyName, typeof(bool));
                         break;

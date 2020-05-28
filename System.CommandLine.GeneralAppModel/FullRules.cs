@@ -1,35 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.GeneralAppModel.Rules;
 
 namespace System.CommandLine.GeneralAppModel
 {
     public static class FullRules
     {
-
-        public static Strategy SetFullSelectSymbolRules(this Strategy strategy)
-        {
-            strategy.SelectSymbolRules.SetFullSelectSymbolRules();
-            return strategy;
-        }
-
-        public static Strategy SetFullArgumentRules(this Strategy strategy)
-        {
-            strategy.ArgumentRules.SetFullArgumentRules();
-            return strategy;
-        }
-
-        public static Strategy SetFullCommandRules(this Strategy strategy)
-        {
-            strategy.CommandRules.SetFullCommandRules();
-            return strategy;
-        }
-
-        public static Strategy SetFullOptionRules(this Strategy strategy)
-        {
-            strategy.OptionRules.SetFullOptionRules();
-            return strategy;
-        }
-
         public static RuleSetSelectSymbols SetFullSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
             rules.Rules
@@ -44,58 +20,45 @@ namespace System.CommandLine.GeneralAppModel
             ;
             return rules;
         }
- 
+
         public static RuleSetArgument SetFullArgumentRules(this RuleSetArgument rules)
         {
             rules.DescriptionRules
-                .Add(new AttributeWithPropertyRule<string>("Description", "Description"))
-                .Add(new AttributeWithPropertyRule<string>("Argument", "Description"))
+                .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
+                .Add(new AttributeWithPropertyValueRule<string>("Argument", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new AttributeWithPropertyRule<string>("Name", "Name"))
-                .Add(new AttributeWithPropertyRule<string>("Argument", "Name"))
+                .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
+                .Add(new AttributeWithPropertyValueRule<string>("Argument", "Name"))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg"))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument"))
                 .Add(new IdentityRule<string>())
                 ;
             rules.DefaultRules
-                .Add(new OptionalValueAttributeRule<object>("Default", "Value"))
+                .Add(new AttributeWithOptionalValueRule<object>("Default", "Value"))
                 // Default on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
                 ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyRule<bool>("Required"))
-                .Add(new AttributeWithPropertyRule<bool>("Argument", "Required"))
+                .Add(new BooleanAttribute("Required"))
+                .Add(new BooleanAttribute("Argument", "Required"))
             ;
 
             rules.IsHiddenRules
-                .Add(new AttributeWithPropertyRule<bool>("Hidden"))
-                .Add(new AttributeWithPropertyRule<bool>("Argument", "IsHidden"))
+                .Add(new BooleanAttribute("Hidden"))
+                .Add(new BooleanAttribute("Argument", "IsHidden"))
                 ;
 
             rules.AliasRules
-                .Add(new AttributeWithPropertyRule<string>("Aliases", "Aliases"))
-                .Add(new AttributeWithPropertyRule<string>("Argument", "Aliases"))
+                .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
+                .Add(new AttributeWithPropertyValueRule<string[]>("Argument", "Aliases"))
                 ;
 
             rules.ArityRules
-                .Add(new ComplexAttributeRule("Arity")
-                {
-                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
-                    { 
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName,propertyName: "MinCount", propertyType: typeof(int)),
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName,propertyName: "MaxCount", propertyType: typeof(int))
-                    }
-                })
-                .Add(new ComplexAttributeRule("Arity")
-                {
-                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
-                    {
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName, propertyName: "MinimumCount", propertyType: typeof(int)),
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName, propertyName: "MaximumCount", propertyType: typeof(int))
-                    }
-                 });
+                .Add(new RuleArity("Arity", "MinCount", "MaxCount"))
+                .Add(new RuleArity("Arity", "MinimumCount", "MaximumCount"))
+                ;
 
             return rules;
         }
@@ -104,76 +67,63 @@ namespace System.CommandLine.GeneralAppModel
         {
 
             rules.DescriptionRules
-                .Add(new AttributeWithPropertyRule<string>("Description", "Description"))
-                .Add(new AttributeWithPropertyRule<string>("Option", "Description"))
+                .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
+                .Add(new AttributeWithPropertyValueRule<string>("Option", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new AttributeWithPropertyRule<string>("Name", "Name"))
-                .Add(new AttributeWithPropertyRule<string>("Option", "Name"))
+                .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
+                .Add(new AttributeWithPropertyValueRule<string>("Option", "Name"))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Option"))
                 .Add(new IdentityRule<string>());
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyRule<bool>("Required"))
-                .Add(new AttributeWithPropertyRule<bool>("Option", "OptionRequired"))
+                .Add(new BooleanAttribute("Required"))
+                .Add(new BooleanAttribute("Option", "OptionRequired"))
              ;
 
             rules.IsHiddenRules
-                .Add(new AttributeWithPropertyRule<bool>("Hidden"))
-                .Add(new AttributeWithPropertyRule<bool>("Option", "IsHidden"))
+                .Add(new BooleanAttribute("Hidden"))
+                .Add(new BooleanAttribute("Option", "IsHidden"))
                 ;
 
             rules.AliasRules
-                .Add(new AttributeWithPropertyRule<string>("Aliases", "Aliases"))
-                .Add(new AttributeWithPropertyRule<string>("Option", "Aliases"))
+                .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
+                .Add(new AttributeWithPropertyValueRule<string[]>("Option", "Aliases"))
                 ;
 
             return rules;
         }
 
-        public static RuleSetArgument SetStandardOptionArgumentRules(this RuleSetArgument rules)
+        public static RuleSetArgument SetFullOptionArgumentRules(this RuleSetArgument rules)
         {
             rules.DescriptionRules
-                .Add(new AttributeWithPropertyRule<string>("Option", "ArgumentDescription", SymbolType.Argument))
+                .Add(new AttributeWithPropertyValueRule<string>("Option", "ArgumentDescription", SymbolType.Argument))
                 ;
 
             // The name is used for help
             rules.NameRules
-                .Add(new AttributeWithPropertyRule<string>("Option", "ArgumentName", SymbolType.Argument))
+                .Add(new AttributeWithPropertyValueRule<string>("Option", "ArgumentName", SymbolType.Argument))
                 ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
+                .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
             ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
+                .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
             ;
 
             rules.DefaultRules
-                .Add(new OptionalValueAttributeRule<object>("Default", "Value"))
+                .Add(new AttributeWithOptionalValueRule<object>("Default", "Value"))
                 ;
- 
+
             // Never hidden, no aliases
 
             rules.ArityRules
-                .Add(new ComplexAttributeRule("Arity")
-                {
-                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
-                    {
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName,propertyName: "MinCount", propertyType: typeof(int)),
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName,propertyName: "MaxCount", propertyType: typeof(int))
-                    }
-                })
-                .Add(new ComplexAttributeRule("Arity")
-                {
-                    PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
-                    {
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MinimumCountName, propertyName: "MinimumCount", propertyType: typeof(int)),
-                        new ComplexAttributeRule.NameAndType(ArityDescriptor.MaximumCountName, propertyName: "MaximumCount", propertyType: typeof(int))
-                    }
-                });
+                .Add(new RuleArity("Arity", "MinCount", "MaxCount"))
+                .Add(new RuleArity("Arity", "MinimumCount", "MaximumCount"))
+                ;
             return rules;
         }
 
@@ -181,28 +131,28 @@ namespace System.CommandLine.GeneralAppModel
         {
 
             rules.DescriptionRules
-                .Add(new AttributeWithPropertyRule<string>("Description", "Description"))
-                .Add(new AttributeWithPropertyRule<string>("Command", "Description"))
+                .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
+                .Add(new AttributeWithPropertyValueRule<string>("Command", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new AttributeWithPropertyRule<string>("Name", "Name"))
-                .Add(new AttributeWithPropertyRule<string>("Command", "Name"))
+                .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
+                .Add(new AttributeWithPropertyValueRule<string>("Command", "Name"))
                 .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command"))
                 .Add(new IdentityRule<string>())
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules
-                .Add(new AttributeWithPropertyRule<bool>("TreatUnmatchedTokensAsErrors", "Value"))
-                .Add(new AttributeWithPropertyRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
+                .Add(new BooleanAttribute("TreatUnmatchedTokensAsErrors"))
+                .Add(new AttributeWithPropertyValueRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
 
             rules.IsHiddenRules
-                .Add(new AttributeWithPropertyRule<bool>("Hidden"))
-                .Add(new AttributeWithPropertyRule<bool>("Command", "IsHidden"));
+                .Add(new BooleanAttribute("Hidden"))
+                .Add(new BooleanAttribute("Command", "IsHidden"));
 
             rules.AliasRules
-                .Add(new AttributeWithPropertyRule<string>("Aliases", "Aliases"))
-                 .Add(new AttributeWithPropertyRule<string>("Command", "Aliases"))
+                .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
+                 .Add(new AttributeWithPropertyValueRule<string[]>("Command", "Aliases"))
                ;
 
             return rules;

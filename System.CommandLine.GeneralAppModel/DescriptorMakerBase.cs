@@ -116,14 +116,8 @@ namespace System.CommandLine.GeneralAppModel
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            //var (success, value) = ruleSet.DefaultRules.TryGetFirstValue<object>(descriptor, candidate, parentSymbolDescriptor);
-            //if (!success)
-            var data = ruleSet.DefaultRules.GetFirstOrDefaultValue<Dictionary<string, object>>(descriptor, candidate, parentSymbolDescriptor);
-            if (data is null || !data.Any())
-            {
-                return;
-            }
-            if (data.TryGetValue("Value", out var value))// && data.TryGetValue("Value", out var value))
+            var (success, value) = ruleSet.DefaultRules.GetOptionalValue<object>(descriptor, candidate, parentSymbolDescriptor);
+            if (success)
             {
                 descriptor.DefaultValue = new DefaultValueDescriptor(value);
             }
@@ -163,7 +157,8 @@ namespace System.CommandLine.GeneralAppModel
 
         private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbol ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            descriptor.Aliases = ruleSet.AliasRules.GetAllValues<string>(descriptor, candidate, parentSymbolDescriptor);
+            descriptor.Aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
+                                    .SelectMany(x=>x);
             descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);

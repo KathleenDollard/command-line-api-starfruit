@@ -11,6 +11,7 @@
         public RuleSetSelectSymbols SelectSymbolRules { get; } = new RuleSetSelectSymbols();
         public RuleSetArgument ArgumentRules { get; } = new RuleSetArgument();
         public RuleSetOption OptionRules { get; } = new RuleSetOption();
+        public RuleSetArgument OptionArgumentRules { get; } = new RuleSetArgument(); // these aren't yet used
         public RuleSetCommand CommandRules { get; } = new RuleSetCommand();
 
         public string Report()
