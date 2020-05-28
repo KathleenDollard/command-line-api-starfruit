@@ -35,8 +35,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static void CheckNamePatternRule(this IRule rule, SymbolType symbolType, StringContentsRule.StringPosition position, string compareTo)
         {
-            rule.CheckRule<NamePatternRule>(symbolType);
-            var typeRule = rule as NamePatternRule;
+            rule.CheckRule<NameEndsWithRule>(symbolType);
+            var typeRule = rule as NameEndsWithRule;
             typeRule.Position.Should().Be(position);
             typeRule.CompareTo.Should().Be(compareTo);
         }
@@ -98,7 +98,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             {
                 switch (actual[i])
                 {
-                    case NamePatternRule r:
+                    case NameEndsWithRule r:
                         var np = expectedRules[i] as NamePatternTestData;
                         r.CheckNamePatternRule(symbolType, np.Position, np.CompareTo);
                         break;

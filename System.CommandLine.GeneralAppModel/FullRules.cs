@@ -10,11 +10,11 @@ namespace System.CommandLine.GeneralAppModel
         {
             rules.Rules
                .Add(new AttributeRule("Command", SymbolType.Command))
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command", SymbolType.Command))
+               .Add(new NameEndsWithRule("Command", SymbolType.Command))
                .Add(new IsOfTypeRule<Type>(SymbolType.Command))
                .Add(new AttributeRule("Argument", SymbolType.Argument))
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument", SymbolType.Argument))
-               .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg", SymbolType.Argument))
+               .Add(new NameEndsWithRule("Argument", SymbolType.Argument))
+               .Add(new NameEndsWithRule("Arg", SymbolType.Argument))
                .Add(new RemainingSymbolRule(SymbolType.Option))
             // TODO: .Add(new LabelRule<string>("ComplexUserType", SymbolType.Command))
             ;
@@ -31,8 +31,8 @@ namespace System.CommandLine.GeneralAppModel
             rules.NameRules
                 .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
                 .Add(new AttributeWithPropertyValueRule<string>("Argument", "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Arg"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Argument"))
+                .Add(new NameEndsWithRule("Arg"))
+                .Add(new NameEndsWithRule("Argument"))
                 .Add(new IdentityRule<string>())
                 ;
             rules.DefaultRules
@@ -74,7 +74,7 @@ namespace System.CommandLine.GeneralAppModel
             rules.NameRules
                 .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
                 .Add(new AttributeWithPropertyValueRule<string>("Option", "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Option"))
+                .Add(new NameEndsWithRule("Option"))
                 .Add(new IdentityRule<string>());
 
             rules.RequiredRules
@@ -138,7 +138,7 @@ namespace System.CommandLine.GeneralAppModel
             rules.NameRules
                 .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
                 .Add(new AttributeWithPropertyValueRule<string>("Command", "Name"))
-                .Add(new NamePatternRule(StringContentsRule.StringPosition.EndsWith, "Command"))
+                .Add(new NameEndsWithRule("Command"))
                 .Add(new IdentityRule<string>())
             ;
 

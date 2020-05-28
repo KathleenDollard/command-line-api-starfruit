@@ -40,11 +40,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        //public (bool skip, AndConstraint<CommandDescriptorAssertions> constraint) Unless()
-        //{
-        //    return new AndConstraint<CommandDescriptorAssertions>(this);
-        //}
-
         /// <summary>
         /// This determines if the object is in the initial state. "Empty" is a bit of a misnomer
         /// because Name and Raw should not be empty and are tested not being empty and ParentSymbolDescriptor is ignored

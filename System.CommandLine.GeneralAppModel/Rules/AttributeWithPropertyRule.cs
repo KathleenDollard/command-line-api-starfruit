@@ -23,11 +23,6 @@ namespace System.CommandLine.GeneralAppModel
             : base(attributeName, propertyName, typeof(TValue), symbolType)
         { }
 
-        //public AttributeWithPropertyValueRule(string attributeName, SymbolType symbolType = SymbolType.All)
-        //    : base(attributeName, null, typeof(TValue), symbolType)
-        //{ }
-
-
         public (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
                                                                    IEnumerable<object> traits,
                                                                    SymbolDescriptorBase parentSymbolDescriptor)

@@ -20,36 +20,5 @@
 
         public bool IsAritySet { get; private set; }
 
-        //public int MinimumValuesAllowed
-        //{
-        //    get => minimumCount;
-        //    set
-        //    {
-        //        IsAritySet = true;
-        //        minimumCount = value;
-        //    }
-        //}
-        //public int MaximumValuesAllowed
-        //{
-        //    get => maximumCount;
-        //    set
-        //    {
-        //        IsAritySet = true;
-        //        maximumCount = value;
-        //    }
-        //}
-
-        //public bool IsDefaultSet { get; private set; }
-
-        //public object DefaultValue
-        //{
-        //    get => defaultValue;
-        //    set
-        //    {
-        //        IsDefaultSet = true;
-        //        defaultValue = value;
-        //    }
-        //}
- 
     }
 }

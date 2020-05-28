@@ -40,22 +40,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"the name begins with 'Abc'")]
-        public void ReportForNameRuleForGetItemsIsCorrect(StringContentsRule.StringPosition position,
-            string compareTo, string expected)
+        [InlineData("Abc", @"the name ends with 'Abc'")]
+        public void ReportForNameRuleForGetItemsIsCorrect(string compareTo, string expected)
         {
-            var rule = new NamePatternRule(position, compareTo);
+            var rule = new NameEndsWithRule(compareTo);
             var actual = rule.RuleDescription<IRuleGetCandidates>();
 
             actual.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"If name begins with 'Abc', remove 'Abc'")]
-        public void ReportForNameRuleForGetValueIsCorrect(StringContentsRule.StringPosition position,
-            string compareTo, string expected)
+        [InlineData("Abc", @"If name ends with 'Abc', remove 'Abc'")]
+        public void ReportForNameRuleForGetValueIsCorrect(string compareTo, string expected)
         {
-            var rule = new NamePatternRule(position, compareTo);
+            var rule = new NameEndsWithRule(compareTo);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -131,9 +129,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData("Abc", "Def",  "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
+        [InlineData("Abc", "Def", "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
         public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
-            string propName1,   string expected)
+            string propName1, string expected)
         {
             var rule = new AttributeWithOptionalValueRule<int>(attributeName, propName1);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
