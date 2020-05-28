@@ -40,22 +40,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"the name begins with 'Abc'")]
-        public void ReportForNameRuleForGetItemsIsCorrect(StringContentsRule.StringPosition position,
-            string compareTo, string expected)
+        [InlineData("Abc", @"the name ends with 'Abc'")]
+        public void ReportForNameRuleForGetItemsIsCorrect(string compareTo, string expected)
         {
-            var rule = new NamePatternRule(position, compareTo);
+            var rule = new NameEndsWithRule(compareTo);
             var actual = rule.RuleDescription<IRuleGetCandidates>();
 
             actual.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(StringContentsRule.StringPosition.BeginsWith, "Abc", @"If name begins with 'Abc', remove 'Abc'")]
-        public void ReportForNameRuleForGetValueIsCorrect(StringContentsRule.StringPosition position,
-            string compareTo, string expected)
+        [InlineData("Abc", @"If name ends with 'Abc', remove 'Abc'")]
+        public void ReportForNameRuleForGetValueIsCorrect(string compareTo, string expected)
         {
-            var rule = new NamePatternRule(position, compareTo);
+            var rule = new NameEndsWithRule(compareTo);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -75,7 +73,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("WithProperty", "ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
         public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
         {
-            var rule = new AttributeWithPropertyRule<string>(attributeName, propertyName);
+            var rule = new AttributeWithPropertyValueRule<string>(attributeName, propertyName);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -117,12 +115,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void ReportForComplexAttributeRuleGetValueIsCorrect(string attributeName,
                     string propName1, Type type1, string propName2, Type type2, string expected)
         {
-            var rule = new ComplexAttributeRule(attributeName)
+            var rule = new AttributeWithComplexValueRule(attributeName)
             {
-                PropertyNamesAndTypes = new List<ComplexAttributeRule.NameAndType>()
+                PropertyNamesAndTypes = new List<AttributeWithComplexValueRule.NameAndType>()
                     {
-                        new ComplexAttributeRule.NameAndType(propName1, propName1, propertyType: type1),
-                        new ComplexAttributeRule.NameAndType(propName2, propName2, propertyType: type2)
+                        new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1),
+                        new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2)
                     }
             };
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
@@ -131,11 +129,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData("Abc", "Def",  "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
+        [InlineData("Abc", "Def", "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
         public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
-            string propName1,   string expected)
+            string propName1, string expected)
         {
-            var rule = new OptionalValueAttributeRule<int>(attributeName, propName1);
+            var rule = new AttributeWithOptionalValueRule<int>(attributeName, propName1);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);

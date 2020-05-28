@@ -4,19 +4,20 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleGroup<T> : IEnumerable<IRule>
+    public class RuleGroup<TRule> : IEnumerable<TRule>
+        where TRule : IRule
     {
 
-        private readonly List<IRule> _rules = new List<IRule>();
-        public IEnumerable<IRule> Rules => _rules;
+        private readonly List<TRule> _rules = new List<TRule>();
+        public IEnumerable<TRule> Rules => _rules;
 
-        public RuleGroup<T> Add(IRule rule)
+        public RuleGroup<TRule> Add(TRule rule)
         {
             _rules.Add(rule);
             return this;
         }
 
-        public RuleGroup<T> AddRange(IEnumerable<IRule> rules)
+        public RuleGroup<TRule> AddRange(IEnumerable<TRule> rules)
         {
             foreach (var rule in rules)
             {
@@ -24,11 +25,11 @@ namespace System.CommandLine.GeneralAppModel
             }
             return this;
         }
-        public IEnumerator<IRule> GetEnumerator()
-            => ((IEnumerable<IRule>)_rules).GetEnumerator();
+        public IEnumerator<TRule> GetEnumerator()
+            => ((IEnumerable<TRule>)_rules).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-            => ((IEnumerable<IRule>)_rules).GetEnumerator();
+            => ((IEnumerable<TRule>)_rules).GetEnumerator();
 
         public virtual (bool, TValue) TryGetFirstValue<TValue>(SymbolDescriptorBase symbolDescriptor,
                                                    Candidate candidate,
@@ -60,6 +61,27 @@ namespace System.CommandLine.GeneralAppModel
                 if (Success)
                 {
                     return Value;
+                }
+            }
+            return default;
+        }
+
+        public virtual (bool success, T value) GetOptionalValue<T>(SymbolDescriptorBase symbolDescriptor,
+                                             Candidate candidate,
+                                             SymbolDescriptorBase parentSymbolDescriptor)
+        {
+            var traits = candidate.Traits;
+
+            // A frequent trouble spot for strategies is that their rules don't match OfType in the following line. 
+            // This can be because they inadvertently have the wrong T, or they don't support IRuleGetValue.
+            // Strong typing in strategies is planned to reduce this issue.
+            var valueRules = Rules.OfType<IRuleOptionalValue<T>>().ToList();
+            foreach (var rule in valueRules)
+            {
+                var (success, value) = rule.GetOptionalValue(symbolDescriptor, traits, parentSymbolDescriptor);
+                if (success)
+                {
+                    return (success, value);
                 }
             }
             return default;

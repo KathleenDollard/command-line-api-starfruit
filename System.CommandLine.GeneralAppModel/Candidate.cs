@@ -11,15 +11,7 @@ namespace System.CommandLine.GeneralAppModel
             Item = item;
         }
 
-        public Candidate(object item, string name)
-            : this (item)
-        {
-            Name = name;
-        }
-
         public object Item { get; }
-
-        public string Name { get; set; }
 
         public IEnumerable<object> Traits => traits;
 

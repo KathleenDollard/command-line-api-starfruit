@@ -24,13 +24,4 @@ namespace System.CommandLine.GeneralAppModel
          public override string RuleDescription<TIRuleSet>()
            => "The identity, usually the name.";
    }
-
-    public class IdentityWrapper<T> : IdentityWrapper
-    {
-        public IdentityWrapper(T value)
-        {
-            Value = value;
-        }
-        public T Value { get; }
-    }
 }

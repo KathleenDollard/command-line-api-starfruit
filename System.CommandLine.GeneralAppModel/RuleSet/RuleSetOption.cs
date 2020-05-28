@@ -1,10 +1,10 @@
 ﻿namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleSetOption : RuleSetSymbol, IRuleSetOption
+    public class RuleSetOption : RuleSetSymbol
     {
-        public RuleGroup<IRuleGetValues<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValues<bool>>();
+        public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 
-        public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
+        public void AddRequiredRule(IRuleGetValue<bool> requiredRule)
         {
             CheckFrozen();
             RequiredRules.Add(requiredRule);

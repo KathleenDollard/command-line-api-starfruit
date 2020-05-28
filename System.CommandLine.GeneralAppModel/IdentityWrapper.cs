@@ -7,4 +7,13 @@
     /// </summary>
     public class IdentityWrapper
     { }
+
+    public class IdentityWrapper<T> : IdentityWrapper
+    {
+        public IdentityWrapper(T value)
+        {
+            Value = value;
+        }
+        public T Value { get; }
+    }
 }

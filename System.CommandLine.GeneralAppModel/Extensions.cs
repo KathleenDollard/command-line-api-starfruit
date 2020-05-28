@@ -34,11 +34,12 @@ namespace System.CommandLine.GeneralAppModel
             return Environment.NewLine + new string(' ', tabsCount) + new string(' ', tabsCount) + new string(' ', tabsCount);
         }
 
-        public static string ReportRuleGroup<TIRuleSet>(this RuleGroup<TIRuleSet> ruleGroup,int tabsCount, string what )
+        public static string ReportRuleGroup<TRule>(this RuleGroup<TRule> ruleGroup,int tabsCount, string what )
+            where TRule : IRule
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             string indentedWhitespace = CoreExtensions.NewLineWithTabs(tabsCount + 1);
-            return $"{ whitespace}To determine {what}  { string.Join("", ruleGroup.Select(r => indentedWhitespace + r.RuleDescription<TIRuleSet>() + $" ({r.GetType().Name})"))}";
+            return $"{ whitespace}To determine {what}  { string.Join("", ruleGroup.Select(r => indentedWhitespace + r.RuleDescription<TRule>() + $" ({r.GetType().Name})"))}";
         }
 
         public static string ProperAnOrA(this string s)
