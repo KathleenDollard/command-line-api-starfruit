@@ -1,6 +1,6 @@
 ﻿namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleSetOption : RuleSetSymbol, IRuleSetOption
+    public class RuleSetOption : RuleSetSymbol
     {
         public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 

@@ -2,7 +2,7 @@
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public abstract class RuleSetSymbol : RuleSetBase, IRuleSetSymbol
+    public abstract class RuleSetSymbol : RuleSetBase
     {
         public bool Frozen { get; private set; }
         internal void Freeze()

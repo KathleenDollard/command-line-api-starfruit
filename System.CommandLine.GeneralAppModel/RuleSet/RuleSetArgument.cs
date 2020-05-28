@@ -1,6 +1,6 @@
 ﻿namespace System.CommandLine.GeneralAppModel
 {
-    public class RuleSetArgument : RuleSetSymbol, IRuleSetArgument
+    public class RuleSetArgument : RuleSetSymbol
     {
         public RuleGroup<IRuleArity> ArityRules { get; } = new RuleGroup<IRuleArity>();
         public RuleGroup<IRuleOptionalValue<object>> DefaultRules { get; } = new RuleGroup<IRuleOptionalValue<object>>();
