@@ -25,13 +25,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
     }
 
-    public class CommandDescriptorAssertions :
-            ReferenceTypeAssertions<CommandDescriptor, CommandDescriptorAssertions>
+    public class CommandDescriptorAssertions : SymbolDescriptorAssertions<CommandDescriptor, CommandDescriptorAssertions>
     {
         public CommandDescriptorAssertions(CommandDescriptor instance)
-        {
-            Subject = instance;
-        }
+            : base(instance)
+        { }
 
         protected override string Identifier => "commanddescriptor";
 
@@ -115,7 +113,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         private void CheckName(SymbolType symbolType, SymbolData expected, SymbolDescriptorBase actual)
         {
-    
+
             CheckIfNotNullWrapper(expected.NameWrapper, expectedValue =>
                 {
                     if (actual.Name is null)
