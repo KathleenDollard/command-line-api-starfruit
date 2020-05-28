@@ -93,13 +93,21 @@ namespace System.CommandLine.GeneralAppModel
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             var candidates = SpecificSource.Tools.GetChildCandidates(Strategy, descriptor);
-            candidates = candidates.Where(c => !Strategy.GetCandidateRules.NamesToIgnore.Contains(c.Name));
+            candidates = candidates.Where(c => !InNamesToIgnore(Strategy, candidate));
             var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(candidates, descriptor);
 
             descriptor.Arguments.AddRange(argumentItems.Select(i => GetArgument(i, descriptor)));
             descriptor.Options.AddRange(optionItems.Select(i => GetOption(i, descriptor)));
             descriptor.SubCommands.AddRange(subCommandItems.Select(i => GetCommand(i, descriptor)));
             return descriptor;
+
+            static bool InNamesToIgnore(Strategy strategy, Candidate candidate)
+            {
+                var identity = candidate.Traits.OfType<IdentityWrapper<string>>().FirstOrDefault();
+                return identity is null 
+                            ? false 
+                            : strategy.GetCandidateRules.NamesToIgnore.Contains(identity.Value);
+            }
         }
 
         private ArgumentDescriptor GetArgument(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
@@ -158,7 +166,7 @@ namespace System.CommandLine.GeneralAppModel
         private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbol ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
             descriptor.Aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
-                                    .SelectMany(x=>x);
+                                    .SelectMany(x => x);
             descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
