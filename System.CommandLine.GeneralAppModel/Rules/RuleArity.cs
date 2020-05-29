@@ -16,28 +16,5 @@ namespace System.CommandLine.GeneralAppModel.Rules
                         new AttributeWithComplexValueRule.NameAndType(ArityDescriptor.MaximumCountName,propertyName: maxCountPropertyName, propertyType: typeof(int))
             };
         }
-
-        public (bool success, uint minimumCount, uint maximumCount) GetArity(SymbolDescriptorBase descriptor,
-                                                               IEnumerable<object> traits,
-                                                               SymbolDescriptorBase parentSymbolDescriptor)
-        {
-            var (success, data) = GetFirstOrDefaultValue(descriptor, traits, parentSymbolDescriptor);
-            if (!success )
-            {
-                return (false, default, default);
-            }
-            uint minCount = 0;
-            uint maxCount = 0;
-            if (data.TryGetValue(ArityDescriptor.MinimumCountName, out var objMinCount))
-            {
-                minCount = Conversions.To<uint>(objMinCount);
-            }
-            if (data.TryGetValue(ArityDescriptor.MaximumCountName, out var objMaxCount))
-            {
-                maxCount = Conversions.To<uint>(objMaxCount);
-            }
-            return (true, minCount, maxCount);
-        }
-
     }
 }

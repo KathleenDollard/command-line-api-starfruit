@@ -61,7 +61,7 @@ namespace System.CommandLine.GeneralAppModel
             var arg = new Argument(descriptor.Name);
             arg.ArgumentType = descriptor.ArgumentType;
             AddAliases(arg, descriptor.Aliases);
-            if (descriptor.Arity != null && descriptor.Arity.IsSet)
+            if (descriptor.Arity != null)
             {
                 arg.Arity = new ArgumentArity(descriptor.Arity.MinimumCount, descriptor.Arity.MaximumCount);
             }

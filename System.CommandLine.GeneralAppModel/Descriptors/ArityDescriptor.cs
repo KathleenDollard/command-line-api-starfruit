@@ -7,14 +7,12 @@
         private int minimumNumberOfValues;
         private int maximumNumberOfValues;
 
-        public bool IsSet { get; private set; }
         public int MinimumCount
         {
             get => minimumNumberOfValues;
             set
             {
                 minimumNumberOfValues = value;
-                IsSet = true;
             }
         }
 
@@ -24,7 +22,6 @@
             set
             {
                 maximumNumberOfValues = value;
-                IsSet = true;
             }
         }
     }
