@@ -1035,12 +1035,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
         public class FromParameterWithAttributeValue
         {
-            public void DoSomething([Default(value)] string stringValueArg) { }
+            public void DoSomething([DefaultValue(value)] string stringValueArg) { }
         }
 
         public class FromPropertyWithAttributeValue
         {
-            [Default(value)]
+            [DefaultValue(value)]
             public string StringPropertyArg { get; set; }
         }
     }

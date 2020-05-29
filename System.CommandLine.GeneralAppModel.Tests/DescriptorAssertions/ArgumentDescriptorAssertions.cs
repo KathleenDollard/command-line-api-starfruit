@@ -59,15 +59,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<ArgumentDescriptorAssertions> HaveDefaultValue(bool isSet, object defaultValue)
         {
+            // Be careful simplifying the following. VS wants to you to, but bugs and a lack of clarity resulted. 
             Execute.Assertion
-                 .ForCondition(isSet || !(Subject.DefaultValue is null))
-                 .FailWith("Expected the default value not to be set, but found that it was set")
-                 .Then
-                 .ForCondition(!isSet || Subject.DefaultValue is null)
+                 .ForCondition(isSet ? !(Subject.DefaultValue is null) : true)
                  .FailWith("Expected the default value to be set, but found it was not")
                  .Then
-                 .ForCondition(isSet ? Subject.DefaultValue.DefaultValue .Equals(defaultValue) : true)
-                 .FailWith($"Expected DefaultValue to be {defaultValue}, but found {(isSet ? Subject.DefaultValue.DefaultValue  : "<wat?>")}");
+                 .ForCondition(!isSet ? Subject.DefaultValue is null : true)
+                 .FailWith("Expected the default value not to be set, but found that it was set");
+
+            if (!(defaultValue is null) && !(Subject.DefaultValue is null))
+            {
+                Execute.Assertion
+                     .ForCondition(Subject.DefaultValue.DefaultValue.Equals(defaultValue))
+                     .FailWith($"Expected DefaultValue to be {defaultValue}, but found {(isSet ? Subject.DefaultValue.DefaultValue : "<wat?>")}");
+            }
 
             return new AndConstraint<ArgumentDescriptorAssertions>(this);
         }

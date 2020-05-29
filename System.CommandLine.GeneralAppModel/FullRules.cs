@@ -35,9 +35,9 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NameEndsWithRule("Argument"))
                 .Add(new IdentityRule<string>())
                 ;
-            rules.DefaultRules
-                .Add(new AttributeWithOptionalValueRule<object>("Default", "Value"))
-                // Default on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
+            rules.DefaultValueRules
+                .Add(new AttributeWithOptionalValueRule<object>("DefaultValue", "Value"))
+                // DefaultValue on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
                 ;
 
             rules.RequiredRules
@@ -114,8 +114,8 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
             ;
 
-            rules.DefaultRules
-                .Add(new AttributeWithOptionalValueRule<object>("Default", "Value"))
+            rules.DefaultValueRules
+                .Add(new AttributeWithOptionalValueRule<object>("DefaultValue", "Value"))
                 ;
 
             // Never hidden, no aliases

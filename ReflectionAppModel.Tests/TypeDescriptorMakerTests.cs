@@ -10,15 +10,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public class TypeDescriptorMakerTests
     {
-        public const string Name = "George";
-        public const string NameForEmpty = "DummyName";
-        public const string Description = "Awesome description!";
-        public const string AliasAsStringMuitple = "a,b,c";
-        public const string AliasAsStringSingle = "x";
-        public const string ArgumentName = "Red";
-        public const string ArgumentName2 = "Blue";
-        public const string OptionName = "East";
-        public const string OptionName2 = "West";
+        internal const string Name = "George";
+        internal const string NameForEmpty = "DummyName";
+        internal const string Description = "Awesome description!";
+        internal const string AliasAsStringMuitple = "a,b,c";
+        internal const string AliasAsStringSingle = "x";
+        internal const string ArgumentName = "Red";
+        internal const string ArgumentName2 = "Blue";
+        internal const string OptionName = "East";
+        internal const string OptionName2 = "West";
+        internal const string PropertyOptionName = "Prop";
+        internal const string PropertyArgName = "Prop";
+        internal const string DefaultValueString = "MyDefault";
+        internal const int DefaultValueInt = 42;
+  
         private readonly Strategy strategy;
 
 
@@ -28,14 +33,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
                             .SetReflectionRules();
         }
 
-
+        #region CommandTests
         [Theory]
         [InlineData(typeof(EmptyType), nameof(EmptyType), default)]
         [InlineData(typeof(TypeWithNameAttribute), Name, default)]
         [InlineData(typeof(TypeWithNameInCommandAttribute), Name, default)]
         [InlineData(typeof(TypeWithDescriptionAttribute), nameof(TypeWithDescriptionAttribute), Description)]
         [InlineData(typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
-        public void NameAndDescriptionFromType(Type typeToTest, string name, string description)
+        public void CommandNameAndDescriptionFromType(Type typeToTest, string name, string description)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
@@ -43,11 +48,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     .And.HaveDescription(description);
         }
 
-
         [Theory]
         [InlineData(typeof(TypeWithOneAliasAttribute), AliasAsStringSingle)]
         [InlineData(typeof(TypeWithThreeAliasesInOneAttribute), AliasAsStringMuitple)]
-        public void AliasesFromType(Type typeToTest, string aliasesAsString)
+        public void CommandAliasesFromType(Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
                           ? null
@@ -116,6 +120,167 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
             descriptor.Should().HaveOptionsNamed(argNames);
         }
+        #endregion
+
+
+        #region Option tests
+
+        [Theory]
+        [InlineData(typeof(PropertyOptionWithName), Name, default)]
+        [InlineData(typeof(PropertyOptionWithNameAttribute), Name, default)]
+        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), Name, default)]
+        [InlineData(typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
+        [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
+        public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Options.First()
+                    .Should().HaveName(name)
+                    .And.HaveDescription(description);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyOptionWithOneAliasAttribute), AliasAsStringSingle)]
+        [InlineData(typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMuitple)]
+        public void OptionAliasesFromProperty(Type typeToTest, string aliasesAsString)
+        {
+            var aliases = aliasesAsString is null
+                          ? null
+                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Options.First()
+                    .Should().HaveAliases(aliases);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyOptionWithIsHiddenTrueInOptionAttribute), true)]
+        [InlineData(typeof(PropertyOptionWithIsHiddenFalseInOptionAttribute), false)]
+        [InlineData(typeof(PropertyOptionWithIsHiddenTrue), true)]
+        [InlineData(typeof(PropertyOptionWithIsHiddenFalse), false)]
+        [InlineData(typeof(PropertyOptionWithIsHiddenTrueAsImplied), true)]
+        public void OptionIsHiddenFromProperty(Type typeToTest, bool isHidden)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Options.First()
+                    .Should().HaveIsHidden(isHidden);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyOptionWithRequiredTrueInOptionAttribute), true)]
+        [InlineData(typeof(PropertyOptionWithRequiredFalseInOptionAttribute), false)]
+        [InlineData(typeof(PropertyOptionWithRequiredTrue), true)]
+        [InlineData(typeof(PropertyOptionWithRequiredFalse), false)]
+        [InlineData(typeof(PropertyOptionWithRequiredTrueAsImplied), true)]
+        public void OptionRequiredFromProperty(Type typeToTest, bool isHidden)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Options.First()
+                    .Should().HaveRequired(isHidden);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyOptionArgumentWithNoDefaultValue),false, null )]
+        [InlineData(typeof(PropertyOptionArgumentWithStringDefaultValue), true, DefaultValueString )]
+        [InlineData(typeof(PropertyOptionArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
+        public void OptionDefaultValueFromProperty(Type typeToTest, bool isSet, object value)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Options.First().Arguments.First()
+                    .Should().HaveDefaultValue(isSet, value);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyOptionWithName), typeof(string))]
+        [InlineData(typeof(PropertyOptionArgumentForIntegerType), typeof(int))]
+        public void OptionWithArguments(Type typeToTest,Type argType)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Options.First().Arguments.First()
+                    .Should().HaveArgumentType(argType);
+        }
+
+        #endregion
+
+        #region Argument Tests
+
+        [Theory]
+        [InlineData(typeof(PropertyArgumentWithName), Name, default)]
+        [InlineData(typeof(PropertyArgumentWithNameAttribute), Name, default)]
+        [InlineData(typeof(PropertyArgumentWithNameInArgumentAttribute), Name, default)]
+        [InlineData(typeof(PropertyArgumentWithDescriptionAttribute), PropertyArgName, Description)]
+        [InlineData(typeof(PropertyArgumentWithDescriptionInArgumentAttribute), PropertyArgName, Description)]
+        public void ArgumentNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveName(name)
+                    .And.HaveDescription(description);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyArgumentWithOneAliasAttribute), AliasAsStringSingle)]
+        [InlineData(typeof(PropertyArgumentWithThreeAliasesInOneAttribute), AliasAsStringMuitple)]
+        public void ArgumentAliasesFromProperty(Type typeToTest, string aliasesAsString)
+        {
+            var aliases = aliasesAsString is null
+                          ? null
+                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveAliases(aliases);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyArgumentWithIsHiddenTrueInArgumentAttribute), true)]
+        [InlineData(typeof(PropertyArgumentWithIsHiddenFalseInArgumentAttribute), false)]
+        [InlineData(typeof(PropertyArgumentWithIsHiddenTrue), true)]
+        [InlineData(typeof(PropertyArgumentWithIsHiddenFalse), false)]
+        [InlineData(typeof(PropertyArgumentWithIsHiddenTrueAsImplied), true)]
+        public void ArgumentIsHiddenFromProperty(Type typeToTest, bool isHidden)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveIsHidden(isHidden);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyArgumentWithRequiredTrueInArgumentAttribute), true)]
+        [InlineData(typeof(PropertyArgumentWithRequiredFalseInArgumentAttribute), false)]
+        [InlineData(typeof(PropertyArgumentWithRequiredTrue), true)]
+        [InlineData(typeof(PropertyArgumentWithRequiredFalse), false)]
+        [InlineData(typeof(PropertyArgumentWithRequiredTrueAsImplied), true)]
+        public void ArgumentRequiredFromType(Type typeToTest, bool isHidden)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveRequired(isHidden);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyArgumentWithNoDefaultValue), false, null)]
+        [InlineData(typeof(PropertyArgumentWithStringDefaultValue), true, DefaultValueString)]
+        [InlineData(typeof(PropertyArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
+        public void ArgumentDefaultValuesFromType(Type typeToTest, bool isSet, object value)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveDefaultValue(isSet, value);
+        }
+
+        #endregion
 
     }
 }
