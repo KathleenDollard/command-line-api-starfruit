@@ -8,7 +8,6 @@ namespace System.CommandLine.GeneralAppModel
                                                         IEnumerable<object> item,
                                                         SymbolDescriptorBase parentSymbolDescriptor);
 
-        interface IFoo { }
     }
 
 }
