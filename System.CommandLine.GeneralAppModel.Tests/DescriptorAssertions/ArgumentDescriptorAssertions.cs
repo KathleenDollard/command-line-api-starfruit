@@ -47,12 +47,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
                  .FailWith("Expected there not to be an Arity, but found one")
                  .Then
                  .ForCondition(isSet ? !(Subject.Arity is null) : true)
-                 .FailWith("Expected to be an Arity, but did not find one")
-                 .Then
-                 .ForCondition(minValue.Value == Subject.Arity.MinimumCount &&
+                 .FailWith("Expected to be an Arity, but did not find one");
+
+            if (isSet && !(Subject.Arity is null))
+            {
+                Execute.Assertion
+                    .ForCondition(minValue.Value == Subject.Arity.MinimumCount &&
                                maxValue.Value == Subject.Arity.MaximumCount)
-                 .FailWith($"Expected Arity to be {minValue.Value} to {maxValue.Value}, " +
+                    .FailWith($"Expected Arity to be {minValue.Value} to {maxValue.Value}, " +
                             $"but found {Subject.Arity.MinimumCount} to {Subject.Arity.MaximumCount}");
+            }
 
             return new AndConstraint<ArgumentDescriptorAssertions>(this);
         }

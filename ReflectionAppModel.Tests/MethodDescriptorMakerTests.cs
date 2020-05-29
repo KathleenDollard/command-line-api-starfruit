@@ -278,6 +278,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
+        [InlineData(typeof(ParameterArgumentWithNoArity), false, 0, int.MaxValue)]
+        [InlineData(typeof(ParameterArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
+        [InlineData(typeof(ParameterArgumentWithArityUpperBoundOnly), true, 0, 3)]
+        [InlineData(typeof(ParameterArgumentWithArityBothBounds), true, 2, 3)]
+        public void ArgumentArityFromType(Type typeToTest, bool isSet, int? minCount, int? maxCount)
+        {
+            var method = typeToTest.GetMethods().First();
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
+
+            descriptor.Arguments.First()
+                    .Should().HaveArity(isSet, minCount, maxCount);
+        }
+
+        [Theory]
         [InlineData(typeof(ParameterArgumentWithNoDefaultValue), false, null)]
         [InlineData(typeof(ParameterArgumentWithStringDefaultValue), true, DefaultValueString)]
         [InlineData(typeof(ParameterArgumentWithIntegerDefaultValue), true, DefaultValueInt)]

@@ -34,15 +34,5 @@ namespace System.CommandLine.GeneralAppModel
         public string Description { get; set; }
         public virtual string Name { get; set; }
         public bool IsHidden { get; set; }
-
-        // Rules sometimes rely on other rules, such as knowing how an 
-        // Argument was determined to be an argument affects the name.
-        // For example removing "Argument".
-        // This is also extremely valuable during debugging.
-        public IEnumerable<RuleBase> AppliedAliasRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedDescriptionRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedNameRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedIsHiddenRules { get; } = new List<RuleBase>();
-
     }
 }

@@ -269,6 +269,19 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
+        [InlineData(typeof(PropertyArgumentWithNoArity), false, 0, int.MaxValue)]
+        [InlineData(typeof(PropertyArgumentWithArityLowerBoundOnly), true,2, int.MaxValue )]
+        [InlineData(typeof(PropertyArgumentWithArityUpperBoundOnly), true,0,3)]
+        [InlineData(typeof(PropertyArgumentWithArityBothBounds), true, 2,3)]
+        public void ArgumentArityFromType(Type typeToTest, bool isSet, int minCount, int maxCount)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveArity(isSet, minCount, maxCount  );
+        }
+
+        [Theory]
         [InlineData(typeof(PropertyArgumentWithNoDefaultValue), false, null)]
         [InlineData(typeof(PropertyArgumentWithStringDefaultValue), true, DefaultValueString)]
         [InlineData(typeof(PropertyArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
