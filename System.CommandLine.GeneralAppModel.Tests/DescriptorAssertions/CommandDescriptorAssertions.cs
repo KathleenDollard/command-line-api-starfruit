@@ -49,10 +49,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<CommandDescriptorAssertions> HaveSubCommandsNamed(IEnumerable<string> expected)
         {
-            var actual = Subject.SubCommands.Select(sub => sub.Name);
+            var actual = string.Join(",", Subject.SubCommands.Select(sub => sub.Name));
+            var expectedString = string.Join(",", expected);
             Execute.Assertion
-                     .ForCondition(actual == expected)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "SubCommands", expected, actual));
+                     .ForCondition(actual == expectedString)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "SubCommands", expectedString, actual));
 
             return new AndConstraint<CommandDescriptorAssertions>(this);
 
@@ -60,10 +61,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<CommandDescriptorAssertions> HaveOptionsNamed(IEnumerable<string> expected)
         {
-            var actual = Subject.Options.Select(sub => sub.Name);
+            var actual = string.Join(",", Subject.Options.Select(sub => sub.Name));
+            var expectedString = string.Join(",", expected);
             Execute.Assertion
-                     .ForCondition(actual == expected)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Options", expected, actual));
+                     .ForCondition(actual == expectedString)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Options", expectedString, actual));
 
             return new AndConstraint<CommandDescriptorAssertions>(this);
 
@@ -71,10 +73,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<CommandDescriptorAssertions> HaveArgumentsNamed(IEnumerable<string> expected)
         {
-            var actual = Subject.Arguments.Select(sub => sub.Name);
+            var actual = string.Join(",",Subject.Arguments.Select(sub => sub.Name));
+            var expectedString = string.Join(",", expected);
             Execute.Assertion
-                     .ForCondition(actual == expected)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Arguments", expected, actual));
+                     .ForCondition(actual == expectedString)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Arguments", expectedString, actual));
 
             return new AndConstraint<CommandDescriptorAssertions>(this);
 

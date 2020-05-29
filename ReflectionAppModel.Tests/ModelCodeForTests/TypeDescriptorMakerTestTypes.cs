@@ -11,27 +11,27 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
     {
     }
 
-    [Name(NewDescriptorMakerTests.Name)]
+    [Name(TypeDescriptorMakerTests.Name)]
     public class TypeWithNameAttribute
     {
     }
 
-    [Description(NewDescriptorMakerTests.Description)]
+    [Description(TypeDescriptorMakerTests.Description)]
     public class TypeWithDescriptionAttribute
     {
     }
 
-    [Command(Name = NewDescriptorMakerTests.Name)]
+    [Command(Name = TypeDescriptorMakerTests.Name)]
     public class TypeWithNameInCommandAttribute
     {
     }
 
-    [Command(Description = NewDescriptorMakerTests.Description)]
+    [Command(Description = TypeDescriptorMakerTests.Description)]
     public class TypeWithDescriptionInCommandAttribute
     {
     }
 
-    [Aliases(NewDescriptorMakerTests.AliasAsStringSingle)]
+    [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]
     public class TypeWithOneAliasAttribute
     {
     }
@@ -91,4 +91,63 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
     public class TypeWithTreatUnmatchedTokensAsErrorsTrueAsImplied
     {
     }
+
+    public class TypeWithOneArgumentByArgName
+    {
+        public string RedArg { get; set; }
+    }
+
+    public class TypeWithTwoArgumentByArgumentName
+    {
+        public string RedArgument { get; set; }
+        public string BlueArgument { get; set; }
+    }
+
+    public class TypeWithOneArgumentByAttribute
+    {
+        [Argument]
+        public string Red { get; set; }
+    }
+
+    public class TypeWithTwoArgumentsByAttribute
+    {
+        [Argument]
+        public string Red { get; set; }
+        [Argument]
+        public string Blue { get; set; }
+    }
+
+    public class TypeWithOneCommandByDerivedType
+    {
+        public class A : TypeWithOneCommandByDerivedType { }
+    }
+
+    public class TypeWithTwoCommandsByDerivedType
+    {
+        public class A : TypeWithTwoCommandsByDerivedType { }
+        public class B : TypeWithTwoCommandsByDerivedType { }
+    }
+
+    public class TypeWithOnlyOneProperty
+    {
+        public string East { get; set; }
+    }
+
+    public class TypeWithOneOptionByRemaining
+    {
+        public string RedArgument { get; set; }
+        public string East { get; set; }
+    }
+
+    public class TypeWithTwoOptionsByRemaining
+    {
+        [Argument]
+        public string RedArgument { get; set; }
+        [Argument]
+        public string Blue { get; set; }
+        public string East { get; set; }
+        public string West { get; set; }
+
+    }
+
 }

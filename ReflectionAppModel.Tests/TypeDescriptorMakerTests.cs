@@ -8,17 +8,21 @@ using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class NewDescriptorMakerTests
+    public class TypeDescriptorMakerTests
     {
         public const string Name = "George";
         public const string NameForEmpty = "DummyName";
         public const string Description = "Awesome description!";
         public const string AliasAsStringMuitple = "a,b,c";
         public const string AliasAsStringSingle = "x";
+        public const string ArgumentName = "Red";
+        public const string ArgumentName2 = "Blue";
+        public const string OptionName = "East";
+        public const string OptionName2 = "West";
         private readonly Strategy strategy;
 
 
-        public NewDescriptorMakerTests()
+        public TypeDescriptorMakerTests()
         {
             strategy = new Strategy()
                             .SetReflectionRules();
@@ -78,6 +82,39 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Should().HaveTreatUnmatchedTokensAsErrors(treatUnmatchedTokensAsErrors);
+        }
+
+        [Theory]
+        [InlineData(typeof(TypeWithOneArgumentByArgName), ArgumentName)]
+        [InlineData(typeof(TypeWithTwoArgumentByArgumentName), ArgumentName, ArgumentName2)]
+        [InlineData(typeof(TypeWithOneArgumentByAttribute), ArgumentName)]
+        [InlineData(typeof(TypeWithTwoArgumentsByAttribute), ArgumentName, ArgumentName2)]
+        public void CommandWithArguments(Type typeToTest, params string[] argNames)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Should().HaveArgumentsNamed(argNames);
+        }
+
+        [Theory]
+        [InlineData(typeof(TypeWithOneCommandByDerivedType), "A")]
+        [InlineData(typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
+        public void CommandWithSubCommands(Type typeToTest, params string[] argNames)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Should().HaveSubCommandsNamed(argNames);
+        }
+
+        [Theory]
+        [InlineData(typeof(TypeWithOnlyOneProperty), OptionName )]
+        [InlineData(typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
+        public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Should().HaveOptionsNamed(argNames);
         }
 
     }
