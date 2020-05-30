@@ -1,5 +1,9 @@
-﻿using FluentAssertions.Execution;
+﻿using FluentAssertions;
+using FluentAssertions.Execution;
+using System.CommandLine.Builder;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
@@ -103,7 +107,49 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
             var actual2 = parentCommand.Children.OfType<Command>().Skip(1).FirstOrDefault();
             actual2.Should().NotBeNull()
-                    .And.HaveName(SubCommandName1);
+                    .And.HaveName(SubCommandName2);
+        }
+    }
+
+
+    public class CommandHandlerRunsTestData : MakerCommandTestData
+    {
+        private const string HelloTo = "World";
+        private static string checkValue = "";
+        // Option and ArgumentTestData of necessity test adding a single option and argument
+        public CommandHandlerRunsTestData()
+              : base(new CommandDescriptor(null, typeof(CommandHandlerRunsTestData).GetMethod("Run"))
+              { Name = DummyCommandName })
+        {
+            Descriptor.Arguments.Add(
+                    new ArgumentDescriptor(null, null)
+                    {
+                        ArgumentType=typeof(string),
+                        Name = "HelloTo"
+                    }
+                );
+        }
+
+        public int Run(string helloTo)
+        {
+            checkValue = $"Hello {helloTo}";
+            return 3;
+        }
+
+        public override void Check(Command command)
+        {
+            using var scope = new AssertionScope();
+            var parser = new CommandLineBuilder(command)
+                                 .UseDefaults()
+                                 .Build();
+
+            var parseResult = parser.Parse($"DummyCommandName {HelloTo}");
+            parseResult.Errors.Should().BeEmpty();
+
+            var ret = parser.Invoke(HelloTo);
+            ret.Should().Be(3);
+            checkValue.Should().Be("Hello World");
+
         }
     }
 }

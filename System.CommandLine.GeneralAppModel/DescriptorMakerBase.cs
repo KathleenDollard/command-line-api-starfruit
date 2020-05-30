@@ -118,7 +118,7 @@ namespace System.CommandLine.GeneralAppModel
             SetArityIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             SetDefaultIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
-            descriptor.ArgumentType = SpecificSource.Tools.GetArgumentType(candidate);
+            descriptor.ArgumentType = SpecificSource.Tools.GetArgumentType(candidate) ?? typeof(string);
             return descriptor;
         }
 
