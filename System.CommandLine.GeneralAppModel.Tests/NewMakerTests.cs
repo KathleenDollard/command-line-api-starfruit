@@ -7,6 +7,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
     public class NewMakerTests
     {
         public const string name = "Fred";
+        public const string name2 = "Bill";
         public const string nameForEmpty = "NameIsRequired";
         public const string desc = "This is awesome!";
         public const string aliasAsStringMuitple = "x,y,z";
@@ -80,6 +81,22 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void CommandWithOneSubCommandTests()
         {
             var data = new CommandOneSubCommandTestData(name);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void CommandWithTwoSubCommandTests()
+        {
+            var data = new CommandTwoSubCommandsTestData(name, name2);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void MethodInfoTreatedAsHandlerAtRoot()
+        {
+            var data = new CommandHandlerRunsTestData();
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }

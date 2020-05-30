@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Linq;
+using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -18,6 +20,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             command.IsHidden = descriptor.IsHidden;
             command.TreatUnmatchedTokensAsErrors  = descriptor.TreatUnmatchedTokensAsErrors;
+            SetHandlerIfNeeded(command, descriptor);
             AddAliases(command, descriptor.Aliases);
             command.AddArguments(descriptor.Arguments
                                     .Select(a => MakeArgument(a)));
@@ -25,6 +28,14 @@ namespace System.CommandLine.GeneralAppModel
                                     .Select(o => MakeOption(o)));
             command.AddCommands(descriptor.SubCommands
                                     .Select(c => MakeCommand(c)));
+        }
+
+        private static void SetHandlerIfNeeded(Command command, CommandDescriptor descriptor)
+        {
+            if (descriptor.Raw is MethodInfo methodInfo)
+            {
+                command.Handler = CommandHandler.Create(methodInfo);
+            }
         }
 
         public static Option MakeOption(OptionDescriptor descriptor)
