@@ -2,7 +2,7 @@
 {
     public class Strategy
     {
-        public Strategy(string name=null)
+        public Strategy(string name="")
         {
             Name = name;
         }

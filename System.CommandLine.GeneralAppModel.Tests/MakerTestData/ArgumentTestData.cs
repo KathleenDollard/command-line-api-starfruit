@@ -10,13 +10,12 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
-                new ArgumentDescriptor(null, null)
+                new ArgumentDescriptor(argumentType, null, null)
                 {
                     Name = name,
                     Description = description,
                     Aliases = aliases,
                     IsHidden = isHidden,
-                    ArgumentType = argumentType
                 });
             Name = name;
             Description = description;
@@ -49,7 +48,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(null, null)
+            var argDescriptor = new ArgumentDescriptor(typeof(string), null, null)
             {
                 Name = DummyArgumentName,
             };
@@ -88,7 +87,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(null, null)
+            var argDescriptor = new ArgumentDescriptor(typeof(string), null, null)
             {
                 Name = DummyArgumentName,
             };

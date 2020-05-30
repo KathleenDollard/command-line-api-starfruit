@@ -2,7 +2,7 @@
 {
     public static class Conversions
     {
-// Jon: Does System.CommandLine have any conversion stuff I should use. 
+        // Jon: Does System.CommandLine have any conversion stuff I should use. 
 
         // Don't remove this until we settle on how to convert values
         public static T To<T>(object rawValue)

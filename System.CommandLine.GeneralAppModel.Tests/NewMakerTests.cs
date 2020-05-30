@@ -37,21 +37,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
                           ? null
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new OptionBasicsTestData(name, description, aliases, isHidden, required);
-            var command = CommandMaker.MakeCommand(data.Descriptor);
+            var command = CommandMaker.MakeRootCommand(data.Descriptor);
             data.Check(command);
         }
 
         [Theory]
         [InlineData(name, desc, aliasAsStringMuitple, true, typeof(string))]
         [InlineData(name, desc, aliasAsStringSingle, false, typeof(string))]
-        [InlineData(nameForEmpty, null, null, false, null)]
         public void ArgumentBasicsTests(string name, string description, string aliasesAsString, bool isHidden, Type argumentType)
         {
             var aliases = aliasesAsString is null
                           ? null
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new ArgumentBasicsTestData(name, description, aliases, isHidden, argumentType);
-            var command = CommandMaker.MakeCommand(data.Descriptor);
+            var command = CommandMaker.MakeRootCommand(data.Descriptor);
             data.Check(command);
         }
 
@@ -62,7 +61,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void ArgumentArityTests(bool isSet, int? minValue, int? maxValue)
         {
             var data = new ArgumentArityTestData(isSet, minValue, maxValue);
-            var command = CommandMaker.MakeCommand(data.Descriptor);
+            var command = CommandMaker.MakeRootCommand(data.Descriptor);
             data.Check(command);
         }
 

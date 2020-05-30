@@ -32,10 +32,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
             }
             if (!(data.SubCommands is null))
             {
-                command.AddCommands (data.SubCommands.Select(x => CreateCommand(x)));
+                command.AddCommands(data.SubCommands.Select(x => CreateCommand(x)));
             }
             return command;
-       }
+        }
 
         /// <summary>
         /// To be used in DescriptorMakerTests that test the creation of a
@@ -70,9 +70,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 Aliases = data.Aliases ?? new List<string>(),
                 Required = data.Required,
             };
-            option.Arguments = data.Arguments == null
-                                   ? null
-                                   : data.Arguments.Select(a => CreateDescriptor(a, option));
+            if (!(data.Arguments is null))
+                {
+                option.Arguments.AddRange(data.Arguments.Select(a => CreateDescriptor(a, option)));
+            }
+
             return option;
         }
 
@@ -98,10 +100,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var arg = new ArgumentDescriptor(parentSymbolDescriptor, data.Raw)
+            var arg = new ArgumentDescriptor(data.ArgumentType, parentSymbolDescriptor, data.Raw)
             {
                 Name = data.Name,
-                ArgumentType = data.ArgumentType,
                 Description = data.Description,
                 IsHidden = data.IsHidden,
                 Aliases = data.Aliases ?? new List<string>(),
@@ -121,7 +122,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return arg;
         }
 
-         public static CommandDescriptor CreateDescriptor(this CommandTestData data, SymbolDescriptorBase parentSymbolDescriptor)
+        public static CommandDescriptor CreateDescriptor(this CommandTestData data, SymbolDescriptorBase parentSymbolDescriptor)
         {
             var command = new CommandDescriptor(parentSymbolDescriptor, data.Raw)
             {
@@ -130,7 +131,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 IsHidden = data.IsHidden,
                 Aliases = data.Aliases ?? new List<string>(),
             };
-           if (!(data.Arguments is null))
+            if (!(data.Arguments is null))
                 command.Arguments.AddRange(data
                                     .Arguments
                                     .Select(a => CreateDescriptor(a, command)));
@@ -141,7 +142,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             if (!(data.SubCommands is null))
                 command.SubCommands.AddRange(data
                                     .SubCommands
-                                    .Select(a => CreateDescriptor(a, command)));    
+                                    .Select(a => CreateDescriptor(a, command)));
             return command;
         }
 

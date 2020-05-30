@@ -8,7 +8,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
                                 object raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Option) { }
 
-        public IEnumerable<ArgumentDescriptor> Arguments { get; set; }
+        public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
         public bool Required { get; set; }
 
     }

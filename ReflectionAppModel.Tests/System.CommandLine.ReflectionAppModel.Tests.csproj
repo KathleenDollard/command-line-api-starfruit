@@ -11,10 +11,16 @@
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="2.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0-preview.3.20214.6" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20253.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <!--    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20253.1" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.CommandLine">
+      <HintPath>..\..\..\command-line-api\command-line-api\artifacts\bin\System.CommandLine\Debug\netstandard2.0\System.CommandLine.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

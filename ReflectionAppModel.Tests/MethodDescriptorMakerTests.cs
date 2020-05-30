@@ -37,9 +37,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         #region Command tests
         [Theory]
-        [InlineData(typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod ), default)]
-        [InlineData(typeof(MethodWithNameAttribute), Name, default)]
-        [InlineData(typeof(MethodWithNameInCommandAttribute), Name,default)]
+        [InlineData(typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod ), "")]
+        [InlineData(typeof(MethodWithNameAttribute), Name, "")]
+        [InlineData(typeof(MethodWithNameInCommandAttribute), Name, "")]
         [InlineData(typeof(MethodWithDescriptionAttribute), TestMethodName, Description )]
         [InlineData(typeof(MethodWithDescriptionInCommandAttribute), TestMethodName, Description)]
         public void NameAndDescriptionFromType(Type typeToTest, string name, string description)
@@ -125,9 +125,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(ParameterOptionWithName), Name, default)]
-        [InlineData(typeof(ParameterOptionWithNameAttribute), Name, default)]
-        [InlineData(typeof(ParameterOptionWithNameInOptionAttribute), Name, default)]
+        [InlineData(typeof(ParameterOptionWithName), Name, "")]
+        [InlineData(typeof(ParameterOptionWithNameAttribute), Name, "")]
+        [InlineData(typeof(ParameterOptionWithNameInOptionAttribute), Name, "")]
         [InlineData(typeof(ParameterOptionWithDescriptionAttribute), ParameterOptionName, Description)]
         [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), ParameterOptionName, Description)]
         public void OptionNameAndDescriptionFromParameter(Type typeToTest, string name, string description)
@@ -216,9 +216,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Argument Tests
 
         [Theory]
-        [InlineData(typeof(ParameterArgumentWithName), Name, default)]
-        [InlineData(typeof(ParameterArgumentWithNameAttribute), Name, default)]
-        [InlineData(typeof(ParameterArgumentWithNameInArgumentAttribute), Name, default)]
+        [InlineData(typeof(ParameterArgumentWithName), Name, "")]
+        [InlineData(typeof(ParameterArgumentWithNameAttribute), Name, "")]
+        [InlineData(typeof(ParameterArgumentWithNameInArgumentAttribute), Name, "")]
         [InlineData(typeof(ParameterArgumentWithDescriptionAttribute), ParameterArgName, Description)]
         [InlineData(typeof(ParameterArgumentWithDescriptionInArgumentAttribute), ParameterArgName, Description)]
         public void ArgumentNameAndDescriptionFromParameter(Type typeToTest, string name, string description)

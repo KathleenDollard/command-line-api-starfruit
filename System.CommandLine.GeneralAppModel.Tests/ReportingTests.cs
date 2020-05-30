@@ -117,12 +117,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var rule = new AttributeWithComplexValueRule(attributeName)
             {
-                PropertyNamesAndTypes = new List<AttributeWithComplexValueRule.NameAndType>()
-                    {
-                        new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1),
-                        new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2)
-                    }
             };
+            rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1));
+            rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2));
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);

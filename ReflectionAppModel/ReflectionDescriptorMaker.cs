@@ -14,9 +14,8 @@ namespace System.CommandLine.ReflectionAppModel
     {
         protected ReflectionDescriptorMaker(Strategy strategy,
                                      object dataSource,
-                                     object parentDataSource = null,
                                      Type[] ommittedTypes = null)
-            : base(strategy, new ReflectionSpecificSource(), dataSource, parentDataSource)
+            : base(strategy, new ReflectionSpecificSource(), dataSource)
         {
             OmmittedTypes = ommittedTypes ?? commonOmmittedTypes;
         }

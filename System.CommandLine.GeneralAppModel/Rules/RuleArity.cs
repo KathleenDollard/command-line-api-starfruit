@@ -10,11 +10,8 @@ namespace System.CommandLine.GeneralAppModel.Rules
         public RuleArity(string attributeName, string minCountPropertyName, string maxCountPropertyName)
             : base(attributeName, SymbolType.Argument)
         {
-            PropertyNamesAndTypes = new List<AttributeWithComplexValueRule.NameAndType>()
-            {
-                        new AttributeWithComplexValueRule.NameAndType(ArityDescriptor.MinimumCountName,propertyName: minCountPropertyName, propertyType: typeof(int)),
-                        new AttributeWithComplexValueRule.NameAndType(ArityDescriptor.MaximumCountName,propertyName: maxCountPropertyName, propertyType: typeof(int))
-            };
+            PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(ArityDescriptor.MinimumCountName, propertyName: minCountPropertyName, propertyType: typeof(int)));
+            PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(ArityDescriptor.MaximumCountName, propertyName: maxCountPropertyName, propertyType: typeof(int)));
         }
     }
 }

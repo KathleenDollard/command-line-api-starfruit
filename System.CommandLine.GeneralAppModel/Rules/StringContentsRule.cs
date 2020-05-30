@@ -31,7 +31,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             if (!(input is string s) || s is null)
             {
-                return null;
+                return string.Empty;
             }
             if (!DoesStringMatch(input, Position, CompareTo))
             {
@@ -59,7 +59,7 @@ namespace System.CommandLine.GeneralAppModel
                                .Select(x => MorphValueInternal(symbolDescriptor, x, x.Value, parentSymbolDescriptor))
                                .First());
             }
-            return (false, default);
+            return (false, string.Empty);
 
 
         }

@@ -4,7 +4,6 @@ namespace System.CommandLine.GeneralAppModel
 {
     public interface IRuleGetCandidates : IRule
     {
-        SymbolType SymbolType { get; }
         IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates,
                                    SymbolDescriptorBase parentSymbolDescriptor);
    

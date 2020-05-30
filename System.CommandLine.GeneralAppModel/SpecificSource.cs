@@ -8,10 +8,27 @@ namespace System.CommandLine.GeneralAppModel
     /// </summary>
     public abstract class SpecificSource
     {
+        private static SpecificSource? tools;
+
         /// <summary>
         /// This provides a singleton for access to the methods technology specific layer (like Roslyn, Reflection or JSON)
         /// </summary>
-        public static SpecificSource Tools { get; internal set; }
+        public static SpecificSource Tools
+        {
+            get
+            {
+                var _ = tools ?? throw new InvalidOperationException("Tools cannot be used before they are set");
+                return tools;
+            }
+        }
+
+        /// <summary>
+        /// This provides a singleton for access to the methods technology specific layer (like Roslyn, Reflection or JSON)
+        /// </summary>
+        internal static void SetTools(SpecificSource value)
+        {
+            tools = value;
+        }
 
         /// <summary>
         /// Wrap the item including supplying a default name and traits that will be used by rules
@@ -67,7 +84,7 @@ namespace System.CommandLine.GeneralAppModel
                                 SymbolDescriptorBase symbolDescriptor,
                                 TTraitType trait,
                                 SymbolDescriptorBase parentSymbolDescriptor)
-            => DoesTraitMatch(attributeName, null, symbolDescriptor, trait, parentSymbolDescriptor);
+            => DoesTraitMatch(attributeName, string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
 
         public abstract bool DoesTraitMatch<TTraitType>(
@@ -82,7 +99,7 @@ namespace System.CommandLine.GeneralAppModel
                         SymbolDescriptorBase symbolDescriptor,
                         object trait,
                         SymbolDescriptorBase parentSymbolDescriptor)
-            => GetValue<TValue>(attributeName, null, symbolDescriptor, trait, parentSymbolDescriptor);
+            => GetValue<TValue>(attributeName, string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
 
         public abstract (bool success, TValue value) GetValue<TValue>(

@@ -16,7 +16,7 @@ namespace UserStudyTest2
         {
             var type = typeof(T);
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type);
-            var command = CommandMaker.MakeCommand(descriptor);
+            var command = CommandMaker.MakeRootCommand(descriptor);
             var binder = new ModelBinder(type);
             var bindingContext = new BindingContext(command.Parse(args));
             return (T)binder.CreateInstance(bindingContext);
@@ -27,7 +27,7 @@ namespace UserStudyTest2
         {
             var type = typeof(T);
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type);
-            var command = CommandMaker.MakeCommand(descriptor);
+            var command = CommandMaker.MakeRootCommand(descriptor);
             command.Handler = CommandHandler.Create(toRun);
             return command.Invoke(args);
         }
@@ -36,7 +36,7 @@ namespace UserStudyTest2
         {
             System.Reflection.MethodInfo entryMethod = typeof(Program).GetMethod("Test");
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, entryMethod);
-            var command = CommandMaker.MakeCommand(descriptor);
+            var command = CommandMaker.MakeRootCommand(descriptor);
             command.Handler = CommandHandler.Create(methodInfo);
             command.Invoke(args);
             return 0;

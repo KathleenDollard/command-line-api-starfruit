@@ -122,9 +122,8 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
               { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
-                    new ArgumentDescriptor(null, null)
+                    new ArgumentDescriptor(typeof(string), null, null)
                     {
-                        ArgumentType=typeof(string),
                         Name = "HelloTo"
                     }
                 );

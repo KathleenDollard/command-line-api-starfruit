@@ -15,7 +15,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("abcD", "abc d")]
         [InlineData("ABCD", "a b c d")]
         [InlineData("", "")]
-        [InlineData(null, null)]
+        [InlineData(null, "")]
         public void FriendlyToPascalProducesCorrectOutput(string s, string expected)
         {
             s.FriendlyFromPascal().Should().Be(expected);

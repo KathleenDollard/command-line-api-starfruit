@@ -29,10 +29,10 @@ namespace System.CommandLine.GeneralAppModel
         /// </summary>
         public object Raw { get; }
         public SymbolType SymbolType { get; }
-        public IEnumerable<string> Aliases { get; set; }
+        public IEnumerable<string>? Aliases { get; set; }
         // TODO: Understand raw aliases: public IReadOnlyList<string> RawAliases { get; }
-        public string Description { get; set; }
-        public virtual string Name { get; set; }
+        public string? Description { get; set; }
+        public virtual string? Name { get; set; }
         public bool IsHidden { get; set; }
     }
 }

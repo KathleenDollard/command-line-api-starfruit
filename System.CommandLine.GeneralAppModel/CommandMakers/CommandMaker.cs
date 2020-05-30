@@ -9,8 +9,16 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class CommandMaker
     {
+        public static Command MakeRootCommand(CommandDescriptor descriptor)
+        {
+            var command = new RootCommand(descriptor.Description ?? string.Empty);
+            FillCommand(command, descriptor);
+            return command;
+        }
+
         public static Command MakeCommand(CommandDescriptor descriptor)
         {
+            var _ = descriptor.Name ?? throw new InvalidOperationException("The name for a non-root command cannot be null");
             var subCommand = new Command(descriptor.Name, descriptor.Description);
             FillCommand(subCommand, descriptor);
             return subCommand;
@@ -19,7 +27,7 @@ namespace System.CommandLine.GeneralAppModel
         private static void FillCommand(Command command, CommandDescriptor descriptor)
         {
             command.IsHidden = descriptor.IsHidden;
-            command.TreatUnmatchedTokensAsErrors  = descriptor.TreatUnmatchedTokensAsErrors;
+            command.TreatUnmatchedTokensAsErrors = descriptor.TreatUnmatchedTokensAsErrors;
             SetHandlerIfNeeded(command, descriptor);
             AddAliases(command, descriptor.Aliases);
             command.AddArguments(descriptor.Arguments
@@ -40,8 +48,9 @@ namespace System.CommandLine.GeneralAppModel
 
         public static Option MakeOption(OptionDescriptor descriptor)
         {
+            var _ = descriptor.Name ?? throw new InvalidOperationException("The name for an option cannot be null");
             var option = new Option("--" + descriptor.Name.ToKebabCase(), descriptor.Description);
-            if (!(descriptor.Arguments is null))
+            if (descriptor.Arguments.Any())
             {
                 option.Argument = descriptor
                                    .Arguments
@@ -55,7 +64,7 @@ namespace System.CommandLine.GeneralAppModel
             return option;
         }
 
-        private static void AddAliases(Symbol symbol, IEnumerable<string> aliases)
+        private static void AddAliases(Symbol symbol, IEnumerable<string>? aliases)
         {
             if (aliases is null)
             {

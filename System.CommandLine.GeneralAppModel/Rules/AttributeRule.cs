@@ -19,7 +19,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates,
                                                     SymbolDescriptorBase parentSymbolDescriptor) 
-            => candidates.Where(c => GetMatches(null, c.Traits, parentSymbolDescriptor).Any());
+            => candidates.Where(c => GetMatches(parentSymbolDescriptor, c.Traits, parentSymbolDescriptor).Any());
 
         protected IEnumerable<TTraitType> GetMatches<TTraitType>(SymbolDescriptorBase symbolDescriptor,
                                               IEnumerable<TTraitType> traits,

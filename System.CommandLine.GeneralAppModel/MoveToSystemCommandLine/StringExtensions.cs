@@ -8,7 +8,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             if (s is null)
             {
-                return null;
+                return string.Empty;
             }
             char space = (char)32;
             var start = s.ToCharArray();

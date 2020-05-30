@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel
     /// </summary>
     public class BooleanAttribute : AttributeRule, IRuleGetValue<bool>
     {
-        public BooleanAttribute(string attributeName, string propertyName = null, SymbolType symbolType = SymbolType.All)
+        public BooleanAttribute(string attributeName, string propertyName = "", SymbolType symbolType = SymbolType.All)
         : base(attributeName, symbolType)
         {
             PropertyName = propertyName;

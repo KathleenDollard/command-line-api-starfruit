@@ -34,7 +34,8 @@ namespace System.CommandLine.ReflectionAppModel
             {
                 PropertyInfo prop => prop.PropertyType,
                 ParameterInfo param => param.ParameterType,
-                _ => null
+                Type type => type,
+                _ => throw new InvalidOperationException("There must be an argument type")
             };
 
         public override Candidate CreateCandidate(object item)
