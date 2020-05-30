@@ -3,9 +3,9 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Struct)]
     public class TreatUnmatchedTokensAsErrorsAttribute : Attribute
     {
-        public TreatUnmatchedTokensAsErrorsAttribute()
+        public TreatUnmatchedTokensAsErrorsAttribute(bool value = true)
         {
-            Value = true;
+            Value = value;
         }
 
         public bool Value { get; set; }

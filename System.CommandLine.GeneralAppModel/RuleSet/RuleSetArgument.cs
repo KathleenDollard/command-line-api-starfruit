@@ -3,7 +3,7 @@
     public class RuleSetArgument : RuleSetSymbol
     {
         public RuleGroup<IRuleArity> ArityRules { get; } = new RuleGroup<IRuleArity>();
-        public RuleGroup<IRuleOptionalValue<object>> DefaultRules { get; } = new RuleGroup<IRuleOptionalValue<object>>();
+        public RuleGroup<IRuleOptionalValue<object>> DefaultValueRules { get; } = new RuleGroup<IRuleOptionalValue<object>>();
         public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
         public RuleGroup<IRuleGetValue<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValue<Type>>();
 

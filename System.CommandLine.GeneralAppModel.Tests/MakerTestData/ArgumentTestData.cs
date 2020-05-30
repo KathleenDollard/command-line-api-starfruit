@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
-    public class ArgumentBasicsTestData : MakerCommandTestDataBase
+    public class ArgumentBasicsTestData : MakerCommandTestData
     {
         public ArgumentBasicsTestData(string name, string description, string[] aliases, bool isHidden, Type argumentType)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
         {
-            base.Descriptor.Arguments.Add(
+            Descriptor.Arguments.Add(
                 new ArgumentDescriptor(null, null)
                 {
                     Name = name,
@@ -44,7 +44,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         }
     }
 
-    public class ArgumentArityTestData : MakerCommandTestDataBase
+    public class ArgumentArityTestData : MakerCommandTestData
     {
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
@@ -83,7 +83,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         }
     }
 
-    public class ArgumentDefaultValueTestData : MakerCommandTestDataBase
+    public class ArgumentDefaultValueTestData : MakerCommandTestData
     {
         public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
             : base(new CommandDescriptor(null, null) { Name = DummyCommandName })

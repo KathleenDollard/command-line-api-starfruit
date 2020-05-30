@@ -3,8 +3,8 @@
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class ArityAttribute : Attribute
     {
-        private int minimumCount;
-        private int maximumCount;
+        private int minimumCount = 0;
+        private int maximumCount = int.MaxValue ;
         private bool isSet;
 
         public ArityAttribute()

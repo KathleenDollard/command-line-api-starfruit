@@ -69,24 +69,24 @@ namespace System.CommandLine.ReflectionAppModel.Tests
 
         }
 
-        private static void WhyDoWeNeedTheseExtraChecks(CommandDescriptor actual, CommandDescriptor expected)
-        {
-            actual.Options.Should().BeEquivalentTo(expected.Options, symbolOptions);
-            var actualOptions = actual.Options.ToArray();
-            var expectedOptions = expected.Options.ToArray();
-            for (int i = 0; i < actualOptions.Length; i++)
-            {
-                actualOptions[i].Should().BeEquivalentTo(expectedOptions[i], symbolOptions);
-            }
-            actual.Arguments.Should().BeEquivalentTo(expected.Arguments, symbolOptions);
-            var actualArgs = actual.Arguments.ToArray();
-            var expectedArgs = expected.Arguments.ToArray();
-            for (int i = 0; i < actualArgs.Length; i++)
-            {
-                actualArgs[i].Arity.Should().BeEquivalentTo(expectedArgs[i].Arity);
-            }
-            actual.SubCommands.Should().BeEquivalentTo(expected.SubCommands, symbolOptions);
-        }
+        //private static void WhyDoWeNeedTheseExtraChecks(CommandDescriptor actual, CommandDescriptor expected)
+        //{
+        //    actual.Options.Should().BeEquivalentTo(expected.Options, symbolOptions);
+        //    var actualOptions = actual.Options.ToArray();
+        //    var expectedOptions = expected.Options.ToArray();
+        //    for (int i = 0; i < actualOptions.Length; i++)
+        //    {
+        //        actualOptions[i].Should().BeEquivalentTo(expectedOptions[i], symbolOptions);
+        //    }
+        //    actual.Arguments.Should().BeEquivalentTo(expected.Arguments, symbolOptions);
+        //    var actualArgs = actual.Arguments.ToArray();
+        //    var expectedArgs = expected.Arguments.ToArray();
+        //    for (int i = 0; i < actualArgs.Length; i++)
+        //    {
+        //        actualArgs[i].Arity.Should().BeEquivalentTo(expectedArgs[i].Arity);
+        //    }
+        //    actual.SubCommands.Should().BeEquivalentTo(expected.SubCommands, symbolOptions);
+        //}
 
         public static IEnumerable<Command> SubCommands(this Command command)
         {

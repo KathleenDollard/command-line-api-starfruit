@@ -16,10 +16,5 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public DefaultValueDescriptor DefaultValue { get; set; }
         public bool Required { get; set; }
 
-        public IEnumerable<RuleBase> AppliedArityRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedAllowedValuesRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedDefaultValueRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedRequiredRules { get; } = new List<RuleBase>();
-
     }
 }

@@ -25,19 +25,62 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
     }
 
-    public class CommandDescriptorAssertions :
-            ReferenceTypeAssertions<CommandDescriptor, CommandDescriptorAssertions>
+    public class CommandDescriptorAssertions : SymbolDescriptorAssertions<CommandDescriptor, CommandDescriptorAssertions>
     {
         public CommandDescriptorAssertions(CommandDescriptor instance)
-        {
-            Subject = instance;
-        }
+            : base(instance)
+        { }
 
         protected override string Identifier => "commanddescriptor";
 
         public AndConstraint<CommandDescriptorAssertions> BeEmptyExcept(params string[] skipChecks)
         {
             return new AndConstraint<CommandDescriptorAssertions>(this);
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveTreatUnmatchedTokensAsErrors(bool expected)
+        {
+            Execute.Assertion
+                     .ForCondition(Subject.TreatUnmatchedTokensAsErrors == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "TreatUnmatchedTokensAsErrors", expected, Subject.TreatUnmatchedTokensAsErrors));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveSubCommandsNamed(IEnumerable<string> expected)
+        {
+            var actual = string.Join(",", Subject.SubCommands.Select(sub => sub.Name));
+            var expectedString = string.Join(",", expected);
+            Execute.Assertion
+                     .ForCondition(actual == expectedString)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "SubCommands", expectedString, actual));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveOptionsNamed(IEnumerable<string> expected)
+        {
+            var actual = string.Join(",", Subject.Options.Select(sub => sub.Name));
+            var expectedString = string.Join(",", expected);
+            Execute.Assertion
+                     .ForCondition(actual == expectedString)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Options", expectedString, actual));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+
+        }
+
+        public AndConstraint<CommandDescriptorAssertions> HaveArgumentsNamed(IEnumerable<string> expected)
+        {
+            var actual = string.Join(",",Subject.Arguments.Select(sub => sub.Name));
+            var expectedString = string.Join(",", expected);
+            Execute.Assertion
+                     .ForCondition(actual == expectedString)
+                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Arguments", expectedString, actual));
+
+            return new AndConstraint<CommandDescriptorAssertions>(this);
+
         }
 
         /// <summary>
@@ -73,7 +116,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         private void CheckName(SymbolType symbolType, SymbolData expected, SymbolDescriptorBase actual)
         {
-    
+
             CheckIfNotNullWrapper(expected.NameWrapper, expectedValue =>
                 {
                     if (actual.Name is null)

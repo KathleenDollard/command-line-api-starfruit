@@ -2,9 +2,9 @@
 {
     public class HiddenAttribute : Attribute 
     {
-        public HiddenAttribute()
+        public HiddenAttribute(bool value = true)
         {
-            Value = true;
+            Value = value;
         }
 
         public bool Value { get; set; }

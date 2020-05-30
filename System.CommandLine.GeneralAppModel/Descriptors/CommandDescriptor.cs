@@ -14,9 +14,5 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public List<CommandDescriptor> SubCommands { get; } = new List<CommandDescriptor>();
         // TODO: Yes! Include it: Set by the model or the configuration: public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
 
-        public IEnumerable<RuleBase> AppliedArgumentRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedOptionRules { get; } = new List<RuleBase>();
-        public IEnumerable<RuleBase> AppliedSubCommandRules { get; } = new List<RuleBase>();
-
     }
 }

@@ -124,7 +124,7 @@ namespace System.CommandLine.GeneralAppModel
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
         {
-            var (success, value) = ruleSet.DefaultRules.GetOptionalValue<object>(descriptor, candidate, parentSymbolDescriptor);
+            var (success, value) = ruleSet.DefaultValueRules.GetOptionalValue<object>(descriptor, candidate, parentSymbolDescriptor);
             if (success)
             {
                 descriptor.DefaultValue = new DefaultValueDescriptor(value);
