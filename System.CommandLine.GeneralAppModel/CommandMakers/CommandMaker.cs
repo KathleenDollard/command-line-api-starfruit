@@ -2,6 +2,7 @@
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -11,6 +12,12 @@ namespace System.CommandLine.GeneralAppModel
     {
         public static Command MakeRootCommand(CommandDescriptor descriptor)
         {
+            var (success, messages) = descriptor.ValidateRoot();
+            if (!success)
+            {
+                throw new InvalidOperationException("There are errors in the definition of your CLI. See the Inner Exception.",
+                                new DescriptorInvalidException(messages));
+            }
             var command = new RootCommand(descriptor.Description ?? string.Empty);
             FillCommand(command, descriptor);
             return command;
