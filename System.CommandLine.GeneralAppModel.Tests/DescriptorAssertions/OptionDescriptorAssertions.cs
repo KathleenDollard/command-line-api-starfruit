@@ -29,11 +29,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         protected override string Identifier => "commanddescriptor2";
 
-        public AndConstraint<OptionDescriptorAssertions> BeEmptyExcept(params string[] skipChecks)
-        {
-            return new AndConstraint<OptionDescriptorAssertions>(this);
-        }
-
         public AndConstraint<OptionDescriptorAssertions> HaveRequired(bool expected)
         {
             Execute.Assertion

@@ -29,11 +29,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         protected override string Identifier => "commanddescriptor2";
 
-        public AndConstraint<ArgumentDescriptorAssertions> BeEmptyExcept(params string[] skipChecks)
-        {
-            return new AndConstraint<ArgumentDescriptorAssertions>(this);
-        }
-
         public AndConstraint<ArgumentDescriptorAssertions> HaveArity(bool isSet, int? minValue, int? maxValue)
         {
             if (isSet)

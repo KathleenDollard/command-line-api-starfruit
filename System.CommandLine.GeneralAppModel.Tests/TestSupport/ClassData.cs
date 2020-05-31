@@ -55,13 +55,6 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
             public Wrapper<bool>? IsHiddenWrapper { get; private set; }
             public Wrapper<string>? NameWrapper { get; private set; }
 
-            public object? Raw { set { RawWrapper = Wrap(value); } }
-            public SymbolType SymbolType { set { SymbolTypeWrapper = Wrap(value); } }
-            public IEnumerable<string>? Aliases { set { AliasesWrapper = Wrap(value); } }
-            public string? Description { set { DescriptionWrapper = Wrap(value); } }
-            public bool IsHidden { set { IsHiddenWrapper = Wrap(value); } }
-            public string? Name { set { NameWrapper = Wrap(value); } }
-
             public string? AltName { get; private set; }
             protected void SetAltName(string altName)
             {
