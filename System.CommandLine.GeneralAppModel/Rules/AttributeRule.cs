@@ -18,12 +18,12 @@ namespace System.CommandLine.GeneralAppModel
         public string AttributeName { get; }
 
         public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates,
-                                                    SymbolDescriptorBase parentSymbolDescriptor) 
+                                                    ISymbolDescriptor parentSymbolDescriptor) 
             => candidates.Where(c => GetMatches(parentSymbolDescriptor, c.Traits, parentSymbolDescriptor).Any());
 
-        protected IEnumerable<TTraitType> GetMatches<TTraitType>(SymbolDescriptorBase symbolDescriptor,
+        protected IEnumerable<TTraitType> GetMatches<TTraitType>(ISymbolDescriptor symbolDescriptor,
                                               IEnumerable<TTraitType> traits,
-                                              SymbolDescriptorBase parentSymbolDescriptor)
+                                              ISymbolDescriptor parentSymbolDescriptor)
             => traits.Where(
                  trait => SpecificSource.Tools.DoesTraitMatch(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
 

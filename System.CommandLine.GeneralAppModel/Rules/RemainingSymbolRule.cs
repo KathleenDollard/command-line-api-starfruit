@@ -11,7 +11,7 @@ namespace System.CommandLine.GeneralAppModel
 
 
 
-        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> items, SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> items, ISymbolDescriptor parentSymbolDescriptor)
         {
             return items;
         }

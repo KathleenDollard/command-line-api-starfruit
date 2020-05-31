@@ -2,9 +2,9 @@
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
-    public class OptionDescriptor : SymbolDescriptorBase
+    public class OptionDescriptor : SymbolDescriptor
     {
-        public OptionDescriptor(SymbolDescriptorBase parentSymbolDescriptorBase,
+        public OptionDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
                                 object raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Option) { }
 

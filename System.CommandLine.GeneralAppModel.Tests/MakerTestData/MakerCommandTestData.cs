@@ -1,4 +1,5 @@
 ﻿using System.CommandLine.GeneralAppModel.Descriptors;
+using System.Reflection.Metadata;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
@@ -7,6 +8,8 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
         protected const string DummyArgumentName = "DummyArgumentName";
         protected const string DummyCommandName = "DummyCommandName";
+        protected const string DummyRaw = "Explicit Descriptor";
+
         public MakerCommandTestData(CommandDescriptor descriptor)
         {
             Descriptor = descriptor;

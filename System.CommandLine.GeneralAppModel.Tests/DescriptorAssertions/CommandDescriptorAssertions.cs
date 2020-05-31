@@ -98,9 +98,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public void CheckSymbol<TSymbol, TDescriptor>(SymbolType symbolType, SymbolData expected, SymbolDescriptorBase actual)
+        public void CheckSymbol<TSymbol, TDescriptor>(SymbolType symbolType, SymbolData expected, SymbolDescriptor actual)
             where TSymbol : SymbolData
-            where TDescriptor : SymbolDescriptorBase
+            where TDescriptor : SymbolDescriptor
         {
             CheckType<TDescriptor>(actual);
             CheckIfNotNullWrapper(expected.AliasesWrapper, expectedValue => HaveAliases(symbolType, expectedValue, actual.Aliases));
@@ -114,7 +114,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             AreSame(symbolType, "SymbolType", symbolType, actual.SymbolType);
         }
 
-        private void CheckName(SymbolType symbolType, SymbolData expected, SymbolDescriptorBase actual)
+        private void CheckName(SymbolType symbolType, SymbolData expected, SymbolDescriptor actual)
         {
 
             CheckIfNotNullWrapper(expected.NameWrapper, expectedValue =>
@@ -165,7 +165,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
 
-        public void CheckType<TExpected>(SymbolDescriptorBase actual)
+        public void CheckType<TExpected>(SymbolDescriptor actual)
         {
             Execute.Assertion
                  .ForCondition(typeof(TExpected).IsAssignableFrom(actual.GetType()))
@@ -371,16 +371,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<CommandDescriptorAssertions>(this);
         }
 
-        public string DisplayString<T>(T input)
-        {
-            return input switch
-            {
-                null => "<null>",
-                string s => $@"""{s}""",
-                _ => input.ToString()
-            };
+        //public string DisplayString<T>(T input)
+        //{
+        //    return input switch
+        //    {
+        //        null => "<null>",
+        //        string s => $@"""{s}""",
+        //        _ => input.ToString()
+        //    };
 
-        }
+        //}
     }
 }
 

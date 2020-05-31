@@ -2,9 +2,9 @@
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
-    public class ArgumentDescriptor : SymbolDescriptorBase
+    public class ArgumentDescriptor : SymbolDescriptor
     {
-        public ArgumentDescriptor(Type argumentType, SymbolDescriptorBase parentSymbolDescriptorBase,
+        public ArgumentDescriptor(Type argumentType, ISymbolDescriptor parentSymbolDescriptorBase,
                                    object raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Argument)
         {

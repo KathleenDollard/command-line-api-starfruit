@@ -11,7 +11,7 @@ namespace System.CommandLine.GeneralAppModel
 
         public List<string> NamesToIgnore { get; } = new List<string>();
 
-        public IEnumerable<Candidate> GetCandidates(SymbolDescriptorBase commandDescriptor)
+        public IEnumerable<Candidate> GetCandidates(SymbolDescriptor commandDescriptor)
         {
             return Rules
                      .OfType<IRuleGetAvailableCandidates>()

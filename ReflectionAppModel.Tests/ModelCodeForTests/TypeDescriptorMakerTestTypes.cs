@@ -149,10 +149,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     }
 
-    
-    
+
+
     // Option test classes
-    
+
     public class PropertyOptionWithName
     {
         public string George { get; set; }
@@ -387,19 +387,13 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class PropertyArgumentWithArityLowerBoundOnly
     {
-        [Arity(MinimumCount =2)]
-        public string PropArg { get; set; }
-    }
-
-    public class PropertyArgumentWithArityUpperBoundOnly
-    {
-        [Arity(MaximumCount = 3)]
+        [Arity(minimumCount: 2)]
         public string PropArg { get; set; }
     }
 
     public class PropertyArgumentWithArityBothBounds
     {
-        [Arity(MinimumCount =2, MaximumCount = 3)]
+        [Arity(minimumCount: 2, maximumCount: 3)]
         public string PropArg { get; set; }
     }
 
@@ -410,7 +404,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class PropertyArgumentWithStringDefaultValue
     {
-        [DefaultValue(TypeDescriptorMakerTests.DefaultValueString )]
+        [DefaultValue(TypeDescriptorMakerTests.DefaultValueString)]
         public string PropArg { get; set; }
     }
 

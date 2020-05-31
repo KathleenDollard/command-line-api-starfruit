@@ -32,9 +32,9 @@ namespace System.CommandLine.GeneralAppModel
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<TRule>)_rules).GetEnumerator();
 
-        public virtual (bool, TValue) TryGetFirstValue<TValue>(SymbolDescriptorBase symbolDescriptor,
+        public virtual (bool, TValue) TryGetFirstValue<TValue>(SymbolDescriptor symbolDescriptor,
                                                    Candidate candidate,
-                                                   SymbolDescriptorBase parentSymbolDescriptor)
+                                                   SymbolDescriptor parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
             var getValueRules = Rules.OfType<IRuleGetValue<TValue>>();
@@ -47,9 +47,9 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         [return: MaybeNull]
-        public virtual T GetFirstOrDefaultValue<T>(SymbolDescriptorBase symbolDescriptor,
+        public virtual T GetFirstOrDefaultValue<T>(ISymbolDescriptor symbolDescriptor,
                                                    Candidate candidate,
-                                                   SymbolDescriptorBase parentSymbolDescriptor)
+                                                   ISymbolDescriptor parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
 
@@ -68,9 +68,9 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
-        public virtual (bool success, T value) GetOptionalValue<T>(SymbolDescriptorBase symbolDescriptor,
+        public virtual (bool success, T value) GetOptionalValue<T>(ISymbolDescriptor symbolDescriptor,
                                              Candidate candidate,
-                                             SymbolDescriptorBase parentSymbolDescriptor)
+                                             ISymbolDescriptor parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
 
@@ -89,9 +89,9 @@ namespace System.CommandLine.GeneralAppModel
             return default;
         }
 
-        public virtual IEnumerable<TValue> GetAllValues<TValue>(SymbolDescriptorBase symbolDescriptor,
-                                            Candidate candidate,
-                                            SymbolDescriptorBase parentSymbolDescriptor)
+        public virtual IEnumerable<TValue> GetAllValues<TValue>(ISymbolDescriptor symbolDescriptor,
+                                                                Candidate candidate,
+                                                                ISymbolDescriptor parentSymbolDescriptor)
         {
             var traits = candidate.Traits;
             var valueRules = Rules.OfType<IRuleGetValues<TValue>>().ToList();

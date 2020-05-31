@@ -16,7 +16,7 @@ namespace System.CommandLine.GeneralAppModel
 
 
         public IEnumerable<Candidate> GetItems(SymbolType symbolType,
-                                               SymbolDescriptorBase commandDescriptor,
+                                               ISymbolDescriptor commandDescriptor,
                                                IEnumerable<Candidate> candidates)
         {
             IEnumerable<IRuleGetCandidates> rules = Rules

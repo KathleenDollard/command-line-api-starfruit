@@ -11,7 +11,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public class SymbolDescriptorAssertions<TDesc, TAssert> :
             ReferenceTypeAssertions<TDesc, TAssert>
-        where TDesc : SymbolDescriptorBase
+        where TDesc : SymbolDescriptor
         where TAssert : SymbolDescriptorAssertions<TDesc, TAssert>
     {
         public SymbolDescriptorAssertions(TDesc instance)

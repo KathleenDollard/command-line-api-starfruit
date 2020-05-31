@@ -60,7 +60,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return option;
         }
 
-        public static OptionDescriptor CreateDescriptor(this OptionTestData data, SymbolDescriptorBase parentSymbolDescriptor)
+        public static OptionDescriptor CreateDescriptor(this OptionTestData data, SymbolDescriptor parentSymbolDescriptor)
         {
             var option = new OptionDescriptor(null, data.Raw)
             {
@@ -98,7 +98,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return arg;
         }
 
-        public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data, SymbolDescriptorBase parentSymbolDescriptor)
+        public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data, SymbolDescriptor parentSymbolDescriptor)
         {
             var arg = new ArgumentDescriptor(data.ArgumentType, parentSymbolDescriptor, data.Raw)
             {
@@ -122,7 +122,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return arg;
         }
 
-        public static CommandDescriptor CreateDescriptor(this CommandTestData data, SymbolDescriptorBase parentSymbolDescriptor)
+        public static CommandDescriptor CreateDescriptor(this CommandTestData data, SymbolDescriptor parentSymbolDescriptor)
         {
             var command = new CommandDescriptor(parentSymbolDescriptor, data.Raw)
             {

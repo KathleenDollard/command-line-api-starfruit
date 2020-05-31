@@ -7,10 +7,10 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentBasicsTestData : MakerCommandTestData
     {
         public ArgumentBasicsTestData(string name, string description, string[] aliases, bool isHidden, Type argumentType)
-            : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
-                new ArgumentDescriptor(argumentType, null, null)
+                new ArgumentDescriptor(argumentType, SymbolDescriptor.Empty, DummyRaw)
                 {
                     Name = name,
                     Description = description,
@@ -46,9 +46,9 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentArityTestData : MakerCommandTestData
     {
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
-            : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(typeof(string), null, null)
+            var argDescriptor = new ArgumentDescriptor(typeof(string), SymbolDescriptor.Empty, DummyRaw)
             {
                 Name = DummyArgumentName,
             };
@@ -85,9 +85,9 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentDefaultValueTestData : MakerCommandTestData
     {
         public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
-            : base(new CommandDescriptor(null, null) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(typeof(string), null, null)
+            var argDescriptor = new ArgumentDescriptor(typeof(string), SymbolDescriptor.Empty, DummyRaw)
             {
                 Name = DummyArgumentName,
             };

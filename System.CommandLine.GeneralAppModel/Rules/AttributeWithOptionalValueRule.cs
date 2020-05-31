@@ -9,9 +9,9 @@ namespace System.CommandLine.GeneralAppModel
             : base(attributeName, propertyName, symbolType)
         { }
 
-        public (bool success, TValue value) GetOptionalValue(SymbolDescriptorBase symbolDescriptor,
+        public (bool success, TValue value) GetOptionalValue(ISymbolDescriptor symbolDescriptor,
                                                         IEnumerable<object> traits,
-                                                        SymbolDescriptorBase parentSymbolDescriptor)
+                                                        ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);

@@ -77,50 +77,50 @@ namespace System.CommandLine.GeneralAppModel
         /// </param>
         /// <returns></returns>
         public abstract IEnumerable<Candidate> GetChildCandidates(Strategy strategy,
-                                                                  SymbolDescriptorBase commandDescriptor);
+                                                                  SymbolDescriptor commandDescriptor);
 
         public virtual bool DoesTraitMatch<TTraitType>(
                                 string attributeName,
-                                SymbolDescriptorBase symbolDescriptor,
+                                ISymbolDescriptor symbolDescriptor,
                                 TTraitType trait,
-                                SymbolDescriptorBase parentSymbolDescriptor)
+                                ISymbolDescriptor parentSymbolDescriptor)
             => DoesTraitMatch(attributeName, string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
 
         public abstract bool DoesTraitMatch<TTraitType>(
                                 string attributeName,
                                 string propertyName,
-                                SymbolDescriptorBase symbolDescriptor,
+                                ISymbolDescriptor symbolDescriptor,
                                 TTraitType trait,
-                                SymbolDescriptorBase parentSymbolDescriptor);
+                                ISymbolDescriptor parentSymbolDescriptor);
 
         public virtual (bool success, TValue value) GetValue<TValue>(
                         string attributeName,
-                        SymbolDescriptorBase symbolDescriptor,
+                        ISymbolDescriptor symbolDescriptor,
                         object trait,
-                        SymbolDescriptorBase parentSymbolDescriptor)
+                        ISymbolDescriptor parentSymbolDescriptor)
             => GetValue<TValue>(attributeName, string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
 
         public abstract (bool success, TValue value) GetValue<TValue>(
                        string attributeName,
                        string propertyName,
-                       SymbolDescriptorBase symbolDescriptor,
+                       ISymbolDescriptor symbolDescriptor,
                        object trait,
-                       SymbolDescriptorBase parentSymbolDescriptor);
+                       ISymbolDescriptor parentSymbolDescriptor);
 
         public abstract IEnumerable<TValue> GetAllValues<TValue>(
                         string attributeName,
                         string propertyName,
-                        SymbolDescriptorBase symbolDescriptor,
+                        ISymbolDescriptor symbolDescriptor,
                         object trait,
-                        SymbolDescriptorBase parentSymbolDescriptor);
+                        ISymbolDescriptor parentSymbolDescriptor);
 
         public abstract IEnumerable<(string key, TValue value)> GetComplexValue<TValue>(
                         string attributeName,
-                        SymbolDescriptorBase symbolDescriptor,
+                        ISymbolDescriptor symbolDescriptor,
                         object trait,
-                        SymbolDescriptorBase parentSymbolDescriptor);
+                        ISymbolDescriptor parentSymbolDescriptor);
 
 
     }

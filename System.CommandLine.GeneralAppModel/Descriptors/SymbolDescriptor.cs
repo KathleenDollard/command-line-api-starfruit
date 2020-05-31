@@ -2,9 +2,17 @@
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public abstract class SymbolDescriptorBase
+
+    public class EmptySymbolDescriptor : ISymbolDescriptor
     {
-        public SymbolDescriptorBase(SymbolDescriptorBase parentSymbolDescriptorBase,
+        public SymbolType SymbolType { get; } = SymbolType.All;
+    }
+
+    public abstract class SymbolDescriptor : ISymbolDescriptor
+    {
+        public static ISymbolDescriptor Empty = new EmptySymbolDescriptor();
+
+        public SymbolDescriptor(ISymbolDescriptor  parentSymbolDescriptorBase,
                                     object raw,
                                     SymbolType symbolType)
         {
@@ -20,7 +28,7 @@ namespace System.CommandLine.GeneralAppModel
         /// The setting of this value makes depth first much easier, so that is the only option.
         /// If sibling evaluation is needed, plan a post processing step.
         /// </summary>
-        public SymbolDescriptorBase ParentSymbolDescriptorBase { get; }
+        public ISymbolDescriptor ParentSymbolDescriptorBase { get; }
 
         /// <summary>
         /// This is the underlying thing rules were evaluated against. For

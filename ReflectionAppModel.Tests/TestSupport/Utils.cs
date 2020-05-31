@@ -12,7 +12,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
 
     internal static class Utils
     {
-        private static Func<EquivalencyAssertionOptions<SymbolDescriptorBase>, EquivalencyAssertionOptions<SymbolDescriptorBase>> symbolOptions;
+        private static Func<EquivalencyAssertionOptions<SymbolDescriptor>, EquivalencyAssertionOptions<SymbolDescriptor>> symbolOptions;
 
         static Utils()
         {

@@ -37,7 +37,7 @@ namespace System.CommandLine.GeneralAppModel
 
 
         private (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
-             ClassifyChildren(IEnumerable<Candidate> candidates, SymbolDescriptorBase commandDescriptor)
+             ClassifyChildren(IEnumerable<Candidate> candidates, ISymbolDescriptor commandDescriptor)
         {
             var optionItems =    new   List<Candidate>();
             var subCommandItems =new   List<Candidate>();
@@ -81,10 +81,10 @@ namespace System.CommandLine.GeneralAppModel
             }
         }
 
-        protected CommandDescriptor CommandFrom(SymbolDescriptorBase parentSymbolDescriptor)
+        protected CommandDescriptor CommandFrom(ISymbolDescriptor parentSymbolDescriptor)
             => GetCommand(SpecificSource.Tools.CreateCandidate(DataSource), parentSymbolDescriptor);
 
-        protected CommandDescriptor GetCommand(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        protected CommandDescriptor GetCommand(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var descriptor = new CommandDescriptor(parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.CommandRules;
@@ -108,7 +108,7 @@ namespace System.CommandLine.GeneralAppModel
             }
         }
 
-        private ArgumentDescriptor GetArgument(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        private ArgumentDescriptor GetArgument(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var argumentType = SpecificSource.Tools.GetArgumentType(candidate) ?? typeof(string);
             var descriptor = new ArgumentDescriptor(argumentType, parentSymbolDescriptor, candidate.Item);
@@ -120,7 +120,7 @@ namespace System.CommandLine.GeneralAppModel
             return descriptor;
         }
 
-        private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var (success, value) = ruleSet.DefaultValueRules.GetOptionalValue<object>(descriptor, candidate, parentSymbolDescriptor);
             if (success)
@@ -129,7 +129,7 @@ namespace System.CommandLine.GeneralAppModel
             }
         }
 
-        private void SetArityIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        private void SetArityIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var data = ruleSet.ArityRules.GetFirstOrDefaultValue<Dictionary<string, object>>(descriptor, candidate, parentSymbolDescriptor);
             if (data is null || !data.Any())
@@ -148,7 +148,7 @@ namespace System.CommandLine.GeneralAppModel
             descriptor.Arity = arity;
         }
 
-        private OptionDescriptor GetOption(Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        private OptionDescriptor GetOption(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
             descriptor.Arguments.Add(GetArgument(candidate, descriptor));
@@ -161,8 +161,12 @@ namespace System.CommandLine.GeneralAppModel
             return descriptor;
         }
 
-        private void FillSymbol(SymbolDescriptorBase descriptor, RuleSetSymbol ruleSet, Candidate candidate, SymbolDescriptorBase parentSymbolDescriptor)
+        private void FillSymbol(ISymbolDescriptor symbolDescriptor, RuleSetSymbol ruleSet, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
+            if (!(symbolDescriptor is SymbolDescriptor descriptor))
+            {
+                return ;
+            }
             descriptor.Aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
                                     .SelectMany(x => x);
             descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;

@@ -2,10 +2,10 @@
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
-    public class CommandDescriptor : SymbolDescriptorBase
+    public class CommandDescriptor : SymbolDescriptor
     {
-        public CommandDescriptor(SymbolDescriptorBase parentSymbolDescriptorBase,
-                                   object raw)
+        public CommandDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
+                                 object raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Command) { }
 
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;

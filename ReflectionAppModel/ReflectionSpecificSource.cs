@@ -11,7 +11,7 @@ namespace System.CommandLine.ReflectionAppModel
 {
     public class ReflectionSpecificSource : SpecificSource
     {
-        public override IEnumerable<Candidate> GetChildCandidates(Strategy strategy, SymbolDescriptorBase commandDescriptor)
+        public override IEnumerable<Candidate> GetChildCandidates(Strategy strategy, SymbolDescriptor commandDescriptor)
         {
             var item = commandDescriptor.Raw;
             return item switch
@@ -22,7 +22,7 @@ namespace System.CommandLine.ReflectionAppModel
 
             };
 
-            static IEnumerable<Candidate> GetTypeChildren(Strategy strategy, SymbolDescriptorBase commandDescriptor, Type t, Func<Candidate, Candidate> fillCandidate)
+            static IEnumerable<Candidate> GetTypeChildren(Strategy strategy, SymbolDescriptor commandDescriptor, Type t, Func<Candidate, Candidate> fillCandidate)
             {
                 var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor).Select(c => fillCandidate(c));
                 return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
@@ -45,14 +45,14 @@ namespace System.CommandLine.ReflectionAppModel
                MethodInfo methodItem => GetCandidateInternal(methodItem),
                ParameterInfo parameterInfo => GetCandidateInternal(parameterInfo),
                PropertyInfo propertyInfo => GetCandidateInternal(propertyInfo),
-               _ => null
+               _ => throw new InvalidOperationException ("Unexpected candidate type")
            };
 
         public override bool DoesTraitMatch<TTraitType>(string attributeName,
                                                         string propertyName,
-                                                        SymbolDescriptorBase symbolDescriptor,
+                                                        ISymbolDescriptor symbolDescriptor,
                                                         TTraitType trait,
-                                                        SymbolDescriptorBase parentSymbolDescriptor)
+                                                        ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute))
             {
@@ -65,9 +65,9 @@ namespace System.CommandLine.ReflectionAppModel
 
         public override (bool success, TValue value) GetValue<TValue>(string attributeName,
                                                                       string propertyName,
-                                                                      SymbolDescriptorBase symbolDescriptor,
+                                                                      ISymbolDescriptor symbolDescriptor,
                                                                       object trait,
-                                                                      SymbolDescriptorBase parentSymbolDescriptor)
+                                                                      ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute) ||
                 !DoesTraitMatch(attributeName, propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
@@ -92,9 +92,9 @@ namespace System.CommandLine.ReflectionAppModel
 
         public override IEnumerable<TValue> GetAllValues<TValue>(string attributeName,
                                                                  string propertyName,
-                                                                 SymbolDescriptorBase symbolDescriptor,
+                                                                 ISymbolDescriptor symbolDescriptor,
                                                                  object trait,
-                                                                 SymbolDescriptorBase parentSymbolDescriptor)
+                                                                 ISymbolDescriptor parentSymbolDescriptor)
         {
             var (singleSuccess, single) = GetValue<TValue>(attributeName, propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
             if (singleSuccess)
@@ -109,41 +109,7 @@ namespace System.CommandLine.ReflectionAppModel
             return new List<TValue>();
         }
 
-        /// <summary>
-        /// Adust the type. We work at this so traits like attributes can be flexible. 
-        /// For exmple, a design might be to put each alias in a separate attribute. 
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private TValue FixType<TValue>(object value)
-        {
-            // We can just cast
-            if (value is TValue tValue)
-            {
-                // no further conversion needed
-                return tValue;
-            }
-
-            // We need to move a single value into an IEnumerable - this happens for aliases
-            if (typeof(IEnumerable<>).IsAssignableFrom(typeof(TValue)) && !typeof(IEnumerable<>).IsAssignableFrom(value.GetType()))
-            {
-                // Wrap the value in an Enumerable. This could use some type checking
-                var innerType = typeof(TValue).GenericTypeArguments.First();
-                return (TValue)MakeEnumerable(typeof(TValue), innerType, value);
-            }
-
-            // throwing an exception here so during alpha we can figure out what is missing
-            throw new InvalidOperationException("Unhandled attribute propertytype");
-        }
-
-        private object MakeEnumerable(Type type, Type innerType, object value)
-        {
-            var bindingFlags = BindingFlags.NonPublic | BindingFlags.Static;
-            var method = GetType().GetMethod(nameof(MakeGenericEnumerable), bindingFlags);
-            var constructed = method.MakeGenericMethod(innerType);
-            return constructed.Invoke(null, new object[] { value });
-        }
+  
 
         internal static IEnumerable<TValue> MakeGenericEnumerable<TValue>(object value)
         {
@@ -153,9 +119,9 @@ namespace System.CommandLine.ReflectionAppModel
 
         public override IEnumerable<(string key, TValue value)> GetComplexValue<TValue>(
                                                                       string attributeName,
-                                                                      SymbolDescriptorBase symbolDescriptor,
+                                                                      ISymbolDescriptor symbolDescriptor,
                                                                       object trait,
-                                                                      SymbolDescriptorBase parentSymbolDescriptor)
+                                                                      ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute) ||
                 !DoesTraitMatch(attributeName, symbolDescriptor, trait, parentSymbolDescriptor))
@@ -182,6 +148,7 @@ namespace System.CommandLine.ReflectionAppModel
         {
             var candidate = new Candidate(parameterInfo);
             candidate.AddTraitRange(parameterInfo.GetCustomAttributes(Context.IncludeBaseClassAttributes));
+            var _ = parameterInfo.Name ?? throw new InvalidOperationException("How is a parameter name null?");
             candidate.AddTrait(new IdentityWrapper<string>(parameterInfo.Name));
             return candidate;
         }

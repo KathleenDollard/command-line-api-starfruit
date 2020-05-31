@@ -19,8 +19,9 @@ namespace System.CommandLine.GeneralAppModel
 
         public List<NameAndType> PropertyNamesAndTypes { get; } = new List<NameAndType>();
 
-        public (bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(
-                  SymbolDescriptorBase symbolDescriptor, IEnumerable<object> traits, SymbolDescriptorBase parentSymbolDescriptor)
+        public (bool success, Dictionary<string, object> value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
+                                                                                       IEnumerable<object> traits,
+                                                                                       ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
