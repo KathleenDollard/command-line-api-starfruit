@@ -4,15 +4,6 @@ namespace System.CommandLine.GeneralAppModel
 {
     public abstract class RuleSetSymbol : RuleSetBase
     {
-        public bool Frozen { get; private set; }
-        internal void Freeze()
-            => Frozen = true;
-        internal void UnFreeze()
-            => Frozen = false;
-        public bool CheckFrozen()
-            => Frozen
-                ? throw new InvalidOperationException("This operation can't be done at this time.")
-                : true;
         
         public RuleGroup<IRuleGetValue<string>> DescriptionRules { get; } = new RuleGroup<IRuleGetValue<string>>();
 
@@ -30,25 +21,21 @@ namespace System.CommandLine.GeneralAppModel
 
         public void AddDescriptionRule(IRuleGetValues<string> descriptionRule)
         {
-            CheckFrozen();
             DescriptionRules.Add(descriptionRule);
         }
 
         public void AddNameRule(IRuleGetValues<string> nameRule)
         {
-            CheckFrozen();
             NameRules.Add(nameRule);
         }
 
         public void AddAliasesRule(IRuleGetValues<string[]> aliasesRule)
         {
-            CheckFrozen();
             AliasRules.Add(aliasesRule);
         }
 
         public void AddHiddenRule(IRuleGetValues<bool> isHiddenRule)
         {
-            CheckFrozen();
             IsHiddenRules.Add(isHiddenRule);
         }
 

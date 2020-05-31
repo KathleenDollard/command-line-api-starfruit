@@ -9,19 +9,16 @@
 
         public void AddArityRule(IRuleArity arityRule)
         {
-            CheckFrozen();
             ArityRules.Add(arityRule);
         }
 
         public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
         {
-            CheckFrozen();
             RequiredRules.Add(requiredRule);
         }
 
         public void AddSpecialArgumentTypeRule(IRuleGetValues<Type> specialArgumentType)
         {
-            CheckFrozen();
             SpecialArgumentTypeRules.Add(specialArgumentType);
         }
 

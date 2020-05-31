@@ -9,8 +9,7 @@ using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class SymbolDescriptorAssertions<TDesc, TAssert> :
-            ReferenceTypeAssertions<TDesc, TAssert>
+    public class SymbolDescriptorAssertions<TDesc, TAssert> : ReferenceTypeAssertions<TDesc, TAssert>
         where TDesc : SymbolDescriptor
         where TAssert : SymbolDescriptorAssertions<TDesc, TAssert>
     {

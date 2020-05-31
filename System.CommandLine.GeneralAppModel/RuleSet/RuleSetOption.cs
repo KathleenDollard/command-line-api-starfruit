@@ -6,7 +6,6 @@
 
         public void AddRequiredRule(IRuleGetValue<bool> requiredRule)
         {
-            CheckFrozen();
             RequiredRules.Add(requiredRule);
         }
 
