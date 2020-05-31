@@ -32,10 +32,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
             };
    public class Install : Tool, IHaveTypeTestData
     {
-        public bool Global { get; set; }
-        public bool Local { get; set; }
-        public string ToolPath { get; set; }
-        public string PackageIdArg { get; set; }
+        public bool? Global { get; set; }
+        public bool? Local { get; set; }
+        public string? ToolPath { get; set; }
+        public string? PackageIdArg { get; set; }
 
         public new CommandTestData CommandDataFromType
            => new CommandTestData()

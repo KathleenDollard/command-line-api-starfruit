@@ -4,8 +4,8 @@ namespace System.CommandLine.GeneralAppModel
 {
     public interface IRuleOptionalValue<T> : IRule
     {
-        (bool success, T value) GetOptionalValue(SymbolDescriptorBase symbolDescriptor,
+        (bool success, T value) GetOptionalValue(ISymbolDescriptor symbolDescriptor,
                                                  IEnumerable<object> item,
-                                                 SymbolDescriptorBase parentSymbolDescriptor);
+                                                 ISymbolDescriptor parentSymbolDescriptor);
     }
 }

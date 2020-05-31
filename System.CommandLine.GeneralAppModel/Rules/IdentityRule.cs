@@ -10,9 +10,9 @@ namespace System.CommandLine.GeneralAppModel
         { }
 
 
-        public (bool success, T value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public (bool success, T value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
                                                               IEnumerable<object> items,
-                                                              SymbolDescriptorBase parentSymbolDescriptor)
+                                                              ISymbolDescriptor parentSymbolDescriptor)
         {
             var matches = items.OfType<IdentityWrapper<T>>();
             if (matches.Any())

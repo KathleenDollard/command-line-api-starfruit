@@ -2,10 +2,18 @@
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public abstract class SymbolDescriptorBase
+
+    public class EmptySymbolDescriptor : ISymbolDescriptor
     {
-        public SymbolDescriptorBase(SymbolDescriptorBase parentSymbolDescriptorBase,
-                                    object raw,
+        public SymbolType SymbolType { get; } = SymbolType.All;
+    }
+
+    public abstract class SymbolDescriptor : ISymbolDescriptor
+    {
+        public static ISymbolDescriptor Empty = new EmptySymbolDescriptor();
+
+        public SymbolDescriptor(ISymbolDescriptor  parentSymbolDescriptorBase,
+                                    object? raw,
                                     SymbolType symbolType)
         {
             ParentSymbolDescriptorBase = parentSymbolDescriptorBase;
@@ -20,19 +28,19 @@ namespace System.CommandLine.GeneralAppModel
         /// The setting of this value makes depth first much easier, so that is the only option.
         /// If sibling evaluation is needed, plan a post processing step.
         /// </summary>
-        public SymbolDescriptorBase ParentSymbolDescriptorBase { get; }
+        public ISymbolDescriptor ParentSymbolDescriptorBase { get; }
 
         /// <summary>
         /// This is the underlying thing rules were evaluated against. For
         /// example MethodInfo, Type, ParameterInfo and PropertyInfo appear
         /// in the ReflectionAppModel. 
         /// </summary>
-        public object Raw { get; }
+        public object? Raw { get; }
         public SymbolType SymbolType { get; }
-        public IEnumerable<string> Aliases { get; set; }
+        public IEnumerable<string>? Aliases { get; set; }
         // TODO: Understand raw aliases: public IReadOnlyList<string> RawAliases { get; }
-        public string Description { get; set; }
-        public virtual string Name { get; set; }
+        public string? Description { get; set; }
+        public virtual string? Name { get; set; }
         public bool IsHidden { get; set; }
     }
 }

@@ -4,9 +4,9 @@ namespace System.CommandLine.GeneralAppModel
 {
     public interface IRuleGetComplexValue : IRuleGetValue<Dictionary<string, object>>
     {
-        (bool success, Dictionary<string, object> value) GetComplexValue(SymbolDescriptorBase symbolDescriptor,
+        (bool success, Dictionary<string, object> value) GetComplexValue(SymbolDescriptor symbolDescriptor,
                                  IEnumerable<object> item,
-                                 SymbolDescriptorBase parentSymbolDescriptor);
+                                 SymbolDescriptor parentSymbolDescriptor);
 
     }
 

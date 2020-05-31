@@ -14,27 +14,26 @@ namespace System.CommandLine.ReflectionAppModel
     {
         protected ReflectionDescriptorMaker(Strategy strategy,
                                      object dataSource,
-                                     object parentDataSource = null,
-                                     Type[] ommittedTypes = null)
-            : base(strategy, new ReflectionSpecificSource(), dataSource, parentDataSource)
+                                     Type[]? ommittedTypes = null)
+            : base(strategy, new ReflectionSpecificSource(), dataSource)
         {
             OmmittedTypes = ommittedTypes ?? commonOmmittedTypes;
         }
 
         public static CommandDescriptor RootCommandDescriptor(Strategy strategy,
                                      MethodInfo entryMethod,
-                                     Type[] ommittedTypes = null)
+                                     Type[]? ommittedTypes = null)
         {
             var model = new ReflectionDescriptorMaker(strategy, entryMethod, ommittedTypes);
-            return model.CommandFrom(null);
+            return model.CommandFrom(SymbolDescriptor.Empty );
         }
 
         public static CommandDescriptor RootCommandDescriptor(Strategy strategy,
                                         Type entryType,
-                                        Type[] ommittedTypes = null)
+                                        Type[]? ommittedTypes = null)
         {
             var model = new ReflectionDescriptorMaker(strategy, entryType, ommittedTypes);
-            return model.CommandFrom(null);
+            return model.CommandFrom(SymbolDescriptor.Empty);
         }
 
         internal static readonly Type[] commonOmmittedTypes = new[]

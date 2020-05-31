@@ -4,15 +4,14 @@ namespace System.CommandLine.GeneralAppModel
 {
     public interface IRuleGetCandidates : IRule
     {
-        SymbolType SymbolType { get; }
         IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates,
-                                   SymbolDescriptorBase parentSymbolDescriptor);
+                                   ISymbolDescriptor parentSymbolDescriptor);
    
     }
 
     public interface IRuleGetAvailableCandidates : IRule
     {
-        IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase parentSymbolDescriptor);
+        IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor parentSymbolDescriptor);
     }
 
 }

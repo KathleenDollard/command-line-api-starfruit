@@ -13,11 +13,11 @@ namespace System.CommandLine.ReflectionAppModel
     /// </summary>
     public class DerivedTypeRule : RuleBase, IRuleGetAvailableCandidates
     {
-        private IEnumerable<Type> cacheTypes;
-        private string cacheAssemblyName;
-        private string cacheNamespaceName;
+        private IEnumerable<Type>? cacheTypes;
+        private string? cacheAssemblyName;
+        private string? cacheNamespaceName;
 
-        public DerivedTypeRule(string assemblyName = null, string namespaceName = null, bool ignoreNamespace = false)
+        public DerivedTypeRule(string? assemblyName = null, string? namespaceName = null, bool ignoreNamespace = false)
                             : base(SymbolType.All)
         {
             NamespaceName = namespaceName;
@@ -28,20 +28,22 @@ namespace System.CommandLine.ReflectionAppModel
         public override string RuleDescription<TIRuleSet>()
             => $"DerivedTypeRule Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
 
-        public string NamespaceName { get; }
-        public string AssemblyName { get; }
+        public string? NamespaceName { get; }
+        public string? AssemblyName { get; }
         public bool IgnoreNamespace { get; }
         private bool useTypeAssembly { get; set; }
 
-        public IEnumerable<Candidate> GetChildCandidates(SymbolDescriptorBase desc)
+        public IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor generalSymbolDescriptor)
         {
-            if (!(desc.Raw is Type type))
+            if (!(generalSymbolDescriptor is SymbolDescriptor symbolDescriptor)
+                    || !(symbolDescriptor.Raw is Type type))
             {
                 return new List<Candidate>();
             }
-            var namespaceName = string.IsNullOrEmpty(NamespaceName)
-                                ? type.Namespace
-                                : NamespaceName;
+
+            string namespaceName = (string.IsNullOrEmpty(NamespaceName)
+                                        ? type.Namespace
+                                        : NamespaceName)!; // The type always has a non-null namespace
             var assemblyName = IgnoreNamespace
                                 ? null
                                 : string.IsNullOrEmpty(AssemblyName)
@@ -56,10 +58,11 @@ namespace System.CommandLine.ReflectionAppModel
             return types.Select(t => new Candidate(t));
         }
 
-        private Assembly GetNamedAssembly(Type type, string assemblyName)
-            => assemblyName is null
-                ? type.Assembly
-                : Thread.GetDomain().GetAssemblies().Where(a => a.GetName().Name == assemblyName).FirstOrDefault();
+
+        private Assembly GetNamedAssembly(Type type, string? assemblyName)
+                => assemblyName is null
+                    ? type.Assembly
+                    : Thread.GetDomain().GetAssemblies().Where(a => a.GetName().Name == assemblyName).FirstOrDefault();
 
         private IEnumerable<Type> GetTypes(Type type, string namespaceName, Assembly assembly)
         {

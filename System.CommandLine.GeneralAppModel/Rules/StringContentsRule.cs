@@ -24,14 +24,14 @@ namespace System.CommandLine.GeneralAppModel
             Contains
         }
 
-        protected virtual string MorphValueInternal(SymbolDescriptorBase symbolDescriptor,
-                         object item,
-                         string input,
-                         SymbolDescriptorBase parentSymbolDescriptor)
+        protected virtual string MorphValueInternal(ISymbolDescriptor symbolDescriptor,
+                                                    object item,
+                                                    string input,
+                                                    ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(input is string s) || s is null)
             {
-                return null;
+                return string.Empty;
             }
             if (!DoesStringMatch(input, Position, CompareTo))
             {
@@ -47,9 +47,9 @@ namespace System.CommandLine.GeneralAppModel
                 throw new ArgumentException("Unexpected position");
         }
 
-        public virtual (bool success, string value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
-                                                                   IEnumerable<object> traits,
-                                                                   SymbolDescriptorBase parentSymbolDescriptor)
+        public virtual (bool success, string value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
+                                                                           IEnumerable<object> traits,
+                                                                           ISymbolDescriptor parentSymbolDescriptor)
         {
             var matches = traits.OfType<IdentityWrapper<string>>()
                                .Where(x => DoesStringMatch(x.Value, Position, CompareTo));
@@ -59,7 +59,7 @@ namespace System.CommandLine.GeneralAppModel
                                .Select(x => MorphValueInternal(symbolDescriptor, x, x.Value, parentSymbolDescriptor))
                                .First());
             }
-            return (false, default);
+            return (false, string.Empty);
 
 
         }
@@ -81,7 +81,7 @@ namespace System.CommandLine.GeneralAppModel
             };
         }
 
-        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, ISymbolDescriptor parentSymbolDescriptor)
             => candidates
                     .Where(x => x.Traits
                                 .OfType<IdentityWrapper<string>>()

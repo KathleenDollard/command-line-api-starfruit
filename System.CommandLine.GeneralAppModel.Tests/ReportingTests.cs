@@ -8,14 +8,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public class ReportingTests
     {
-        private static Func<EquivalencyAssertionOptions<Symbol>, EquivalencyAssertionOptions<Symbol>> symbolOptions;
         private readonly Strategy strategy;
 
 
         public ReportingTests()
         {
             AssertionOptions.AssertEquivalencyUsing(o => o.ExcludingFields().IgnoringCyclicReferences());
-            symbolOptions = o => o.Excluding(ctx => ctx.SelectedMemberPath.EndsWith("ConvertArguments"));
             strategy = new Strategy().SetGeneralRules();
         }
 
@@ -117,12 +115,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var rule = new AttributeWithComplexValueRule(attributeName)
             {
-                PropertyNamesAndTypes = new List<AttributeWithComplexValueRule.NameAndType>()
-                    {
-                        new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1),
-                        new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2)
-                    }
             };
+            rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1));
+            rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2));
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);

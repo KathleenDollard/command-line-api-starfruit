@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel
     /// </summary>
     public class BooleanAttribute : AttributeRule, IRuleGetValue<bool>
     {
-        public BooleanAttribute(string attributeName, string propertyName = null, SymbolType symbolType = SymbolType.All)
+        public BooleanAttribute(string attributeName, string propertyName = "", SymbolType symbolType = SymbolType.All)
         : base(attributeName, symbolType)
         {
             PropertyName = propertyName;
@@ -19,9 +19,9 @@ namespace System.CommandLine.GeneralAppModel
         public string PropertyName { get; }
 
 
-        public (bool success, bool value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public (bool success, bool value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
                                                                    IEnumerable<object> traits,
-                                                                   SymbolDescriptorBase parentSymbolDescriptor)
+                                                                   ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);

@@ -14,10 +14,6 @@ namespace System.CommandLine.ReflectionAppModel.Tests
                            .SymbolCandidateNamesToIgnore( "CommandDataFromMethods", "CommandDataFromType");
         }
 
-        //[Fact]
-        //public void CanMakeDotnetInstall()
-        //    => Utils.TestType<Install>(strategy);
-
         [Fact]
         public void CanMakeDotnet()
             => Utils.TestType<Dotnet>(strategy);

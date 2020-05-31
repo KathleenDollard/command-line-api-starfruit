@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
@@ -23,12 +24,15 @@ namespace System.CommandLine.GeneralAppModel
             : base(symbolType, typeof(TType))
         { }
 
-        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates, ISymbolDescriptor parentSymbolDescriptor)
         {
-            IEnumerable<Candidate> commandCandidates = candidates
-                                            .Where(c => !c.Item.Equals(parentSymbolDescriptor.Raw) && c.Item is TType)
-                                            .ToList();
-            return commandCandidates;
+            if (!(parentSymbolDescriptor is SymbolDescriptor nonEmptySymbolDescriptor))
+            {
+                return new List<Candidate>();
+            }
+            return candidates
+                  .Where(c => !c.Item.Equals(nonEmptySymbolDescriptor.Raw) && c.Item is TType)
+                  .ToList();
         }
     }
 }

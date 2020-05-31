@@ -2,13 +2,13 @@
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
-    public class OptionDescriptor : SymbolDescriptorBase
+    public class OptionDescriptor : SymbolDescriptor
     {
-        public OptionDescriptor(SymbolDescriptorBase parentSymbolDescriptorBase,
-                                object raw)
+        public OptionDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
+                                object? raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Option) { }
 
-        public IEnumerable<ArgumentDescriptor> Arguments { get; set; }
+        public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
         public bool Required { get; set; }
 
     }

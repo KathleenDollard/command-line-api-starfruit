@@ -8,10 +8,27 @@ namespace System.CommandLine.GeneralAppModel
     /// </summary>
     public abstract class SpecificSource
     {
+        private static SpecificSource? tools;
+
         /// <summary>
         /// This provides a singleton for access to the methods technology specific layer (like Roslyn, Reflection or JSON)
         /// </summary>
-        public static SpecificSource Tools { get; internal set; }
+        public static SpecificSource Tools
+        {
+            get
+            {
+                var _ = tools ?? throw new InvalidOperationException("Tools cannot be used before they are set");
+                return tools;
+            }
+        }
+
+        /// <summary>
+        /// This provides a singleton for access to the methods technology specific layer (like Roslyn, Reflection or JSON)
+        /// </summary>
+        internal static void SetTools(SpecificSource value)
+        {
+            tools = value;
+        }
 
         /// <summary>
         /// Wrap the item including supplying a default name and traits that will be used by rules
@@ -60,50 +77,50 @@ namespace System.CommandLine.GeneralAppModel
         /// </param>
         /// <returns></returns>
         public abstract IEnumerable<Candidate> GetChildCandidates(Strategy strategy,
-                                                                  SymbolDescriptorBase commandDescriptor);
+                                                                  SymbolDescriptor commandDescriptor);
 
         public virtual bool DoesTraitMatch<TTraitType>(
                                 string attributeName,
-                                SymbolDescriptorBase symbolDescriptor,
+                                ISymbolDescriptor symbolDescriptor,
                                 TTraitType trait,
-                                SymbolDescriptorBase parentSymbolDescriptor)
-            => DoesTraitMatch(attributeName, null, symbolDescriptor, trait, parentSymbolDescriptor);
+                                ISymbolDescriptor parentSymbolDescriptor)
+            => DoesTraitMatch(attributeName, string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
 
         public abstract bool DoesTraitMatch<TTraitType>(
                                 string attributeName,
                                 string propertyName,
-                                SymbolDescriptorBase symbolDescriptor,
+                                ISymbolDescriptor symbolDescriptor,
                                 TTraitType trait,
-                                SymbolDescriptorBase parentSymbolDescriptor);
+                                ISymbolDescriptor parentSymbolDescriptor);
 
         public virtual (bool success, TValue value) GetValue<TValue>(
                         string attributeName,
-                        SymbolDescriptorBase symbolDescriptor,
+                        ISymbolDescriptor symbolDescriptor,
                         object trait,
-                        SymbolDescriptorBase parentSymbolDescriptor)
-            => GetValue<TValue>(attributeName, null, symbolDescriptor, trait, parentSymbolDescriptor);
+                        ISymbolDescriptor parentSymbolDescriptor)
+            => GetValue<TValue>(attributeName, string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
 
         public abstract (bool success, TValue value) GetValue<TValue>(
                        string attributeName,
                        string propertyName,
-                       SymbolDescriptorBase symbolDescriptor,
+                       ISymbolDescriptor symbolDescriptor,
                        object trait,
-                       SymbolDescriptorBase parentSymbolDescriptor);
+                       ISymbolDescriptor parentSymbolDescriptor);
 
         public abstract IEnumerable<TValue> GetAllValues<TValue>(
                         string attributeName,
                         string propertyName,
-                        SymbolDescriptorBase symbolDescriptor,
+                        ISymbolDescriptor symbolDescriptor,
                         object trait,
-                        SymbolDescriptorBase parentSymbolDescriptor);
+                        ISymbolDescriptor parentSymbolDescriptor);
 
         public abstract IEnumerable<(string key, TValue value)> GetComplexValue<TValue>(
                         string attributeName,
-                        SymbolDescriptorBase symbolDescriptor,
+                        ISymbolDescriptor symbolDescriptor,
                         object trait,
-                        SymbolDescriptorBase parentSymbolDescriptor);
+                        ISymbolDescriptor parentSymbolDescriptor);
 
 
     }

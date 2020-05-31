@@ -35,9 +35,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         #region CommandTests
         [Theory]
-        [InlineData(typeof(EmptyType), nameof(EmptyType), default)]
-        [InlineData(typeof(TypeWithNameAttribute), Name, default)]
-        [InlineData(typeof(TypeWithNameInCommandAttribute), Name, default)]
+        [InlineData(typeof(EmptyType), nameof(EmptyType), "")]
+        [InlineData(typeof(TypeWithNameAttribute), Name, "")]
+        [InlineData(typeof(TypeWithNameInCommandAttribute), Name, "")]
         [InlineData(typeof(TypeWithDescriptionAttribute), nameof(TypeWithDescriptionAttribute), Description)]
         [InlineData(typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
         public void CommandNameAndDescriptionFromType(Type typeToTest, string name, string description)
@@ -126,9 +126,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithName), Name, default)]
-        [InlineData(typeof(PropertyOptionWithNameAttribute), Name, default)]
-        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), Name, default)]
+        [InlineData(typeof(PropertyOptionWithName), Name, "")]
+        [InlineData(typeof(PropertyOptionWithNameAttribute), Name, "")]
+        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
         [InlineData(typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
         [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
@@ -211,9 +211,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Argument Tests
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithName), Name, default)]
-        [InlineData(typeof(PropertyArgumentWithNameAttribute), Name, default)]
-        [InlineData(typeof(PropertyArgumentWithNameInArgumentAttribute), Name, default)]
+        [InlineData(typeof(PropertyArgumentWithName), Name, "")]
+        [InlineData(typeof(PropertyArgumentWithNameAttribute), Name, "")]
+        [InlineData(typeof(PropertyArgumentWithNameInArgumentAttribute), Name, "")]
         [InlineData(typeof(PropertyArgumentWithDescriptionAttribute), PropertyArgName, Description)]
         [InlineData(typeof(PropertyArgumentWithDescriptionInArgumentAttribute), PropertyArgName, Description)]
         public void ArgumentNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
@@ -269,9 +269,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithNoArity), false, 0, int.MaxValue)]
+        [InlineData(typeof(PropertyArgumentWithNoArity), false, 0, 0)]
         [InlineData(typeof(PropertyArgumentWithArityLowerBoundOnly), true,2, int.MaxValue )]
-        [InlineData(typeof(PropertyArgumentWithArityUpperBoundOnly), true,0,3)]
         [InlineData(typeof(PropertyArgumentWithArityBothBounds), true, 2,3)]
         public void ArgumentArityFromType(Type typeToTest, bool isSet, int minCount, int maxCount)
         {

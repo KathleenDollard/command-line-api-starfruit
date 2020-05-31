@@ -23,9 +23,9 @@ namespace System.CommandLine.GeneralAppModel
             : base(attributeName, propertyName, typeof(TValue), symbolType)
         { }
 
-        public (bool success, TValue value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        public (bool success, TValue value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
                                                                    IEnumerable<object> traits,
-                                                                   SymbolDescriptorBase parentSymbolDescriptor)
+                                                                   ISymbolDescriptor parentSymbolDescriptor)
         {
             var values = GetAllValuesInternal(symbolDescriptor, traits, parentSymbolDescriptor);
             return values.Any()
@@ -33,11 +33,11 @@ namespace System.CommandLine.GeneralAppModel
                     : (false, default);
         }
 
-        public IEnumerable<TValue> GetAllValues(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> traits, SymbolDescriptorBase parentSymbolDescriptor)
+        public IEnumerable<TValue> GetAllValues(ISymbolDescriptor symbolDescriptor, IEnumerable<object> traits, ISymbolDescriptor parentSymbolDescriptor)
             => GetAllValuesInternal(symbolDescriptor, traits, parentSymbolDescriptor);
 
         // This might be the wrong return value
-        private protected IEnumerable<TValue> GetAllValuesInternal(SymbolDescriptorBase symbolDescriptor, IEnumerable<object> traits, SymbolDescriptorBase parentSymbolDescriptor)
+        private protected IEnumerable<TValue> GetAllValuesInternal(ISymbolDescriptor symbolDescriptor, IEnumerable<object> traits, ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);

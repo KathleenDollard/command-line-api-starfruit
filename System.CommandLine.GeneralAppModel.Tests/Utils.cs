@@ -7,23 +7,26 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public static class Utils
     {
-        public static string CompareLists<T>(this IEnumerable<T> list1, IEnumerable<T> list2, string name)
+
+        public const string EmptyRawForTest = "";
+
+        public static (bool success, string message) CompareLists<T>(this IEnumerable<T> list1, IEnumerable<T> list2, string name)
         {
             var a1 = list1.ToArray();
             var a2 = list2.ToArray();
             if (a1.Length != a2.Length)
             {
-                return $"The length of {name} {list1.Count()} does not equal {list2.Count()}";
+                return (false, $"The length of {name} {list1.Count()} does not equal {list2.Count()}");
             }
             for (int i = 0; i < list1.Count(); i++)
             {
-                if (!(a1[i].Equals(a2[i])))
+                if (Equals(a1[i], a2[i]))
                 {
-                    return $"Position {i} of {name} is {a1}, while {a2} was expected";
+                    return (false, $"Position {i} of {name} is {a1}, while {a2} was expected");
                 }
 
             }
-            return null;
+            return (true, string.Empty);
         }
 
         public static void CheckRule<TRule>(this IRule rule, SymbolType symbolType)
@@ -37,6 +40,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             rule.CheckRule<NameEndsWithRule>(symbolType);
             var typeRule = rule as NameEndsWithRule;
+            var _ = typeRule ?? throw new InvalidOperationException("Unhandled rule type");
             typeRule.Position.Should().Be(position);
             typeRule.CompareTo.Should().Be(compareTo);
         }
@@ -45,6 +49,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             rule.CheckRule<AttributeRule>(symbolType);
             var typeRule = rule as AttributeRule;
+            var _ = typeRule ?? throw new InvalidOperationException("Unhandled rule type");
             typeRule.AttributeName.Should().Be(attributeName);
         }
 
@@ -53,6 +58,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             rule.Should().BeAssignableTo<AttributeWithPropertyRule>();
             rule.SymbolType.Should().IncludeSymbolType(symbolType);
             var typedRule = rule as AttributeWithPropertyRule;
+            var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
             typedRule.AttributeName.Should().Be(attributeName);
             typedRule.PropertyName.Should().Be(propertyName);
             typedRule.Type.Should().Be(type);
@@ -76,7 +82,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             {
                 return false;
             }
-            var matchFailures = expected.Where(x => !actual.Where(y => y.Equals(x)).Any());
+            var matchFailures = expected.Where(x => !actual.Where(y => Equals(x, y)).Any());
             return !matchFailures.Any();
         }
 
@@ -85,6 +91,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             rule.Should().BeAssignableTo<IsOfTypeRule>();
             rule.SymbolType.Should().IncludeSymbolType(symbolType);
             var typedRule = rule as IsOfTypeRule;
+            var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
             typedRule.Type.Should().Be(type);
 
         }
@@ -92,6 +99,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public static void CheckRules(this IRule[] actual, RuleGroupTestData descriptionData)
         {
             var symbolType = descriptionData.SymbolType;
+            if (descriptionData.Rules is null)
+            {
+                actual.Should().HaveCount(0);
+                return;
+            }
             var expectedRules = descriptionData.Rules.ToArray();
             actual.Should().HaveCount(expectedRules.Length);
             for (int i = 0; i < actual.Length; i++)
@@ -100,18 +112,22 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 {
                     case NameEndsWithRule r:
                         var np = expectedRules[i] as NamePatternTestData;
+                        var _ = np ?? throw new InvalidOperationException("Unexpecte TestData type");
                         r.CheckNamePatternRule(symbolType, np.Position, np.CompareTo);
                         break;
                     case AttributeWithPropertyValueRule<string> r:
                         var naps = expectedRules[i] as NamedAttributeWithPropertyTestData;
+                        var _2 = naps ?? throw new InvalidOperationException("Unexpecte TestData type");
                         r.CheckNamedAttributeWithPropertyRule(symbolType, naps.AttributeName, naps.PropertyName, typeof(string));
                         break;
                     case AttributeWithPropertyValueRule<bool> r:
                         var rapb = expectedRules[i] as NamedAttributeWithPropertyTestData;
+                        var _3 = rapb ?? throw new InvalidOperationException("Unexpecte TestData type");
                         r.CheckNamedAttributeWithPropertyRule(symbolType, rapb.AttributeName, rapb.PropertyName, typeof(bool));
                         break;
                     case AttributeRule r:
                         var na = expectedRules[i] as NamedAttributeTestData;
+                        var _4 = na ?? throw new InvalidOperationException("Unexpecte TestData type");
                         r.CheckNamedAttributeRule(symbolType, na.AttributeName);
                         break;
 
@@ -130,10 +146,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
             {
                 null => "<null>",
                 string s => $@"""{s}""",
-                IEnumerable e => e.OfType<object>().Count() ==0
-                                    ? "<Empty>"
-                                    : "\n" + string.Join('\n', Members(e)),
-                _ => input.ToString()
+                IEnumerable e => e.OfType<object>().Count() == 0
+                                   ? "<Empty>"
+                                   : "\n" + string.Join('\n', Members(e)),
+                _ => input.ToString() ?? string.Empty
             };
 
             static IEnumerable<string> Members(IEnumerable list)

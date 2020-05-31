@@ -349,17 +349,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class ParameterArgumentWithArityLowerBoundOnly
     {
-        public void Method( [Arity(MinimumCount = 2)]string ParamArg) { }
-    }
-
-    public class ParameterArgumentWithArityUpperBoundOnly
-    {
-        public void Method( [Arity(MaximumCount = 3)]string ParamArg) { }
+        public void Method( [Arity(minimumCount:  2)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithArityBothBounds
     {
-        public void Method([Arity(MinimumCount = 2, MaximumCount = 3)]string ParamArg) { }
+        public void Method([Arity(minimumCount :2, maximumCount : 3)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithNoDefaultValue

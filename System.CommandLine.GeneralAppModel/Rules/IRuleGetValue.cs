@@ -4,18 +4,18 @@ namespace System.CommandLine.GeneralAppModel
 {
     public interface IRuleGetValue<T> : IRule
     {
-        (bool success, T value) GetFirstOrDefaultValue(SymbolDescriptorBase symbolDescriptor,
+        (bool success, T value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
                                  IEnumerable<object> item,
-                                 SymbolDescriptorBase parentSymbolDescriptor);
+                                 ISymbolDescriptor parentSymbolDescriptor);
 
     }
 
     public interface IRuleGetValues<T> : IRuleGetValue<T>
     {
 
-        IEnumerable<T> GetAllValues(SymbolDescriptorBase symbolDescriptor,
+        IEnumerable<T> GetAllValues(ISymbolDescriptor symbolDescriptor,
                                     IEnumerable<object> traits,
-                                    SymbolDescriptorBase parentSymbolDescriptor);
+                                    ISymbolDescriptor parentSymbolDescriptor);
     }
 
 }
