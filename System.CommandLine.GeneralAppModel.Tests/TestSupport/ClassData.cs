@@ -48,27 +48,27 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
 
         public class SymbolData
         {
-            public Wrapper<object> RawWrapper { get; private set; }
-            public Wrapper<SymbolType> SymbolTypeWrapper { get; private set; }
-            public Wrapper<IEnumerable<string>> AliasesWrapper { get; private set; }
-            public Wrapper<string> DescriptionWrapper { get; private set; }
-            public Wrapper<bool> IsHiddenWrapper { get; private set; }
-            public Wrapper<string> NameWrapper { get; private set; }
+            public Wrapper<object>? RawWrapper { get; private set; }
+            public Wrapper<SymbolType>? SymbolTypeWrapper { get; private set; }
+            public Wrapper<IEnumerable<string>>? AliasesWrapper { get; private set; }
+            public Wrapper<string>? DescriptionWrapper { get; private set; }
+            public Wrapper<bool>? IsHiddenWrapper { get; private set; }
+            public Wrapper<string>? NameWrapper { get; private set; }
 
-            public object Raw { set { RawWrapper = Wrap(value); } }
+            public object? Raw { set { RawWrapper = Wrap(value); } }
             public SymbolType SymbolType { set { SymbolTypeWrapper = Wrap(value); } }
-            public IEnumerable<string> Aliases { set { AliasesWrapper = Wrap(value); } }
-            public string Description { set { DescriptionWrapper = Wrap(value); } }
+            public IEnumerable<string>? Aliases { set { AliasesWrapper = Wrap(value); } }
+            public string? Description { set { DescriptionWrapper = Wrap(value); } }
             public bool IsHidden { set { IsHiddenWrapper = Wrap(value); } }
-            public string Name { set { NameWrapper = Wrap(value); } }
+            public string? Name { set { NameWrapper = Wrap(value); } }
 
-            public string AltName { get; private set; }
+            public string? AltName { get; private set; }
             protected void SetAltName(string altName)
             {
                 AltName = altName;
             }
 
-            public string Id { get; private set; }
+            public string? Id { get; private set; }
             protected void SetId(string id)
             {
                 Id = id;
@@ -77,14 +77,14 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
 
         public class CommandData : SymbolData
         {
-            public Wrapper<IEnumerable<OptionData>> OptionsWrapper { get; private set; }
-            public Wrapper<IEnumerable<ArgumentData>> ArgumentsWrapper { get; private set; }
-            public Wrapper<IEnumerable<CommandData>> SubCommandsWrapper { get; private set; }
-            public Wrapper<bool> TreatUnmatchedTokensAsErrorsWrapper { get; private set; }
+            public Wrapper<IEnumerable<OptionData>>? OptionsWrapper { get; private set; }
+            public Wrapper<IEnumerable<ArgumentData>>? ArgumentsWrapper { get; private set; }
+            public Wrapper<IEnumerable<CommandData>>? SubCommandsWrapper { get; private set; }
+            public Wrapper<bool>? TreatUnmatchedTokensAsErrorsWrapper { get; private set; }
 
-            public IEnumerable<OptionData> Options { set { OptionsWrapper = Wrap(value); } }
-            public IEnumerable<ArgumentData> Arguments { set { ArgumentsWrapper = Wrap(value); } }
-            public IEnumerable<CommandData> SubCommands { set { SubCommandsWrapper = Wrap(value); } }
+            public IEnumerable<OptionData>? Options { set { OptionsWrapper = Wrap(value); } }
+            public IEnumerable<ArgumentData>? Arguments { set { ArgumentsWrapper = Wrap(value); } }
+            public IEnumerable<CommandData>? SubCommands { set { SubCommandsWrapper = Wrap(value); } }
             public bool TreatUnmatchedTokensAsErrors { set { TreatUnmatchedTokensAsErrorsWrapper = Wrap(value); } }
 
             // This allows return type to be specifically CommandData. We could probably 
@@ -104,14 +104,14 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
 
         public class ArgumentData : SymbolData
         {
-            public Wrapper<int> ArityMinWrapper { get; private set; }
-            public Wrapper<int> ArityMaxWrapper { get; private set; }
-            public Wrapper<bool> HasArityWrapper { get; private set; }
-            public Wrapper<object> DefaultValueWrapper { get; private set; }
-            public Wrapper<bool> HasDefaultWrapper { get; private set; }
-            public Wrapper<Type> ArgumentTypeWrapper { get; private set; }
-            public Wrapper<HashSet<string>> AllowedValuesWrapper { get; private set; }
-            public Wrapper<bool> RequiredWrapper { get; private set; }
+            public Wrapper<int>? ArityMinWrapper { get; private set; }
+            public Wrapper<int>? ArityMaxWrapper { get; private set; }
+            public Wrapper<bool>? HasArityWrapper { get; private set; }
+            public Wrapper<object>? DefaultValueWrapper { get; private set; }
+            public Wrapper<bool>? HasDefaultWrapper { get; private set; }
+            public Wrapper<Type>? ArgumentTypeWrapper { get; private set; }
+            public Wrapper<HashSet<string>>? AllowedValuesWrapper { get; private set; }
+            public Wrapper<bool>? RequiredWrapper { get; private set; }
 
             public int ArityMin
             {
@@ -144,8 +144,8 @@ namespace System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests
 
         public class OptionData : SymbolData
         {
-            public Wrapper<IEnumerable<ArgumentData>> ArgumentsWrapper { get; private set; }
-            public Wrapper<bool> RequiredWrapper { get; private set; }
+            public Wrapper<IEnumerable<ArgumentData>>? ArgumentsWrapper { get; private set; }
+            public Wrapper<bool>? RequiredWrapper { get; private set; }
 
 
             public IEnumerable<ArgumentData> Arguments { set { ArgumentsWrapper = Wrap(value); } }

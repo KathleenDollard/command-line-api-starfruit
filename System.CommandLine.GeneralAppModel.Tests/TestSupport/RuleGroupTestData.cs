@@ -7,7 +7,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
     public class RuleGroupTestData
     {
         public SymbolType SymbolType { get; set; }
-        public List<RuleBaseTestData> Rules { get; set; }
+        public List<RuleBaseTestData>? Rules { get; set; }
 
     }
 

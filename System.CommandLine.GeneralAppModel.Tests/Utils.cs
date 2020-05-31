@@ -7,6 +7,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public static class Utils
     {
+
+        public const string EmptyRawForTest = "";
+
         public static string CompareLists<T>(this IEnumerable<T> list1, IEnumerable<T> list2, string name)
         {
             var a1 = list1.ToArray();
