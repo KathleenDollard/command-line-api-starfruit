@@ -1,14 +1,9 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System.Collections;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Xunit.Sdk;
-using static System.CommandLine.GeneralAppModel.Tests.ModelCodeForTests.ClassData;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
