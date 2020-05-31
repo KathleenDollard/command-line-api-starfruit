@@ -8,14 +8,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public class ReportingTests
     {
-        private static Func<EquivalencyAssertionOptions<Symbol>, EquivalencyAssertionOptions<Symbol>> symbolOptions;
         private readonly Strategy strategy;
 
 
         public ReportingTests()
         {
             AssertionOptions.AssertEquivalencyUsing(o => o.ExcludingFields().IgnoringCyclicReferences());
-            symbolOptions = o => o.Excluding(ctx => ctx.SelectedMemberPath.EndsWith("ConvertArguments"));
             strategy = new Strategy().SetGeneralRules();
         }
 
