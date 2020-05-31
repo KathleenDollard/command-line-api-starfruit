@@ -13,7 +13,7 @@ namespace System.CommandLine.GeneralAppModel
         public static ISymbolDescriptor Empty = new EmptySymbolDescriptor();
 
         public SymbolDescriptor(ISymbolDescriptor  parentSymbolDescriptorBase,
-                                    object raw,
+                                    object? raw,
                                     SymbolType symbolType)
         {
             ParentSymbolDescriptorBase = parentSymbolDescriptorBase;
@@ -35,7 +35,7 @@ namespace System.CommandLine.GeneralAppModel
         /// example MethodInfo, Type, ParameterInfo and PropertyInfo appear
         /// in the ReflectionAppModel. 
         /// </summary>
-        public object Raw { get; }
+        public object? Raw { get; }
         public SymbolType SymbolType { get; }
         public IEnumerable<string>? Aliases { get; set; }
         // TODO: Understand raw aliases: public IReadOnlyList<string> RawAliases { get; }

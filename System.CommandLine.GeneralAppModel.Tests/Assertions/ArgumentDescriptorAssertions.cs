@@ -4,7 +4,7 @@ using System.CommandLine.GeneralAppModel.Descriptors;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public static class ArgumentDescriptorTestExtensions2
+    public static class ArgumentDescriptorTestExtensions
     {
         public static ArgumentDescriptorAssertions Should(this ArgumentDescriptor instance)
         {
@@ -21,14 +21,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         protected override string Identifier => "commanddescriptor2";
 
-        public AndConstraint<ArgumentDescriptorAssertions> HaveArity(bool isSet, int? minValue, int? maxValue)
+        public AndConstraint<ArgumentDescriptorAssertions> HaveArity(bool isSet, int minValue, int maxValue)
         {
-            if (isSet)
-            {
-                var _ = !minValue.HasValue || !maxValue.HasValue
-                       ? throw new InvalidOperationException("MinValue and MaxValue must be set when IsSet is true. For no maxValue, use Int32.Max")
-                       : 0;
-            }
             Execute.Assertion
                  .ForCondition(!isSet ? Subject.Arity is null : true)
                  .FailWith("Expected there not to be an Arity, but found one")
@@ -39,9 +33,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
             if (isSet && !(Subject.Arity is null))
             {
                 Execute.Assertion
-                    .ForCondition(minValue.Value == Subject.Arity.MinimumCount &&
-                               maxValue.Value == Subject.Arity.MaximumCount)
-                    .FailWith($"Expected Arity to be {minValue.Value} to {maxValue.Value}, " +
+                    .ForCondition(minValue == Subject.Arity.MinimumCount &&
+                               maxValue == Subject.Arity.MaximumCount)
+                    .FailWith($"Expected Arity to be {minValue} to {maxValue}, " +
                             $"but found {Subject.Arity.MinimumCount} to {Subject.Arity.MaximumCount}");
             }
 
@@ -61,7 +55,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             if (!(defaultValue is null) && !(Subject.DefaultValue is null))
             {
                 Execute.Assertion
-                     .ForCondition(Subject.DefaultValue.DefaultValue.Equals(defaultValue))
+                     .ForCondition(Equals(Subject.DefaultValue.DefaultValue, defaultValue))
                      .FailWith($"Expected DefaultValue to be {defaultValue}, but found {(isSet ? Subject.DefaultValue.DefaultValue : "<wat?>")}");
             }
 

@@ -57,17 +57,31 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<TAssert>((TAssert)this);
         }
 
-        public AndConstraint<TAssert> HaveAliases(string[] expected)
+        public AndConstraint<TAssert> HaveAliases(string[]? expected)
         {
+            if (Subject.Aliases is null && expected is null)
+            {
+                return new AndConstraint<TAssert>((TAssert)this);
+            }
             var expectedAliases = expected is null
-                                    ? null
-                                    : string.Join(",", expected);
+                                ? string.Empty
+                                : string.Join(",", expected);
             var actualAliases = expected is null
-                          ? null
-                          : string.Join(",", Subject.Aliases);
+                               ? string.Empty
+                               : string.Join(",", expected);
+            if (expected is null || Subject.Aliases is null)
+            {
+                Execute.Assertion
+                              .ForCondition(expectedAliases is null)
+                              .FailWith($"No aliases were not expected, but were found: {actualAliases }")
+                              .Then
+                              .ForCondition(!(expectedAliases is null))
+                              .FailWith($"No aliases were expected, but were not found");
+                return new AndConstraint<TAssert>((TAssert)this);
+            }
             Execute.Assertion
-                     .ForCondition(expectedAliases == actualAliases)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Aliases", expected, Subject.Aliases));
+                             .ForCondition(expectedAliases == actualAliases)
+                             .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Aliases", expected, Subject.Aliases));
 
             return new AndConstraint<TAssert>((TAssert)this);
         }
@@ -78,7 +92,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             {
                 null => "<null>",
                 string s => $@"""{s}""",
-                _ => input.ToString()
+                _ => input.ToString() ?? string.Empty
             };
 
         }

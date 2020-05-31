@@ -3,11 +3,11 @@
     public class DefaultValueDescriptor
     {
 
-        public DefaultValueDescriptor(object defaultValue)
+        public DefaultValueDescriptor(object? defaultValue)
         {
             DefaultValue = defaultValue;
         }
 
-        public object DefaultValue { get; set; }
+        public object? DefaultValue { get; set; }
     }
 }

@@ -118,7 +118,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         private static string checkValue = "";
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandHandlerRunsTestData()
-              : base(new CommandDescriptor(SymbolDescriptor.Empty , typeof(CommandHandlerRunsTestData).GetMethod("Run"))
+              : base(new CommandDescriptor(SymbolDescriptor.Empty , typeof(CommandHandlerRunsTestData).GetMethod("Run")!)
               { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(

@@ -5,7 +5,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
     public class CommandDescriptor : SymbolDescriptor
     {
         public CommandDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
-                                 object raw)
+                                 object? raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Command) { }
 
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;

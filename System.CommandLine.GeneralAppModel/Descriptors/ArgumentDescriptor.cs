@@ -5,7 +5,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
     public class ArgumentDescriptor : SymbolDescriptor
     {
         public ArgumentDescriptor(Type argumentType, ISymbolDescriptor parentSymbolDescriptorBase,
-                                   object raw)
+                                   object? raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Argument)
         {
             ArgumentType = argumentType;

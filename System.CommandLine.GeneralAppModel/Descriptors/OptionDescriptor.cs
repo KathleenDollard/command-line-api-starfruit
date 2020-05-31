@@ -5,7 +5,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
     public class OptionDescriptor : SymbolDescriptor
     {
         public OptionDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
-                                object raw)
+                                object? raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Option) { }
 
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();

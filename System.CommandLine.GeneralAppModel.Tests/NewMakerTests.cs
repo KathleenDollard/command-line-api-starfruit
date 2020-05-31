@@ -20,7 +20,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void CommandBasicsTests(string name, string description, string aliasesAsString, bool isHidden, bool treatUnmatchedTokensAsErrors)
         {
             var aliases = aliasesAsString is null
-                          ? null
+                          ? new string[] { }
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
             var command = CommandMaker.MakeCommand(data.Descriptor);
@@ -34,7 +34,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void OptionBasicsTests(string name, string description, string aliasesAsString, bool isHidden, bool required)
         {
             var aliases = aliasesAsString is null
-                          ? null
+                          ? new string[] { }
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new OptionBasicsTestData(name, description, aliases, isHidden, required);
             var command = CommandMaker.MakeRootCommand(data.Descriptor);
@@ -47,7 +47,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void ArgumentBasicsTests(string name, string description, string aliasesAsString, bool isHidden, Type argumentType)
         {
             var aliases = aliasesAsString is null
-                          ? null
+                          ? new string[] { }
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new ArgumentBasicsTestData(name, description, aliases, isHidden, argumentType);
             var command = CommandMaker.MakeRootCommand(data.Descriptor);

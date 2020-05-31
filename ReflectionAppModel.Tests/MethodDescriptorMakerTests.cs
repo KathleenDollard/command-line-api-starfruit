@@ -281,7 +281,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(typeof(ParameterArgumentWithNoArity), false, 0, int.MaxValue)]
         [InlineData(typeof(ParameterArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
         [InlineData(typeof(ParameterArgumentWithArityBothBounds), true, 2, 3)]
-        public void ArgumentArityFromType(Type typeToTest, bool isSet, int? minCount, int? maxCount)
+        public void ArgumentArityFromType(Type typeToTest, bool isSet, int minCount, int maxCount)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
