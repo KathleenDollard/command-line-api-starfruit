@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -102,6 +103,33 @@ namespace System.CommandLine.GeneralAppModel
             }
             return values;
         }
+        public void ReplaceAbstractRules(SpecificSource tools)
+        {
+            var abstractRules = this.Where(r => r.GetType().IsAbstract);
+            foreach (var abstractRule in abstractRules)
+            {
+                // We might want to cache this
+                var assembly = tools.GetType().Assembly;
+                var derivedTypes = assembly.GetTypes()
+                                    .Where(t => !t.IsAbstract && abstractRule.GetType().IsAssignableFrom(t));
+                var derivedType = derivedTypes.FirstOrDefault();
+                if (derivedType is null)
+                {
+                    continue; // this isn't an error because the specific layer might not support this rule
+                }
 
+                // Abstract and derived types must have the same parameter list
+                var ctor = abstractRule.GetType().GetConstructors().FirstOrDefault(); // we might want to look for longest parameter list
+                var parameters = ctor.GetParameters();
+                var arguments = new object[parameters.Length];
+                var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var prop = abstractRule.GetType().GetProperty(parameters[i].Name, flags);
+                    arguments[i] = prop.GetValue(abstractRule);
+                }
+                var derivedRule = Activator.CreateInstance(derivedType, arguments);
+            }
+        }
     }
 }

@@ -14,7 +14,6 @@ namespace System.CommandLine.GeneralAppModel
     {
         public RuleGroup<IRuleGetCandidates> Rules { get; private set; } = new RuleGroup<IRuleGetCandidates>();
 
-
         public IEnumerable<Candidate> GetItems(SymbolType symbolType,
                                                ISymbolDescriptor commandDescriptor,
                                                IEnumerable<Candidate> candidates)
@@ -36,6 +35,11 @@ namespace System.CommandLine.GeneralAppModel
 
             public int GetHashCode(Candidate obj) 
                 => obj.Item.GetHashCode();
+        }
+
+        public override void ReplaceAbstractRules(SpecificSource tools)
+        {
+            Rules.ReplaceAbstractRules(tools);
         }
 
         public override string Report(int tabsCount)

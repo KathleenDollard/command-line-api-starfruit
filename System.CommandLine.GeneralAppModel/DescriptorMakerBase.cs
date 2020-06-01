@@ -30,7 +30,9 @@ namespace System.CommandLine.GeneralAppModel
             SpecificSource.SetTools(tools);
             Strategy = strategy;
             DataSource = dataSource;
+            ReplaceAbstractRules(strategy, tools);
         }
+
 
         protected Strategy Strategy { get; }
         protected object DataSource { get; }
@@ -39,9 +41,9 @@ namespace System.CommandLine.GeneralAppModel
         private (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
              ClassifyChildren(IEnumerable<Candidate> candidates, ISymbolDescriptor commandDescriptor)
         {
-            var optionItems =    new   List<Candidate>();
-            var subCommandItems =new   List<Candidate>();
-            var argumentItems =  new  List<Candidate> ();
+            var optionItems = new List<Candidate>();
+            var subCommandItems = new List<Candidate>();
+            var argumentItems = new List<Candidate>();
 
             // TODO: Provide way to customize this order since the first match wins
             var symbolSelectionOrder = new SymbolType[] { SymbolType.Argument, SymbolType.Command, SymbolType.Option };
@@ -50,7 +52,7 @@ namespace System.CommandLine.GeneralAppModel
                 switch (symbolType)
                 {
                     case SymbolType.Option:
-                        optionItems.AddRange( Strategy.SelectSymbolRules
+                        optionItems.AddRange(Strategy.SelectSymbolRules
                                         .GetItems(SymbolType.Option, commandDescriptor, candidates));
                         candidates = Remove(candidates, optionItems);
                         break;
@@ -165,13 +167,22 @@ namespace System.CommandLine.GeneralAppModel
         {
             if (!(symbolDescriptor is SymbolDescriptor descriptor))
             {
-                return ;
+                return;
             }
             descriptor.Aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
                                     .SelectMany(x => x);
             descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+        }
+
+        private void ReplaceAbstractRules(Strategy strategy, SpecificSource tools)
+        {
+            strategy.GetCandidateRules.ReplaceAbstractRules(tools);
+            strategy.SelectSymbolRules.ReplaceAbstractRules(tools);
+            strategy.CommandRules.ReplaceAbstractRules(tools);
+            strategy.ArgumentRules.ReplaceAbstractRules(tools);
+            strategy.OptionRules.ReplaceAbstractRules(tools);
         }
     }
 }

@@ -7,19 +7,28 @@
         public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
         public RuleGroup<IRuleGetValue<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValue<Type>>();
 
-        public void AddArityRule(IRuleArity arityRule)
-        {
-            ArityRules.Add(arityRule);
-        }
+        //public void AddArityRule(IRuleArity arityRule)
+        //{
+        //    ArityRules.Add(arityRule);
+        //}
 
-        public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
-        {
-            RequiredRules.Add(requiredRule);
-        }
+        //public void AddRequiredRule(IRuleGetValues<bool> requiredRule)
+        //{
+        //    RequiredRules.Add(requiredRule);
+        //}
 
-        public void AddSpecialArgumentTypeRule(IRuleGetValues<Type> specialArgumentType)
+        //public void AddSpecialArgumentTypeRule(IRuleGetValues<Type> specialArgumentType)
+        //{
+        //    SpecialArgumentTypeRules.Add(specialArgumentType);
+        //}
+
+        public override void ReplaceAbstractRules(SpecificSource tools)
         {
-            SpecialArgumentTypeRules.Add(specialArgumentType);
+            base.ReplaceAbstractRules(tools);
+            ArityRules.ReplaceAbstractRules(tools);
+            DefaultValueRules.ReplaceAbstractRules(tools);
+            RequiredRules.ReplaceAbstractRules(tools);
+            SpecialArgumentTypeRules.ReplaceAbstractRules(tools);
         }
 
         public override string Report(int tabsCount)

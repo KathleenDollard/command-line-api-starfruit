@@ -4,9 +4,15 @@
     {
         public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 
-        public void AddRequiredRule(IRuleGetValue<bool> requiredRule)
+        //public void AddRequiredRule(IRuleGetValue<bool> requiredRule)
+        //{
+        //    RequiredRules.Add(requiredRule);
+        //}
+
+        public override void ReplaceAbstractRules(SpecificSource tools)
         {
-            RequiredRules.Add(requiredRule);
+            base.ReplaceAbstractRules(tools);
+            RequiredRules.ReplaceAbstractRules(tools);
         }
 
         public override string Report(int tabsCount)

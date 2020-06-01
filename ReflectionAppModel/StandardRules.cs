@@ -16,7 +16,7 @@ namespace System.CommandLine.ReflectionAppModel
         public static RuleSetGetCandidatesRule AvailableCandidatesRules(this RuleSetGetCandidatesRule rules)
         {
             rules.Rules
-                .Add(new DerivedTypeRule())
+                .Add(new DerivedFromReflectionRule())
                 ;
             return rules;
         }
