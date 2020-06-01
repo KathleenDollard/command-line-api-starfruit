@@ -7,7 +7,7 @@ using System.Reflection;
 namespace System.CommandLine.GeneralAppModel
 {
     public class RuleGroup<TRule> : IEnumerable<TRule>
-        where TRule : IRule
+        where TRule : class, IRule
     {
 
         private readonly List<TRule> _rules = new List<TRule>();
@@ -105,19 +105,32 @@ namespace System.CommandLine.GeneralAppModel
         }
         public void ReplaceAbstractRules(SpecificSource tools)
         {
-            var abstractRules = this.Where(r => r.GetType().IsAbstract);
+            var abstractRules = this.Where(r => typeof(IAbstractRule).IsAssignableFrom(r.GetType()));
+            var toReplace = new List<(TRule oldRule, TRule newRule)>();
             foreach (var abstractRule in abstractRules)
             {
-                // We might want to cache this
-                var assembly = tools.GetType().Assembly;
-                var derivedTypes = assembly.GetTypes()
-                                    .Where(t => !t.IsAbstract && abstractRule.GetType().IsAssignableFrom(t));
-                var derivedType = derivedTypes.FirstOrDefault();
+                Type? derivedType = GetNewRuleType(tools, abstractRule);
                 if (derivedType is null)
-                {
-                    continue; // this isn't an error because the specific layer might not support this rule
-                }
+                { continue; } // this isn't an error because the specific layer might not support this rule
+                TRule derivedRule = CreateNewRule(abstractRule, derivedType);
+                toReplace.Add((abstractRule, derivedRule));
+            }
+            ReplaceRules(toReplace);
+            return;
 
+            void ReplaceRules(List<(TRule oldRule, TRule newRule)> toReplace)
+            {
+                foreach (var (oldRule, newRule) in toReplace)
+                {
+                    var pos = _rules.IndexOf(oldRule);
+                    _rules.RemoveAt(pos);
+                    _rules.Insert(pos, newRule);
+
+                }
+            }
+
+            static TRule CreateNewRule(TRule abstractRule, Type? derivedType)
+            {
                 // Abstract and derived types must have the same parameter list
                 var ctor = abstractRule.GetType().GetConstructors().FirstOrDefault(); // we might want to look for longest parameter list
                 var parameters = ctor.GetParameters();
@@ -128,7 +141,19 @@ namespace System.CommandLine.GeneralAppModel
                     var prop = abstractRule.GetType().GetProperty(parameters[i].Name, flags);
                     arguments[i] = prop.GetValue(abstractRule);
                 }
-                var derivedRule = Activator.CreateInstance(derivedType, arguments);
+                var derivedRuleObject = Activator.CreateInstance(derivedType, arguments);
+                var derivedRule = (derivedRuleObject as TRule) ?? throw new InvalidOperationException("Derived rule not of expected type");
+                return derivedRule;
+            }
+
+            static Type GetNewRuleType(SpecificSource tools, TRule abstractRule)
+            {
+                // We might want to cache this
+                var assembly = tools.GetType().Assembly;
+                var derivedTypes = assembly.GetTypes()
+                                    .Where(t => abstractRule.GetType().IsAssignableFrom(t));
+                var derivedType = derivedTypes.FirstOrDefault();
+                return derivedType;
             }
         }
     }

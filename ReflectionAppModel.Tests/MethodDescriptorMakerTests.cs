@@ -32,7 +32,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public MethodDescriptorMakerTests()
         {
             strategy = new Strategy()
-                            .SetReflectionRules();
+                            .SetFullRules();
         }
 
         #region Command tests

@@ -13,7 +13,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public StrategyCreationTests()
         {
             generalStrategy = new Strategy(generalStrategyName)
-                            .SetGeneralRules()
+                            .SetFullRules()
                             .SymbolCandidateNamesToIgnore("CommandDataFromMethods", "CommandDataFromType");
         }
 
@@ -26,8 +26,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void GeneralStrategyGetCandidateRulesIsCorrect()
         {
-            var rules = generalStrategy.GetCandidateRules.Rules;
-            rules.Should().BeEmpty(); // this is set by a non-abstract Strategy
+            var rules = generalStrategy.GetCandidateRules.Rules.ToArray();
+            rules[0].CheckDerivedFromRule(null,null, false); 
         }
 
         [Fact]

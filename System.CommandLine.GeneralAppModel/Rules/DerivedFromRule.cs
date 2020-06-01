@@ -9,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel
     /// <summary>
     /// This rule returns candidates for all types derived from the parent description type. 
     /// </summary>
-    public abstract class DerivedFromRule : RuleBase, IRuleGetAvailableCandidates
+    public class DerivedFromRule : RuleBase, IRuleGetAvailableCandidates, IAbstractRule
     {
         public DerivedFromRule(string? assemblyName = null, string? namespaceName = null, bool ignoreNamespace = false)
             : base(SymbolType.Command)
@@ -23,7 +23,14 @@ namespace System.CommandLine.GeneralAppModel
         public string? AssemblyName { get; }
         public bool IgnoreNamespace { get; }
 
-        public abstract IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor generalSymbolDescriptor);
+        public virtual IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor generalSymbolDescriptor)
+        {
+            return new List<Candidate>();
+        }
+
+        public override string RuleDescription<TIRuleSet>()
+            => $"DerivedFrom Abstract Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
+
     }
 }
 

@@ -23,7 +23,7 @@ namespace Playground
         // So, thoughts? We either have coupling between the CLI definition and implementation, we're going to have a nasty list of paramters somewhere (or reflection). No? Where shoudl that be?
         public static int Main2(string[] args)
         {
-            Strategy strategy = new Strategy("Full").SetReflectionRules();
+            Strategy strategy = new Strategy("Full").SetFullRules();
             return strategy.Invoke((Func<ManageGlobalJson, int>)(args
                 => (args switch
                     {

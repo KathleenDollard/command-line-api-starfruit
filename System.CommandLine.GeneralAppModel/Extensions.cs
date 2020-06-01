@@ -35,7 +35,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public static string ReportRuleGroup<TRule>(this RuleGroup<TRule> ruleGroup,int tabsCount, string what )
-            where TRule : IRule
+            where TRule :class, IRule
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             string indentedWhitespace = CoreExtensions.NewLineWithTabs(tabsCount + 1);

@@ -9,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
     {
 
         public const string EmptyRawForTest = "";
- 
+
         public static (bool success, string message) CompareLists<T>(this IEnumerable<T> list1, IEnumerable<T> list2, string name)
         {
             var a1 = list1.ToArray();
@@ -93,6 +93,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var typedRule = rule as IsOfTypeRule;
             var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
             typedRule.Type.Should().Be(type);
+        }
+
+
+        public static void CheckDerivedFromRule(this IRule rule, string? assembly, string? namespaceName, bool ignoreNamespace)
+        {
+            rule.Should().BeAssignableTo<DerivedFromRule >();
+            var typedRule = rule as DerivedFromRule;
+            var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
+            typedRule.AssemblyName.Should().Be(assembly);
+            typedRule.NamespaceName .Should().Be(namespaceName);
+            typedRule.IgnoreNamespace.Should().Be(ignoreNamespace);
 
         }
 

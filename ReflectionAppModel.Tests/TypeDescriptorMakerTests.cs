@@ -30,7 +30,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public TypeDescriptorMakerTests()
         {
             strategy = new Strategy()
-                            .SetReflectionRules();
+                            .SetFullRules();
         }
 
         #region CommandTests

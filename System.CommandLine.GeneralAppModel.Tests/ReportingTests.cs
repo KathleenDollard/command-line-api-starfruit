@@ -14,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public ReportingTests()
         {
             AssertionOptions.AssertEquivalencyUsing(o => o.ExcludingFields().IgnoringCyclicReferences());
-            strategy = new Strategy().SetGeneralRules();
+            strategy = new Strategy().SetFullRules();
         }
 
         [Fact(Skip = "")]
