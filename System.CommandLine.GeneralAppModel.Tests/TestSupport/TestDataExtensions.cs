@@ -34,7 +34,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data, ISymbolDescriptor parentSymbolDescriptor)
         {
             var _ = data.ArgumentType ?? throw new InvalidOperationException("ArgumentType cannot be null");
-            var arg = new ArgumentDescriptor(data.ArgumentType, parentSymbolDescriptor, data.Raw)
+            var arg = new ArgumentDescriptor(new ArgTypeInfo(data.ArgumentType), parentSymbolDescriptor, data.Raw)
             {
                 Name = data.Name,
                 Description = data.Description,

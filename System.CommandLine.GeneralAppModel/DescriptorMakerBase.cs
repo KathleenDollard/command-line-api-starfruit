@@ -112,7 +112,7 @@ namespace System.CommandLine.GeneralAppModel
 
         private ArgumentDescriptor GetArgument(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var argumentType = SpecificSource.Tools.GetArgumentType(candidate) ?? typeof(string);
+            var argumentType = SpecificSource.Tools.GetArgTypeInfo(candidate) ?? throw new InvalidOperationException("Type must be supplied for argument");
             var descriptor = new ArgumentDescriptor(argumentType, parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);

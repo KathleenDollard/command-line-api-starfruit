@@ -86,7 +86,7 @@ namespace System.CommandLine.GeneralAppModel
         public static Argument MakeArgument(ArgumentDescriptor descriptor)
         {
             var arg = new Argument(descriptor.Name);
-            arg.ArgumentType = descriptor.ArgumentType;
+            arg.ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>();
             AddAliases(arg, descriptor.Aliases);
             if (descriptor.Arity != null)
             {
