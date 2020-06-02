@@ -29,13 +29,13 @@ namespace System.CommandLine.ReflectionAppModel
             }
         }
 
-        public override Type GetArgumentType(Candidate candidate)
+        public override ArgTypeInfo GetArgTypeInfo(Candidate candidate)
             => candidate.Item switch
             {
-                PropertyInfo prop => prop.PropertyType,
-                ParameterInfo param => param.ParameterType,
-                Type type => type,
-                _ => throw new InvalidOperationException("There must be an argument type")
+                PropertyInfo prop => new ArgTypeInfo( prop.PropertyType),
+                ParameterInfo param => new ArgTypeInfo(param.ParameterType),
+                Type type => new ArgTypeInfo(type),
+                _ => throw new InvalidOperationException("Argument result is of an unexpected type")
             };
 
         public override Candidate CreateCandidate(object item)

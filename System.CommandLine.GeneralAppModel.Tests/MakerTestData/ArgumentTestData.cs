@@ -1,6 +1,7 @@
 ﻿using FluentAssertions.Execution;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
+using Xunit.Sdk;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {
@@ -10,7 +11,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
             : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
-                new ArgumentDescriptor(argumentType, SymbolDescriptor.Empty, DummyRaw)
+                new ArgumentDescriptor(new ArgTypeInfo ( argumentType), SymbolDescriptor.Empty, DummyRaw)
                 {
                     Name = name,
                     Description = description,
@@ -48,7 +49,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
             : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(typeof(string), SymbolDescriptor.Empty, DummyRaw)
+            var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo (  typeof(string)), SymbolDescriptor.Empty, DummyRaw)
             {
                 Name = DummyArgumentName,
             };
@@ -87,7 +88,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
             : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(typeof(string), SymbolDescriptor.Empty, DummyRaw)
+            var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, DummyRaw)
             {
                 Name = DummyArgumentName,
             };

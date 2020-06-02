@@ -122,7 +122,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
               { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
-                    new ArgumentDescriptor(typeof(string), SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                    new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, Utils.EmptyRawForTest)
                     {
                         Name = "HelloTo"
                     }

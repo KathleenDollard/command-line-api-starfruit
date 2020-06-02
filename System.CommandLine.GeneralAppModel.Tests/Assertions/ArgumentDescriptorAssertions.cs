@@ -65,9 +65,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<ArgumentDescriptorAssertions> HaveArgumentType(Type expected)
         {
+            Type actual = Subject.ArgumentType.GetArgumentType<Type>();
             Execute.Assertion
-                 .ForCondition(Subject.ArgumentType == expected)
-                 .FailWith(Utils.DisplayEqualsFailure(SymbolType.Argument, "ArgumentType", expected, Subject.ArgumentType));
+                 .ForCondition(actual == expected)
+                 .FailWith(Utils.DisplayEqualsFailure(SymbolType.Argument, "ArgumentType", expected, actual));
 
             return new AndConstraint<ArgumentDescriptorAssertions>(this);
         }

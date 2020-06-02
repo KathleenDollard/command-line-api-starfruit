@@ -54,7 +54,7 @@ namespace System.CommandLine.GeneralAppModel
         /// for example we may have custom rules that require running code in the technology.
         /// </remarks>
         /// <returns></returns>
-        public abstract Type GetArgumentType(Candidate candidate);
+        public abstract ArgTypeInfo  GetArgTypeInfo(Candidate candidate);
 
         /// <summary>
         /// Given a command, return it's children - subcommands, options and arguments.
