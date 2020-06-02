@@ -14,29 +14,37 @@ namespace System.CommandLine.GeneralAppModel
         public RuleGroup<IRuleGetValues<string[]>> AliasRules { get; } = new RuleGroup<IRuleGetValues<string[]>>();
         public RuleGroup<IRuleGetValue<bool>> IsHiddenRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 
-        public IEnumerable<T> GetSymbols<T>(SymbolType requestedSymbolType, IEnumerable<T> items, SymbolDescriptor parentSymbolDescriptor)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<T> GetSymbols<T>(SymbolType requestedSymbolType, IEnumerable<T> items, SymbolDescriptor parentSymbolDescriptor)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public void AddDescriptionRule(IRuleGetValues<string> descriptionRule)
-        {
-            DescriptionRules.Add(descriptionRule);
-        }
+        //public void AddDescriptionRule(IRuleGetValues<string> descriptionRule)
+        //{
+        //    DescriptionRules.Add(descriptionRule);
+        //}
 
-        public void AddNameRule(IRuleGetValues<string> nameRule)
-        {
-            NameRules.Add(nameRule);
-        }
+        //public void AddNameRule(IRuleGetValues<string> nameRule)
+        //{
+        //    NameRules.Add(nameRule);
+        //}
 
-        public void AddAliasesRule(IRuleGetValues<string[]> aliasesRule)
-        {
-            AliasRules.Add(aliasesRule);
-        }
+        //public void AddAliasesRule(IRuleGetValues<string[]> aliasesRule)
+        //{
+        //    AliasRules.Add(aliasesRule);
+        //}
 
-        public void AddHiddenRule(IRuleGetValues<bool> isHiddenRule)
+        //public void AddHiddenRule(IRuleGetValues<bool> isHiddenRule)
+        //{
+        //    IsHiddenRules.Add(isHiddenRule);
+        //}
+
+        public override void ReplaceAbstractRules(SpecificSource tools)
         {
-            IsHiddenRules.Add(isHiddenRule);
+            DescriptionRules.ReplaceAbstractRules(tools);
+            NameRules.ReplaceAbstractRules(tools);
+            AliasRules.ReplaceAbstractRules(tools);
+            IsHiddenRules.ReplaceAbstractRules(tools);
         }
 
         public override string Report(int tabsCount)

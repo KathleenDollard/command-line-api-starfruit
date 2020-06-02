@@ -11,29 +11,22 @@ namespace System.CommandLine.ReflectionAppModel
     /// This rule assumes that all candidates will be in the same assembly and in the same
     /// namespace unless ignore namespace is set to true.
     /// </summary>
-    public class DerivedTypeRule : RuleBase, IRuleGetAvailableCandidates
+    public class DerivedFromReflectionRule : DerivedFromRule
     {
         private IEnumerable<Type>? cacheTypes;
         private string? cacheAssemblyName;
         private string? cacheNamespaceName;
 
-        public DerivedTypeRule(string? assemblyName = null, string? namespaceName = null, bool ignoreNamespace = false)
-                            : base(SymbolType.All)
+        public DerivedFromReflectionRule(string? assemblyName = null, string? namespaceName = null, bool ignoreNamespace = false)
         {
-            NamespaceName = namespaceName;
-            AssemblyName = assemblyName;
-            IgnoreNamespace = ignoreNamespace;
             useTypeAssembly = AssemblyName is null;
         }
-        public override string RuleDescription<TIRuleSet>()
-            => $"DerivedTypeRule Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
-
-        public string? NamespaceName { get; }
-        public string? AssemblyName { get; }
-        public bool IgnoreNamespace { get; }
         private bool useTypeAssembly { get; set; }
 
-        public IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor generalSymbolDescriptor)
+        public override string RuleDescription<TIRuleSet>()
+            => $"DerivedFromReflectionRule Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
+
+        public override IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor generalSymbolDescriptor)
         {
             if (!(generalSymbolDescriptor is SymbolDescriptor symbolDescriptor)
                     || !(symbolDescriptor.Raw is Type type))
@@ -57,7 +50,6 @@ namespace System.CommandLine.ReflectionAppModel
             var types = GetTypes(type, namespaceName, assembly);
             return types.Select(t => new Candidate(t));
         }
-
 
         private Assembly GetNamedAssembly(Type type, string? assemblyName)
                 => assemblyName is null

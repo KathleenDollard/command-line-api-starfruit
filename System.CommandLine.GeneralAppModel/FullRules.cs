@@ -6,6 +6,14 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class FullRules
     {
+        public static RuleSetGetCandidatesRule SetFullCandidatesRules(this RuleSetGetCandidatesRule rules)
+        {
+            rules.Rules
+                .Add(new DerivedFromRule ())
+                ;
+            return rules;
+        }
+
         public static RuleSetSelectSymbols SetFullSelectSymbolRules(this RuleSetSelectSymbols rules)
         {
             rules.Rules

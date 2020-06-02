@@ -19,6 +19,11 @@ namespace System.CommandLine.GeneralAppModel
                      .ToList();
         }
 
+        public override void ReplaceAbstractRules(SpecificSource tools)
+        {
+            Rules.ReplaceAbstractRules(tools);
+        }
+
         public override string Report(int tabsCount)
         {
             return $@"{CoreExtensions.NewLineWithTabs(tabsCount)}Arity Rules:  { string.Join("", Rules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription<RuleSetGetCandidatesRule>()))}";

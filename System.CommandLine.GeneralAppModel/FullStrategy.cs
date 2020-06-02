@@ -2,9 +2,10 @@
 {
     public static class FullStrategy
     {
-        public static Strategy SetGeneralRules(this Strategy strategy)
+        public static Strategy SetFullRules(this Strategy strategy)
         {
             strategy.SelectSymbolRules.SetFullSelectSymbolRules();
+            strategy.GetCandidateRules.SetFullCandidatesRules();
             strategy.ArgumentRules.SetFullArgumentRules();
             strategy.CommandRules.SetFullCommandRules();
             strategy.OptionRules.SetFullOptionRules();

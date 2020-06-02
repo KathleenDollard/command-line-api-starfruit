@@ -3,9 +3,19 @@
     public class RuleSetCommand : RuleSetSymbol
     {
         public RuleGroup<IRuleGetValue<bool>> TreatUnmatchedTokensAsErrorsRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
-        public void TreatUnmatchedTokensAsErrors(IRuleGetValue<bool> rule)
+
+        public override void ReplaceAbstractRules(SpecificSource tools)
         {
-            TreatUnmatchedTokensAsErrorsRules.Add(rule);
+            base.ReplaceAbstractRules(tools);
+            TreatUnmatchedTokensAsErrorsRules.ReplaceAbstractRules(tools);
         }
+
+
+        //public void TreatUnmatchedTokensAsErrors(IRuleGetValue<bool> rule)
+        //{
+        //    TreatUnmatchedTokensAsErrorsRules.Add(rule);
+        //}
+
+
     }
 }

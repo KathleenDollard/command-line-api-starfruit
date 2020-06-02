@@ -10,7 +10,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         public DotnetModelTests()
         {
             strategy = new Strategy()
-                           .SetReflectionRules()
+                           .SetFullRules ()
                            .SymbolCandidateNamesToIgnore( "CommandDataFromMethods", "CommandDataFromType");
         }
 
