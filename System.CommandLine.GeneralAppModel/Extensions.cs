@@ -34,8 +34,8 @@ namespace System.CommandLine.GeneralAppModel
             return Environment.NewLine + new string(' ', tabsCount) + new string(' ', tabsCount) + new string(' ', tabsCount);
         }
 
-        public static string ReportRuleGroup<TRule>(this RuleGroup<TRule> ruleGroup,int tabsCount, string what )
-            where TRule :class, IRule
+        public static string ReportRuleGroup<TRule>(this RuleGroup<TRule> ruleGroup, int tabsCount, string what)
+            where TRule : class, IRule
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             string indentedWhitespace = CoreExtensions.NewLineWithTabs(tabsCount + 1);
@@ -47,6 +47,14 @@ namespace System.CommandLine.GeneralAppModel
             return new char[] { 'A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u' }.Contains(s.First())
                     ? "an " + s
                     : "a " + s;
+        }
+
+        public static void Assert(this List<ValidationFailureInfo> messages, bool isOK, string id, string path, string message)
+        {
+            if (!isOK)
+            {
+                messages.Add(new ValidationFailureInfo(id, path,message));
+            }
         }
     }
 }

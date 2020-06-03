@@ -24,7 +24,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             ex.InnerException.Should().BeOfType<DescriptorInvalidException>();
             var validationException = ex.InnerException as DescriptorInvalidException;
             var _ = validationException ?? throw new InvalidOperationException("Unexpected exception type");
-            validationException.Should().HaveFailures((DescriptorValidation.CommandNameNotNull, $"Root->Command:{DisplayFor.Name(name)}"));
+            validationException.Should().HaveFailures((DescriptorValidation.CommandNameNotEmpty, $"Root->Command:{DisplayFor.Name(name)}"));
         }
 
         [Theory]
@@ -42,7 +42,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             ex.InnerException.Should().BeOfType<DescriptorInvalidException>();
             var validationException = ex.InnerException as DescriptorInvalidException;
             var _ = validationException ?? throw new InvalidOperationException("Unexpected exception type");
-            validationException.Should().HaveFailures((DescriptorValidation.OptionNameNotNull, $"Root->Option:{DisplayFor.Name(name)}"));
+            validationException.Should().HaveFailures((DescriptorValidation.OptionNameNotEmpty, $"Root->Option:{DisplayFor.Name(name)}"));
         }
 
         [Theory]
@@ -102,7 +102,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             ex.InnerException.Should().BeOfType<DescriptorInvalidException>();
             var validationException = ex.InnerException as DescriptorInvalidException;
             var _ = validationException ?? throw new InvalidOperationException("Unexpected exception type");
-            validationException.Should().HaveFailures((DescriptorValidation.ArgumentTypeNameNotNull, $"Root->Argument:{DisplayFor.Name(null)}"));
+            validationException.Should().HaveFailures((DescriptorValidation.ArgumentTypeNotNull, $"Root->Argument:{DisplayFor.Name(null)}"));
         }
 
         [Fact]
@@ -123,9 +123,26 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var validationException = ex.InnerException as DescriptorInvalidException;
             var _ = validationException ?? throw new InvalidOperationException("Unexpected exception type");
             validationException.Should().HaveFailures(
-                (DescriptorValidation.CommandNameNotNull, $"Root->Command:{DisplayFor.Name(null)}"),
-                (DescriptorValidation.OptionNameNotNull , $"Root->Option:{DisplayFor.Name(null)}"),
-                (DescriptorValidation.ArgumentTypeNameNotNull , $"Root->Argument:{DisplayFor.Name(null)}"));
+                (DescriptorValidation.CommandNameNotEmpty, $"Root->Command:{DisplayFor.Name(null)}"),
+                (DescriptorValidation.OptionNameNotEmpty, $"Root->Option:{DisplayFor.Name(null)}"),
+                (DescriptorValidation.ArgumentTypeNotNull , $"Root->Argument:{DisplayFor.Name(null)}"));
+        }
+
+        [Fact]
+        public void DescriptorValidationThrowsIfALlowedValuesOfWrongType()
+        {
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
+            // ArgumentType is int, value is string
+            var argumentDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(int)), SymbolDescriptor.Empty, null);
+            argumentDescriptor.AllowedValues.Add("Fred");
+            descriptor.Arguments.Add(argumentDescriptor);
+
+
+            var ex = Assert.Throws<InvalidOperationException>(() => CommandMaker.MakeRootCommand(descriptor));
+            ex.InnerException.Should().BeOfType<DescriptorInvalidException>();
+            var validationException = ex.InnerException as DescriptorInvalidException;
+            var _ = validationException ?? throw new InvalidOperationException("Unexpected exception type");
+            validationException.Should().HaveFailures((DescriptorValidation.AllowedValuesNotOfCorrectType, $"Root->Argument:{DisplayFor.Name(null)}"));
         }
     }
 }

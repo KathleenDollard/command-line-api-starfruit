@@ -65,17 +65,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var expectedAliases = expected is null
                                 ? string.Empty
                                 : string.Join(",", expected);
-            var actualAliases = expected is null
+            var actualAliases = Subject.Aliases is null
                                ? string.Empty
-                               : string.Join(",", expected);
+                               : string.Join(",", Subject.Aliases);
             if (expected is null || Subject.Aliases is null)
             {
                 Execute.Assertion
-                              .ForCondition(expectedAliases is null)
-                              .FailWith($"No aliases were not expected, but were found: {actualAliases }")
+                              .ForCondition(expected is null)
+                              .FailWith($"Aliases were not expected, but were found: {actualAliases }")
                               .Then
-                              .ForCondition(!(expectedAliases is null))
-                              .FailWith($"No aliases were expected, but were not found");
+                              .ForCondition(!(expected is null))
+                              .FailWith($"Aliases were expected, but were not found. Expected {expectedAliases}");
                 return new AndConstraint<TAssert>((TAssert)this);
             }
             Execute.Assertion

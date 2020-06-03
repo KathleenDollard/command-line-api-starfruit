@@ -316,7 +316,21 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class PropertyArgumentWithThreeAliasesInOneAttribute
     {
-        [Aliases("a", "b", "c")]
+        [Aliases(TypeDescriptorMakerTests.AliasAsStringMultiple)]
+        public string? PropArg { get; set; }
+    }
+
+    public class PropertyArgumentWithOneAllowedValueAttribute
+    {
+        [AllowedValues(TypeDescriptorMakerTests.AllowedValuesAsIntFirst)]
+        public string? PropArg { get; set; }
+    }
+
+    public class PropertyArgumentWithThreeAllowedValuesInOneAttribute
+    {
+        [AllowedValues(TypeDescriptorMakerTests.AllowedValuesAsIntFirst,
+                                          TypeDescriptorMakerTests.AllowedValuesAsIntSecond,
+                                          TypeDescriptorMakerTests.AllowedValuesAsIntThird)]
         public string? PropArg { get; set; }
     }
 

@@ -15,7 +15,8 @@ namespace System.CommandLine.GeneralAppModel
             var (success, messages) = descriptor.ValidateRoot();
             if (!success)
             {
-                throw new InvalidOperationException("There are errors in the definition of your CLI. See the Inner Exception.",
+                throw new InvalidOperationException("There are errors in the definition of your CLI. See the Inner Exception.\n\t" +
+                                                    string.Join("\n\t", messages.Select(x=>x.Message)),
                                 new DescriptorInvalidException(messages));
             }
             var command = new RootCommand(descriptor.Description ?? string.Empty);

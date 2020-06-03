@@ -43,6 +43,7 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NameEndsWithRule("Argument"))
                 .Add(new IdentityRule<string>())
                 ;
+
             rules.DefaultValueRules
                 .Add(new AttributeWithOptionalValueRule<object>("DefaultValue", "Value"))
                 // DefaultValue on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
@@ -61,6 +62,10 @@ namespace System.CommandLine.GeneralAppModel
             rules.AliasRules
                 .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
                 .Add(new AttributeWithPropertyValueRule<string[]>("Argument", "Aliases"))
+                ;
+
+            rules.AllowedValueRules
+                .Add(new AttributeWithImpliedPropertyRule<object[]>("AllowedValues"))
                 ;
 
             rules.ArityRules

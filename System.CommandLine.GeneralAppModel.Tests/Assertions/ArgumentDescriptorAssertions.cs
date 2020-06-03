@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
+using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 
 namespace System.CommandLine.GeneralAppModel.Tests
@@ -62,6 +63,45 @@ namespace System.CommandLine.GeneralAppModel.Tests
             return new AndConstraint<ArgumentDescriptorAssertions>(this);
         }
 
+        public AndConstraint<ArgumentDescriptorAssertions> HaveAllowedValues(IEnumerable<object>? expected)
+        {
+            var actualAllowedValues = Subject.AllowedValues;
+            if (actualAllowedValues is null && expected is null)
+            {
+                return new AndConstraint<ArgumentDescriptorAssertions>(this);
+            }
+
+            var expectedDisplay = expected is null
+                               ? string.Empty
+                               : string.Join(",", expected);
+            var actualDisplay = actualAllowedValues is null
+                               ? string.Empty
+                               : string.Join(",", actualAllowedValues);
+
+            if (expected is null || actualAllowedValues is null)
+            {
+                Execute.Assertion
+                              .ForCondition(expected is null)
+                              .FailWith($"Allowed values  were not expected, but found {expectedDisplay}.")
+                              .Then
+                              .ForCondition(!(expected is null))
+                              .FailWith($"Allowed values were expected, but were not found. Expected {actualDisplay}");
+                return new AndConstraint<ArgumentDescriptorAssertions>(this);
+            }
+            var match = true;
+            foreach (var value in expected)
+            {
+                if (!actualAllowedValues.Contains(value))
+                {
+                    match = false;
+                }
+            }
+                Execute.Assertion
+                             .ForCondition(match)
+                             .FailWith($"Expected {expectedDisplay}, but found {actualDisplay }.");
+
+            return new AndConstraint<ArgumentDescriptorAssertions>(this);
+        }
 
         public AndConstraint<ArgumentDescriptorAssertions> HaveArgumentType(Type expected)
         {

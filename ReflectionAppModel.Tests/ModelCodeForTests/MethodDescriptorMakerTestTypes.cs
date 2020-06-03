@@ -4,6 +4,7 @@ using System.CommandLine.GeneralAppModel.Tests;
 using System.CommandLine.ReflectionAppModel.Attributes;
 using System.ComponentModel;
 using System.Text;
+using constant = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 {
@@ -14,31 +15,31 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class MethodWithNameAttribute
     {
-        [Name(TypeDescriptorMakerTests.Name)]
+        [Name(constant.Name)]
         public void Method() { }
     }
 
     public class MethodWithDescriptionAttribute
     {
-        [Description(TypeDescriptorMakerTests.Description)]
+        [Description(constant.Description)]
         public void Method() { }
     }
 
     public class MethodWithNameInCommandAttribute
     {
-        [Command(Name = TypeDescriptorMakerTests.Name)]
+        [Command(Name = constant.Name)]
         public void Method() { }
     }
 
     public class MethodWithDescriptionInCommandAttribute
     {
-        [Command(Description = TypeDescriptorMakerTests.Description)]
+        [Command(Description = constant.Description)]
         public void Method() { }
     }
 
     public class MethodWithOneAliasAttribute
     {
-        [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]
+        [Aliases(constant.AliasAsStringSingle)]
         public void Method() { }
     }
 
@@ -156,32 +157,44 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
     public class ParameterOptionWithNameAttribute
     {
         
-        public void Method([Name(TypeDescriptorMakerTests.Name)]string Param) { }
+        public void Method([Name(constant.Name)]string Param) { }
     }
 
     public class ParameterOptionWithNameInOptionAttribute
     {
-        public void Method( [Option(Name = TypeDescriptorMakerTests.Name)]string Param) { }
+        public void Method( [Option(Name = constant.Name)]string Param) { }
     }
 
     public class ParameterOptionWithDescriptionAttribute
     {
-        public void Method([Description(TypeDescriptorMakerTests.Description)]string Param) { }
+        public void Method([Description(constant.Description)]string Param) { }
     }
 
     public class ParameterOptionWithDescriptionInOptionAttribute
     {
-        public void Method([Option(Description = TypeDescriptorMakerTests.Description)]string Param) { }
+        public void Method([Option(Description = constant.Description)]string Param) { }
     }
 
     public class ParameterOptionWithOneAliasAttribute
     {
-        public void Method( [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]string Param) { }
+        public void Method( [Aliases(constant.AliasAsStringSingle)]string Param) { }
     }
 
     public class ParameterOptionWithThreeAliasesInOneAttribute
     {
-        public void Method(  [Aliases("a", "b", "c")]string Param) { }
+        public void Method(  [Aliases(constant.AliasAsStringMultiple)]string Param) { }
+    }
+
+    public class ParameterOptionWithOneAllowedValueAttribute
+    {
+        public void Method([AllowedValues(constant.AllowedValuesAsIntFirst)] string Param) { }
+    }
+
+    public class ParameterOptionWithThreeAllowedVauesInOneAttribute
+    {
+        public void Method([AllowedValues(constant.AllowedValuesAsIntFirst,
+                                          constant.AllowedValuesAsIntSecond,
+                                          constant.AllowedValuesAsIntThird)] string Param) { }
     }
 
     public class ParameterOptionWithIsHiddenTrueInOptionAttribute
@@ -241,12 +254,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class ParameterOptionArgumentWithStringDefaultValue
     {
-        public void Method( [DefaultValue(TypeDescriptorMakerTests.DefaultValueString)]string Param) { }
+        public void Method( [DefaultValue(constant.DefaultValueString)]string Param) { }
     }
 
     public class ParameterOptionArgumentWithIntegerDefaultValue
     {
-        public void Method([DefaultValue(TypeDescriptorMakerTests.DefaultValueInt)]string Param) { }
+        public void Method([DefaultValue(constant.DefaultValueInt)]string Param) { }
     }
 
     public class ParameterOptionArgumentForIntegerType
@@ -264,32 +277,45 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class ParameterArgumentWithNameAttribute
     {
-        public void Method([Name(TypeDescriptorMakerTests.Name)]string ParamArg) { }
+        public void Method([Name(constant.Name)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithDescriptionAttribute
     {
-        public void Method( [Description(TypeDescriptorMakerTests.Description)]string ParamArg) { }
+        public void Method( [Description(constant.Description)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithNameInArgumentAttribute
     {
-        public void Method( [Argument(Name = TypeDescriptorMakerTests.Name)]string ParamArg) { }
+        public void Method( [Argument(Name = constant.Name)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithDescriptionInArgumentAttribute
     {
-        public void Method( [Argument(Description = TypeDescriptorMakerTests.Description)]string ParamArg) { }
+        public void Method( [Argument(Description = constant.Description)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithOneAliasAttribute
     {
-        public void Method( [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]string ParamArg) { }
+        public void Method( [Aliases(constant.AliasAsStringSingle)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithThreeAliasesInOneAttribute
     {
         public void Method([Aliases("a", "b", "c")]string ParamArg) { }
+    }
+
+    public class ParameterArgumentWithOneAllowedValueAttribute
+    {
+        public void Method([AllowedValues(constant.AllowedValuesAsIntFirst)] string ParamArg) { }
+    }
+
+    public class ParameterArgumentWithThreeAllowedVauesInOneAttribute
+    {
+        public void Method([AllowedValues(constant.AllowedValuesAsIntFirst,
+                                          constant.AllowedValuesAsIntSecond,
+                                          constant.AllowedValuesAsIntThird)] string ParamArg)
+        { }
     }
 
     public class ParameterArgumentWithIsHiddenTrueInArgumentAttribute
@@ -364,12 +390,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
 
     public class ParameterArgumentWithStringDefaultValue
     {
-        public void Method([DefaultValue(TypeDescriptorMakerTests.DefaultValueString)]string ParamArg) { }
+        public void Method([DefaultValue(constant.DefaultValueString)]string ParamArg) { }
     }
 
     public class ParameterArgumentWithIntegerDefaultValue
     {
-        public void Method([DefaultValue(TypeDescriptorMakerTests.DefaultValueInt)]string ParamArg) { }
+        public void Method([DefaultValue(constant.DefaultValueInt)]string ParamArg) { }
     }
 
     public class ParameterArgumentForIntegerType

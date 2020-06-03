@@ -9,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel
         private const string NullDisplay = "<null>";
         private const string EmptyDisplay = "<empty>";
 
-        public static object Name(string? name)
+        public static string Name(string? name)
         {
             return name is null
                 ? NullDisplay
