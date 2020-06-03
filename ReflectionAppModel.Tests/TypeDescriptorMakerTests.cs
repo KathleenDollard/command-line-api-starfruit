@@ -13,8 +13,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const string Name = "George";
         internal const string NameForEmpty = "DummyName";
         internal const string Description = "Awesome description!";
-        internal const string AliasAsStringMuitple = "a,b,c";
+        internal const string AliasAsStringMultiple = "a,b,c";
         internal const string AliasAsStringSingle = "x";
+        internal const int AllowedValuesAsIntFirst = 3;
+        internal const int AllowedValuesAsIntSecond = 5;
+        internal const int AllowedValuesAsIntThird = 7;
         internal const string ArgumentName = "Red";
         internal const string ArgumentName2 = "Blue";
         internal const string OptionName = "East";
@@ -23,7 +26,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const string PropertyArgName = "Prop";
         internal const string DefaultValueString = "MyDefault";
         internal const int DefaultValueInt = 42;
-  
+
+        internal const string TestMethodName = "Method";
+        internal const string ParameterOptionName = "Param";
+        internal const string ParameterArgName = "Param";
+
         private readonly Strategy strategy;
 
 
@@ -50,7 +57,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         [Theory]
         [InlineData(typeof(TypeWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(TypeWithThreeAliasesInOneAttribute), AliasAsStringMuitple)]
+        [InlineData(typeof(TypeWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
         public void CommandAliasesFromType(Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
@@ -72,7 +79,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
-            descriptor.Should().HaveIsHidden (isHidden );
+            descriptor.Should().HaveIsHidden(isHidden);
         }
 
         [Theory]
@@ -111,7 +118,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOnlyOneProperty), OptionName )]
+        [InlineData(typeof(TypeWithOnlyOneProperty), OptionName)]
         [InlineData(typeof(TypeWithOneOptionByRemaining), OptionName)]
         [InlineData(typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
         public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
@@ -142,7 +149,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         [Theory]
         [InlineData(typeof(PropertyOptionWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMuitple)]
+        [InlineData(typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
         public void OptionAliasesFromProperty(Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
@@ -184,8 +191,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionArgumentWithNoDefaultValue),false, null )]
-        [InlineData(typeof(PropertyOptionArgumentWithStringDefaultValue), true, DefaultValueString )]
+        [InlineData(typeof(PropertyOptionArgumentWithNoDefaultValue), false, null)]
+        [InlineData(typeof(PropertyOptionArgumentWithStringDefaultValue), true, DefaultValueString)]
         [InlineData(typeof(PropertyOptionArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
         public void OptionDefaultValueFromProperty(Type typeToTest, bool isSet, object value)
         {
@@ -198,7 +205,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Theory]
         [InlineData(typeof(PropertyOptionWithName), typeof(string))]
         [InlineData(typeof(PropertyOptionArgumentForIntegerType), typeof(int))]
-        public void OptionWithArguments(Type typeToTest,Type argType)
+        public void OptionWithArguments(Type typeToTest, Type argType)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
@@ -227,7 +234,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         [Theory]
         [InlineData(typeof(PropertyArgumentWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(PropertyArgumentWithThreeAliasesInOneAttribute), AliasAsStringMuitple)]
+        [InlineData(typeof(PropertyArgumentWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
         public void ArgumentAliasesFromProperty(Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
@@ -238,6 +245,18 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
             descriptor.Arguments.First()
                     .Should().HaveAliases(aliases);
+        }
+
+        [Theory]
+        [InlineData(typeof(PropertyArgumentWithOneAllowedValueAttribute), AllowedValuesAsIntFirst)]
+        [InlineData(typeof(PropertyArgumentWithThreeAllowedValuesInOneAttribute),
+                            AllowedValuesAsIntFirst, AllowedValuesAsIntSecond, AllowedValuesAsIntThird)]
+        public void ArgumentAllowedValuesAsFromProperty(Type typeToTest, params object[] allowedValues)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+
+            descriptor.Arguments.First()
+                    .Should().HaveAllowedValues(allowedValues);
         }
 
         [Theory]
@@ -270,14 +289,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         [Theory]
         [InlineData(typeof(PropertyArgumentWithNoArity), false, 0, 0)]
-        [InlineData(typeof(PropertyArgumentWithArityLowerBoundOnly), true,2, int.MaxValue )]
-        [InlineData(typeof(PropertyArgumentWithArityBothBounds), true, 2,3)]
+        [InlineData(typeof(PropertyArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
+        [InlineData(typeof(PropertyArgumentWithArityBothBounds), true, 2, 3)]
         public void ArgumentArityFromType(Type typeToTest, bool isSet, int minCount, int maxCount)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Arguments.First()
-                    .Should().HaveArity(isSet, minCount, maxCount  );
+                    .Should().HaveArity(isSet, minCount, maxCount);
         }
 
         [Theory]

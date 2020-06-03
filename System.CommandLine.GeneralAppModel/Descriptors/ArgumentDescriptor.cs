@@ -13,7 +13,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
 
         public ArityDescriptor? Arity { get; set; }
         //TODO: AllowedValues aren't supported in DescriptorMakerBase or tests
-        public HashSet<string>? AllowedValues { get; } = new HashSet<string>();
+        public List<object> AllowedValues { get; } = new List<object>();
         // TODO: Consider how ArgumentType works when coming from JSON. 
         public ArgTypeInfo ArgumentType { get; }
         public DefaultValueDescriptor? DefaultValue { get; set; }

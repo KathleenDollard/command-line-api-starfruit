@@ -118,6 +118,9 @@ namespace System.CommandLine.GeneralAppModel
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             SetArityIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             SetDefaultIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
+            var allowedValues = ruleSet.AllowedValueRules.GetAllValues<object[]>(descriptor, candidate, parentSymbolDescriptor)
+                                    .SelectMany(x => x);
+            descriptor.AllowedValues.AddRange(allowedValues); 
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             return descriptor;
         }

@@ -4,10 +4,13 @@ using System.CommandLine.GeneralAppModel.Descriptors;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace System.CommandLine.GeneralAppModel
 {
+
+
     /// <summary>
     /// The goal of Descrpitor validation is to have it be very rare that a 
     /// System.CommandLine exception is displayed to an AppModel user. This 
@@ -23,10 +26,13 @@ namespace System.CommandLine.GeneralAppModel
     /// </remarks>
     public static class DescriptorValidation
     {
-        public const string CommandNameNotNull = "CommandNameNotNull";
-        public const string ArgumentTypeNameNotNull = "ArgumentTypeNameNotNull";
-        public const string OptionNameNotNull = "OptionNameNotNull";
+        public const string CommandNameNotEmpty = "CommandNameNotEmpty";
+        public const string ArgumentNameNotEmpty = "ArgumentNameNotEmpty";
+        public const string ArgumentTypeNotNull = "ArgumentTypeNotNull";
+        public const string OptionNameNotEmpty = "OptionNameNotEmpty";
         public const string DuplicateSymbolName = "DuplicateSymbolName";
+        public const string AllowedValuesNotOfCorrectType = "AllowedValuesNotOfCorrectType";
+        public const string ArgumentTypeNotAssignableToType = "ArgumentTypeNotAssignableToType";
 
         public static (bool success, IEnumerable<ValidationFailureInfo> messages) ValidateRoot(this CommandDescriptor descriptor)
         {
@@ -43,10 +49,7 @@ namespace System.CommandLine.GeneralAppModel
                          : $"{parentPath}->Command:{DisplayFor.Name(descriptor.Name)}";
             messages.AddRange(ValidateNoDuplicateNames(parentPath, descriptor));
 
-            if (!isRoot && string.IsNullOrWhiteSpace(descriptor.Name))
-            {
-                messages.Add(new ValidationFailureInfo(CommandNameNotNull, path, $"Subcommand name cannot be null. ({path})"));
-            }
+            messages.Assert(isRoot || !string.IsNullOrWhiteSpace(descriptor.Name), CommandNameNotEmpty, path, $"Subcommand name cannot be null. ({path})");
             foreach (var argument in descriptor.Arguments)
             {
                 argument.Validate(path, messages);
@@ -79,10 +82,7 @@ namespace System.CommandLine.GeneralAppModel
             foreach (var name in allNames)
             {
                 var usages = allChildren.Where(x => x.Name == name);
-                if (usages.Count() == 1)
-                { continue; }
-                messages.Add(new ValidationFailureInfo(DuplicateSymbolName, parentPath,
-                            $"Option, Arguments, and SubCommands must have unique names. {name} was duplicated. {parentPath}"));
+                messages.Assert(usages.Count() == 1, DuplicateSymbolName, parentPath, $"Option, Arguments, and SubCommands must have unique names. {name} was duplicated. {parentPath}");
             }
             return messages;
         }
@@ -90,11 +90,42 @@ namespace System.CommandLine.GeneralAppModel
         private static IEnumerable<ValidationFailureInfo> Validate(this ArgumentDescriptor descriptor, string parentPath, List<ValidationFailureInfo> messages)
         {
             var path = $"{parentPath}->Argument:{DisplayFor.Name(descriptor.Name)}";
-            if (string.IsNullOrWhiteSpace(descriptor.Name))
+            // Name can be null
+            if (descriptor.ArgumentType is null)
             {
-                messages.Add(new ValidationFailureInfo(ArgumentTypeNameNotNull, path, $"Argument type for {descriptor.Name} cannot be null. ({path})"));
+                messages.Assert(false, ArgumentTypeNotNull, path, $"Argument type for {DisplayFor.Name( descriptor.Name)} cannot be null. ({path})");
             }
+            // For source generation we probably need an alternate validation path
+            else if (descriptor.ArgumentType.ValidateAsType(parentPath, messages))
+            {
+                messages.Assert(CheckAllowedValues(descriptor.ArgumentType.GetArgumentType<Type>(), descriptor.AllowedValues), AllowedValuesNotOfCorrectType, path,
+                                $"Allowed values not all assignable to argument type for {path}");
+            }
+
             return messages;
+
+            static bool CheckAllowedValues(Type expecteType, IEnumerable<object> allowedValues)
+            {
+                return allowedValues.Count() == allowedValues
+                                               .Where(v => expecteType
+                                               .IsAssignableFrom(v.GetType()))
+                                               .Count();
+            }
+        }
+
+        private static bool ValidateAsType(this ArgTypeInfo argTypeInfo, string parentPath, List<ValidationFailureInfo> messages)
+        {
+            try
+            {
+                var argType = argTypeInfo.GetArgumentType<Type>();
+                return true;
+            }
+            catch
+            {
+                messages.Assert(false, ArgumentTypeNotAssignableToType, parentPath, "ArgumentType representation must currently be available as a Type (System.Type)");
+
+                return false;
+            }
         }
 
         private static IEnumerable<ValidationFailureInfo> Validate(this OptionDescriptor descriptor, string parentPath, List<ValidationFailureInfo> messages)
@@ -102,7 +133,7 @@ namespace System.CommandLine.GeneralAppModel
             var path = $"{parentPath}->Option:{DisplayFor.Name(descriptor.Name)}";
             if (string.IsNullOrWhiteSpace(descriptor.Name))
             {
-                messages.Add(new ValidationFailureInfo(OptionNameNotNull, path, $"Option name cannot be null. ({path})"));
+                messages.Add(new ValidationFailureInfo(OptionNameNotEmpty, path, $"Option name cannot be null. ({path})"));
             }
             foreach (var argument in descriptor.Arguments)
             {
