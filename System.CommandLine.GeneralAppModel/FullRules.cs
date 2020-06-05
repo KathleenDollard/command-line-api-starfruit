@@ -9,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel
         public static RuleSetGetCandidatesRule SetFullCandidatesRules(this RuleSetGetCandidatesRule rules)
         {
             rules.Rules
-                .Add(new DerivedFromRule ())
+                .Add(new DerivedFromRule())
                 ;
             return rules;
         }
@@ -34,6 +34,8 @@ namespace System.CommandLine.GeneralAppModel
             rules.DescriptionRules
                 .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
                 .Add(new AttributeWithPropertyValueRule<string>("Argument", "Description"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<DescriptionAttribute, string>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string>("Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
