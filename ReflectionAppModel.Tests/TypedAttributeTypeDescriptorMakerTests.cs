@@ -3,13 +3,13 @@ using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
 using System.CommandLine.ReflectionAppModel;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
-using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttributes;
+using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes;
 using System.Linq;
 using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class TypeDescriptorMakerTests
+    public class TypedAttributeTypeDescriptorMakerTests
     {
         internal const string Name = "George";
         internal const string NameForEmpty = "DummyName";
@@ -35,9 +35,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
         private readonly Strategy strategy;
 
 
-        public TypeDescriptorMakerTests()
+        public TypedAttributeTypeDescriptorMakerTests()
         {
-            strategy = NamedAttributeRules.SetRules(new Strategy());
+            strategy = new Strategy()
+                            .SetFullRules();
         }
 
         #region CommandTests

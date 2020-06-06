@@ -6,7 +6,7 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class FullRules
     {
-        public static RuleSetGetCandidatesRule SetFullCandidatesRules(this RuleSetGetCandidatesRule rules)
+        public static RuleSetGetCandidatesRule SetFullCandidatesRules( RuleSetGetCandidatesRule rules)
         {
             rules.Rules
                 .Add(new DerivedFromRule())
@@ -14,13 +14,13 @@ namespace System.CommandLine.GeneralAppModel
             return rules;
         }
 
-        public static RuleSetSelectSymbols SetFullSelectSymbolRules(this RuleSetSelectSymbols rules)
+        public static RuleSetSelectSymbols SetFullSelectSymbolRules( RuleSetSelectSymbols rules)
         {
             rules.Rules
-               .Add(new AttributeRule("Command", SymbolType.Command))
+               .Add(new StronglyTypedAttributeRule<CommandAttribute>( SymbolType.Command))
                .Add(new NameEndsWithRule("Command", SymbolType.Command))
                .Add(new IsOfTypeRule<Type>(SymbolType.Command))
-               .Add(new AttributeRule("Argument", SymbolType.Argument))
+               .Add(new StronglyTypedAttributeRule<ArgumentAttribute>( SymbolType.Argument))
                .Add(new NameEndsWithRule("Argument", SymbolType.Argument))
                .Add(new NameEndsWithRule("Arg", SymbolType.Argument))
                .Add(new RemainingSymbolRule(SymbolType.Option))
@@ -29,145 +29,145 @@ namespace System.CommandLine.GeneralAppModel
             return rules;
         }
 
-        public static RuleSetArgument SetFullArgumentRules(this RuleSetArgument rules)
+        public static RuleSetArgument SetFullArgumentRules( RuleSetArgument rules)
         {
             rules.DescriptionRules
-                .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
-                .Add(new AttributeWithPropertyValueRule<string>("Argument", "Description"))
                 .Add(new StronglyTypedAttributeWithImpliedPropertyRule<DescriptionAttribute, string>())
-                .Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string>("Description"))
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string>( "Description"))
+                //.Add(new StronglyTypedAttributeWithImpliedPropertyRule<DescriptionAttribute, string>())
+                //.Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string>("Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
-                .Add(new AttributeWithPropertyValueRule<string>("Argument", "Name"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<NameAttribute, string>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string>( "Name"))
                 .Add(new NameEndsWithRule("Arg"))
                 .Add(new NameEndsWithRule("Argument"))
                 .Add(new IdentityRule<string>())
                 ;
 
             rules.DefaultValueRules
-                .Add(new AttributeWithOptionalValueRule<object>("DefaultValue", "Value"))
+                .Add(new StronglyTypedAttributeWithOptionalValueRule<DefaultValueAttribute, object>( ))
                 // DefaultValue on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
                 ;
 
             rules.RequiredRules
-                .Add(new BooleanAttribute("Required"))
-                .Add(new BooleanAttribute("Argument", "Required"))
+                .Add(new StronglyTypedBooleanAttributeRule<RequiredAttribute>())
+                .Add(new StronglyTypedBooleanAttributeRule<ArgumentAttribute>( "Required"))
             ;
 
             rules.IsHiddenRules
-                .Add(new BooleanAttribute("Hidden"))
-                .Add(new BooleanAttribute("Argument", "IsHidden"))
+                .Add(new StronglyTypedBooleanAttributeRule<HiddenAttribute>())
+                .Add(new StronglyTypedBooleanAttributeRule<ArgumentAttribute>( "IsHidden"))
                 ;
 
             rules.AliasRules
-                .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
-                .Add(new AttributeWithPropertyValueRule<string[]>("Argument", "Aliases"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<AliasesAttribute, string[]>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string[]>( "Aliases"))
                 ;
 
             rules.AllowedValueRules
-                .Add(new AttributeWithImpliedPropertyRule<object[]>("AllowedValues"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<AllowedValuesAttribute, object[]>())
                 ;
 
             rules.ArityRules
-                .Add(new RuleArity("Arity", "MinCount", "MaxCount"))
-                .Add(new RuleArity("Arity", "MinimumCount", "MaximumCount"))
+                .Add(new StronglyTypedAttributeArityRule<ArityAttribute>( "MinCount", "MaxCount"))
+                .Add(new StronglyTypedAttributeArityRule<ArityAttribute>( "MinimumCount", "MaximumCount"))
                 ;
 
             return rules;
         }
 
-        public static RuleSetOption SetFullOptionRules(this RuleSetOption rules)
+        public static RuleSetOption SetFullOptionRules( RuleSetOption rules)
         {
 
             rules.DescriptionRules
-                .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "Description"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<DescriptionAttribute, string>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, string>( "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "Name"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<NameAttribute, string>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, string>( "Name"))
                 .Add(new NameEndsWithRule("Option"))
                 .Add(new IdentityRule<string>());
 
             rules.RequiredRules
-                .Add(new BooleanAttribute("Required"))
-                .Add(new BooleanAttribute("Option", "OptionRequired"))
+                .Add(new StronglyTypedBooleanAttributeRule<RequiredAttribute>())
+                .Add(new StronglyTypedBooleanAttributeRule<OptionAttribute>( "OptionRequired"))
              ;
 
             rules.IsHiddenRules
-                .Add(new BooleanAttribute("Hidden"))
-                .Add(new BooleanAttribute("Option", "IsHidden"))
+                .Add(new StronglyTypedBooleanAttributeRule<HiddenAttribute>())
+                .Add(new StronglyTypedBooleanAttributeRule<OptionAttribute>( "IsHidden"))
                 ;
 
             rules.AliasRules
-                .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
-                .Add(new AttributeWithPropertyValueRule<string[]>("Option", "Aliases"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<AliasesAttribute, string[]>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, string[]>( "Aliases"))
                 ;
 
             return rules;
         }
 
-        public static RuleSetArgument SetFullOptionArgumentRules(this RuleSetArgument rules)
+        public static RuleSetArgument SetFullOptionArgumentRules( RuleSetArgument rules)
         {
             rules.DescriptionRules
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "ArgumentDescription", SymbolType.Argument))
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, string>( "ArgumentDescription", SymbolType.Argument))
                 ;
 
             // The name is used for help
             rules.NameRules
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "ArgumentName", SymbolType.Argument))
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, string>( "ArgumentName", SymbolType.Argument))
                 ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, bool>( "ArgumentRequired", SymbolType.Option))
             ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<OptionAttribute, bool>( "ArgumentIsHidden", SymbolType.Option))
             ;
 
             rules.DefaultValueRules
-                .Add(new AttributeWithOptionalValueRule<object>("DefaultValue", "Value"))
+                .Add(new StronglyTypedAttributeWithOptionalValueRule<DefaultValueAttribute, object>( ))
                 ;
 
             // Never hidden, no aliases
 
             rules.ArityRules
-                .Add(new RuleArity("Arity", "MinCount", "MaxCount"))
-                .Add(new RuleArity("Arity", "MinimumCount", "MaximumCount"))
+                .Add(new StronglyTypedAttributeArityRule<ArityAttribute>( "MinCount", "MaxCount"))
+                .Add(new StronglyTypedAttributeArityRule<ArityAttribute>( "MinimumCount", "MaximumCount"))
                 ;
             return rules;
         }
 
-        public static RuleSetCommand SetFullCommandRules(this RuleSetCommand rules)
+        public static RuleSetCommand SetFullCommandRules( RuleSetCommand rules)
         {
 
             rules.DescriptionRules
-                .Add(new AttributeWithImpliedPropertyRule<string>("Description"))
-                .Add(new AttributeWithPropertyValueRule<string>("Command", "Description"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<DescriptionAttribute, string>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<CommandAttribute, string>( "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
-                .Add(new AttributeWithImpliedPropertyRule<string>("Name"))
-                .Add(new AttributeWithPropertyValueRule<string>("Command", "Name"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<NameAttribute, string>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<CommandAttribute, string>( "Name"))
                 .Add(new NameEndsWithRule("Command"))
                 .Add(new IdentityRule<string>())
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules
-                .Add(new BooleanAttribute("TreatUnmatchedTokensAsErrors"))
-                .Add(new AttributeWithPropertyValueRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
+                .Add(new StronglyTypedBooleanAttributeRule<TreatUnmatchedTokensAsErrorsAttribute>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<CommandAttribute, bool>( "TreatUnmatchedTokensAsErrors"));
 
             rules.IsHiddenRules
-                .Add(new BooleanAttribute("Hidden"))
-                .Add(new BooleanAttribute("Command", "IsHidden"));
+                .Add(new StronglyTypedBooleanAttributeRule<HiddenAttribute>())
+                .Add(new StronglyTypedBooleanAttributeRule<CommandAttribute>( "IsHidden"));
 
             rules.AliasRules
-                .Add(new AttributeWithImpliedPropertyRule<string[]>("Aliases"))
-                 .Add(new AttributeWithPropertyValueRule<string[]>("Command", "Aliases"))
+                .Add(new StronglyTypedAttributeWithImpliedPropertyRule<AliasesAttribute, string[]>())
+                .Add(new StronglyTypedAttributeWithPropertyValueRule<CommandAttribute, string[]>( "Aliases"))
                ;
 
             return rules;

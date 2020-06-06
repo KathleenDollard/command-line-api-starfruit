@@ -4,12 +4,12 @@
     {
         public static Strategy SetFullRules(this Strategy strategy)
         {
-            strategy.SelectSymbolRules.SetFullSelectSymbolRules();
-            strategy.GetCandidateRules.SetFullCandidatesRules();
-            strategy.ArgumentRules.SetFullArgumentRules();
-            strategy.CommandRules.SetFullCommandRules();
-            strategy.OptionRules.SetFullOptionRules();
-            strategy.OptionArgumentRules.SetFullOptionArgumentRules();
+            FullRules.SetFullSelectSymbolRules(strategy.SelectSymbolRules);
+            FullRules.SetFullCandidatesRules(strategy.GetCandidateRules);
+            FullRules.SetFullArgumentRules(strategy.ArgumentRules);
+            FullRules.SetFullCommandRules(strategy.CommandRules);
+            FullRules.SetFullOptionRules(strategy.OptionRules);
+            FullRules.SetFullOptionArgumentRules(strategy.OptionArgumentRules);
             return strategy;
         }
 

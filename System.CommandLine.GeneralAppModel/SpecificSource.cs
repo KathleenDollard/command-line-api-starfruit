@@ -83,7 +83,7 @@ namespace System.CommandLine.GeneralAppModel
                          ISymbolDescriptor symbolDescriptor,
                          TTraitType trait,
                          ISymbolDescriptor parentSymbolDescriptor)
-            => DoesTraitMatch(string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
+            => DoesTraitMatch<TAttribute, TTraitType>(string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
 
         public virtual bool DoesTraitMatch<TTraitType>(
                                 string attributeName,

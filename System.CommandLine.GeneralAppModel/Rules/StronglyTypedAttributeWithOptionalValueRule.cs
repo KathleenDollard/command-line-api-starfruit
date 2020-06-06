@@ -5,7 +5,7 @@ namespace System.CommandLine.GeneralAppModel
 {
     public class StronglyTypedAttributeWithOptionalValueRule<TAttribute, TValue> : StronglyTypedAttributeWithPropertyValueRule<TAttribute, TValue>, IRuleOptionalValue<TValue>
     {
-        public StronglyTypedAttributeWithOptionalValueRule(string propertyName, SymbolType symbolType = SymbolType.All)
+        public StronglyTypedAttributeWithOptionalValueRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
             : base(propertyName, symbolType)
         { }
 
@@ -14,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel
                                                         ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
-            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);
+            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
             if (!matchingTraits.Any())
             {
                 return (false, default);

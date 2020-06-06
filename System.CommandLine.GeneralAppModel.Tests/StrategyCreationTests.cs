@@ -27,7 +27,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void GeneralStrategyGetCandidateRulesIsCorrect()
         {
             var rules = generalStrategy.GetCandidateRules.Rules.ToArray();
-            rules[0].CheckDerivedFromRule(null,null, false); 
+            rules[0].CheckDerivedFromRule(null, null, false);
         }
 
         [Fact]
@@ -36,10 +36,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var rules = generalStrategy.SelectSymbolRules.Rules.ToArray();
 
             rules.Should().HaveCount(7);
-            rules[0].CheckNamedAttributeRule(SymbolType.Command, "Command");
+            rules[0].CheckStronglyTypedAttributeRule<CommandAttribute>(SymbolType.Command);
             rules[1].CheckNamePatternRule(SymbolType.Command, StringContentsRule.StringPosition.EndsWith, "Command");
             rules[2].CheckIsOfTypeRule(SymbolType.Command, typeof(Type));
-            rules[3].CheckNamedAttributeRule(SymbolType.Argument, "Argument");
+            rules[3].CheckStronglyTypedAttributeRule<ArgumentAttribute>(SymbolType.Argument);
             rules[4].CheckNamePatternRule(SymbolType.Argument, StringContentsRule.StringPosition.EndsWith, "Argument");
             rules[5].CheckNamePatternRule(SymbolType.Argument, StringContentsRule.StringPosition.EndsWith, "Arg");
             rules[6].CheckRule<RemainingSymbolRule>(SymbolType.Option);
@@ -47,7 +47,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
 
-        [Fact(Skip ="Will probably remove these rules or rewrite. 2 is correct (current failure)")]
+        [Fact(Skip = "Will probably remove these rules or rewrite. 2 is correct (current failure)")]
         public void GeneralStrategyArgumentRulesIsCorrect()
         {
 

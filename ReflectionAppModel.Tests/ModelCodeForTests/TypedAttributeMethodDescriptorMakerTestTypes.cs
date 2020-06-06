@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
-using System.CommandLine.ReflectionAppModel.Attributes;
-using System.ComponentModel;
 using System.Text;
 using constant = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
 
-namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttributes
+namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes
 {
     public class MethodEmptyMethod
     {

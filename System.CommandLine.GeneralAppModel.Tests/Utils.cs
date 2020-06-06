@@ -53,6 +53,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
             typeRule.AttributeName.Should().Be(attributeName);
         }
 
+        public static void CheckStronglyTypedAttributeRule<TAttribute>(this IRule rule, SymbolType symbolType)
+        {
+            rule.CheckRule<StronglyTypedAttributeRule<TAttribute>>(symbolType);
+            var typeRule = rule as StronglyTypedAttributeRule<TAttribute>;
+            var _ = typeRule ?? throw new InvalidOperationException("Unhandled rule type");
+            typeRule.Should().BeOfType<StronglyTypedAttributeRule<TAttribute>>();
+        }
+
         public static void CheckNamedAttributeWithPropertyRule(this IRule rule, SymbolType symbolType, string attributeName, string propertyName, Type type)
         {
             rule.Should().BeAssignableTo<AttributeWithPropertyRule>();
@@ -60,6 +68,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var typedRule = rule as AttributeWithPropertyRule;
             var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
             typedRule.AttributeName.Should().Be(attributeName);
+            typedRule.PropertyName.Should().Be(propertyName);
+            typedRule.Type.Should().Be(type);
+        }
+
+        public static void CheckStronglyTypedAttributeWithPropertyRule<TAttribute>(this IRule rule, SymbolType symbolType, string propertyName, Type type)
+        {
+            rule.Should().BeAssignableTo<StronglyTypedAttributeWithPropertyRule<TAttribute>>();
+            rule.SymbolType.Should().IncludeSymbolType(symbolType);
+            var typedRule = rule as StronglyTypedAttributeWithPropertyRule<TAttribute>;
+            var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
+            typedRule.Should().BeOfType<TAttribute>();
             typedRule.PropertyName.Should().Be(propertyName);
             typedRule.Type.Should().Be(type);
         }
@@ -98,11 +117,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static void CheckDerivedFromRule(this IRule rule, string? assembly, string? namespaceName, bool ignoreNamespace)
         {
-            rule.Should().BeAssignableTo<DerivedFromRule >();
+            rule.Should().BeAssignableTo<DerivedFromRule>();
             var typedRule = rule as DerivedFromRule;
             var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
             typedRule.AssemblyName.Should().Be(assembly);
-            typedRule.NamespaceName .Should().Be(namespaceName);
+            typedRule.NamespaceName.Should().Be(namespaceName);
             typedRule.IgnoreNamespace.Should().Be(ignoreNamespace);
 
         }
