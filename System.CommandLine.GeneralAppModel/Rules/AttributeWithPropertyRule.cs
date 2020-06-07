@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public abstract class StronglyTypedAttributeWithPropertyRule<TAttribute>
-        : StronglyTypedAttributeRule<TAttribute>
+    public abstract class AttributeWithPropertyRule<TAttribute>
+        : AttributeRule<TAttribute>
     {
-        public StronglyTypedAttributeWithPropertyRule(string propertyName, Type type, SymbolType symbolType = SymbolType.All)
+        public AttributeWithPropertyRule(string propertyName, Type type, SymbolType symbolType = SymbolType.All)
         : base(symbolType)
         {
             var _ = propertyName ?? throw new InvalidOperationException("PropertyName cannot be null, use AttributeWithImpliedPropertyValue rule");
@@ -18,10 +18,10 @@ namespace System.CommandLine.GeneralAppModel
         public Type Type { get; }
     }
 
-    public class StronglyTypedAttributeWithPropertyValueRule<TAttribute, TValue>
-        : StronglyTypedAttributeWithPropertyRule<TAttribute>, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class AttributeWithPropertyValueRule<TAttribute, TValue>
+        : AttributeWithPropertyRule<TAttribute>, IRuleGetValue<TValue>, IRuleGetValues<TValue>
     {
-        public StronglyTypedAttributeWithPropertyValueRule(string propertyName, SymbolType symbolType = SymbolType.All)
+        public AttributeWithPropertyValueRule(string propertyName, SymbolType symbolType = SymbolType.All)
             : base(propertyName, typeof(TValue), symbolType)
         { }
 

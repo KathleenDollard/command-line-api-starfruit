@@ -18,9 +18,9 @@ namespace System.CommandLine.NamedAttributeRules
         public Type Type { get; }
     }
 
-    public class AttributeWithPropertyValueRule<TValue> : NamedAttributeWithPropertyRule, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class NamedAttributeWithPropertyValueRule<TValue> : NamedAttributeWithPropertyRule, IRuleGetValue<TValue>, IRuleGetValues<TValue>
     {
-        public AttributeWithPropertyValueRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+        public NamedAttributeWithPropertyValueRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, propertyName, typeof(TValue), symbolType)
         { }
 

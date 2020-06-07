@@ -5,10 +5,10 @@ using System.Text;
 
 namespace System.CommandLine.GeneralAppModel.Rules
 {
-    public class StronglyTypedAttributeArityRule<TAttribute> 
-        : StronglyTypedAttributeWithComplexValueRule<TAttribute>, IRuleArity
+    public class AttributeArityRule<TAttribute> 
+        : AttributeWithComplexValueRule<TAttribute>, IRuleArity
     {
-        public StronglyTypedAttributeArityRule( string minCountPropertyName, string maxCountPropertyName)
+        public AttributeArityRule( string minCountPropertyName, string maxCountPropertyName)
             : base( SymbolType.Argument)
         {
             PropertyNamesAndTypes.Add(new NameAndType(ArityDescriptor.MinimumCountName, propertyName: minCountPropertyName, propertyType: typeof(int)));

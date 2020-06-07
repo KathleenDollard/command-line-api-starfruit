@@ -8,9 +8,9 @@ namespace System.CommandLine.GeneralAppModel
     /// By implication this only works if the attribute's default is false, and it is never logical to use the 
     /// attribute to clarify the default. Otherwise, use NamedAttributeWithPropertyRule
     /// </summary>
-    public class StronglyTypedAttributeRule<TAttribute> : RuleBase, IRuleGetCandidates
+    public class AttributeRule<TAttribute> : RuleBase, IRuleGetCandidates
     {
-        public StronglyTypedAttributeRule(SymbolType symbolType = SymbolType.All)
+        public AttributeRule(SymbolType symbolType = SymbolType.All)
             : base(symbolType)
         {
         }

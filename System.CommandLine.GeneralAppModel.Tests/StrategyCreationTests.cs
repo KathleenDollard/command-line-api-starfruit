@@ -36,10 +36,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var rules = generalStrategy.SelectSymbolRules.Rules.ToArray();
 
             rules.Should().HaveCount(7);
-            rules[0].CheckStronglyTypedAttributeRule<CommandAttribute>(SymbolType.Command);
+            rules[0].CheckAttributeRule<CommandAttribute>(SymbolType.Command);
             rules[1].CheckNamePatternRule(SymbolType.Command, StringContentsRule.StringPosition.EndsWith, "Command");
             rules[2].CheckIsOfTypeRule(SymbolType.Command, typeof(Type));
-            rules[3].CheckStronglyTypedAttributeRule<ArgumentAttribute>(SymbolType.Argument);
+            rules[3].CheckAttributeRule<ArgumentAttribute>(SymbolType.Argument);
             rules[4].CheckNamePatternRule(SymbolType.Argument, StringContentsRule.StringPosition.EndsWith, "Argument");
             rules[5].CheckNamePatternRule(SymbolType.Argument, StringContentsRule.StringPosition.EndsWith, "Arg");
             rules[6].CheckRule<RemainingSymbolRule>(SymbolType.Option);

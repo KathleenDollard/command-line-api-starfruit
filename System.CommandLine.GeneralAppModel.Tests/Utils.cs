@@ -46,23 +46,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
 
-        public static void CheckStronglyTypedAttributeRule<TAttribute>(this IRule rule, SymbolType symbolType)
+        public static void CheckAttributeRule<TAttribute>(this IRule rule, SymbolType symbolType)
         {
-            rule.CheckRule<StronglyTypedAttributeRule<TAttribute>>(symbolType);
-            var typeRule = rule as StronglyTypedAttributeRule<TAttribute>;
+            rule.CheckRule<AttributeRule<TAttribute>>(symbolType);
+            var typeRule = rule as AttributeRule<TAttribute>;
             var _ = typeRule ?? throw new InvalidOperationException("Unhandled rule type");
-            typeRule.Should().BeOfType<StronglyTypedAttributeRule<TAttribute>>();
-        }
-
-        public static void CheckStronglyTypedAttributeWithPropertyRule<TAttribute>(this IRule rule, SymbolType symbolType, string propertyName, Type type)
-        {
-            rule.Should().BeAssignableTo<StronglyTypedAttributeWithPropertyRule<TAttribute>>();
-            rule.SymbolType.Should().IncludeSymbolType(symbolType);
-            var typedRule = rule as StronglyTypedAttributeWithPropertyRule<TAttribute>;
-            var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
-            typedRule.Should().BeOfType<TAttribute>();
-            typedRule.PropertyName.Should().Be(propertyName);
-            typedRule.Type.Should().Be(type);
+            typeRule.Should().BeOfType<AttributeRule<TAttribute>>();
         }
 
         public static bool CompareDistinctEnumerable<T>(IEnumerable<T> expected, IEnumerable<T> actual, bool nullAndEmptyRelaxed = false)

@@ -45,14 +45,12 @@ namespace System.CommandLine.NamedAttributeRules
         {
             rules.DescriptionRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string>("Description"))
-                .Add(new AttributeWithPropertyValueRule<string>("Argument", "Description"))
-                //.Add(new StronglyTypedAttributeWithImpliedPropertyRule<DescriptionAttribute, string>())
-                //.Add(new StronglyTypedAttributeWithPropertyValueRule<ArgumentAttribute, string>("Description"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Argument", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string>("Name"))
-                .Add(new AttributeWithPropertyValueRule<string>("Argument", "Name"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Argument", "Name"))
                 .Add(new NameEndsWithRule("Arg"))
                 .Add(new NameEndsWithRule("Argument"))
                 .Add(new IdentityRule<string>())
@@ -75,7 +73,7 @@ namespace System.CommandLine.NamedAttributeRules
 
             rules.AliasRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string[]>("Aliases"))
-                .Add(new AttributeWithPropertyValueRule<string[]>("Argument", "Aliases"))
+                .Add(new NamedAttributeWithPropertyValueRule<string[]>("Argument", "Aliases"))
                 ;
 
             rules.AllowedValueRules
@@ -95,12 +93,12 @@ namespace System.CommandLine.NamedAttributeRules
 
             rules.DescriptionRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string>("Description"))
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "Description"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Option", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string>("Name"))
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "Name"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Option", "Name"))
                 .Add(new NameEndsWithRule("Option"))
                 .Add(new IdentityRule<string>());
 
@@ -116,7 +114,7 @@ namespace System.CommandLine.NamedAttributeRules
 
             rules.AliasRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string[]>("Aliases"))
-                .Add(new AttributeWithPropertyValueRule<string[]>("Option", "Aliases"))
+                .Add(new NamedAttributeWithPropertyValueRule<string[]>("Option", "Aliases"))
                 ;
 
             return rules;
@@ -125,20 +123,20 @@ namespace System.CommandLine.NamedAttributeRules
         public static RuleSetArgument SetFullOptionArgumentRules(this RuleSetArgument rules)
         {
             rules.DescriptionRules
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "ArgumentDescription", SymbolType.Argument))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Option", "ArgumentDescription", SymbolType.Argument))
                 ;
 
             // The name is used for help
             rules.NameRules
-                .Add(new AttributeWithPropertyValueRule<string>("Option", "ArgumentName", SymbolType.Argument))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Option", "ArgumentName", SymbolType.Argument))
                 ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
+                .Add(new NamedAttributeWithPropertyValueRule<bool>("Option", "ArgumentRequired", SymbolType.Option))
             ;
 
             rules.RequiredRules
-                .Add(new AttributeWithPropertyValueRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
+                .Add(new NamedAttributeWithPropertyValueRule<bool>("Option", "ArgumentIsHidden", SymbolType.Option))
             ;
 
             rules.DefaultValueRules
@@ -159,19 +157,19 @@ namespace System.CommandLine.NamedAttributeRules
 
             rules.DescriptionRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string>("Description"))
-                .Add(new AttributeWithPropertyValueRule<string>("Command", "Description"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Command", "Description"))
                 // TODO: .Add(new LabelRule<string>("XmlDocComments") )
                 ;
             rules.NameRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string>("Name"))
-                .Add(new AttributeWithPropertyValueRule<string>("Command", "Name"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Command", "Name"))
                 .Add(new NameEndsWithRule("Command"))
                 .Add(new IdentityRule<string>())
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules
                 .Add(new NamedBooleanAttributeRule("TreatUnmatchedTokensAsErrors"))
-                .Add(new AttributeWithPropertyValueRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
+                .Add(new NamedAttributeWithPropertyValueRule<bool>("Command", "TreatUnmatchedTokensAsErrors"));
 
             rules.IsHiddenRules
                 .Add(new NamedBooleanAttributeRule("Hidden"))
@@ -179,7 +177,7 @@ namespace System.CommandLine.NamedAttributeRules
 
             rules.AliasRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<string[]>("Aliases"))
-                 .Add(new AttributeWithPropertyValueRule<string[]>("Command", "Aliases"))
+                 .Add(new NamedAttributeWithPropertyValueRule<string[]>("Command", "Aliases"))
                ;
 
             return rules;

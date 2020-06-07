@@ -9,9 +9,9 @@ namespace System.CommandLine.GeneralAppModel
     /// you don't want to declare what that property might be named. This is useful for 
     /// rules for Description or Name, for example.
     /// </summary>
-    public class StronglyTypedAttributeWithImpliedPropertyRule<TAttribute, TValue> : StronglyTypedAttributeRule<TAttribute>, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class AttributeWithImpliedPropertyRule<TAttribute, TValue> : AttributeRule<TAttribute>, IRuleGetValue<TValue>, IRuleGetValues<TValue>
     {
-        public StronglyTypedAttributeWithImpliedPropertyRule(SymbolType symbolType = SymbolType.All)
+        public AttributeWithImpliedPropertyRule(SymbolType symbolType = SymbolType.All)
         : base(symbolType)
         { }
 

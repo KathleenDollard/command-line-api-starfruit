@@ -9,10 +9,10 @@ namespace System.CommandLine.GeneralAppModel
     /// A dictionary is returned, which contains the _Name_, not the _PropertyName_ of each expected item.
     /// The Name is consistent, the PropertyName can be whatever that particular strategy wants. 
     /// </summary>
-    public class StronglyTypedAttributeWithComplexValueRule<TAttribute> : StronglyTypedAttributeRule<TAttribute>, IRuleGetValue<Dictionary<string, object>>
+    public class AttributeWithComplexValueRule<TAttribute> : AttributeRule<TAttribute>, IRuleGetValue<Dictionary<string, object>>
     {
 
-        public StronglyTypedAttributeWithComplexValueRule( SymbolType symbolType = SymbolType.All)
+        public AttributeWithComplexValueRule( SymbolType symbolType = SymbolType.All)
             : base( symbolType)
         {
         }

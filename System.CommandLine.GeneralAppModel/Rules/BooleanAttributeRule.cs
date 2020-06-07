@@ -8,9 +8,9 @@ namespace System.CommandLine.GeneralAppModel
     /// no argument indicates true, and an optional property can either confirm 
     /// true or indicate false.
     /// </summary>
-    public class StronglyTypedBooleanAttributeRule<TAttribute> : StronglyTypedAttributeRule<TAttribute>, IRuleGetValue<bool>
+    public class BooleanAttributeRule<TAttribute> : AttributeRule<TAttribute>, IRuleGetValue<bool>
     {
-        public StronglyTypedBooleanAttributeRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
+        public BooleanAttributeRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
         : base(symbolType)
         {
             PropertyName = propertyName;

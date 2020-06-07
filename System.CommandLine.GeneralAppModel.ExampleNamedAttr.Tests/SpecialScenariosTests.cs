@@ -13,8 +13,8 @@ namespace System.CommandLine.NamedAttributeRules
         {
             var strategy = new Strategy();
             strategy.CommandRules.DescriptionRules
-                .Add(new AttributeWithPropertyValueRule<string>("Command", "Description", SymbolType.Command))
-                .Add(new AttributeWithPropertyValueRule<string>("Description", "Description"))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Command", "Description", SymbolType.Command))
+                .Add(new NamedAttributeWithPropertyValueRule<string>("Description", "Description"))
                 ;
             var actual = ReflectionDescriptorMaker
                 .RootCommandDescriptor(strategy, typeof(SpecialScenarioModels));

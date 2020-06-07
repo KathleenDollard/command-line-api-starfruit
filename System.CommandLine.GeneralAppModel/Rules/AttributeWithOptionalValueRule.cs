@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public class StronglyTypedAttributeWithOptionalValueRule<TAttribute, TValue> : StronglyTypedAttributeWithPropertyValueRule<TAttribute, TValue>, IRuleOptionalValue<TValue>
+    public class AttributeWithOptionalValueRule<TAttribute, TValue> : AttributeWithPropertyValueRule<TAttribute, TValue>, IRuleOptionalValue<TValue>
     {
-        public StronglyTypedAttributeWithOptionalValueRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
+        public AttributeWithOptionalValueRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
             : base(propertyName, symbolType)
         { }
 
