@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.Text;
+using constants= System.CommandLine.GeneralAppModel.Tests.TypedAttributeTypeDescriptorMakerTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes
 {
@@ -10,27 +11,27 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
     {
     }
 
-    [Name(TypeDescriptorMakerTests.Name)]
+    [Name(constants.Name)]
     public class TypeWithNameAttribute
     {
     }
 
-    [Description(TypeDescriptorMakerTests.Description)]
+    [Description(constants.Description)]
     public class TypeWithDescriptionAttribute
     {
     }
 
-    [Command(Name = TypeDescriptorMakerTests.Name)]
+    [Command(Name = constants.Name)]
     public class TypeWithNameInCommandAttribute
     {
     }
 
-    [Command(Description = TypeDescriptorMakerTests.Description)]
+    [Command(Description = constants.Description)]
     public class TypeWithDescriptionInCommandAttribute
     {
     }
 
-    [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]
+    [Aliases(constants.AliasAsStringSingle)]
     public class TypeWithOneAliasAttribute
     {
     }
@@ -159,31 +160,31 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class PropertyOptionWithNameAttribute
     {
-        [Name(TypeDescriptorMakerTests.Name)]
+        [Name(constants.Name)]
         public string? Prop { get; set; }
     }
 
     public class PropertyOptionWithNameInOptionAttribute
     {
-        [Option(Name = TypeDescriptorMakerTests.Name)]
+        [Option(Name = constants.Name)]
         public string? Prop { get; set; }
     }
 
     public class PropertyOptionWithDescriptionAttribute
     {
-        [Description(TypeDescriptorMakerTests.Description)]
+        [Description(constants.Description)]
         public string? Prop { get; set; }
     }
 
     public class PropertyOptionWithDescriptionInOptionAttribute
     {
-        [Option(Description = TypeDescriptorMakerTests.Description)]
+        [Option(Description = constants.Description)]
         public string? Prop { get; set; }
     }
 
     public class PropertyOptionWithOneAliasAttribute
     {
-        [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]
+        [Aliases(constants.AliasAsStringSingle)]
         public string? Prop { get; set; }
     }
 
@@ -260,13 +261,13 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class PropertyOptionArgumentWithStringDefaultValue
     {
-        [DefaultValue(TypeDescriptorMakerTests.DefaultValueString)]
+        [DefaultValue(constants.DefaultValueString)]
         public string? Prop { get; set; }
     }
 
     public class PropertyOptionArgumentWithIntegerDefaultValue
     {
-        [DefaultValue(TypeDescriptorMakerTests.DefaultValueInt)]
+        [DefaultValue(constants.DefaultValueInt)]
         public string? Prop { get; set; }
     }
 
@@ -285,51 +286,51 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class PropertyArgumentWithNameAttribute
     {
-        [Name(TypeDescriptorMakerTests.Name)]
+        [Name(constants.Name)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithDescriptionAttribute
     {
-        [Description(TypeDescriptorMakerTests.Description)]
+        [Description(constants.Description)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithNameInArgumentAttribute
     {
-        [Argument(Name = TypeDescriptorMakerTests.Name)]
+        [Argument(Name = constants.Name)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithDescriptionInArgumentAttribute
     {
-        [Argument(Description = TypeDescriptorMakerTests.Description)]
+        [Argument(Description = constants.Description)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithOneAliasAttribute
     {
-        [Aliases(TypeDescriptorMakerTests.AliasAsStringSingle)]
+        [Aliases(constants.AliasAsStringSingle)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithThreeAliasesInOneAttribute
     {
-        [Aliases(TypeDescriptorMakerTests.AliasAsStringMultiple)]
+        [Aliases(constants.AliasAsStringMultiple)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithOneAllowedValueAttribute
     {
-        [AllowedValues(TypeDescriptorMakerTests.AllowedValuesAsIntFirst)]
+        [AllowedValues(constants.AllowedValuesAsIntFirst)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithThreeAllowedValuesInOneAttribute
     {
-        [AllowedValues(TypeDescriptorMakerTests.AllowedValuesAsIntFirst,
-                                          TypeDescriptorMakerTests.AllowedValuesAsIntSecond,
-                                          TypeDescriptorMakerTests.AllowedValuesAsIntThird)]
+        [AllowedValues(constants.AllowedValuesAsIntFirst,
+                                          constants.AllowedValuesAsIntSecond,
+                                          constants.AllowedValuesAsIntThird)]
         public string? PropArg { get; set; }
     }
 
@@ -417,13 +418,13 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class PropertyArgumentWithStringDefaultValue
     {
-        [DefaultValue(TypeDescriptorMakerTests.DefaultValueString)]
+        [DefaultValue(constants.DefaultValueString)]
         public string? PropArg { get; set; }
     }
 
     public class PropertyArgumentWithIntegerDefaultValue
     {
-        [DefaultValue(TypeDescriptorMakerTests.DefaultValueInt)]
+        [DefaultValue(constants.DefaultValueInt)]
         public string? PropArg { get; set; }
     }
 

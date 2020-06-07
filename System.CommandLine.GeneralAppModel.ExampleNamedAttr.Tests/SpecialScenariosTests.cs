@@ -1,7 +1,7 @@
 ﻿using System.CommandLine.GeneralAppModel;
-using A = System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.MissingPropertyNotBlockingOtherAttributes;
 using Xunit;
 using FluentAssertions;
+using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.MissingPropertyNotBlockingOtherAttributes;
 
 namespace System.CommandLine.ReflectionAppModel
 {
@@ -16,7 +16,7 @@ namespace System.CommandLine.ReflectionAppModel
                 .Add(new AttributeWithPropertyValueRule<string>("Description", "Description"))
                 ;
             var actual = ReflectionDescriptorMaker
-                .RootCommandDescriptor(strategy, typeof(A.SpecialScenarioModels));
+                .RootCommandDescriptor(strategy, typeof(SpecialScenarioModels));
             actual.Description.Should().Be("Boo!");
 
         }

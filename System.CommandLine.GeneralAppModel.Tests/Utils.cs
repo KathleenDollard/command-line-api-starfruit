@@ -45,13 +45,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
             typeRule.CompareTo.Should().Be(compareTo);
         }
 
-        public static void CheckNamedAttributeRule(this IRule rule, SymbolType symbolType, string attributeName)
-        {
-            rule.CheckRule<AttributeRule>(symbolType);
-            var typeRule = rule as AttributeRule;
-            var _ = typeRule ?? throw new InvalidOperationException("Unhandled rule type");
-            typeRule.AttributeName.Should().Be(attributeName);
-        }
 
         public static void CheckStronglyTypedAttributeRule<TAttribute>(this IRule rule, SymbolType symbolType)
         {
@@ -59,17 +52,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var typeRule = rule as StronglyTypedAttributeRule<TAttribute>;
             var _ = typeRule ?? throw new InvalidOperationException("Unhandled rule type");
             typeRule.Should().BeOfType<StronglyTypedAttributeRule<TAttribute>>();
-        }
-
-        public static void CheckNamedAttributeWithPropertyRule(this IRule rule, SymbolType symbolType, string attributeName, string propertyName, Type type)
-        {
-            rule.Should().BeAssignableTo<AttributeWithPropertyRule>();
-            rule.SymbolType.Should().IncludeSymbolType(symbolType);
-            var typedRule = rule as AttributeWithPropertyRule;
-            var _ = typedRule ?? throw new InvalidOperationException("Unhandled rule type");
-            typedRule.AttributeName.Should().Be(attributeName);
-            typedRule.PropertyName.Should().Be(propertyName);
-            typedRule.Type.Should().Be(type);
         }
 
         public static void CheckStronglyTypedAttributeWithPropertyRule<TAttribute>(this IRule rule, SymbolType symbolType, string propertyName, Type type)
@@ -145,21 +127,23 @@ namespace System.CommandLine.GeneralAppModel.Tests
                         var _ = np ?? throw new InvalidOperationException("Unexpecte TestData type");
                         r.CheckNamePatternRule(symbolType, np.Position, np.CompareTo);
                         break;
-                    case AttributeWithPropertyValueRule<string> r:
-                        var naps = expectedRules[i] as NamedAttributeWithPropertyTestData;
-                        var _2 = naps ?? throw new InvalidOperationException("Unexpecte TestData type");
-                        r.CheckNamedAttributeWithPropertyRule(symbolType, naps.AttributeName, naps.PropertyName, typeof(string));
-                        break;
-                    case AttributeWithPropertyValueRule<bool> r:
-                        var rapb = expectedRules[i] as NamedAttributeWithPropertyTestData;
-                        var _3 = rapb ?? throw new InvalidOperationException("Unexpecte TestData type");
-                        r.CheckNamedAttributeWithPropertyRule(symbolType, rapb.AttributeName, rapb.PropertyName, typeof(bool));
-                        break;
-                    case AttributeRule r:
-                        var na = expectedRules[i] as NamedAttributeTestData;
-                        var _4 = na ?? throw new InvalidOperationException("Unexpecte TestData type");
-                        r.CheckNamedAttributeRule(symbolType, na.AttributeName);
-                        break;
+                    //case AttributeWithPropertyValueRule<string> r:
+                    //    var naps = expectedRules[i] as NamedAttributeWithPropertyTestData;
+                    //    var _2 = naps ?? throw new InvalidOperationException("Unexpecte TestData type");
+                    //    r.CheckNamedAttributeWithPropertyRule(symbolType, naps.AttributeName, naps.PropertyName, typeof(string));
+                    //    break;
+                    //case AttributeWithPropertyValueRule<bool> r:
+                    //    var rapb = expectedRules[i] as NamedAttributeWithPropertyTestData;
+                    //    var _3 = rapb ?? throw new InvalidOperationException("Unexpecte TestData type");
+                    //    r.CheckNamedAttributeWithPropertyRule(symbolType, rapb.AttributeName, rapb.PropertyName, typeof(bool));
+                    //    break;
+                    //case AttributeRule r:
+                    //    var na = expectedRules[i] as NamedAttributeTestData;
+                    //    var _4 = na ?? throw new InvalidOperationException("Unexpecte TestData type");
+                    //    r.CheckNamedAttributeRule(symbolType, na.AttributeName);
+                    //    break;
+                    default:
+                        throw new InvalidOperationException("Add strongly typed attribute rules");
 
                 }
             }

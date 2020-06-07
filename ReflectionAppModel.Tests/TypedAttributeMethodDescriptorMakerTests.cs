@@ -7,7 +7,7 @@ using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes;
 using System.Linq;
 using Xunit;
-using constant = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
+using constant = System.CommandLine.GeneralAppModel.Tests.TypedAttributeTypeDescriptorMakerTests;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
