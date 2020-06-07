@@ -3,6 +3,7 @@ using FluentAssertions.Equivalency;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
@@ -57,24 +58,22 @@ namespace System.CommandLine.GeneralAppModel.Tests
             actual.Should().Be(expected);
         }
 
-        [Theory(Skip ="Rework for StronglyTyped")]
-        [InlineData("NamedAttribute", @"If there is an attribute named 'NamedAttribute'")]
-        public void ReportForNamedAttributeRuleIsCorrect(string attributeName, string expected)
+        [Fact]
+        public void ReportForNamedAttributeRuleIsCorrect()
         {
-            //var rule = new AttributeRule(attributeName);
-            //var actual = rule.RuleDescription<IRuleGetValue<string>>();
+            var rule = new AttributeRule<DescriptionAttribute>();
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
-            //actual.Should().Be(expected);
+            actual.Should().Be(@"If there is an attribute named 'DescriptionAttribute'");
         }
 
-        [Theory(Skip = "Rework for StronglyTyped")]
-        [InlineData("WithProperty", "ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
-        public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
+        [Fact]
+        public void ReportForNamedAttributeWithPropertyRuleIsCorrect()
         {
-            //var rule = new AttributeWithPropertyValueRule<string>(attributeName, propertyName);
-            //var actual = rule.RuleDescription<IRuleGetValue<string>>();
+            var rule = new AttributeWithPropertyValueRule<ArgumentAttribute, string>( "Name");
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
-            //actual.Should().Be(expected);
+            actual.Should().Be("If there is an attribute named 'ArgumentAttribute', its 'Name' property, with type System.String");
         }
 
         [Fact()]
@@ -107,34 +106,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
             actual.Should().Be(expected);
         }
-
-        [Theory(Skip = "Rework for StronglyTyped")]
-        [InlineData("Abc", "Def", typeof(int), "Ghi", typeof(string), "If there is an attribute named 'Abc': Def as System.Int32, Ghi as System.String")]
-        public void ReportForComplexAttributeRuleGetValueIsCorrect(string attributeName,
-                    string propName1, Type type1, string propName2, Type type2, string expected)
-        {
-            //var rule = new AttributeWithComplexValueRule(attributeName)
-            //{
-            //};
-            //rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1));
-            //rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2));
-            //var actual = rule.RuleDescription<IRuleGetValue<string>>();
-
-            //actual.Should().Be(expected);
-        }
-
-        [Theory(Skip = "Rework for StronglyTyped")]
-        [InlineData("Abc", "Def", "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
-        public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
-            string propName1, string expected)
-        {
-            //var rule = new AttributeWithOptionalValueRule<int>(attributeName, propName1);
-            //var actual = rule.RuleDescription<IRuleGetValue<string>>();
-
-            //actual.Should().Be(expected);
-        }
-
-
 
         [Fact]
         public void FullStrategyReportIsAboutTheRightLength()
