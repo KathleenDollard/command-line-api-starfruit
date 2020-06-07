@@ -134,14 +134,14 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class TypeWithOneOptionByRemaining
     {
-        public string? RedArgument { get; set; }
+        public string? RedArg { get; set; }
         public string? East { get; set; }
     }
 
     public class TypeWithTwoOptionsByRemaining
     {
         [Argument]
-        public string? RedArgument { get; set; }
+        public string? RedArg { get; set; }
         [Argument]
         public string? Blue { get; set; }
         public string? East { get; set; }

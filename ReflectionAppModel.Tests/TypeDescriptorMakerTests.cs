@@ -32,99 +32,116 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const string ParameterOptionName = "Param";
         internal const string ParameterArgName = "Param";
 
-        private readonly Strategy strategy;
-
+        private readonly Strategy fullStrategy;
+        private readonly Strategy standardStrategy;
+        private const string full = "Full";
+        private const string standard = "Standard";
 
         public TypeDescriptorMakerTests()
         {
-            strategy = new Strategy()
-                            .SetFullRules();
+            fullStrategy = new Strategy().SetFullRules();
+            standardStrategy = new Strategy().SetStandardRules();
         }
 
         #region CommandTests
         [Theory]
-        [InlineData(typeof(EmptyType), nameof(EmptyType), "")]
-        [InlineData(typeof(TypeWithNameAttribute), Name, "")]
-        [InlineData(typeof(TypeWithNameInCommandAttribute), Name, "")]
-        [InlineData(typeof(TypeWithDescriptionAttribute), nameof(TypeWithDescriptionAttribute), Description)]
-        [InlineData(typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
-        public void CommandNameAndDescriptionFromType(Type typeToTest, string name, string description)
+        [InlineData(full, typeof(EmptyType), nameof(EmptyType), "")]
+        [InlineData(full, typeof(TypeWithNameAttribute), Name, "")]
+        [InlineData(full, typeof(TypeWithNameInCommandAttribute), Name, "")]
+        [InlineData(full, typeof(TypeWithDescriptionAttribute), nameof(TypeWithDescriptionAttribute), Description)]
+        [InlineData(full, typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
+        [InlineData(standard, typeof(EmptyType), nameof(EmptyType), "")]
+        [InlineData(standard, typeof(TypeWithNameInCommandAttribute), Name, "")]
+        [InlineData(standard, typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
+        public void CommandNameAndDescriptionFromType(string useStrategy, Type typeToTest, string name, string description)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveName(name)
                     .And.HaveDescription(description);
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(TypeWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
-        public void CommandAliasesFromType(Type typeToTest, string aliasesAsString)
+        [InlineData(full, typeof(TypeWithOneAliasAttribute), AliasAsStringSingle)]
+        [InlineData(full, typeof(TypeWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
+        public void CommandAliasesFromType(string useStrategy, Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
                           ? null
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
 
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveAliases(aliases);
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithIsHiddenTrueInCommandAttribute), true)]
-        [InlineData(typeof(TypeWithIsHiddenFalseInCommandAttribute), false)]
-        [InlineData(typeof(TypeWithIsHiddenTrue), true)]
-        [InlineData(typeof(TypeWithIsHiddenFalse), false)]
-        [InlineData(typeof(TypeWithIsHiddenTrueAsImplied), true)]
-        public void CommandIsHiddenFromType(Type typeToTest, bool isHidden)
+        [InlineData(full, typeof(TypeWithIsHiddenTrueInCommandAttribute), true)]
+        [InlineData(full, typeof(TypeWithIsHiddenFalseInCommandAttribute), false)]
+        [InlineData(full, typeof(TypeWithIsHiddenTrue), true)]
+        [InlineData(full, typeof(TypeWithIsHiddenFalse), false)]
+        [InlineData(full, typeof(TypeWithIsHiddenTrueAsImplied), true)]
+        [InlineData(standard, typeof(TypeWithIsHiddenTrueInCommandAttribute), true)]
+        [InlineData(standard, typeof(TypeWithIsHiddenFalseInCommandAttribute), false)]
+        public void CommandIsHiddenFromType(string useStrategy, Type typeToTest, bool isHidden)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveIsHidden(isHidden);
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithTreatUnmatchedTokensAsErrorsTrueInCommandAttribute), true)]
-        [InlineData(typeof(TypeWithTreatUnmatchedTokensAsErrorsFalseInCommandAttribute), false)]
-        [InlineData(typeof(TypeWithTreatUnmatchedTokensAsErrorsTrue), true)]
-        [InlineData(typeof(TypeWithTreatUnmatchedTokensAsErrorsFalse), false)]
-        [InlineData(typeof(TypeWithTreatUnmatchedTokensAsErrorsTrueAsImplied), true)]
-        public void CommandTreatUnmatchedTokensAsErrorsFromType(Type typeToTest, bool treatUnmatchedTokensAsErrors)
+        [InlineData(full, typeof(TypeWithTreatUnmatchedTokensAsErrorsTrueInCommandAttribute), true)]
+        [InlineData(full, typeof(TypeWithTreatUnmatchedTokensAsErrorsFalseInCommandAttribute), false)]
+        [InlineData(full, typeof(TypeWithTreatUnmatchedTokensAsErrorsTrue), true)]
+        [InlineData(full, typeof(TypeWithTreatUnmatchedTokensAsErrorsFalse), false)]
+        [InlineData(full, typeof(TypeWithTreatUnmatchedTokensAsErrorsTrueAsImplied), true)]
+        [InlineData(standard, typeof(TypeWithTreatUnmatchedTokensAsErrorsTrueInCommandAttribute), true)]
+        [InlineData(standard, typeof(TypeWithTreatUnmatchedTokensAsErrorsFalseInCommandAttribute), false)]
+        public void CommandTreatUnmatchedTokensAsErrorsFromType(string useStrategy, Type typeToTest, bool treatUnmatchedTokensAsErrors)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveTreatUnmatchedTokensAsErrors(treatUnmatchedTokensAsErrors);
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOneArgumentByArgName), ArgumentName)]
-        [InlineData(typeof(TypeWithTwoArgumentByArgumentName), ArgumentName, ArgumentName2)]
-        [InlineData(typeof(TypeWithOneArgumentByAttribute), ArgumentName)]
-        [InlineData(typeof(TypeWithTwoArgumentsByAttribute), ArgumentName, ArgumentName2)]
-        public void CommandWithArguments(Type typeToTest, params string[] argNames)
+        [InlineData(full, typeof(TypeWithOneArgumentByArgName), ArgumentName)]
+        [InlineData(full, typeof(TypeWithTwoArgumentByArgumentName), ArgumentName, ArgumentName2)]
+        [InlineData(full, typeof(TypeWithOneArgumentByAttribute), ArgumentName)]
+        [InlineData(full, typeof(TypeWithTwoArgumentsByAttribute), ArgumentName, ArgumentName2)]
+        [InlineData(standard, typeof(TypeWithOneArgumentByArgName), ArgumentName)]
+        [InlineData(standard, typeof(TypeWithOneArgumentByAttribute), ArgumentName)]
+        [InlineData(standard, typeof(TypeWithTwoArgumentsByAttribute), ArgumentName, ArgumentName2)]
+        public void CommandWithArguments(string useStrategy, Type typeToTest, params string[] argNames)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveArgumentsNamed(argNames);
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOneCommandByDerivedType), "A")]
-        [InlineData(typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
-        public void CommandWithSubCommands(Type typeToTest, params string[] argNames)
+        [InlineData(full, typeof(TypeWithOneCommandByDerivedType), "A")]
+        [InlineData(full, typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
+        [InlineData(standard, typeof(TypeWithOneCommandByDerivedType), "A")]
+        [InlineData(standard, typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
+        public void CommandWithSubCommands(string useStrategy, Type typeToTest, params string[] argNames)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveSubCommandsNamed(argNames);
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOnlyOneProperty), OptionName)]
-        [InlineData(typeof(TypeWithOneOptionByRemaining), OptionName)]
-        [InlineData(typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
-        public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
+        [InlineData(full, typeof(TypeWithOnlyOneProperty), OptionName)]
+        [InlineData(full, typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
+        [InlineData(standard, typeof(TypeWithOnlyOneProperty), OptionName)]
+        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
+        public void CommandWithSubOptions(string useStrategy, Type typeToTest, params string[] argNames)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveOptionsNamed(argNames);
         }
@@ -134,14 +151,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithName), Name, "")]
-        [InlineData(typeof(PropertyOptionWithNameAttribute), Name, "")]
-        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
-        [InlineData(typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
-        [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
-        public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
+        [InlineData(full, typeof(PropertyOptionWithName), Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithNameAttribute), Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
+        [InlineData(full, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
+        [InlineData(standard, typeof(PropertyOptionWithName), Name, "")]
+        [InlineData(standard, typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
+        [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
+        public void OptionNameAndDescriptionFromProperty(string useStrategy, Type typeToTest, string name, string description)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
                     .Should().HaveName(name)
@@ -149,66 +169,75 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
-        public void OptionAliasesFromProperty(Type typeToTest, string aliasesAsString)
+        [InlineData(full, typeof(PropertyOptionWithOneAliasAttribute), AliasAsStringSingle)]
+        [InlineData(full, typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
+        public void OptionAliasesFromProperty(string useStrategy, Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
                           ? null
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
 
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
                     .Should().HaveAliases(aliases);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithIsHiddenTrueInOptionAttribute), true)]
-        [InlineData(typeof(PropertyOptionWithIsHiddenFalseInOptionAttribute), false)]
-        [InlineData(typeof(PropertyOptionWithIsHiddenTrue), true)]
-        [InlineData(typeof(PropertyOptionWithIsHiddenFalse), false)]
-        [InlineData(typeof(PropertyOptionWithIsHiddenTrueAsImplied), true)]
-        public void OptionIsHiddenFromProperty(Type typeToTest, bool isHidden)
+        [InlineData(full, typeof(PropertyOptionWithIsHiddenTrueInOptionAttribute), true)]
+        [InlineData(full, typeof(PropertyOptionWithIsHiddenFalseInOptionAttribute), false)]
+        [InlineData(full, typeof(PropertyOptionWithIsHiddenTrue), true)]
+        [InlineData(full, typeof(PropertyOptionWithIsHiddenFalse), false)]
+        [InlineData(full, typeof(PropertyOptionWithIsHiddenTrueAsImplied), true)]
+        [InlineData(standard, typeof(PropertyOptionWithIsHiddenTrueInOptionAttribute), true)]
+        [InlineData(standard, typeof(PropertyOptionWithIsHiddenFalseInOptionAttribute), false)]
+        public void OptionIsHiddenFromProperty(string useStrategy, Type typeToTest, bool isHidden)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
                     .Should().HaveIsHidden(isHidden);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithRequiredTrueInOptionAttribute), true)]
-        [InlineData(typeof(PropertyOptionWithRequiredFalseInOptionAttribute), false)]
-        [InlineData(typeof(PropertyOptionWithRequiredTrue), true)]
-        [InlineData(typeof(PropertyOptionWithRequiredFalse), false)]
-        [InlineData(typeof(PropertyOptionWithRequiredTrueAsImplied), true)]
-        public void OptionRequiredFromProperty(Type typeToTest, bool isHidden)
+        [InlineData(full, typeof(PropertyOptionWithRequiredTrueInOptionAttribute), true)]
+        [InlineData(full, typeof(PropertyOptionWithRequiredFalseInOptionAttribute), false)]
+        [InlineData(full, typeof(PropertyOptionWithRequiredTrue), true)]
+        [InlineData(full, typeof(PropertyOptionWithRequiredFalse), false)]
+        [InlineData(full, typeof(PropertyOptionWithRequiredTrueAsImplied), true)]
+        [InlineData(standard, typeof(PropertyOptionWithRequiredTrueInOptionAttribute), true)]
+        [InlineData(standard, typeof(PropertyOptionWithRequiredFalseInOptionAttribute), false)]
+        public void OptionRequiredFromProperty(string useStrategy, Type typeToTest, bool isHidden)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
                     .Should().HaveRequired(isHidden);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionArgumentWithNoDefaultValue), false, null)]
-        [InlineData(typeof(PropertyOptionArgumentWithStringDefaultValue), true, DefaultValueString)]
-        [InlineData(typeof(PropertyOptionArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
-        public void OptionDefaultValueFromProperty(Type typeToTest, bool isSet, object value)
+        [InlineData(full, typeof(PropertyOptionArgumentWithNoDefaultValue), false, null)]
+        [InlineData(full, typeof(PropertyOptionArgumentWithStringDefaultValue), true, DefaultValueString)]
+        [InlineData(full, typeof(PropertyOptionArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
+        [InlineData(standard, typeof(PropertyOptionArgumentWithNoDefaultValue), false, null)]
+        [InlineData(standard, typeof(PropertyOptionArgumentWithStringDefaultValue), true, DefaultValueString)]
+        [InlineData(standard, typeof(PropertyOptionArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
+        public void OptionDefaultValueFromProperty(string useStrategy, Type typeToTest, bool isSet, object value)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First().Arguments.First()
                     .Should().HaveDefaultValue(isSet, value);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithName), typeof(string))]
-        [InlineData(typeof(PropertyOptionArgumentForIntegerType), typeof(int))]
-        public void OptionWithArguments(Type typeToTest, Type argType)
+        [InlineData(full, typeof(PropertyOptionWithName), typeof(string))]
+        [InlineData(full, typeof(PropertyOptionArgumentForIntegerType), typeof(int))]
+        [InlineData(standard, typeof(PropertyOptionWithName), typeof(string))]
+        [InlineData(standard, typeof(PropertyOptionArgumentForIntegerType), typeof(int))]
+        public void OptionWithArguments(string useStrategy, Type typeToTest, Type argType)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First().Arguments.First()
                     .Should().HaveArgumentType(argType);
@@ -219,14 +248,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Argument Tests
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithName), Name, "")]
-        [InlineData(typeof(PropertyArgumentWithNameAttribute), Name, "")]
-        [InlineData(typeof(PropertyArgumentWithNameInArgumentAttribute), Name, "")]
-        [InlineData(typeof(PropertyArgumentWithDescriptionAttribute), PropertyArgName, Description)]
-        [InlineData(typeof(PropertyArgumentWithDescriptionInArgumentAttribute), PropertyArgName, Description)]
-        public void ArgumentNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
+        [InlineData(full, typeof(PropertyArgumentWithName), Name, "")]
+        [InlineData(full, typeof(PropertyArgumentWithNameAttribute), Name, "")]
+        [InlineData(full, typeof(PropertyArgumentWithNameInArgumentAttribute), Name, "")]
+        [InlineData(full, typeof(PropertyArgumentWithDescriptionAttribute), PropertyArgName, Description)]
+        [InlineData(full, typeof(PropertyArgumentWithDescriptionInArgumentAttribute), PropertyArgName, Description)]
+        [InlineData(standard, typeof(PropertyArgumentWithName), Name, "")]
+        [InlineData(standard, typeof(PropertyArgumentWithNameInArgumentAttribute), Name, "")]
+        [InlineData(standard, typeof(PropertyArgumentWithDescriptionInArgumentAttribute), PropertyArgName, Description)]
+        public void ArgumentNameAndDescriptionFromProperty(string useStrategy, Type typeToTest, string name, string description)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveName(name)
@@ -234,79 +266,92 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(PropertyArgumentWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
-        public void ArgumentAliasesFromProperty(Type typeToTest, string aliasesAsString)
+        [InlineData(full, typeof(PropertyArgumentWithOneAliasAttribute), AliasAsStringSingle)]
+        [InlineData(full, typeof(PropertyArgumentWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
+        public void ArgumentAliasesFromProperty(string useStrategy, Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
                           ? null
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
 
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveAliases(aliases);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithOneAllowedValueAttribute), AllowedValuesAsIntFirst)]
-        [InlineData(typeof(PropertyArgumentWithThreeAllowedValuesInOneAttribute),
+        [InlineData(full, typeof(PropertyArgumentWithOneAllowedValueAttribute), AllowedValuesAsIntFirst)]
+        [InlineData(full, typeof(PropertyArgumentWithThreeAllowedValuesInOneAttribute),
                             AllowedValuesAsIntFirst, AllowedValuesAsIntSecond, AllowedValuesAsIntThird)]
-        public void ArgumentAllowedValuesAsFromProperty(Type typeToTest, params object[] allowedValues)
+        [InlineData(standard, typeof(PropertyArgumentWithOneAllowedValueAttribute), AllowedValuesAsIntFirst)]
+        [InlineData(standard, typeof(PropertyArgumentWithThreeAllowedValuesInOneAttribute),
+                            AllowedValuesAsIntFirst, AllowedValuesAsIntSecond, AllowedValuesAsIntThird)]
+        public void ArgumentAllowedValuesAsFromProperty(string useStrategy, Type typeToTest, params object[] allowedValues)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveAllowedValues(allowedValues);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithIsHiddenTrueInArgumentAttribute), true)]
-        [InlineData(typeof(PropertyArgumentWithIsHiddenFalseInArgumentAttribute), false)]
-        [InlineData(typeof(PropertyArgumentWithIsHiddenTrue), true)]
-        [InlineData(typeof(PropertyArgumentWithIsHiddenFalse), false)]
-        [InlineData(typeof(PropertyArgumentWithIsHiddenTrueAsImplied), true)]
-        public void ArgumentIsHiddenFromProperty(Type typeToTest, bool isHidden)
+        [InlineData(full, typeof(PropertyArgumentWithIsHiddenTrueInArgumentAttribute), true)]
+        [InlineData(full, typeof(PropertyArgumentWithIsHiddenFalseInArgumentAttribute), false)]
+        [InlineData(full, typeof(PropertyArgumentWithIsHiddenTrue), true)]
+        [InlineData(full, typeof(PropertyArgumentWithIsHiddenFalse), false)]
+        [InlineData(full, typeof(PropertyArgumentWithIsHiddenTrueAsImplied), true)]
+        [InlineData(standard, typeof(PropertyArgumentWithIsHiddenTrueInArgumentAttribute), true)]
+        [InlineData(standard, typeof(PropertyArgumentWithIsHiddenFalseInArgumentAttribute), false)]
+        public void ArgumentIsHiddenFromProperty(string useStrategy, Type typeToTest, bool isHidden)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveIsHidden(isHidden);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithRequiredTrueInArgumentAttribute), true)]
-        [InlineData(typeof(PropertyArgumentWithRequiredFalseInArgumentAttribute), false)]
-        [InlineData(typeof(PropertyArgumentWithRequiredTrue), true)]
-        [InlineData(typeof(PropertyArgumentWithRequiredFalse), false)]
-        [InlineData(typeof(PropertyArgumentWithRequiredTrueAsImplied), true)]
-        public void ArgumentRequiredFromType(Type typeToTest, bool isHidden)
+        [InlineData(full, typeof(PropertyArgumentWithRequiredTrueInArgumentAttribute), true)]
+        [InlineData(full, typeof(PropertyArgumentWithRequiredFalseInArgumentAttribute), false)]
+        [InlineData(full, typeof(PropertyArgumentWithRequiredTrue), true)]
+        [InlineData(full, typeof(PropertyArgumentWithRequiredFalse), false)]
+        [InlineData(full, typeof(PropertyArgumentWithRequiredTrueAsImplied), true)]
+        [InlineData(standard, typeof(PropertyArgumentWithRequiredTrueInArgumentAttribute), true)]
+        [InlineData(standard, typeof(PropertyArgumentWithRequiredFalseInArgumentAttribute), false)]
+        public void ArgumentRequiredFromType(string useStrategy, Type typeToTest, bool isHidden)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveRequired(isHidden);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithNoArity), false, 0, 0)]
-        [InlineData(typeof(PropertyArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
-        [InlineData(typeof(PropertyArgumentWithArityBothBounds), true, 2, 3)]
-        public void ArgumentArityFromType(Type typeToTest, bool isSet, int minCount, int maxCount)
+        [InlineData(full, typeof(PropertyArgumentWithNoArity), false, 0, 0)]
+        [InlineData(full, typeof(PropertyArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
+        [InlineData(full, typeof(PropertyArgumentWithArityBothBounds), true, 2, 3)]
+        [InlineData(standard, typeof(PropertyArgumentWithNoArity), false, 0, 0)]
+        [InlineData(standard, typeof(PropertyArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
+        [InlineData(standard, typeof(PropertyArgumentWithArityBothBounds), true, 2, 3)]
+        public void ArgumentArityFromType(string useStrategy, Type typeToTest, bool isSet, int minCount, int maxCount)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveArity(isSet, minCount, maxCount);
         }
 
         [Theory]
-        [InlineData(typeof(PropertyArgumentWithNoDefaultValue), false, null)]
-        [InlineData(typeof(PropertyArgumentWithStringDefaultValue), true, DefaultValueString)]
-        [InlineData(typeof(PropertyArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
-        public void ArgumentDefaultValuesFromType(Type typeToTest, bool isSet, object value)
+        [InlineData(full, typeof(PropertyArgumentWithNoDefaultValue), false, null)]
+        [InlineData(full, typeof(PropertyArgumentWithStringDefaultValue), true, DefaultValueString)]
+        [InlineData(full, typeof(PropertyArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
+        [InlineData(standard, typeof(PropertyArgumentWithNoDefaultValue), false, null)]
+        [InlineData(standard, typeof(PropertyArgumentWithStringDefaultValue), true, DefaultValueString)]
+        [InlineData(standard, typeof(PropertyArgumentWithIntegerDefaultValue), true, DefaultValueInt)]
+        public void ArgumentDefaultValuesFromType(string useStrategy, Type typeToTest, bool isSet, object value)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy==full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Arguments.First()
                     .Should().HaveDefaultValue(isSet, value);
