@@ -76,7 +76,7 @@ namespace System.CommandLine.NamedAttributeRules
                 .Add(new NamedAttributeWithPropertyValueRule<string[]>("Argument", "Aliases"))
                 ;
 
-            rules.AllowedValueRules
+            rules.AllowedValuesRules
                 .Add(new NamedAttributeWithImpliedPropertyRule<object[]>("AllowedValues"))
                 ;
 

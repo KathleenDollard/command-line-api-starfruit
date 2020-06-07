@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.Text;
-using constants= System.CommandLine.GeneralAppModel.Tests.TypedAttributeTypeDescriptorMakerTests;
+using constants= System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes
 {
@@ -134,14 +134,14 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class TypeWithOneOptionByRemaining
     {
-        public string? RedArgument { get; set; }
+        public string? RedArg { get; set; }
         public string? East { get; set; }
     }
 
     public class TypeWithTwoOptionsByRemaining
     {
         [Argument]
-        public string? RedArgument { get; set; }
+        public string? RedArg { get; set; }
         [Argument]
         public string? Blue { get; set; }
         public string? East { get; set; }

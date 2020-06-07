@@ -64,7 +64,7 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<ArgumentAttribute, string[]>( "Aliases"))
                 ;
 
-            rules.AllowedValueRules
+            rules.AllowedValuesRules
                 .Add(new AttributeWithImpliedPropertyRule<AllowedValuesAttribute, object[]>())
                 ;
 

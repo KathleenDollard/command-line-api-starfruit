@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.Text;
-using constant = System.CommandLine.GeneralAppModel.Tests.TypedAttributeTypeDescriptorMakerTests;
+using constant = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes
 {
