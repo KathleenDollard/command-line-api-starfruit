@@ -9,7 +9,7 @@ using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class TypedAttributeTypeDescriptorMakerTests
+    public class TypeDescriptorMakerTests
     {
         internal const string Name = "George";
         internal const string NameForEmpty = "DummyName";
@@ -35,7 +35,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         private readonly Strategy strategy;
 
 
-        public TypedAttributeTypeDescriptorMakerTests()
+        public TypeDescriptorMakerTests()
         {
             strategy = new Strategy()
                             .SetFullRules();

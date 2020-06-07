@@ -7,17 +7,17 @@ using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes;
 using System.Linq;
 using Xunit;
-using constant = System.CommandLine.GeneralAppModel.Tests.TypedAttributeTypeDescriptorMakerTests;
+using constant = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class TypedAttributeMethodDescriptorMakerTests
+    public class MethodDescriptorMakerTests
     {
  
         private readonly Strategy strategy;
 
 
-        public TypedAttributeMethodDescriptorMakerTests()
+        public MethodDescriptorMakerTests()
         {
             strategy = new Strategy()
                             .SetFullRules();

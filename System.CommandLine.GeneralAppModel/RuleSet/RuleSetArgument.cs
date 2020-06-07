@@ -5,7 +5,7 @@
         public RuleGroup<IRuleArity> ArityRules { get; } = new RuleGroup<IRuleArity>();
         public RuleGroup<IRuleOptionalValue<object>> DefaultValueRules { get; } = new RuleGroup<IRuleOptionalValue<object>>();
         public RuleGroup<IRuleGetValue<bool>> RequiredRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
-        public RuleGroup<IRuleGetValues<object[]>> AllowedValueRules { get; } = new RuleGroup<IRuleGetValues<object[]>>();
+        public RuleGroup<IRuleGetValues<object[]>> AllowedValuesRules { get; } = new RuleGroup<IRuleGetValues<object[]>>();
         public RuleGroup<IRuleGetValue<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValue<Type>>();
 
         public override void ReplaceAbstractRules(SpecificSource tools)
