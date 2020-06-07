@@ -19,33 +19,11 @@ namespace System.CommandLine.GeneralAppModel
             return this;
         }
 
-        public RuleGroup<TRule> AddRange(IEnumerable<TRule> rules)
-        {
-            foreach (var rule in rules)
-            {
-                _rules.Add(rule);
-            }
-            return this;
-        }
         public IEnumerator<TRule> GetEnumerator()
             => ((IEnumerable<TRule>)_rules).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<TRule>)_rules).GetEnumerator();
-
-        public virtual (bool, TValue) TryGetFirstValue<TValue>(SymbolDescriptor symbolDescriptor,
-                                                   Candidate candidate,
-                                                   SymbolDescriptor parentSymbolDescriptor)
-        {
-            var traits = candidate.Traits;
-            var getValueRules = Rules.OfType<IRuleGetValue<TValue>>();
-            var results = getValueRules
-                             .Select(r => r.GetFirstOrDefaultValue(symbolDescriptor, traits, parentSymbolDescriptor))
-                             .Where(x => x.success);
-            return results.Any()
-                        ? results.First()
-                        : (false, default(TValue));
-        }
 
         [return: MaybeNull]
         public virtual T GetFirstOrDefaultValue<T>(ISymbolDescriptor symbolDescriptor,

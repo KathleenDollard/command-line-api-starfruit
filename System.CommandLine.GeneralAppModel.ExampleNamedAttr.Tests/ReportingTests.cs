@@ -62,7 +62,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData("NamedAttribute", @"If there is an attribute named 'NamedAttribute'")]
         public void ReportForNamedAttributeRuleIsCorrect(string attributeName, string expected)
         {
-            var rule = new AttributeRule(attributeName);
+            var rule = new NamedAttributeRule(attributeName);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -114,11 +114,11 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         public void ReportForComplexAttributeRuleGetValueIsCorrect(string attributeName,
                     string propName1, Type type1, string propName2, Type type2, string expected)
         {
-            var rule = new AttributeWithComplexValueRule(attributeName)
+            var rule = new NamedAttributeWithComplexValueRule(attributeName)
             {
             };
-            rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1));
-            rule.PropertyNamesAndTypes.Add(new AttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2));
+            rule.PropertyNamesAndTypes.Add(new NamedAttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1));
+            rule.PropertyNamesAndTypes.Add(new NamedAttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2));
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);
@@ -129,7 +129,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
             string propName1, string expected)
         {
-            var rule = new AttributeWithOptionalValueRule<int>(attributeName, propName1);
+            var rule = new NamedAttributeWithOptionalValueRule<int>(attributeName, propName1);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
             actual.Should().Be(expected);

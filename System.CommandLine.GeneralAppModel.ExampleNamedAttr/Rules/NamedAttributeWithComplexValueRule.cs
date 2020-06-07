@@ -10,10 +10,10 @@ namespace System.CommandLine.NamedAttributeRules
     /// A dictionary is returned, which contains the _Name_, not the _PropertyName_ of each expected item.
     /// The Name is consistent, the PropertyName can be whatever that particular strategy wants. 
     /// </summary>
-    public class AttributeWithComplexValueRule : AttributeRule, IRuleGetValue<Dictionary<string, object>>
+    public class NamedAttributeWithComplexValueRule : NamedAttributeRule, IRuleGetValue<Dictionary<string, object>>
     {
 
-        public AttributeWithComplexValueRule(string attributeName, SymbolType symbolType = SymbolType.All)
+        public NamedAttributeWithComplexValueRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, symbolType)
         {
         }

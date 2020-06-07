@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace System.CommandLine.NamedAttributeRules
 {
-    public class AttributeWithOptionalValueRule<TValue> : AttributeWithPropertyValueRule<TValue>, IRuleOptionalValue<TValue>
+    public class NamedAttributeWithOptionalValueRule<TValue> : AttributeWithPropertyValueRule<TValue>, IRuleOptionalValue<TValue>
     {
-        public AttributeWithOptionalValueRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+        public NamedAttributeWithOptionalValueRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
             : base(attributeName, propertyName, symbolType)
         { }
 

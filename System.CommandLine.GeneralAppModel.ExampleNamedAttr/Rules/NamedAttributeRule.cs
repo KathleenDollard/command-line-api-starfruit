@@ -9,9 +9,9 @@ namespace System.CommandLine.NamedAttributeRules
     /// By implication this only works if the attribute's default is false, and it is never logical to use the 
     /// attribute to clarify the default. Otherwise, use NamedAttributeWithPropertyRule
     /// </summary>
-    public class AttributeRule : RuleBase, IRuleGetCandidates
+    public class NamedAttributeRule : RuleBase, IRuleGetCandidates
     {
-        public AttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
+        public NamedAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(symbolType)
         {
             AttributeName = attributeName;

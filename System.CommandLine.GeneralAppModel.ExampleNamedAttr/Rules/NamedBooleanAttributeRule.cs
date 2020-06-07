@@ -9,9 +9,9 @@ namespace System.CommandLine.NamedAttributeRules
     /// no argument indicates true, and an optional property can either confirm 
     /// true or indicate false.
     /// </summary>
-    public class BooleanAttribute : AttributeRule, IRuleGetValue<bool>
+    public class NamedBooleanAttributeRule : NamedAttributeRule, IRuleGetValue<bool>
     {
-        public BooleanAttribute(string attributeName, string propertyName = "", SymbolType symbolType = SymbolType.All)
+        public NamedBooleanAttributeRule(string attributeName, string propertyName = "", SymbolType symbolType = SymbolType.All)
         : base(attributeName, symbolType)
         {
             PropertyName = propertyName;
