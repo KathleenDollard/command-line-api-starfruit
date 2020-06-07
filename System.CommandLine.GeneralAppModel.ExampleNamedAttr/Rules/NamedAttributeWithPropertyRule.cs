@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
-    public abstract class AttributeWithPropertyRule<TAttribute>
-        : AttributeRule<TAttribute>
+    public abstract class NamedAttributeWithPropertyRule : NamedAttributeRule
     {
-        public AttributeWithPropertyRule(string propertyName, Type type, SymbolType symbolType = SymbolType.All)
-        : base(symbolType)
+        public NamedAttributeWithPropertyRule(string attributeName, string propertyName, Type type, SymbolType symbolType = SymbolType.All)
+        : base(attributeName, symbolType)
         {
             var _ = propertyName ?? throw new InvalidOperationException("PropertyName cannot be null, use AttributeWithImpliedPropertyValue rule");
             PropertyName = propertyName;
@@ -18,11 +18,10 @@ namespace System.CommandLine.GeneralAppModel
         public Type Type { get; }
     }
 
-    public class AttributeWithPropertyValueRule<TAttribute, TValue>
-        : AttributeWithPropertyRule<TAttribute>, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class NamedAttributeWithPropertyValueRule<TValue> : NamedAttributeWithPropertyRule, IRuleGetValue<TValue>, IRuleGetValues<TValue>
     {
-        public AttributeWithPropertyValueRule(string propertyName, SymbolType symbolType = SymbolType.All)
-            : base(propertyName, typeof(TValue), symbolType)
+        public NamedAttributeWithPropertyValueRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+            : base(attributeName, propertyName, typeof(TValue), symbolType)
         { }
 
         public (bool success, TValue value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
@@ -39,9 +38,7 @@ namespace System.CommandLine.GeneralAppModel
             => GetAllValuesInternal(symbolDescriptor, traits, parentSymbolDescriptor);
 
         // This might be the wrong return value
-        private protected IEnumerable<TValue> GetAllValuesInternal(ISymbolDescriptor symbolDescriptor,
-                                                                   IEnumerable<object> traits,
-                                                                   ISymbolDescriptor parentSymbolDescriptor)
+        private protected IEnumerable<TValue> GetAllValuesInternal(ISymbolDescriptor symbolDescriptor, IEnumerable<object> traits, ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);
@@ -50,14 +47,14 @@ namespace System.CommandLine.GeneralAppModel
                 return Enumerable.Empty<TValue>();
             }
 
-            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TAttribute, TValue>(PropertyName,
+            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TValue>(AttributeName, PropertyName,
                                     symbolDescriptor, trait, parentSymbolDescriptor))
                                  .ToList();
             return fromAllTraits;
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{typeof(TAttribute).Name}', its '{PropertyName}' property, with type {typeof(TValue)}";
+            => $"If there is an attribute named '{AttributeName}', its '{PropertyName}' property, with type {typeof(TValue)}";
 
 
     }

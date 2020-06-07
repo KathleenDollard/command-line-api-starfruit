@@ -1,12 +1,16 @@
 ﻿using FluentAssertions;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
+using System.CommandLine.GeneralAppModel.Tests;
+using System.CommandLine.NamedAttributeRules.Tests.ModelCodeForTests.NamedAttributes;
 using System.CommandLine.ReflectionAppModel;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
+using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttributes;
 using System.Linq;
 using Xunit;
 
-namespace System.CommandLine.GeneralAppModel.Tests
+namespace System.CommandLine.NamedAttributeRules.Tests
 {
     public class TypeDescriptorMakerTests
     {
@@ -36,8 +40,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public TypeDescriptorMakerTests()
         {
-            strategy = new Strategy()
-                            .SetFullRules();
+            strategy = NamedAttributeRules.SetRules(new Strategy());
         }
 
         #region CommandTests

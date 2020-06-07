@@ -2,10 +2,10 @@
 using FluentAssertions.Equivalency;
 using System;
 using System.Collections.Generic;
-using Xunit;
 using System.CommandLine.GeneralAppModel;
+using Xunit;
 
-namespace System.CommandLine.GeneralAppModel.Tests
+namespace System.CommandLine.NamedAttributeRules.Tests
 {
     public class ReportingTests
     {
@@ -58,22 +58,24 @@ namespace System.CommandLine.GeneralAppModel.Tests
             actual.Should().Be(expected);
         }
 
-        [Fact]
-        public void ReportForNamedAttributeRuleIsCorrect()
+        [Theory]
+        [InlineData("NamedAttribute", @"If there is an attribute named 'NamedAttribute'")]
+        public void ReportForNamedAttributeRuleIsCorrect(string attributeName, string expected)
         {
-            var rule = new AttributeRule<DescriptionAttribute>();
+            var rule = new NamedAttributeRule(attributeName);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
-            actual.Should().Be(@"If there is an attribute named 'DescriptionAttribute'");
+            actual.Should().Be(expected);
         }
 
-        [Fact]
-        public void ReportForNamedAttributeWithPropertyRuleIsCorrect()
+        [Theory]
+        [InlineData("WithProperty", "ThisProperty", @"If there is an attribute named 'WithProperty', its 'ThisProperty' property, with type System.String")]
+        public void ReportForNamedAttributeWithPropertyRuleIsCorrect(string attributeName, string propertyName, string expected)
         {
-            var rule = new AttributeWithPropertyValueRule<ArgumentAttribute, string>( "Name");
+            var rule = new NamedAttributeWithPropertyValueRule<string>(attributeName, propertyName);
             var actual = rule.RuleDescription<IRuleGetValue<string>>();
 
-            actual.Should().Be("If there is an attribute named 'ArgumentAttribute', its 'Name' property, with type System.String");
+            actual.Should().Be(expected);
         }
 
         [Fact()]
@@ -106,6 +108,34 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
             actual.Should().Be(expected);
         }
+
+        [Theory]
+        [InlineData("Abc", "Def", typeof(int), "Ghi", typeof(string), "If there is an attribute named 'Abc': Def as System.Int32, Ghi as System.String")]
+        public void ReportForComplexAttributeRuleGetValueIsCorrect(string attributeName,
+                    string propName1, Type type1, string propName2, Type type2, string expected)
+        {
+            var rule = new NamedAttributeWithComplexValueRule(attributeName)
+            {
+            };
+            rule.PropertyNamesAndTypes.Add(new NamedAttributeWithComplexValueRule.NameAndType(propName1, propName1, propertyType: type1));
+            rule.PropertyNamesAndTypes.Add(new NamedAttributeWithComplexValueRule.NameAndType(propName2, propName2, propertyType: type2));
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("Abc", "Def", "If there is an attribute named 'Abc' with a property 'Def', inlcude it as a Int32")]
+        public void ReportForOptionalValueAttributeRuleGetValueIsCorrectForInts(string attributeName,
+            string propName1, string expected)
+        {
+            var rule = new NamedAttributeWithOptionalValueRule<int>(attributeName, propName1);
+            var actual = rule.RuleDescription<IRuleGetValue<string>>();
+
+            actual.Should().Be(expected);
+        }
+
+
 
         [Fact]
         public void FullStrategyReportIsAboutTheRightLength()

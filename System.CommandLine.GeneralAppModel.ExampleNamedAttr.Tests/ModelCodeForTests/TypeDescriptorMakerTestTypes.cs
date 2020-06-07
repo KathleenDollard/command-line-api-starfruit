@@ -5,7 +5,8 @@ using System.CommandLine.ReflectionAppModel.Attributes;
 using System.ComponentModel;
 using System.Text;
 
-namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
+namespace System.CommandLine.NamedAttributeRules.Tests.ModelCodeForTests.NamedAttributes
+
 {
     public class EmptyType
     {

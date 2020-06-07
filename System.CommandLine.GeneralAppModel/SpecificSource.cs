@@ -54,7 +54,7 @@ namespace System.CommandLine.GeneralAppModel
         /// for example we may have custom rules that require running code in the technology.
         /// </remarks>
         /// <returns></returns>
-        public abstract ArgTypeInfo  GetArgTypeInfo(Candidate candidate);
+        public abstract ArgTypeInfo GetArgTypeInfo(Candidate candidate);
 
         /// <summary>
         /// Given a command, return it's children - subcommands, options and arguments.
@@ -79,6 +79,12 @@ namespace System.CommandLine.GeneralAppModel
         public abstract IEnumerable<Candidate> GetChildCandidates(Strategy strategy,
                                                                   SymbolDescriptor commandDescriptor);
 
+        public virtual bool DoesTraitMatch<TAttribute, TTraitType>(
+                         ISymbolDescriptor symbolDescriptor,
+                         TTraitType trait,
+                         ISymbolDescriptor parentSymbolDescriptor)
+            => DoesTraitMatch<TAttribute, TTraitType>(string.Empty, symbolDescriptor, trait, parentSymbolDescriptor);
+
         public virtual bool DoesTraitMatch<TTraitType>(
                                 string attributeName,
                                 ISymbolDescriptor symbolDescriptor,
@@ -93,6 +99,12 @@ namespace System.CommandLine.GeneralAppModel
                                 ISymbolDescriptor symbolDescriptor,
                                 TTraitType trait,
                                 ISymbolDescriptor parentSymbolDescriptor);
+
+        public abstract bool DoesTraitMatch<TAttribute, TTraitType>(
+                         string propertyName,
+                         ISymbolDescriptor symbolDescriptor,
+                         TTraitType trait,
+                         ISymbolDescriptor parentSymbolDescriptor);
 
         public virtual (bool success, TValue value) GetValue<TValue>(
                         string attributeName,
@@ -109,8 +121,20 @@ namespace System.CommandLine.GeneralAppModel
                        object trait,
                        ISymbolDescriptor parentSymbolDescriptor);
 
+        public abstract (bool success, TValue value) GetValue<TAttribute, TValue>(
+                        string propertyName,
+                        ISymbolDescriptor symbolDescriptor,
+                        object trait,
+                        ISymbolDescriptor parentSymbolDescriptor);
+
         public abstract IEnumerable<TValue> GetAllValues<TValue>(
                         string attributeName,
+                        string propertyName,
+                        ISymbolDescriptor symbolDescriptor,
+                        object trait,
+                        ISymbolDescriptor parentSymbolDescriptor);
+
+        public abstract IEnumerable<TValue> GetAllValues<TAttribute, TValue>(
                         string propertyName,
                         ISymbolDescriptor symbolDescriptor,
                         object trait,
@@ -122,6 +146,10 @@ namespace System.CommandLine.GeneralAppModel
                         object trait,
                         ISymbolDescriptor parentSymbolDescriptor);
 
+        public abstract IEnumerable<(string key, TValue value)> GetComplexValue<TAttribute, TValue>(
+                 ISymbolDescriptor symbolDescriptor,
+                 object trait,
+                 ISymbolDescriptor parentSymbolDescriptor);
 
     }
 }

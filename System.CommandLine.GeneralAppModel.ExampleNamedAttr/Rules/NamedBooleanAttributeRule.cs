@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
     /// <summary>
     /// This rule supports attributes where the presence of the attribute with 
     /// no argument indicates true, and an optional property can either confirm 
     /// true or indicate false.
     /// </summary>
-    public class BooleanAttribute : AttributeRule, IRuleGetValue<bool>
+    public class NamedBooleanAttributeRule : NamedAttributeRule, IRuleGetValue<bool>
     {
-        public BooleanAttribute(string attributeName, string propertyName = "", SymbolType symbolType = SymbolType.All)
+        public NamedBooleanAttributeRule(string attributeName, string propertyName = "", SymbolType symbolType = SymbolType.All)
         : base(attributeName, symbolType)
         {
             PropertyName = propertyName;

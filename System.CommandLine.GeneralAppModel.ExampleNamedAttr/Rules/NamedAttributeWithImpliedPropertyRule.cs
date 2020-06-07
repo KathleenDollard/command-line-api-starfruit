@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
     /// <summary>
     /// This rule is for attributes that have a single property and when you use the rule
     /// you don't want to declare what that property might be named. This is useful for 
     /// rules for Description or Name, for example.
     /// </summary>
-    public class AttributeWithImpliedPropertyRule<TAttribute, TValue> : AttributeRule<TAttribute>, IRuleGetValue<TValue>, IRuleGetValues<TValue>
+    public class NamedAttributeWithImpliedPropertyRule<TValue> : NamedAttributeRule, IRuleGetValue<TValue>, IRuleGetValues<TValue>
     {
-        public AttributeWithImpliedPropertyRule(SymbolType symbolType = SymbolType.All)
-        : base(symbolType)
+        public NamedAttributeWithImpliedPropertyRule(string attributeName, SymbolType symbolType = SymbolType.All)
+        : base(attributeName, symbolType)
         { }
 
         public (bool success, TValue value) GetFirstOrDefaultValue(ISymbolDescriptor symbolDescriptor,
@@ -39,7 +40,7 @@ namespace System.CommandLine.GeneralAppModel
             }
 
             var complexValues = matchingTraits.SelectMany(trait =>
-                                         tools.GetComplexValue<TAttribute, object>( symbolDescriptor, trait, parentSymbolDescriptor));
+                                         tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
 
             return complexValues.Count() switch
             {
@@ -54,7 +55,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{typeof(TAttribute).Name}', its first property, with type {typeof(TValue)}";
+            => $"If there is an attribute named '{AttributeName}', its first property, with type {typeof(TValue)}";
 
 
     }

@@ -32,7 +32,7 @@ namespace System.CommandLine.ReflectionAppModel
         public override ArgTypeInfo GetArgTypeInfo(Candidate candidate)
             => candidate.Item switch
             {
-                PropertyInfo prop => new ArgTypeInfo( prop.PropertyType),
+                PropertyInfo prop => new ArgTypeInfo(prop.PropertyType),
                 ParameterInfo param => new ArgTypeInfo(param.ParameterType),
                 Type type => new ArgTypeInfo(type),
                 _ => throw new InvalidOperationException("Argument result is of an unexpected type")
@@ -45,7 +45,7 @@ namespace System.CommandLine.ReflectionAppModel
                MethodInfo methodItem => GetCandidateInternal(methodItem),
                ParameterInfo parameterInfo => GetCandidateInternal(parameterInfo),
                PropertyInfo propertyInfo => GetCandidateInternal(propertyInfo),
-               _ => throw new InvalidOperationException ("Unexpected candidate type")
+               _ => throw new InvalidOperationException("Unexpected candidate type")
            };
 
         public override bool DoesTraitMatch<TTraitType>(string attributeName,
@@ -109,7 +109,7 @@ namespace System.CommandLine.ReflectionAppModel
             return new List<TValue>();
         }
 
-  
+
 
         internal static IEnumerable<TValue> MakeGenericEnumerable<TValue>(object value)
         {
@@ -169,5 +169,72 @@ namespace System.CommandLine.ReflectionAppModel
             return candidate;
         }
 
+        public override bool DoesTraitMatch<TAttribute, TTraitType>(string propertyName,
+                                                                    ISymbolDescriptor symbolDescriptor,
+                                                                    TTraitType trait,
+                                                                    ISymbolDescriptor parentSymbolDescriptor)
+            => trait is TAttribute;
+
+        public override IEnumerable<TValue> GetAllValues<TAttribute, TValue>(string propertyName,
+                                                                             ISymbolDescriptor symbolDescriptor,
+                                                                             object trait,
+                                                                             ISymbolDescriptor parentSymbolDescriptor)
+        {
+            var (singleSuccess, single) = GetValue<TAttribute, TValue>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            if (singleSuccess)
+            {
+                return new List<TValue> { single };
+            }
+            var (multipleSuccess, multiple) = GetValue<TAttribute, IEnumerable<TValue>>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            if (multipleSuccess)
+            {
+                return multiple;
+            }
+            return new List<TValue>();
+        }
+
+        public override (bool success, TValue value) GetValue<TAttribute, TValue>(string propertyName,
+                                                                                  ISymbolDescriptor symbolDescriptor,
+                                                                                  object trait,
+                                                                                  ISymbolDescriptor parentSymbolDescriptor)
+        {
+            if (!(trait is Attribute attribute) ||
+                !DoesTraitMatch<TAttribute, object>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
+            {
+                return (false, default);
+            }
+            var propInfo = attribute.GetType().GetProperties().Where(p => p.Name == propertyName).FirstOrDefault();
+            if (propInfo is null)
+            {
+                return (false, default);
+            }
+            if (!typeof(TValue).IsAssignableFrom(propInfo.PropertyType))
+            {
+                // This is a bit strict as it doesn't handle numeric widening conversions
+                return (false, default);
+            }
+            var obj = propInfo.GetValue(attribute);
+            return (obj is TValue tValue)
+                    ? (true, tValue)
+                    : (false, default);
+        }
+
+
+        public override IEnumerable<(string key, TValue value)> GetComplexValue<TAttribute, TValue>(ISymbolDescriptor symbolDescriptor,
+                                                                                                    object trait,
+                                                                                                    ISymbolDescriptor parentSymbolDescriptor)
+        {
+            if (!(trait is Attribute attribute) ||
+                 !DoesTraitMatch<TAttribute, object>( symbolDescriptor, trait, parentSymbolDescriptor))
+            {
+                return new List<(string, TValue)>();
+            }
+
+            var attributeType = attribute.GetType();
+            var pairs = attributeType.GetProperties()
+                                .Where(prop => prop.Name != "TypeId")
+                                .Select(prop => new { prop.Name, Value = prop.GetValue(trait) });
+            return pairs.Select(pair => (pair.Name, (TValue)pair.Value));
+        }
     }
 }

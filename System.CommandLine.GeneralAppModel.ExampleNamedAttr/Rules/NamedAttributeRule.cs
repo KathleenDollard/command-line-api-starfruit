@@ -1,33 +1,36 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
     /// <summary>
     /// This rule allows either the presence of the attribute or explicitly setting a property to indicate true.
     /// By implication this only works if the attribute's default is false, and it is never logical to use the 
     /// attribute to clarify the default. Otherwise, use NamedAttributeWithPropertyRule
     /// </summary>
-    public class AttributeRule<TAttribute> : RuleBase, IRuleGetCandidates
+    public class NamedAttributeRule : RuleBase, IRuleGetCandidates
     {
-        public AttributeRule(SymbolType symbolType = SymbolType.All)
+        public NamedAttributeRule(string attributeName, SymbolType symbolType = SymbolType.All)
             : base(symbolType)
         {
+            AttributeName = attributeName;
         }
+        public string AttributeName { get; }
 
         public IEnumerable<Candidate> GetCandidates(IEnumerable<Candidate> candidates,
-                                                    ISymbolDescriptor parentSymbolDescriptor)
+                                                    ISymbolDescriptor parentSymbolDescriptor) 
             => candidates.Where(c => GetMatches(parentSymbolDescriptor, c.Traits, parentSymbolDescriptor).Any());
 
         protected IEnumerable<TTraitType> GetMatches<TTraitType>(ISymbolDescriptor symbolDescriptor,
                                               IEnumerable<TTraitType> traits,
                                               ISymbolDescriptor parentSymbolDescriptor)
             => traits.Where(
-                 trait => SpecificSource.Tools.DoesTraitMatch<TAttribute, TTraitType>(symbolDescriptor, trait, parentSymbolDescriptor));
+                 trait => SpecificSource.Tools.DoesTraitMatch(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
 
         public override string RuleDescription<TIRuleSet>()
            => (typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
                 ? "If " : "")
-            + $"there is an attribute named '{typeof(TAttribute).Name}'";
+            + $"there is an attribute named '{AttributeName}'";
     }
 }

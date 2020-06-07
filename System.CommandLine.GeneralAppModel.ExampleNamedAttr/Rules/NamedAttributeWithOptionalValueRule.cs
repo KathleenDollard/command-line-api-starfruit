@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
-    public class AttributeWithOptionalValueRule<TAttribute, TValue> : AttributeWithPropertyValueRule<TAttribute, TValue>, IRuleOptionalValue<TValue>
+    public class NamedAttributeWithOptionalValueRule<TValue> : NamedAttributeWithPropertyValueRule<TValue>, IRuleOptionalValue<TValue>
     {
-        public AttributeWithOptionalValueRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
-            : base(propertyName, symbolType)
+        public NamedAttributeWithOptionalValueRule(string attributeName, string propertyName, SymbolType symbolType = SymbolType.All)
+            : base(attributeName, propertyName, symbolType)
         { }
 
         public (bool success, TValue value) GetOptionalValue(ISymbolDescriptor symbolDescriptor,
@@ -14,7 +15,7 @@ namespace System.CommandLine.GeneralAppModel
                                                         ISymbolDescriptor parentSymbolDescriptor)
         {
             SpecificSource tools = SpecificSource.Tools;
-            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
+            var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);
             if (!matchingTraits.Any())
             {
                 return (false, default);
@@ -23,7 +24,7 @@ namespace System.CommandLine.GeneralAppModel
             {
                 // This is currently legal for attributes with a single property or boolean. It might cause confusion.
                 var allValuesInTrait = matchingTraits.SelectMany(trait =>
-                                             tools.GetComplexValue<TAttribute, object>( symbolDescriptor, trait, parentSymbolDescriptor));
+                                             tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
                 return allValuesInTrait.Count() switch
                 {
                     // If a trait is found, but no property says otherwise, set to true
@@ -35,8 +36,8 @@ namespace System.CommandLine.GeneralAppModel
                 };
             }
 
-            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TAttribute, TValue>
-                                    ( PropertyName, symbolDescriptor, trait, parentSymbolDescriptor))
+            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TValue>
+                                    (AttributeName, PropertyName, symbolDescriptor, trait, parentSymbolDescriptor))
                                     .ToList();
             return fromAllTraits.Any()
                     ? (true, fromAllTraits.First())
@@ -44,7 +45,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-             => $"If there is an attribute named '{typeof(TAttribute).Name}' with a property '{PropertyName}', inlcude it as a {typeof(TValue).Name}";
+             => $"If there is an attribute named '{AttributeName}' with a property '{PropertyName}', inlcude it as a {typeof(TValue).Name}";
 
 
     }

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
 
     /// <summary>
@@ -9,11 +10,11 @@ namespace System.CommandLine.GeneralAppModel
     /// A dictionary is returned, which contains the _Name_, not the _PropertyName_ of each expected item.
     /// The Name is consistent, the PropertyName can be whatever that particular strategy wants. 
     /// </summary>
-    public class AttributeWithComplexValueRule<TAttribute> : AttributeRule<TAttribute>, IRuleGetValue<Dictionary<string, object>>
+    public class NamedAttributeWithComplexValueRule : NamedAttributeRule, IRuleGetValue<Dictionary<string, object>>
     {
 
-        public AttributeWithComplexValueRule( SymbolType symbolType = SymbolType.All)
-            : base( symbolType)
+        public NamedAttributeWithComplexValueRule(string attributeName, SymbolType symbolType = SymbolType.All)
+            : base(attributeName, symbolType)
         {
         }
 
@@ -26,17 +27,18 @@ namespace System.CommandLine.GeneralAppModel
             SpecificSource tools = SpecificSource.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
             var complexValues = matchingTraits.SelectMany(trait =>
-                    tools.GetComplexValue<TAttribute, object>( symbolDescriptor, trait, parentSymbolDescriptor)
+                    tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor)
                             .Where(keyPair => PropertyNamesAndTypes.Any(nameAndType => nameAndType.PropertyName == keyPair.key))
                     );
 
             return complexValues.Any()
                 ? (true, complexValues.ToDictionary(pair => pair.key, pair => pair.value))
                 : (false, new Dictionary<string, object>());
+            ;
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{typeof(TAttribute).Name}': {string.Join(", ", PropertyNamesAndTypes.Select(p => ReportNameAndType(p)))}";
+            => $"If there is an attribute named '{AttributeName}': {string.Join(", ", PropertyNamesAndTypes.Select(p => ReportNameAndType(p)))}";
 
         private string ReportNameAndType(NameAndType p)
         {
