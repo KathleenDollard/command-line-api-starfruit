@@ -1,33 +1,20 @@
 ﻿using FluentAssertions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
+using System.CommandLine.GeneralAppModel.Tests;
 using System.CommandLine.ReflectionAppModel;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttributes;
 using System.Linq;
 using Xunit;
-using constant = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
+using constant = System.CommandLine.NamedAttributeRules.Tests.TypeDescriptorMakerTests;
 
-namespace System.CommandLine.GeneralAppModel.Tests
+namespace System.CommandLine.NamedAttributeRules.Tests
 {
     public class MethodDescriptorMakerTests
     {
-        //internal const string TestMethodName = "Method";
-        //internal const string ParameterOptionName = "Param";
-        //internal const string ParameterArgName = "Param";
-        //internal const string Name = "George";
-        //internal const string NameForEmpty = "DummyName";
-        //internal const string Description = "Awesome description!";
-        //internal const string AliasAsStringMuitple = "a,b,c";
-        //internal const string AliasAsStringSingle = "x";
-        //internal const string ArgumentName = "Red";
-        //internal const string ArgumentName2 = "Blue";
-        //internal const string OptionName = "East";
-        //internal const string OptionName2 = "West";
-        //internal const string DefaultValueString = "MyDefault";
-        //internal const int DefaultValueInt = 42;
-
         private readonly Strategy strategy;
 
 

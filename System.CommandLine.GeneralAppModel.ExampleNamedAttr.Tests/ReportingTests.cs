@@ -2,9 +2,10 @@
 using FluentAssertions.Equivalency;
 using System;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using Xunit;
 
-namespace System.CommandLine.GeneralAppModel.Tests
+namespace System.CommandLine.NamedAttributeRules.Tests
 {
     public class ReportingTests
     {

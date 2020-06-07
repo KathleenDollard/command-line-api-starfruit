@@ -35,4 +35,8 @@
     <ProjectReference Include="..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assertions\" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.Linq;
 
-namespace System.CommandLine.GeneralAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
     /// <summary>
     /// This rule supports attributes where the presence of the attribute with 

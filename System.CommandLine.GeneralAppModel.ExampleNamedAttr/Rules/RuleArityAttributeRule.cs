@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Text;
 
-namespace System.CommandLine.GeneralAppModel.Rules
+namespace System.CommandLine.NamedAttributeRules
 {
     public class RuleArity : AttributeWithComplexValueRule, IRuleArity
     {

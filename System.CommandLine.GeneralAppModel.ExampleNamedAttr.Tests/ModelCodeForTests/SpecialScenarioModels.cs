@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests
+namespace System.CommandLine.NamedAttributeRules.Tests.ModelCodeForTests
 {
     namespace MissingPropertyNotBlockingOtherAttributes
     {

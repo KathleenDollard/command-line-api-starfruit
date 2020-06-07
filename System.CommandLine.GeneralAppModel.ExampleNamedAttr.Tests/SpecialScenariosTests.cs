@@ -1,9 +1,10 @@
 ﻿using System.CommandLine.GeneralAppModel;
 using Xunit;
 using FluentAssertions;
-using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.MissingPropertyNotBlockingOtherAttributes;
+using System.CommandLine.ReflectionAppModel;
+using System.CommandLine.NamedAttributeRules.Tests.ModelCodeForTests.MissingPropertyNotBlockingOtherAttributes;
 
-namespace System.CommandLine.ReflectionAppModel
+namespace System.CommandLine.NamedAttributeRules
 {
     public class SpecialScenariosTests
     {
