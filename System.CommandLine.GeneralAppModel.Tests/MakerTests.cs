@@ -99,5 +99,21 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
+
+        [Fact]
+        public void InvokeMethodTreatedAsHandlerAtRoot()
+        {
+            var data = new CommandInvokeMethodTestData();
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void CommandInvokeMethodMultipleParametersTestData()
+        {
+            var data = new CommandInvokeMethodTestData();
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
     }
 }

@@ -23,6 +23,10 @@ namespace System.CommandLine.GeneralAppModel.Rules
             {
                 var available = SpecificSource.Tools.GetAvailableInvokeMethodInfos(commandDescriptor.Raw);
                 var match = available.Where(x => x.Name == Name);
+                if (!match.Any())
+                {
+                    return (false, null);
+                }
                 var max = match.Max(x => x.Score);
                 return match.Count() switch
                 {
