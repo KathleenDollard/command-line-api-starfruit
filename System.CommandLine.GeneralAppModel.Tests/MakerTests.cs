@@ -108,10 +108,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
             data.Check(command);
         }
 
+
         [Fact]
         public void CommandInvokeMethodMultipleParametersTestData()
         {
-            var data = new CommandInvokeMethodTestData();
+            var data = new CommandInvokeMethodMultipleParametersTestData();
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
