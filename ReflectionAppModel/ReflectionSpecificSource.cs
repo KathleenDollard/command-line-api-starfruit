@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.CommandLine.GeneralAppModel;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -27,6 +28,16 @@ namespace System.CommandLine.ReflectionAppModel
                 var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor).Select(c => fillCandidate(c));
                 return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
             }
+        }
+
+        public override IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos(object? raw)
+        {
+            if (raw is null || !(raw is Type type))
+            {
+                return new List<InvokeMethodInfo>();
+            }
+            return type.GetMethods()
+                            .Select(x => new InvokeMethodInfo(x, x.Name, x.GetParameters().Count())); // by default public instance
         }
 
         public override ArgTypeInfo GetArgTypeInfo(Candidate candidate)
@@ -180,12 +191,12 @@ namespace System.CommandLine.ReflectionAppModel
                                                                              object trait,
                                                                              ISymbolDescriptor parentSymbolDescriptor)
         {
-            var (singleSuccess, single) = GetValue<TAttribute, TValue>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            var (singleSuccess, single) = GetValue<TAttribute, TValue>(propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
             if (singleSuccess)
             {
                 return new List<TValue> { single };
             }
-            var (multipleSuccess, multiple) = GetValue<TAttribute, IEnumerable<TValue>>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            var (multipleSuccess, multiple) = GetValue<TAttribute, IEnumerable<TValue>>(propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
             if (multipleSuccess)
             {
                 return multiple;
@@ -199,7 +210,7 @@ namespace System.CommandLine.ReflectionAppModel
                                                                                   ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute) ||
-                !DoesTraitMatch<TAttribute, object>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
+                !DoesTraitMatch<TAttribute, object>(propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
             {
                 return (false, default);
             }
@@ -225,7 +236,7 @@ namespace System.CommandLine.ReflectionAppModel
                                                                                                     ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute) ||
-                 !DoesTraitMatch<TAttribute, object>( symbolDescriptor, trait, parentSymbolDescriptor))
+                 !DoesTraitMatch<TAttribute, object>(symbolDescriptor, trait, parentSymbolDescriptor))
             {
                 return new List<(string, TValue)>();
             }
@@ -236,5 +247,7 @@ namespace System.CommandLine.ReflectionAppModel
                                 .Select(prop => new { prop.Name, Value = prop.GetValue(trait) });
             return pairs.Select(pair => (pair.Name, (TValue)pair.Value));
         }
+
+
     }
 }

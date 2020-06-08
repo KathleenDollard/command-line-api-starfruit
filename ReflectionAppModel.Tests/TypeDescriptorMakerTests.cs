@@ -145,6 +145,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
             descriptor.Should().HaveOptionsNamed(argNames);
         }
+
+        [Theory]
+        [InlineData(full, typeof(TypeWithInvokeMethod), 0)]
+        [InlineData(full, typeof(TypeWithTwoInvokeMethods), 2)]
+        public void CommandWithInvokeMethods(string useStrategy, Type typeToTest, int parameterCount)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
+
+            descriptor.Should().HaveInvokeMethodInfo(parameterCount );
+        }
         #endregion
 
 

@@ -4,6 +4,7 @@ using FluentAssertions.Primitives;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
+using Xunit.Sdk;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
@@ -73,6 +74,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         }
 
+        public void HaveInvokeMethodInfo(int parameterCount)
+        {
+            ExecuteAssertion
+                    .ForCondition(Subject.InvokeMethod  is null)
+                    .
+        }
     }
 }
 

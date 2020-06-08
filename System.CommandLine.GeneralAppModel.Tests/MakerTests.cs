@@ -4,7 +4,7 @@ using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class NewMakerTests
+    public class MakerTests
     {
         public const string name = "Fred";
         public const string name2 = "Bill";
