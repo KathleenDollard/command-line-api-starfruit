@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.GeneralA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.GeneralAppModel.ExampleNamedAttr", "System.CommandLine.GeneralAppModel.ExampleNamedAttr\System.CommandLine.GeneralAppModel.ExampleNamedAttr.csproj", "{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarFruit", "Samples\StarFruit\StarFruit.csproj", "{02B0E5F6-CD32-4CB8-A9FB-6687D2A94C67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02B0E5F6-CD32-4CB8-A9FB-6687D2A94C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02B0E5F6-CD32-4CB8-A9FB-6687D2A94C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02B0E5F6-CD32-4CB8-A9FB-6687D2A94C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02B0E5F6-CD32-4CB8-A9FB-6687D2A94C67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

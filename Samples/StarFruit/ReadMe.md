@@ -1,0 +1,1 @@
+﻿This directory is temporary to show some ideas on DragonFruitPlus. To avoid confusion, I'm keeping the StarFruit name until we are confident this is the next iteration of DragonFruit. 

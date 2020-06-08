@@ -2,7 +2,7 @@
   "profiles": {
     "Playground": {
       "commandName": "Project",
-      "commandLineArgs": "-h"
+      "commandLineArgs": "update --roll-forward minor"
     }
   }
 }
