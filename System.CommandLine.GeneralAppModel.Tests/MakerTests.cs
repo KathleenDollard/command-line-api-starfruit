@@ -111,7 +111,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void CommandInvokeMethodMultipleParametersTestData()
         {
-            var data = new CommandInvokeMethodTestData();
+            var data = new CommandInvokeMethodMultipleParametersTestData();
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
