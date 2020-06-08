@@ -48,9 +48,15 @@ namespace System.CommandLine.GeneralAppModel
 
         private static void SetHandlerIfNeeded(Command command, CommandDescriptor descriptor)
         {
-            if (descriptor.Raw is MethodInfo methodInfo)
+            if (!(descriptor.InvokeMethod is null) )
             {
-                command.Handler = CommandHandler.Create(methodInfo);
+                var invokeMethodInfo = descriptor.InvokeMethod.GetInvokeMethod<MethodInfo>();
+                command.Handler = CommandHandler.Create(invokeMethodInfo);
+                return;
+            }
+            if (descriptor.Raw is MethodInfo rawMethodInfo)
+            {
+                command.Handler = CommandHandler.Create(rawMethodInfo);
             }
         }
 
@@ -87,7 +93,7 @@ namespace System.CommandLine.GeneralAppModel
         public static Argument MakeArgument(ArgumentDescriptor descriptor)
         {
             var arg = new Argument(descriptor.Name);
-            arg.ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>();
+            arg.ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>(); // need work here for Roslyn source generation
             AddAliases(arg, descriptor.Aliases);
             if (descriptor.Arity != null)
             {

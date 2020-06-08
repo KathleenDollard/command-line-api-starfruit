@@ -92,6 +92,8 @@ namespace System.CommandLine.GeneralAppModel
             var ruleSet = Strategy.CommandRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
+            SetInvokeMethodIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
+
             var candidates = SpecificSource.Tools.GetChildCandidates(Strategy, descriptor);
             candidates = candidates.Where(c => !InNamesToIgnore(Strategy, candidate));
             var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(candidates, descriptor);
@@ -120,9 +122,18 @@ namespace System.CommandLine.GeneralAppModel
             SetDefaultIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
             var allowedValues = ruleSet.AllowedValuesRules.GetAllValues<object[]>(descriptor, candidate, parentSymbolDescriptor)
                                     .SelectMany(x => x);
-            descriptor.AllowedValues.AddRange(allowedValues); 
+            descriptor.AllowedValues.AddRange(allowedValues);
             descriptor.Required = ruleSet.RequiredRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             return descriptor;
+        }
+
+        private void SetInvokeMethodIfNeeded(RuleSetCommand ruleSet, CommandDescriptor descriptor, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
+        {
+            var (success, value) = ruleSet.InvokeMethodRules.GetOptionalValue<InvokeMethodInfo >(descriptor, candidate, parentSymbolDescriptor);
+            if (success)
+            {
+                descriptor.InvokeMethod = value;
+            }
         }
 
         private void SetDefaultIfNeeded(RuleSetArgument ruleSet, ArgumentDescriptor descriptor, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)

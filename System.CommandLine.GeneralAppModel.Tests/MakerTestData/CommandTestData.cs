@@ -151,5 +151,78 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
         }
     }
+
+    public class CommandInvokeMethodTestData : MakerCommandTestData
+    {
+        private static string checkValue = "";
+        // Option and ArgumentTestData of necessity test adding a single option and argument
+        public CommandInvokeMethodTestData()
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+              {
+                  Name = DummyCommandName,
+                  InvokeMethod = new InvokeMethodInfo(typeof(CommandInvokeMethodTestData).GetMethod("Invoke")!, "Invoke", 0)
+              })
+        {   }
+
+        public int Invoke()
+        {
+            checkValue = $"Hello World";
+            return 3;
+        }
+
+        public override void Check(Command command)
+        {
+            using var scope = new AssertionScope();
+            var parser = new CommandLineBuilder(command)
+                                 .UseDefaults()
+                                 .Build();
+
+            var parseResult = parser.Parse($"DummyCommandName");
+            parseResult.Errors.Should().BeEmpty();
+
+            var ret = parser.Invoke("");
+            ret.Should().Be(3);
+            checkValue.Should().Be("Hello World");
+        }
+    }
+
+    public class CommandInvokeMethodMultipleParametersTestData : MakerCommandTestData
+    {
+        private const string HelloTo = "Universe";
+        private const bool AllCaps = true;
+        private const int RetValue = 5;
+        private static string checkValue = "";
+        // Option and ArgumentTestData of necessity test adding a single option and argument
+        public CommandInvokeMethodMultipleParametersTestData()
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+              {
+                  Name = DummyCommandName,
+                  InvokeMethod = new InvokeMethodInfo(typeof(CommandInvokeMethodTestData).GetMethod("Invoke")!, "Invoke", 0)
+              })
+        { }
+
+        public int Invoke(string to, bool allCaps, int returnValue)
+        {
+            checkValue = allCaps
+                         ? $"Hello {to}".ToUpper()
+                         : $"Hello {to}";
+            return returnValue;
+        }
+
+        public override void Check(Command command)
+        {
+            using var scope = new AssertionScope();
+            var parser = new CommandLineBuilder(command)
+                                 .UseDefaults()
+                                 .Build();
+
+            var parseResult = parser.Parse($"DummyCommandName");
+            parseResult.Errors.Should().BeEmpty();
+
+            var ret = parser.Invoke($"{HelloTo}, {AllCaps}, {RetValue}" );
+            ret.Should().Be(RetValue);
+            checkValue.Should().Be($"Hello {HelloTo}");
+        }
+    }
 }
 

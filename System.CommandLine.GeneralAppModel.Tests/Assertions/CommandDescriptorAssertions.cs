@@ -4,6 +4,7 @@ using FluentAssertions.Primitives;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
+using Xunit.Sdk;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
@@ -63,7 +64,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public AndConstraint<CommandDescriptorAssertions> HaveArgumentsNamed(IEnumerable<string> expected)
         {
-            var actual = string.Join(",",Subject.Arguments.Select(sub => sub.Name));
+            var actual = string.Join(",", Subject.Arguments.Select(sub => sub.Name));
             var expectedString = string.Join(",", expected);
             Execute.Assertion
                      .ForCondition(actual == expectedString)
@@ -73,6 +74,24 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         }
 
+        public void HaveInvokeMethodInfo(string name, int parameterCount)
+        {
+            if (Subject.InvokeMethod is null)
+            {
+                Execute.Assertion
+                        .ForCondition(false)
+                        .FailWith("An invoke method was expected, but was not found");
+                return;
+            }
+            Execute.Assertion
+                 .ForCondition(name == Subject.InvokeMethod.Name)
+                 .FailWith($"Invoke method named '{name}' was expected, but name '{Subject.InvokeMethod.Name}' was found")
+                 .Then
+                 .ForCondition(parameterCount == Subject.InvokeMethod.Score)
+                 .FailWith($"Invoke method with {parameterCount} parameter(s) was expected, but parameter count of {Subject.InvokeMethod.Score} was found");
+
+
+        }
     }
 }
 

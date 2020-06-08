@@ -4,6 +4,7 @@ using System.Linq;
 namespace System.CommandLine.GeneralAppModel
 {
     public class AttributeWithOptionalValueRule<TAttribute, TValue> : AttributeWithPropertyValueRule<TAttribute, TValue>, IRuleOptionalValue<TValue>
+        where TValue : class?
     {
         public AttributeWithOptionalValueRule(string propertyName = "", SymbolType symbolType = SymbolType.All)
             : base(propertyName, symbolType)

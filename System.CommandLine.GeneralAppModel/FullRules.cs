@@ -168,6 +168,10 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<CommandAttribute, string[]>( "Aliases"))
                ;
 
+            rules.InvokeMethodRules
+                .Add(new NamedInvokeMethodRule("Invoke"))
+                ;
+
             return rules;
         }
 

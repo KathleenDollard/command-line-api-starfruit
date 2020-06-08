@@ -11,8 +11,8 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
         public List<OptionDescriptor> Options { get; } = new List<OptionDescriptor>();
+        public InvokeMethodInfo? InvokeMethod { get; set; } // in Reflection models, this is a MethodInfo, in Roslyn it will be something else
         public List<CommandDescriptor> SubCommands { get; } = new List<CommandDescriptor>();
-        // TODO: Yes! Include it: Set by the model or the configuration: public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
 
     }
 }

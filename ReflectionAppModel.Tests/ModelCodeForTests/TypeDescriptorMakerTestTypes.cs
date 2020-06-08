@@ -149,6 +149,19 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     }
 
+    public class TypeWithInvokeMethod
+    {
+        public void Invoke() { }
+        public void Blah() { }
+    }
+
+    public class TypeWithTwoInvokeMethods
+    {
+        public void Invoke() { }
+
+        public void Invoke(string p1, int p2) { }
+    }
+
 
 
     // Option test classes

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class NewMakerTests
+    public class MakerTests
     {
         public const string name = "Fred";
         public const string name2 = "Bill";
@@ -96,6 +96,22 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public void MethodInfoTreatedAsHandlerAtRoot()
         {
             var data = new CommandHandlerRunsTestData();
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void InvokeMethodTreatedAsHandlerAtRoot()
+        {
+            var data = new CommandInvokeMethodTestData();
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void CommandInvokeMethodMultipleParametersTestData()
+        {
+            var data = new CommandInvokeMethodTestData();
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
         }
