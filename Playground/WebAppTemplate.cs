@@ -23,12 +23,12 @@ namespace Playground
     {
         public string Invoke([Option(Aliases = new string[] { "au", "auth" }, Description ="The type of authentication to use" )]
                               Authorization authorization = Authorization.None,
-
                               [Option(Description ="Directory B2C instance to connect to(use with IndividualB2C auth)")]
-                              [DefaultValue("https://login.microsoftonline.com/tfp/")]
-                              string AadB2cInstance)
+                              string aadB2cInstance = "https://login.microsoftonline.com/tfp/",
+                              string ourName
+                            )
         {
-            return "Template Result";
+            return @$"public class {ourName} Template Result";
         }
 
  
