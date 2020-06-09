@@ -1,12 +1,21 @@
 ﻿using System;
+using System.CommandLine;
+using System.CommandLine.GeneralAppModel;
+using System.CommandLine.ReflectionAppModel;
 using System.Runtime.CompilerServices;
 
 namespace StarFruit
 {
     class Program
     {
+        static void Main(string[] args)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor<ManageGlobalJson>();
+            var command = CommandMaker.MakeRootCommand(descriptor);
+            command.Invoke(args);
+        }
 
-        static void Main(ManageGlobalJson arg)
+        static void Main0(ManageGlobalJson arg)
         {
             Host.Build(arg).Run(); // expects invocation methods are set, probably through methods or Invoke on type
         }

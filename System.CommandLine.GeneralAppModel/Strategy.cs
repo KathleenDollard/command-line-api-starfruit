@@ -2,6 +2,9 @@
 {
     public class Strategy
     {
+        public static Strategy Full = new Strategy("Full").SetFullRules();
+        public static Strategy Standard = new Strategy("Standard").SetStandardRules();
+
         public Strategy(string name="")
         {
             Name = name;
