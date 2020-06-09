@@ -57,6 +57,17 @@ namespace System.CommandLine.GeneralAppModel
         public abstract ArgTypeInfo GetArgTypeInfo(Candidate candidate);
 
         /// <summary>
+        /// 
+        /// <br/>
+        /// If there is more than one return value that matches a given name, the first
+        /// will be used, so if there is an ordering preference, such as the greatest number
+        /// of parmeters, this order should be set in the derived implementation. 
+        /// </summary>
+        /// <param name="raw"></param>
+        /// <returns></returns>
+        public abstract IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos( object? raw, SymbolDescriptor parentSymbolDescriptor , bool treatParametersAsSymbols);
+
+        /// <summary>
         /// Given a command, return it's children - subcommands, options and arguments.
         /// </summary>
         /// <remarks>

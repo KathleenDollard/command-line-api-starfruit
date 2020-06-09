@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.CommandLine.GeneralAppModel;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -16,7 +17,7 @@ namespace System.CommandLine.ReflectionAppModel
             var item = commandDescriptor.Raw;
             return item switch
             {
-                MethodInfo m => m.GetParameters().Select(p => GetCandidateInternal(p)),
+                MethodInfo m => GetMethodChildCandidates(m, commandDescriptor),
                 Type t => GetTypeChildren(strategy, commandDescriptor, t, c => CreateCandidate(c.Item)),
                 _ => new List<Candidate>(),
 
@@ -28,6 +29,33 @@ namespace System.CommandLine.ReflectionAppModel
                 return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
             }
         }
+
+        private static IEnumerable<Candidate> GetMethodChildCandidates(MethodInfo methodInfo, SymbolDescriptor parentSymbolDescriptor)
+        {
+            return methodInfo.GetParameters().Select(p => GetCandidateInternal(p));
+        }
+
+        public override IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos(object? raw, SymbolDescriptor parentSymbolDescriptor, bool treatParametersAsSymbols)
+        {
+            if (raw is null || !(raw is Type type))
+            {
+                return new List<InvokeMethodInfo>();
+            }
+            return type.GetMethods()
+                            .Select(x => CreateInvokeMethodInfo(x, parentSymbolDescriptor, treatParametersAsSymbols)); // by default public instance
+
+            static InvokeMethodInfo CreateInvokeMethodInfo(MethodInfo methodInfo, SymbolDescriptor parentSymbolDescriptor, bool treatParametersAsSymbols)
+            {
+                var invokeMethodInfo = new InvokeMethodInfo(methodInfo, methodInfo.Name, methodInfo.GetParameters().Count());
+                if (treatParametersAsSymbols)
+                {
+                    invokeMethodInfo.ChildCandidates.AddRange(GetMethodChildCandidates(methodInfo, parentSymbolDescriptor));
+                }
+                return invokeMethodInfo;
+            }
+        }
+
+
 
         public override ArgTypeInfo GetArgTypeInfo(Candidate candidate)
             => candidate.Item switch
@@ -180,12 +208,12 @@ namespace System.CommandLine.ReflectionAppModel
                                                                              object trait,
                                                                              ISymbolDescriptor parentSymbolDescriptor)
         {
-            var (singleSuccess, single) = GetValue<TAttribute, TValue>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            var (singleSuccess, single) = GetValue<TAttribute, TValue>(propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
             if (singleSuccess)
             {
                 return new List<TValue> { single };
             }
-            var (multipleSuccess, multiple) = GetValue<TAttribute, IEnumerable<TValue>>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
+            var (multipleSuccess, multiple) = GetValue<TAttribute, IEnumerable<TValue>>(propertyName, symbolDescriptor, trait, parentSymbolDescriptor);
             if (multipleSuccess)
             {
                 return multiple;
@@ -199,7 +227,7 @@ namespace System.CommandLine.ReflectionAppModel
                                                                                   ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute) ||
-                !DoesTraitMatch<TAttribute, object>( propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
+                !DoesTraitMatch<TAttribute, object>(propertyName, symbolDescriptor, trait, parentSymbolDescriptor))
             {
                 return (false, default);
             }
@@ -225,7 +253,7 @@ namespace System.CommandLine.ReflectionAppModel
                                                                                                     ISymbolDescriptor parentSymbolDescriptor)
         {
             if (!(trait is Attribute attribute) ||
-                 !DoesTraitMatch<TAttribute, object>( symbolDescriptor, trait, parentSymbolDescriptor))
+                 !DoesTraitMatch<TAttribute, object>(symbolDescriptor, trait, parentSymbolDescriptor))
             {
                 return new List<(string, TValue)>();
             }
@@ -236,5 +264,7 @@ namespace System.CommandLine.ReflectionAppModel
                                 .Select(prop => new { prop.Name, Value = prop.GetValue(trait) });
             return pairs.Select(pair => (pair.Name, (TValue)pair.Value));
         }
+
+
     }
 }
