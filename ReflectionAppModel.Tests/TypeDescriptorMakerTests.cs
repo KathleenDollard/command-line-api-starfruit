@@ -5,6 +5,7 @@ using System.CommandLine.ReflectionAppModel;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
@@ -147,13 +148,26 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(full, typeof(TypeWithInvokeMethod), "Invoke", 0)]
-        [InlineData(full, typeof(TypeWithTwoInvokeMethods), "Invoke", 2)]
-        public void CommandWithInvokeMethods(string useStrategy, Type typeToTest, string name, int parameterCount)
+        [InlineData(full, typeof(TypeWithInvokeMethod), "Invoke", "")]
+        [InlineData(full, typeof(TypeWithTwoInvokeMethods), "Invoke", "p1,p2", typeof(string), typeof(int))]
+        public void CommandWithInvokeMethods(string useStrategy, Type typeToTest, string name, string parameterNames, params Type[] parameterTypes)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
-
-            descriptor.Should().HaveInvokeMethodInfo(name, parameterCount);
+            descriptor.Should().NotBeNull();
+            descriptor.InvokeMethod.Should().NotBeNull();
+            if (descriptor.InvokeMethod is null)
+            { return; }
+            descriptor.Should().HaveInvokeMethodInfo(name, parameterTypes.Count());
+            var paramStuff = parameterNames.Split(",").Select(x => x.Trim()).Zip(parameterTypes, (name, type) => (name, type)).ToArray();
+            for (int i = 0; i < paramStuff.Count(); i++)
+            {
+                var actual = descriptor.InvokeMethod.ChildCandidates.Skip(i).First().Item as ParameterInfo;
+                actual.Should().NotBeNull();
+                if (actual is null)
+                { continue; }
+                actual.Name.Should().Be(paramStuff[i].name);
+                actual.ParameterType.Should().Be(paramStuff[i].type);
+            }
         }
         #endregion
 

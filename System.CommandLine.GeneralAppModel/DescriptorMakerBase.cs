@@ -129,10 +129,17 @@ namespace System.CommandLine.GeneralAppModel
 
         private void SetInvokeMethodIfNeeded(RuleSetCommand ruleSet, CommandDescriptor descriptor, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var (success, value) = ruleSet.InvokeMethodRules.GetOptionalValue<InvokeMethodInfo >(descriptor, candidate, parentSymbolDescriptor);
+            var (success, invokeMethodInfo) = ruleSet.InvokeMethodRules.GetOptionalValue<InvokeMethodInfo>(descriptor, candidate, parentSymbolDescriptor);
             if (success)
             {
-                descriptor.InvokeMethod = value;
+                if (invokeMethodInfo.ChildCandidates.Any())  // if not treating parameters as candidates, this will be empty
+                {
+                    var (optionCandidates, commandCandidates, argumentCandidates) = ClassifyChildren(invokeMethodInfo.ChildCandidates, parentSymbolDescriptor);
+                    descriptor.Arguments.AddRange(argumentCandidates.Select(i => GetArgument(i, descriptor)));
+                    descriptor.Options.AddRange(optionCandidates.Select(i => GetOption(i, descriptor)));
+                }
+
+                descriptor.InvokeMethod = invokeMethodInfo;
             }
         }
 

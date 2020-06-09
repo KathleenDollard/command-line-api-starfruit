@@ -29,6 +29,7 @@ namespace System.CommandLine.GeneralAppModel
         public object MethodRepresentation { get; }
         public string Name { get; }
         public int Score { get; }
+        public List<Candidate> ChildCandidates { get; } = new List<Candidate>();
 
         public  T GetInvokeMethod<T>()
             where T : class

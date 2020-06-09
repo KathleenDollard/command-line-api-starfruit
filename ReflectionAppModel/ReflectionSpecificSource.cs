@@ -17,7 +17,7 @@ namespace System.CommandLine.ReflectionAppModel
             var item = commandDescriptor.Raw;
             return item switch
             {
-                MethodInfo m => m.GetParameters().Select(p => GetCandidateInternal(p)),
+                MethodInfo m => GetMethodChildCandidates(m, commandDescriptor),
                 Type t => GetTypeChildren(strategy, commandDescriptor, t, c => CreateCandidate(c.Item)),
                 _ => new List<Candidate>(),
 
@@ -30,15 +30,32 @@ namespace System.CommandLine.ReflectionAppModel
             }
         }
 
-        public override IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos(object? raw)
+        private static IEnumerable<Candidate> GetMethodChildCandidates(MethodInfo methodInfo, SymbolDescriptor parentSymbolDescriptor)
+        {
+            return methodInfo.GetParameters().Select(p => GetCandidateInternal(p));
+        }
+
+        public override IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos(object? raw, SymbolDescriptor parentSymbolDescriptor, bool treatParametersAsSymbols)
         {
             if (raw is null || !(raw is Type type))
             {
                 return new List<InvokeMethodInfo>();
             }
             return type.GetMethods()
-                            .Select(x => new InvokeMethodInfo(x, x.Name, x.GetParameters().Count())); // by default public instance
+                            .Select(x => CreateInvokeMethodInfo(x, parentSymbolDescriptor, treatParametersAsSymbols)); // by default public instance
+
+            static InvokeMethodInfo CreateInvokeMethodInfo(MethodInfo methodInfo, SymbolDescriptor parentSymbolDescriptor, bool treatParametersAsSymbols)
+            {
+                var invokeMethodInfo = new InvokeMethodInfo(methodInfo, methodInfo.Name, methodInfo.GetParameters().Count());
+                if (treatParametersAsSymbols)
+                {
+                    invokeMethodInfo.ChildCandidates.AddRange(GetMethodChildCandidates(methodInfo, parentSymbolDescriptor));
+                }
+                return invokeMethodInfo;
+            }
         }
+
+
 
         public override ArgTypeInfo GetArgTypeInfo(Candidate candidate)
             => candidate.Item switch
