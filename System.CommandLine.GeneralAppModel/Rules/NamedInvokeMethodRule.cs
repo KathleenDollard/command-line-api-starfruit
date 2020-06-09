@@ -8,20 +8,21 @@ namespace System.CommandLine.GeneralAppModel.Rules
 {
     public class NamedInvokeMethodRule : RuleBase, IRuleOptionalValue<InvokeMethodInfo>
     {
-        public NamedInvokeMethodRule(string name)
+        public NamedInvokeMethodRule(string name, bool treatParametersAsCandidates = true)
             : base(SymbolType.Command)
         {
             Name = name;
+            TreatParametersAsCandidates = treatParametersAsCandidates;
         }
 
         public string Name { get; }
-
+        public bool TreatParametersAsCandidates { get; }
 
         public (bool success, InvokeMethodInfo value) GetOptionalValue(ISymbolDescriptor symbolDescriptor, IEnumerable<object> item, ISymbolDescriptor parentSymbolDescriptor)
         {
             if (symbolDescriptor is CommandDescriptor commandDescriptor)
             {
-                var available = SpecificSource.Tools.GetAvailableInvokeMethodInfos(commandDescriptor.Raw);
+                var available = SpecificSource.Tools.GetAvailableInvokeMethodInfos(commandDescriptor.Raw, commandDescriptor, TreatParametersAsCandidates );
                 var match = available.Where(x => x.Name == Name);
                 if (!match.Any())
                 {

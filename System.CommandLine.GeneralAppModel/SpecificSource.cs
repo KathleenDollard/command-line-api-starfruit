@@ -65,7 +65,7 @@ namespace System.CommandLine.GeneralAppModel
         /// </summary>
         /// <param name="raw"></param>
         /// <returns></returns>
-        public abstract IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos(object? raw);
+        public abstract IEnumerable<InvokeMethodInfo> GetAvailableInvokeMethodInfos( object? raw, SymbolDescriptor parentSymbolDescriptor , bool treatParametersAsSymbols);
 
         /// <summary>
         /// Given a command, return it's children - subcommands, options and arguments.
