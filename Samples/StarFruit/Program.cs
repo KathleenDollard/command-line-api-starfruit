@@ -13,7 +13,7 @@ namespace StarFruit
 
         static void Main2(ManageGlobalJson arg)
         {
-            // No code ever runs here. There isn't a Main. I think people will be confused. 
+            // Invoke only. No code ever runs here. There isn't even a Main. I think people will be confused. 
         }
 
         static void Main3(string[] args)
