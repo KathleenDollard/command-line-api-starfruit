@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class CommandMaker
     {
-        public static Command MakeRootCommand(CommandDescriptor descriptor)
+        public static RootCommand MakeRootCommand(CommandDescriptor descriptor)
         {
             var (success, messages) = descriptor.ValidateRoot();
             if (!success)

@@ -24,6 +24,8 @@ namespace StarFruit
 
         public class Find : ManageGlobalJson
         {
+            public void Invoke(FileInfo FilePathArg, string OldVersion)
+            { }
         }
 
         public class List : ManageGlobalJson

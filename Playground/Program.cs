@@ -1,5 +1,6 @@
 ﻿using Playground;
 using System;
+using System.CommandLine.Builder;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionAppModel;
 using System.Security.Cryptography.X509Certificates;
@@ -11,13 +12,16 @@ namespace UserStudyTest2
         // Old debug: --name "Hello" --a 7 --b 13 --c 17
         static int Main(string[] args)
         {
-            return ManageGlobalJsonProgram.Main2(args);
+            //return ManageGlobalJsonProgram.Main2(args);
 
-            //var strategy = new Strategy("Full").SetReflectionRules();
+            var strategy = new Strategy("Full").SetStandardRules();
 
             //Console.WriteLine(strategy.Report());
 
-            //strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
+            strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor<ManageGlobalJson>();
+            var command = CommandMaker.MakeRootCommand(descriptor);
+            var builder = new CommandLineBuilder().AddCommand(command);
 
             //var instance = strategy.CreateInstance<MyClass>(args);
             //Console.WriteLine($"From Type: Name: {instance.Name} A: {instance.A} B: {instance.B} C: {instance.C}");

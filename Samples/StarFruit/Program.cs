@@ -15,7 +15,7 @@ namespace StarFruit
             command.Invoke(args);
         }
 
-        static void Main0(ManageGlobalJson arg)
+        static void Main1(ManageGlobalJson arg)
         {
             Host.Build(arg).Run(); // expects invocation methods are set, probably through methods or Invoke on type
         }
@@ -27,8 +27,10 @@ namespace StarFruit
 
         static void Main3(string[] args)
         {
-            var builder = CustomizeBuilder(); // Lets you customize pipeline behavior
-            Host.Build(args).Run();
+            //Host.UseCommandLine(builder =>
+            //{
+            //    builder.UseHelp()
+            //  }).Build(args).Run();
         }
 
         static int Main4(ManageGlobalJson arg)
