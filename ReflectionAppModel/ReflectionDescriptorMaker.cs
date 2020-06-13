@@ -30,6 +30,11 @@ namespace System.CommandLine.ReflectionAppModel
                                         Type[]? ommittedTypes = null)
                => RootCommandDescriptor(typeof(TRoot), ommittedTypes);
 
+        public static CommandDescriptor RootCommandDescriptor<TRoot>(
+                                Strategy strategy,
+                                Type[]? ommittedTypes = null)
+            => RootCommandDescriptor(strategy, typeof(TRoot), ommittedTypes);
+
         public static CommandDescriptor RootCommandDescriptor(
                                         Type entryType,
                                         Type[]? ommittedTypes = null)

@@ -2,6 +2,8 @@
 {
     public static class StandardStrategy
     {
+ 
+
         public static Strategy SetStandardRules(this Strategy strategy)
         {
             StandardRules.SetSelectSymbolRules(strategy.SelectSymbolRules);

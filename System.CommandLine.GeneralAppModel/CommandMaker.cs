@@ -32,7 +32,7 @@ namespace System.CommandLine.GeneralAppModel
             return subCommand;
         }
 
-        private static void FillCommand(Command command, CommandDescriptor descriptor)
+        public static void FillCommand(Command command, CommandDescriptor descriptor)
         {
             command.IsHidden = descriptor.IsHidden;
             command.TreatUnmatchedTokensAsErrors = descriptor.TreatUnmatchedTokensAsErrors;
