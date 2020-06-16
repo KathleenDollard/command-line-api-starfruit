@@ -1,4 +1,4 @@
-﻿using Playground.PotentialPatterns;
+﻿    using Playground.PotentialPatterns;
 using System.Threading.Tasks;
 
 namespace UserStudyTest2
@@ -7,7 +7,7 @@ namespace UserStudyTest2
     {
         static async Task Main(string[] args)
         {
-            await MainWithGeneraicHostInvokeWithConfiguration.Main1("Playground start Update start2 baz".Split(' '));
+            await MainWithGeneraicHostInvokeWithConfiguration.Main1("playground start update start2 baz".Split(' '));
         }
     }
 }
