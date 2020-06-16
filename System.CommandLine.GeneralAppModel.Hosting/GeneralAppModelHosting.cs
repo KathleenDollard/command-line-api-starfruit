@@ -24,7 +24,7 @@ namespace System.CommandLine.GeneralAppModel.Hosting
         public static IHostBuilder Configure<TCommand>(string[] args)
            => Configure<TCommand>(Strategy.Standard, args);
 
-        public static async Task RunAsync<TCommand>(string[] args) 
+        public static async Task RunAsync<TCommand>(string[] args)
             => await Configure<TCommand>(args).Build().RunAsync();
     }
 }

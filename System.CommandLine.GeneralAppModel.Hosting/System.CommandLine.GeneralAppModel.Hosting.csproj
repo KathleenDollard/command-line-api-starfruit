@@ -20,5 +20,4 @@
     <ProjectReference Include="..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
     <ProjectReference Include="..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
   </ItemGroup>
-
 </Project>

@@ -1,5 +1,4 @@
-﻿
-namespace System.CommandLine.GeneralAppModel.Hosting
+﻿namespace System.CommandLine.GeneralAppModel.Hosting
 {
     public interface IDescriptorMakerContext
     {

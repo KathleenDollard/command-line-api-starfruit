@@ -20,13 +20,13 @@ namespace System.CommandLine.GeneralAppModel.Hosting
 
         public CommandLineAppModelHostedService(ILogger<CommandLineAppModelHostedService<TCommand>> logger,
                                                 IHostApplicationLifetime lifetime,
-                                                IDescriptorMakerContext descriptorMakerContext = null )
+                                                IDescriptorMakerContext descriptorMakerContext = null)
         {
             _logger = logger;
             _lifetime = lifetime;
-          _strategy = descriptorMakerContext?.Strategy is null
-                        ? Strategy.Standard
-                        : descriptorMakerContext.Strategy;
+            _strategy = descriptorMakerContext?.Strategy is null
+                          ? Strategy.Standard
+                          : descriptorMakerContext.Strategy;
         }
 
         public virtual Task StartAsync(CancellationToken cancellationToken)
@@ -50,10 +50,10 @@ namespace System.CommandLine.GeneralAppModel.Hosting
 
         private ParseResult GetParseResult(string arg)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor<TCommand>(_strategy );
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor<TCommand>(_strategy);
             var builder = new CommandLineBuilder();
             CommandMaker.FillCommand(builder.Command, descriptor);
-            return builder.Build().Parse(arg); 
+            return builder.Build().Parse(arg);
         }
 
         /// <summary>
