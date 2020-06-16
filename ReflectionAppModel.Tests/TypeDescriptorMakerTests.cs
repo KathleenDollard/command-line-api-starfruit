@@ -171,7 +171,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
         #endregion
 
-
         #region Option tests
 
         [Theory]
@@ -381,6 +380,15 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     .Should().HaveDefaultValue(isSet, value);
         }
 
+        [Fact]
+        public void PropertyOnBaseAndChildIsArgumentOnlyOnParentCommand()
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(Strategy.Standard, typeof(PropertyOnBaseOnlyOnParentCommand));
+
+            descriptor.Arguments.First()
+                    .Should().HaveName("Prop");
+            descriptor.SubCommands.Should().BeEmpty();
+        }
         #endregion
 
     }

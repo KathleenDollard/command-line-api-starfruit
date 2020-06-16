@@ -26,6 +26,7 @@ namespace System.CommandLine.ReflectionAppModel
             static IEnumerable<Candidate> GetTypeChildren(Strategy strategy, SymbolDescriptor commandDescriptor, Type t, Func<Candidate, Candidate> fillCandidate)
             {
                 var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor).Select(c => fillCandidate(c));
+                var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly;
                 return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
             }
         }
@@ -54,8 +55,6 @@ namespace System.CommandLine.ReflectionAppModel
                 return invokeMethodInfo;
             }
         }
-
-
 
         public override ArgTypeInfo GetArgTypeInfo(Candidate candidate)
             => candidate.Item switch
