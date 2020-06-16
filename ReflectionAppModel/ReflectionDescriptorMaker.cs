@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.CommandLine.Binding;
+﻿using System.CommandLine.Binding;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;

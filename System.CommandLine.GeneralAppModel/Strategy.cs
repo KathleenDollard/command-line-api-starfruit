@@ -9,6 +9,7 @@
         {
             Name = name;
         }
+
         public string Name { get; }
         public RuleSetGetCandidatesRule GetCandidateRules { get; } = new RuleSetGetCandidatesRule();
         public RuleSetSelectSymbols SelectSymbolRules { get; } = new RuleSetSelectSymbols();
