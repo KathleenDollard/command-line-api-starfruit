@@ -27,7 +27,7 @@ namespace System.CommandLine.ReflectionAppModel
             {
                 var derivedTypes = strategy.GetCandidateRules.GetCandidates(commandDescriptor).Select(c => fillCandidate(c));
                 var flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly;
-                return derivedTypes.Union(t.GetProperties().Select(p => GetCandidateInternal(p)));
+                return derivedTypes.Union(t.GetProperties(flags).Select(p => GetCandidateInternal(p)));
             }
         }
 
