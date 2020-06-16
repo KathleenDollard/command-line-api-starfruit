@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.CommandLine.GeneralAppModel.Tests;
 using System.Text;
-using constants= System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
+using constants = System.CommandLine.GeneralAppModel.Tests.TypeDescriptorMakerTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes
 {
@@ -444,5 +444,12 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
     public class PropertyArgumentForIntegerType
     {
         public int PropArg { get; set; }
+    }
+
+    public class PropertyOnBaseOnlyOnParentCommand
+    {
+        public int PropArg { get; set; }
+        public class Derived
+        { }
     }
 }
