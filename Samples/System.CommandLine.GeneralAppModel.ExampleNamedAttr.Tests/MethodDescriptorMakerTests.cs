@@ -25,10 +25,10 @@ namespace System.CommandLine.NamedAttributeRules.Tests
 
         #region Command tests
         [Theory]
-        [InlineData(typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod ), "")]
+        [InlineData(typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), "")]
         [InlineData(typeof(MethodWithNameAttribute), constant.Name, "")]
         [InlineData(typeof(MethodWithNameInCommandAttribute), constant.Name, "")]
-        [InlineData(typeof(MethodWithDescriptionAttribute), constant.TestMethodName, constant.Description )]
+        [InlineData(typeof(MethodWithDescriptionAttribute), constant.TestMethodName, constant.Description)]
         [InlineData(typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
         public void NameAndDescriptionFromType(Type typeToTest, string name, string description)
         {
@@ -66,7 +66,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
 
-            descriptor.Should().HaveIsHidden (isHidden );
+            descriptor.Should().HaveIsHidden(isHidden);
         }
 
         [Theory]
@@ -97,9 +97,9 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(MethodWithOnlyOneParameter), constant.OptionName )]
-        [InlineData(typeof(MethodWithOneOptionByRemaining), constant.OptionName)]
-        [InlineData(typeof(MethodWithTwoOptionsByRemaining), constant.OptionName, constant.OptionName2)]
+        [InlineData(typeof(MethodWithOnlyOneParameter), "--" + constant.OptionName)]
+        [InlineData(typeof(MethodWithOneOptionByRemaining), "--" + constant.OptionName)]
+        [InlineData(typeof(MethodWithTwoOptionsByRemaining), "--" + constant.OptionName, "--" + constant.OptionName2)]
         public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
         {
             var method = typeToTest.GetMethods().First();
@@ -108,16 +108,16 @@ namespace System.CommandLine.NamedAttributeRules.Tests
             descriptor.Should().HaveOptionsNamed(argNames);
         }
 
-# endregion
+        #endregion
 
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(ParameterOptionWithName), constant.Name, "")]
-        [InlineData(typeof(ParameterOptionWithNameAttribute), constant.Name, "")]
-        [InlineData(typeof(ParameterOptionWithNameInOptionAttribute), constant.Name, "")]
-        [InlineData(typeof(ParameterOptionWithDescriptionAttribute), constant.ParameterOptionName, constant.Description)]
-        [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.Description)]
+        [InlineData(typeof(ParameterOptionWithName), "--" + constant.Name, "")]
+        [InlineData(typeof(ParameterOptionWithNameAttribute), "--" + constant.Name, "")]
+        [InlineData(typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.Name, "")]
+        [InlineData(typeof(ParameterOptionWithDescriptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
+        [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
         public void OptionNameAndDescriptionFromParameter(Type typeToTest, string name, string description)
         {
             var method = typeToTest.GetMethods().First();
@@ -129,8 +129,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(ParameterOptionWithOneAliasAttribute), constant.AliasAsStringSingle)]
-        [InlineData(typeof(ParameterOptionWithThreeAliasesInOneAttribute), constant.AliasAsStringMultiple)]
+        [InlineData(typeof(ParameterOptionWithOneAliasAttribute), constant.OptionAliasAsStringSingle)]
+        [InlineData(typeof(ParameterOptionWithThreeAliasesInOneAttribute), constant.OptionAliasAsStringMultiple)]
         public void OptionAliasesFromParameter(Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null

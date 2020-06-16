@@ -190,9 +190,17 @@ namespace System.CommandLine.GeneralAppModel
             {
                 return;
             }
-            descriptor.Aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
-                                    .SelectMany(x => x);
-            descriptor.Name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
+            // Posix rules are hard coded here, because there has been discussion about having System.CommandLine handle prefixes
+            var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
+            var aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
+                                     .SelectMany(x => x);
+            if (symbolDescriptor is OptionDescriptor)
+            {
+                aliases = aliases.Select(x => x.StartsWith("-") ? x : "-" + x);
+                name = name.StartsWith("--") ? name : "--" + name;
+            }
+            descriptor.Name = name;
+            descriptor.Aliases = aliases;
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }

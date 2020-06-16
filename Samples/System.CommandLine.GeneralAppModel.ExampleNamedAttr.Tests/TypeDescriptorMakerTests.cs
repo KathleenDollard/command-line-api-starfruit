@@ -19,6 +19,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         internal const string Description = "Awesome description!";
         internal const string AliasAsStringMultiple = "a,b,c";
         internal const string AliasAsStringSingle = "x";
+        internal const string OptionAliasAsStringMultiple = "-a,-b,-c";
+        internal const string OptionAliasAsStringSingle = "-x";
         internal const int AllowedValuesAsIntFirst = 3;
         internal const int AllowedValuesAsIntSecond = 5;
         internal const int AllowedValuesAsIntThird = 7;
@@ -121,9 +123,9 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOnlyOneProperty), OptionName)]
-        [InlineData(typeof(TypeWithOneOptionByRemaining), OptionName)]
-        [InlineData(typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
+        [InlineData(typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
+        [InlineData(typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
+        [InlineData(typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
         public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
@@ -136,11 +138,11 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithName), Name, "")]
-        [InlineData(typeof(PropertyOptionWithNameAttribute), Name, "")]
-        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
-        [InlineData(typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
-        [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
+        [InlineData(typeof(PropertyOptionWithName), "--" + Name, "")]
+        [InlineData(typeof(PropertyOptionWithNameAttribute), "--" + Name, "")]
+        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), "--" + Name, "")]
+        [InlineData(typeof(PropertyOptionWithDescriptionAttribute), "--" + PropertyOptionName, Description)]
+        [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), "--" + PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
@@ -151,8 +153,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
+        [InlineData(typeof(PropertyOptionWithOneAliasAttribute), OptionAliasAsStringSingle)]
+        [InlineData(typeof(PropertyOptionWithThreeAliasesInOneAttribute), OptionAliasAsStringMultiple)]
         public void OptionAliasesFromProperty(Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
