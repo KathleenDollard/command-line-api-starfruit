@@ -33,10 +33,10 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <ProjectReference Include="..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
+    <ProjectReference Include="..\..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
+    <ProjectReference Include="..\..\System.CommandLine.GeneralAppModel.Tests\System.CommandLine.GeneralAppModel.Tests.csproj" />
+    <ProjectReference Include="..\..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
     <ProjectReference Include="..\System.CommandLine.GeneralAppModel.ExampleNamedAttr\System.CommandLine.GeneralAppModel.ExampleNamedAttr.csproj" />
-    <ProjectReference Include="..\System.CommandLine.GeneralAppModel.Tests\System.CommandLine.GeneralAppModel.Tests.csproj" />
-    <ProjectReference Include="..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
