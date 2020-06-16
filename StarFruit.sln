@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.GeneralA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.GeneralAppModel.ExampleNamedAttr", "System.CommandLine.GeneralAppModel.ExampleNamedAttr\System.CommandLine.GeneralAppModel.ExampleNamedAttr.csproj", "{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.CommandLine.GeneralAppModel.Hosting", "System.CommandLine.GeneralAppModel.Hosting\System.CommandLine.GeneralAppModel.Hosting.csproj", "{ED53DA78-A23B-4238-A30E-081E13F0B0E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.CommandLine.GeneralAppModel.Hosting.Tests", "System.CommandLine.GeneralAppModel.Hosting.Tests\System.CommandLine.GeneralAppModel.Hosting.Tests.csproj", "{6066038A-D8B4-4E0B-BB77-AFAC84D94DE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79FCD0D6-2850-4AFA-A054-D4A5EF1C6C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED53DA78-A23B-4238-A30E-081E13F0B0E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED53DA78-A23B-4238-A30E-081E13F0B0E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED53DA78-A23B-4238-A30E-081E13F0B0E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED53DA78-A23B-4238-A30E-081E13F0B0E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6066038A-D8B4-4E0B-BB77-AFAC84D94DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6066038A-D8B4-4E0B-BB77-AFAC84D94DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6066038A-D8B4-4E0B-BB77-AFAC84D94DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6066038A-D8B4-4E0B-BB77-AFAC84D94DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
