@@ -17,6 +17,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const string Description = "Awesome description!";
         internal const string AliasAsStringMultiple = "a,b,c";
         internal const string AliasAsStringSingle = "x";
+        internal const string OptionAliasAsStringMultiple = "-a,-b,-c";
+        internal const string OptionAliasAsStringSingle = "-x";
         internal const int AllowedValuesAsIntFirst = 3;
         internal const int AllowedValuesAsIntSecond = 5;
         internal const int AllowedValuesAsIntThird = 7;
@@ -134,12 +136,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(full, typeof(TypeWithOnlyOneProperty), OptionName)]
-        [InlineData(full, typeof(TypeWithOneOptionByRemaining), OptionName)]
-        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
-        [InlineData(standard, typeof(TypeWithOnlyOneProperty), OptionName)]
-        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), OptionName)]
-        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
+        [InlineData(full, typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
+        [InlineData(full, typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
+        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
+        [InlineData(standard, typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
+        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
+        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
         public void CommandWithSubOptions(string useStrategy, Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
@@ -174,14 +176,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(full, typeof(PropertyOptionWithName), Name, "")]
-        [InlineData(full, typeof(PropertyOptionWithNameAttribute), Name, "")]
-        [InlineData(full, typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
-        [InlineData(full, typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
-        [InlineData(full, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
-        [InlineData(standard, typeof(PropertyOptionWithName), Name, "")]
-        [InlineData(standard, typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
-        [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
+        [InlineData(full, typeof(PropertyOptionWithName), "--" + Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithNameAttribute), "--" + Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithNameInOptionAttribute), "--" + Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithDescriptionAttribute), "--" + PropertyOptionName, Description)]
+        [InlineData(full, typeof(PropertyOptionWithDescriptionInOptionAttribute), "--" + PropertyOptionName, Description)]
+        [InlineData(standard, typeof(PropertyOptionWithName), "--" + Name, "")]
+        [InlineData(standard, typeof(PropertyOptionWithNameInOptionAttribute), "--" + Name, "")]
+        [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), "--" + PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(string useStrategy, Type typeToTest, string name, string description)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
@@ -192,8 +194,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(full, typeof(PropertyOptionWithOneAliasAttribute), AliasAsStringSingle)]
-        [InlineData(full, typeof(PropertyOptionWithThreeAliasesInOneAttribute), AliasAsStringMultiple)]
+        [InlineData(full, typeof(PropertyOptionWithOneAliasAttribute), OptionAliasAsStringSingle)]
+        [InlineData(full, typeof(PropertyOptionWithThreeAliasesInOneAttribute), OptionAliasAsStringMultiple)]
         public void OptionAliasesFromProperty(string useStrategy, Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null

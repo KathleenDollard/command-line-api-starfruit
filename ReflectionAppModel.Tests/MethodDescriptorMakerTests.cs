@@ -109,12 +109,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(full, typeof(MethodWithOnlyOneParameter), constant.OptionName)]
-        [InlineData(full, typeof(MethodWithOneOptionByRemaining), constant.OptionName)]
-        [InlineData(full, typeof(MethodWithTwoOptionsByRemaining), constant.OptionName, constant.OptionName2)]
-        [InlineData(standard, typeof(MethodWithOnlyOneParameter), constant.OptionName)]
-        [InlineData(standard, typeof(MethodWithOneOptionByRemaining), constant.OptionName)]
-        [InlineData(standard, typeof(MethodWithTwoOptionsByRemaining), constant.OptionName, constant.OptionName2)]
+        [InlineData(full, typeof(MethodWithOnlyOneParameter), "--" + constant.OptionName)]
+        [InlineData(full, typeof(MethodWithOneOptionByRemaining), "--" + constant.OptionName)]
+        [InlineData(full, typeof(MethodWithTwoOptionsByRemaining), "--" + constant.OptionName, "--" + constant.OptionName2)]
+        [InlineData(standard, typeof(MethodWithOnlyOneParameter), "--" + constant.OptionName)]
+        [InlineData(standard, typeof(MethodWithOneOptionByRemaining), "--" + constant.OptionName)]
+        [InlineData(standard, typeof(MethodWithTwoOptionsByRemaining), "--" + constant.OptionName, "--" + constant.OptionName2)]
         public void CommandWithSubOptions(string useStrategy, Type typeToTest, params string[] argNames)
         {
             var method = typeToTest.GetMethods().First();
@@ -128,14 +128,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(full, typeof(ParameterOptionWithName), constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithNameAttribute), constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithNameInOptionAttribute), constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithDescriptionAttribute), constant.ParameterOptionName, constant.Description)]
-        [InlineData(full, typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.Description)]
-        [InlineData(standard, typeof(ParameterOptionWithName), constant.Name, "")]
-        [InlineData(standard, typeof(ParameterOptionWithNameInOptionAttribute), constant.Name, "")]
-        [InlineData(standard, typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.Description)]
+        [InlineData(full, typeof(ParameterOptionWithName), "--" + constant.Name, "")]
+        [InlineData(full, typeof(ParameterOptionWithNameAttribute), "--" + constant.Name, "")]
+        [InlineData(full, typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.Name, "")]
+        [InlineData(full, typeof(ParameterOptionWithDescriptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
+        [InlineData(full, typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
+        [InlineData(standard, typeof(ParameterOptionWithName), "--" + constant.Name, "")]
+        [InlineData(standard, typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.Name, "")]
+        [InlineData(standard, typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
         public void OptionNameAndDescriptionFromParameter(string useStrategy, Type typeToTest, string name, string description)
         {
             var method = typeToTest.GetMethods().First();
@@ -147,8 +147,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(full, typeof(ParameterOptionWithOneAliasAttribute), constant.AliasAsStringSingle)]
-        [InlineData(full, typeof(ParameterOptionWithThreeAliasesInOneAttribute), constant.AliasAsStringMultiple)]
+        [InlineData(full, typeof(ParameterOptionWithOneAliasAttribute), constant.OptionAliasAsStringSingle)]
+        [InlineData(full, typeof(ParameterOptionWithThreeAliasesInOneAttribute), constant.OptionAliasAsStringMultiple)]
         public void OptionAliasesFromParameter(string useStrategy, Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
