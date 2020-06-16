@@ -4,7 +4,7 @@ using Xunit;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
-    public class MakerTests
+    public class CommandMakerTests
     {
         public const string name = "Fred";
         public const string name2 = "Bill";
@@ -24,6 +24,21 @@ namespace System.CommandLine.GeneralAppModel.Tests
                           : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
             var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
             var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Theory]
+        [InlineData(name, desc, aliasAsStringMuitple, true, true)]
+        [InlineData(name, desc, aliasAsStringSingle, false, false)]
+        [InlineData(nameForEmpty, null, null, false, false)]
+        public void CanFillExistingCommand(string name, string description, string aliasesAsString, bool isHidden, bool treatUnmatchedTokensAsErrors)
+        {
+            var aliases = aliasesAsString is null
+                          ? new string[] { }
+                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+            var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
+            var command = new Command(name);
+            CommandMaker.FillCommand(command, data.Descriptor);
             data.Check(command);
         }
 
@@ -54,7 +69,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             data.Check(command);
         }
 
-        [Theory(Skip ="False case is failing")]
+        [Theory(Skip = "False case is failing")]
         [InlineData(true, 0, 5)]
         [InlineData(false, null, null)]
         [InlineData(true, 2, 2)]

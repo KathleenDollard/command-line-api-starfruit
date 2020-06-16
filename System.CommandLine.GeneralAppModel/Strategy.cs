@@ -2,10 +2,14 @@
 {
     public class Strategy
     {
+        public static Strategy Full = new Strategy("Full").SetFullRules();
+        public static Strategy Standard = new Strategy("Standard").SetStandardRules();
+
         public Strategy(string name="")
         {
             Name = name;
         }
+
         public string Name { get; }
         public RuleSetGetCandidatesRule GetCandidateRules { get; } = new RuleSetGetCandidatesRule();
         public RuleSetSelectSymbols SelectSymbolRules { get; } = new RuleSetSelectSymbols();

@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class CommandMaker
     {
-        public static Command MakeRootCommand(CommandDescriptor descriptor)
+        public static RootCommand MakeRootCommand(CommandDescriptor descriptor)
         {
             var (success, messages) = descriptor.ValidateRoot();
             if (!success)
@@ -19,7 +19,7 @@ namespace System.CommandLine.GeneralAppModel
                                                     string.Join("\n\t", messages.Select(x=>x.Message)),
                                 new DescriptorInvalidException(messages));
             }
-            var command = new RootCommand(descriptor.Description ?? string.Empty);
+            var command = new RootCommand();
             FillCommand(command, descriptor);
             return command;
         }
@@ -27,13 +27,14 @@ namespace System.CommandLine.GeneralAppModel
         public static Command MakeCommand(CommandDescriptor descriptor)
         {
             var _ = descriptor.Name ?? throw new InvalidOperationException("The name for a non-root command cannot be null");
-            var subCommand = new Command(descriptor.Name, descriptor.Description);
+            var subCommand = new Command(descriptor.Name);
             FillCommand(subCommand, descriptor);
             return subCommand;
         }
 
-        private static void FillCommand(Command command, CommandDescriptor descriptor)
+        public static void FillCommand(Command command, CommandDescriptor descriptor)
         {
+            command.Description = descriptor.Description;
             command.IsHidden = descriptor.IsHidden;
             command.TreatUnmatchedTokensAsErrors = descriptor.TreatUnmatchedTokensAsErrors;
             SetHandlerIfNeeded(command, descriptor);
