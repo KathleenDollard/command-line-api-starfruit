@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             if (aliases.Any() && aliases.First().Contains(","))
             {
-                aliases = aliases.First().Split(",");
+                aliases = aliases.First().Split(',');
             }
             Aliases = aliases;
         }

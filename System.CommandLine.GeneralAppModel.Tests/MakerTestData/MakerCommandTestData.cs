@@ -1,5 +1,4 @@
 ﻿using System.CommandLine.GeneralAppModel.Descriptors;
-using System.Reflection.Metadata;
 
 namespace System.CommandLine.GeneralAppModel.Tests.Maker
 {

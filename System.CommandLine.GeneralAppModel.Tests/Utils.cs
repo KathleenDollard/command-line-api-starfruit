@@ -151,7 +151,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                 string s => $@"""{s}""",
                 IEnumerable e => e.OfType<object>().Count() == 0
                                    ? "<Empty>"
-                                   : "\n" + string.Join('\n', Members(e)),
+                                   : "\n" + string.Join("\n", Members(e)),
                 _ => input.ToString() ?? string.Empty
             };
 

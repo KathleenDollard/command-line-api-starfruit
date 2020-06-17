@@ -45,7 +45,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.DotnetModel
                Arguments = new List<ArgumentTestData>
                { new ArgumentTestData
                     {
-                       Name = nameof(PackageIdArg)[..^3],
+                       Name = nameof(PackageIdArg).Substring(0,nameof(PackageIdArg).Length-3),
                        Raw = ReflectionSupport.GetPropertyInfo<Install>(nameof(PackageIdArg)),
                        ArgumentType = typeof(string)
                     }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
 
 namespace System.CommandLine.ReflectionAppModel
 {
