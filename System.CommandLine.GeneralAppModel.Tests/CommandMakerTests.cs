@@ -21,7 +21,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? new string[] { }
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
             var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
@@ -35,7 +35,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? new string[] { }
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
             var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
             var command = new Command(name);
             CommandMaker.FillCommand(command, data.Descriptor);
@@ -50,7 +50,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? new string[] { }
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
             var data = new OptionBasicsTestData(name, description, aliases, isHidden, required);
             var command = CommandMaker.MakeRootCommand(data.Descriptor);
             data.Check(command);
@@ -63,7 +63,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? new string[] { }
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
             var data = new ArgumentBasicsTestData(name, description, aliases, isHidden, argumentType);
             var command = CommandMaker.MakeRootCommand(data.Descriptor);
             data.Check(command);

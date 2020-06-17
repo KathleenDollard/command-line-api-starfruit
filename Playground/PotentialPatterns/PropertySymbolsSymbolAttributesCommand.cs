@@ -10,7 +10,6 @@ using System.IO;
 
 namespace Playground
 {
-
     public class PropertySymbolsSymbolAttributesCommand
     {
         [Argument]

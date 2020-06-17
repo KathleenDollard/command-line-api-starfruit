@@ -19,7 +19,6 @@ namespace Playground.PotentialPatterns
           => Host.CreateDefaultBuilder(args)
               .ConfigureServices((hostContext, services) =>
               {
-                 // services.AddSingleton<IDescriptorMakerContext>(new DescriptorMakerContext(strategy));
                   services.AddHostedService<CommandLineAppModelHostedService<TCommand>>();
               })
               .ConfigureLogging((hostingContext, logging) =>

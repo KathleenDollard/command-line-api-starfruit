@@ -1,64 +1,75 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.CommandLine.ReflectionAppModel;
 using System.CommandLine.ReflectionAppModel.Attributes;
+using System.ComponentModel;
 using System.IO;
-
-// SubCommands are via derived classes. This makes binding and accessing data in parent classes super easy. 
-// Options and arguments are via parameters on invoke methods. This probably won't work with "switch" style Main. Data can still be provided on parent classes based on properties (doesn't work yet).
-// Using a symbol (Command/Argument/Option) based attribute. More characters.
-// Descriptions are isolated, to make comparison and localization easier (they could be via a method as well)
+using System.Text;
 
 namespace Playground
 {
-
-    public class ParameterSymbolsSymbolAttributesCommand
+    /// <summary>
+    /// </summary>
+    /// <remarks>
+    /// Parts of this tool is not trivial unless we expose the SDK selection via an API. 
+    /// The actual rules for SDK selection depend on the highest SDK version installed 
+    /// (or ever installed) on the machine.
+    /// </remarks>
+    public class ManageGlobalJson
     {
-        [Argument]
-        public DirectoryInfo StartPath { get; set; }
+        public DirectoryInfo StartPathArg { get; set; }
 
-        [Option(Aliases = new string[] { "v" })]
+        [Aliases("v")]
         public VerbosityLevel Verbosity { get; set; }
 
-        public class List : ParameterSymbolsSymbolAttributesCommand
+        public class Find : ManageGlobalJson
         {
-            public int Invoke([Option(Aliases = new string[] { "o" })] FileInfo output)
-            { return default; }
         }
 
-        public class Update : ParameterSymbolsSymbolAttributesCommand
+        public class List : ManageGlobalJson
         {
-            // Kevin thinks he would use properties for options and parameters for arguments
-            public int Invoke([Argument] FileInfo filePath,
-                              string oldVersion,
-                              string newVersion,
-                              bool allowPrerelease,
-                              RollForward rollForward)
-            { return default; }
+            [Aliases("o")]
+            public FileInfo Output { get; set; }
         }
 
-        public class Check : ParameterSymbolsSymbolAttributesCommand
+        public class Update : ManageGlobalJson
         {
-            public int Invoke(bool sdkOnly)
-            { return default; }
+            public FileInfo FilePathArg { get; set; }
+            public string OldVersion { get; set; }
+            public string NewVersion { get; set; }
+            public bool AllowPrerelease { get; set; }
+            public RollForward RollForward { get; set; }
+
+            public int Invoke()
+            {
+                return ManageGlobalJsonImplementation.Update(StartPathArg, Verbosity, FilePathArg, OldVersion, NewVersion, AllowPrerelease, RollForward);
+            }
         }
+
+        public class Check : ManageGlobalJson
+        {
+            public bool SdkOnly { get; set; }
+        }
+
 
         private const string startName = nameof(ManageGlobalJson);
+        private const string findName = nameof(Find);
         private const string listName = nameof(List);
         private const string updateName = nameof(Update);
         private const string checkName = nameof(Check);
         public Dictionary<string, string> HelpText = new Dictionary<string, string>
             {
                 { startName, "Future global tool to manage global.json. See https://aka.ms/globaljson."},
-                { startName + $"+{nameof(StartPath)}","Location where processing should begin." },
+                { startName + $"+{nameof(StartPathArg)}","Location where processing should begin." },
                 { startName + $"+{nameof(Verbosity) }","Verbosity level:  q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic]." },
+                { startName + $"+{findName}","Find the current global.json and the SDK it contains." },
                 { startName + $"+{listName}","List all global.json files in subdirectories, recursive." },
-                { startName + $"+{listName}+Output","File to contain the output, if desired." },
                 { startName + $"+{updateName}","Update the specified global.json" },
-                { startName + $"+{updateName}+FilePath","Path to the global.json to update" },
-                { startName + $"+{updateName}+OldVersion","Existing SDK version to update. This must be an exact match." },
-                { startName + $"+{updateName}+NewVersion","New SDK version to use." },
-                { startName + $"+{updateName}+AllowPrerelease","True to allow prerelease." },
-                { startName + $"+{updateName}+RollForward","Rules for selecting an SDK version." },
+                { startName + $"+{updateName}+{nameof(Update.FilePathArg)}","Path to the global.json to update" },
+                { startName + $"+{updateName}+{nameof(Update.OldVersion)}","Existing SDK version to update. This must be an exact match." },
+                { startName + $"+{updateName}+{nameof(Update.NewVersion)}","New SDK version to use." },
+                { startName + $"+{updateName}+{nameof(Update.AllowPrerelease)}","True to allow prerelease." },
+                { startName + $"+{updateName}+{nameof(Update.RollForward)}","Rules for selecting an SDK version." },
                 { startName + $"+{checkName}","Check that an appriorpiate SDK version is available." },
                 { nameof(RollForward) + $"+{nameof(RollForward.Patch)}", "Uses the specified version. If not found, rolls forward to the latest patch level. If not found, fails. This value is the legacy behavior from the earlier versions of the SDK." },
                 { nameof(RollForward) + $"+{nameof(RollForward.Feature)}", "Uses the latest patch level for the specified major, minor, and feature band. If not found, rolls forward to the next higher feature band within the same major/minor and uses the latest patch level for that feature band. If not found, fails." },

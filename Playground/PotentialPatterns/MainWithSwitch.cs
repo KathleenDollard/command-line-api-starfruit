@@ -10,6 +10,7 @@ namespace Playground.PotentialPatterns
         public static int Main1(string[] args)
         {
             var typedArg =  Strategy.Standard.CreateInstance<ManageGlobalJson>(args);
+            // System.CommandLine.CommandLine.CreateInstance<T>(args, [Strategy])
             return typedArg switch
             {
                 ManageGlobalJson.Find x => OutputAndReturnFind(),

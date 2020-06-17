@@ -11,7 +11,7 @@ namespace Playground.PotentialPatterns
     {
         public static int Main1(string[] args)
         {
-            return Strategy.Standard.InvokeMethod<ManageGlobalJson>( args);
+            return Strategy.Standard.InvokeMethod<ManageGlobalJson>(args);
         }
     }
 }

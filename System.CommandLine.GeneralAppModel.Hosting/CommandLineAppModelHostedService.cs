@@ -32,7 +32,8 @@ namespace System.CommandLine.GeneralAppModel.Hosting
         public virtual Task StartAsync(CancellationToken cancellationToken)
         {
             //var arg = Environment.CommandLine;
-            var arg = "Playground start Update start2 baz";
+            //var arg = "Playground start Update start2 baz";
+            var arg = "start Update start2 --allow-prerelease";
             var result = GetParseResult(arg);
 
             // Store the task we're executing
