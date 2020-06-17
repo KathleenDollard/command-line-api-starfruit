@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace Playground
+namespace System.CommandLine.Samples
 {
     /// <summary>
     /// </summary>

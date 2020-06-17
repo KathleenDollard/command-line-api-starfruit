@@ -1,4 +1,4 @@
-﻿namespace Playground
+﻿namespace System.CommandLine.Samples
 {
     public enum RollForward
     {

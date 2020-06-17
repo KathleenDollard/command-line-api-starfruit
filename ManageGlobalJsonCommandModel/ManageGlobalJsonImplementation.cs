@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.ReflectionAppModel;
+﻿using System.CommandLine.ReflectionAppModel;
 using System.IO;
-using System.Text;
 
-namespace Playground
+namespace System.CommandLine.Samples
+
 {
-   public  class ManageGlobalJsonImplementation
+    public  class ManageGlobalJsonImplementation
     {
         public static int Find(DirectoryInfo startPathArg, VerbosityLevel verbosity)
         {
