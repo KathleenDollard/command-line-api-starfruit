@@ -47,7 +47,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
@@ -135,7 +135,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
@@ -226,7 +226,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);

@@ -194,13 +194,14 @@ namespace System.CommandLine.GeneralAppModel
             var name = ruleSet.NameRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             var aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
                                      .SelectMany(x => x);
+            aliases = aliases.SelectMany(x => x.Split(','));
             if (symbolDescriptor is OptionDescriptor)
             {
                 aliases = aliases.Select(x => x.StartsWith("-") ? x : "-" + x);
                 name = name.StartsWith("--") ? name : "--" + name;
             }
             descriptor.Name = name;
-            descriptor.Aliases = aliases;
+            descriptor.Aliases = aliases.ToList();
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }

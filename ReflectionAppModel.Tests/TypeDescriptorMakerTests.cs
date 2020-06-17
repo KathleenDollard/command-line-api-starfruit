@@ -71,7 +71,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
@@ -160,7 +160,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             if (descriptor.InvokeMethod is null)
             { return; }
             descriptor.Should().HaveInvokeMethodInfo(name, parameterTypes.Count());
-            var paramStuff = parameterNames.Split(",").Select(x => x.Trim()).Zip(parameterTypes, (name, type) => (name, type)).ToArray();
+            var paramStuff = parameterNames.Split(',').Select(x => x.Trim()).Zip(parameterTypes, (name, type) => (name, type)).ToArray();
             for (int i = 0; i < paramStuff.Count(); i++)
             {
                 var actual = descriptor.InvokeMethod.ChildCandidates.Skip(i).First().Item as ParameterInfo;
@@ -200,7 +200,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
@@ -297,7 +297,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 

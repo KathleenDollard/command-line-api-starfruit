@@ -52,7 +52,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
@@ -153,7 +153,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
@@ -256,7 +256,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var aliases = aliasesAsString is null
                           ? null
-                          : aliasesAsString.Split(",").Select(s => s.Trim()).ToArray();
+                          : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
 
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
