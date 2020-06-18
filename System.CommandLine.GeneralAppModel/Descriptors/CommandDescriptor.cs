@@ -8,6 +8,11 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
                                  object? raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Command) { }
 
+        public Symbol SymbolToBind { get; private set; }
+
+        public void SetBinding(Symbol symbol)
+            => SymbolToBind = symbol;
+
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
         public List<OptionDescriptor> Options { get; } = new List<OptionDescriptor>();

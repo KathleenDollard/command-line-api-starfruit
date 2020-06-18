@@ -13,7 +13,5 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var x = Samples.Program.Main(arg.Split(' '));
             x.Should().Be(7);
         }
-
-
     }
 }

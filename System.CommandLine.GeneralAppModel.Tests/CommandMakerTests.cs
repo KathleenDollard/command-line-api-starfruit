@@ -1,4 +1,5 @@
-﻿using System.CommandLine.GeneralAppModel.Tests.Maker;
+﻿using FluentAssertions;
+using System.CommandLine.GeneralAppModel.Tests.Maker;
 using System.Linq;
 using Xunit;
 
@@ -130,6 +131,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var data = new CommandInvokeMethodMultipleParametersTestData();
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
+        }
+
+        [Fact]
+        public void CommandSymbolBoundToDescriptor()
+        {
+            // Random type chosen for this test
+            var data = new CommandInvokeMethodMultipleParametersTestData();
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Descriptor.SymbolToBind
+                    .Should().Be(command);
         }
     }
 }
