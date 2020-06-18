@@ -16,7 +16,7 @@ namespace System.CommandLine.GeneralAppModel
             if (!success)
             {
                 throw new InvalidOperationException("There are errors in the definition of your CLI. See the Inner Exception.\n\t" +
-                                                    string.Join("\n\t", messages.Select(x=>x.Message)),
+                                                    string.Join("\n\t", messages.Select(x => x.Message)),
                                 new DescriptorInvalidException(messages));
             }
             var command = new RootCommand();
@@ -45,11 +45,12 @@ namespace System.CommandLine.GeneralAppModel
                                     .Select(o => MakeOption(o)));
             command.AddCommands(descriptor.SubCommands
                                     .Select(c => MakeCommand(c)));
+            descriptor.SetBinding(command);
         }
 
         private static void SetHandlerIfNeeded(Command command, CommandDescriptor descriptor)
         {
-            if (!(descriptor.InvokeMethod is null) )
+            if (!(descriptor.InvokeMethod is null))
             {
                 var invokeMethodInfo = descriptor.InvokeMethod.GetInvokeMethod<MethodInfo>();
                 command.Handler = CommandHandler.Create(invokeMethodInfo);
