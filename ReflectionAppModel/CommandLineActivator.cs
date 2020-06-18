@@ -43,11 +43,6 @@ namespace System.CommandLine
             {
                 Console.WriteLine("Errors!");
             }
-            // ***The following is wrong. It needs to be the actual type of the class, not the root
-            // This will either require changes to the binder or a lookup. For this usage, we can't just
-            // change the handler. We should extend that work to instantiating the class of an invoke 
-            // method so we pick up any properties - per base class work I've done and Kevin's idea of 
-            // options as properties.
             var commandDescriptor = GetCommandDescriptor(descriptor, parseResult.CommandResult.Command);
             if (commandDescriptor is null)
             {
