@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
     <ProjectReference Include="..\..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
-    <ProjectReference Include="..\ManageGlobalJsonCommandModel\ManageGlobalJsonCommandModel.csproj" />
+    <ProjectReference Include="..\MidSizePropertyBasedModel\MidSizePropertyBasedModel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Xunit;
+using System.CommandLine;
 
 namespace System.CommandLine.GeneralAppModel.Tests
 {
