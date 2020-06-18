@@ -1,8 +1,9 @@
 ﻿namespace System.CommandLine.Samples
 {
-    class Program
+    // Class and method are public for testing
+    public class Program
     {
-        static int Main(string[] args)
+       public static int Main(string[] args)
         {
             return CommandLineActivator.Invoke<ManageGlobalJson>(args);
         }

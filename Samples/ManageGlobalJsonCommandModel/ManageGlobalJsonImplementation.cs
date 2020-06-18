@@ -29,7 +29,7 @@ namespace System.CommandLine.Samples
             var prereleaseText = allowPrerelease ? "allowing prerelease" : "disallowing prerelease";
             Console.WriteLine(@$"Run Update from {startPathArg} for {filePath} changing '{oldVersion}' to '{newVersion}' " +
                                     $"{prereleaseText} and rollforward to {rollForward} with verbosity {verbosity} ");
-            return 0;
+            return 7;
         }
 
         public static int Check(DirectoryInfo startPathArg, VerbosityLevel verbosity)

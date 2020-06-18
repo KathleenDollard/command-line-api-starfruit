@@ -1,4 +1,5 @@
 ﻿using System.CommandLine.GeneralAppModel;
+using System.Linq;
 
 // Simplest entry point.
 // This can be split up, for example so the strategy or command tree can be modified
@@ -11,6 +12,10 @@ namespace Playground.PotentialPatterns
     {
         public static int Main1(string[] args)
         {
+            if (!args.Any())
+            {
+                args = "start Update start2 --allow-prerelease".Split(',');
+            }
             return Strategy.Standard.InvokeMethod<ManageGlobalJson>(args);
         }
     }
