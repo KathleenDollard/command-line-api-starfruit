@@ -123,7 +123,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
 
     public class TypeWithTwoCommandsByDerivedType
     {
-        public class A : TypeWithTwoCommandsByDerivedType { }
+        public class A : TypeWithTwoCommandsByDerivedType
+        {
+            public bool Allow { get; set; }
+        }
         public class B : TypeWithTwoCommandsByDerivedType { }
     }
 
