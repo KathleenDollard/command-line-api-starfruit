@@ -30,11 +30,13 @@ namespace System.CommandLine
         }
 
         // [return: MaybeNull] Not finding the local one
-        public static TRoot CreateInstance<TRoot>(string[] args, Strategy? strategy = null)
+        public static TRoot CreateInstance<TRoot>(string[] args, Strategy? strategy = null, string commandName=null)
         {
             strategy ??= Strategy.Standard;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeof(TRoot));
-            var command = CommandMaker.MakeRootCommand(descriptor);
+            var command = commandName is null
+                            ? CommandMaker.MakeRootCommand(descriptor)
+                            : CommandMaker.MakeCommand(descriptor);
             var parser = new CommandLineBuilder(command)
                                 .UseDefaults()
                                 .Build();
@@ -76,3 +78,4 @@ namespace System.CommandLine
         }
     }
 }
+

@@ -134,13 +134,20 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Fact]
-        public void CommandSymbolBoundToDescriptor()
+        public void CommandIsRecordedInDescriptor()
         {
-            // Random type chosen for this test
-            var data = new CommandInvokeMethodMultipleParametersTestData();
+            var data = new CommandBasicsTestData(name, desc, new string[] { }, false, true);
             var command = CommandMaker.MakeCommand(data.Descriptor);
-            data.Descriptor.SymbolToBind
-                    .Should().Be(command);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void SubCommandIsRecordedInDescriptor()
+        {
+            var data = new CommandTwoSubCommandsTestData(name, name2);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            var subCommand2 = command.Children.OfType<Command>().Last();
+            data.Descriptor.SubCommands.Last().SymbolToBind.Should().Be(subCommand2);
         }
     }
 }
