@@ -37,10 +37,12 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
 
         public override void Check(Command actual)
         {
+            using var scope = new AssertionScope();
+
+            actual.Should().NotBeNull();
             var expectedAliases = Aliases is null
                                   ? new string[] { Name }
                                   : Aliases.Prepend(Name).ToArray();
-            using var scope = new AssertionScope();
             actual.Should().HaveName(Name)
                     .And.HaveDescription(Description)
                     .And.HaveAliases(expectedAliases)
@@ -110,7 +112,6 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
                     .And.HaveName(SubCommandName2);
         }
     }
-
 
     public class CommandHandlerRunsTestData : MakerCommandTestData
     {

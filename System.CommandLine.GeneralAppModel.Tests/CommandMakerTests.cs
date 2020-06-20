@@ -1,4 +1,5 @@
-﻿using System.CommandLine.GeneralAppModel.Tests.Maker;
+﻿using FluentAssertions;
+using System.CommandLine.GeneralAppModel.Tests.Maker;
 using System.Linq;
 using Xunit;
 
@@ -130,6 +131,23 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var data = new CommandInvokeMethodMultipleParametersTestData();
             var command = CommandMaker.MakeCommand(data.Descriptor);
             data.Check(command);
+        }
+
+        [Fact]
+        public void CommandIsRecordedInDescriptor()
+        {
+            var data = new CommandBasicsTestData(name, desc, new string[] { }, false, true);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            data.Check(command);
+        }
+
+        [Fact]
+        public void SubCommandIsRecordedInDescriptor()
+        {
+            var data = new CommandTwoSubCommandsTestData(name, name2);
+            var command = CommandMaker.MakeCommand(data.Descriptor);
+            var subCommand2 = command.Children.OfType<Command>().Last();
+            data.Descriptor.SubCommands.Last().SymbolToBind.Should().Be(subCommand2);
         }
     }
 }
