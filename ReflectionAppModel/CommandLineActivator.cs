@@ -29,8 +29,13 @@ namespace System.CommandLine
             return command.Invoke(args);
         }
 
-        // [return: MaybeNull] Not finding the local one
-        public static TRoot CreateInstance<TRoot>(string[] args, Strategy? strategy = null, string commandName=null)
+        public static TRoot CreateInstance<TRoot>(string[] args, Strategy? strategy = null, string? commandName = null)
+        {
+            return CreateInstance<TRoot>(string.Join(" ",args), strategy, commandName);
+        }
+
+            // [return: MaybeNull] Not finding the local one
+            public static TRoot CreateInstance<TRoot>(string args, Strategy? strategy = null, string? commandName=null)
         {
             strategy ??= Strategy.Standard;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeof(TRoot));

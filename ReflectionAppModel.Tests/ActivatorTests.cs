@@ -14,9 +14,10 @@ namespace System.CommandLine.ReflectionAppModel.Tests
     {
         private string commandName = "MyCommand";
 
-        [Theory(Skip ="Currently failing")]
-        [InlineData("typewithtwocommandsbyderivedtype a")]
-        public void CommandWithSubCommands(params string[] args)
+        [Theory()]
+        [InlineData("A", false)]
+        [InlineData("A --allow", true)]
+        public void CommandWithSubCommands(string args, bool allow)
         {
            // args[0] = $"{commandName} {args[0]}";
             var result = CommandLineActivator.CreateInstance<TypeWithTwoCommandsByDerivedType>(args, commandName:commandName);
@@ -24,7 +25,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
             result.Should().BeOfType<TypeWithTwoCommandsByDerivedType.A>();
             var a = result as TypeWithTwoCommandsByDerivedType.A;
             var _ = a ?? throw new InvalidOperationException(); ;
-            a.Allow.Should().BeTrue();
+            a.Allow.Should().Be(allow);
         }
     }
 }
