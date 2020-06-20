@@ -19,8 +19,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         [InlineData("A --allow", true)]
         public void CommandWithSubCommands(string args, bool allow)
         {
-           // args[0] = $"{commandName} {args[0]}";
-            var result = CommandLineActivator.CreateInstance<TypeWithTwoCommandsByDerivedType>(args, commandName:commandName);
+            // args[0] = $"{commandName} {args[0]}";
+            var result = CommandLineActivator.CreateInstance<TypeWithTwoCommandsByDerivedType>(args, commandName: commandName);
             using var scope = new AssertionScope();
             result.Should().BeOfType<TypeWithTwoCommandsByDerivedType.A>();
             var a = result as TypeWithTwoCommandsByDerivedType.A;
