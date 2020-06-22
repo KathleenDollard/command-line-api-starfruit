@@ -268,6 +268,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     .Should().HaveArgumentType(argType);
         }
 
+        [Theory]
+        [InlineData(typeof(string))]
+        public void PrivatePropertiesAreIgnored(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Argument Tests
@@ -391,6 +398,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     .Should().HaveName("Prop");
             descriptor.SubCommands.Should().BeEmpty();
         }
+
+
         #endregion
 
     }

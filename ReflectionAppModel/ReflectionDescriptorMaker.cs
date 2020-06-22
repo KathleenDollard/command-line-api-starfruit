@@ -13,7 +13,7 @@ namespace System.CommandLine.ReflectionAppModel
         protected ReflectionDescriptorMaker(Strategy strategy,
                                      object dataSource,
                                      Type[]? ommittedTypes = null)
-            : base(strategy, new ReflectionSpecificSource(), dataSource)
+            : base(strategy, new DescriptorMakerSpecificSource(), dataSource)
         {
             OmmittedTypes = ommittedTypes ?? commonOmmittedTypes;
         }

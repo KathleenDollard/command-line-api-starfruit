@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.Binding;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
@@ -8,8 +9,17 @@ using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel
 {
-    public static class CommandMaker
+    // CommandMaker does not use the "SpecificSource" pattern that DescriptorMakers use because 
+    // the Descriptor simplifes the problem so we can make an interface or base class. 
+
+    // TODO: All the validation should be in the validate process, or each step should a base class check followed by a call to an abstract internal impl
+    public class CommandMaker
     {
+        protected CommandMaker(CommandMakerSpecificSourceBase commandMakerSpecificSource)
+        {
+            CommandMakerSpecificSourceBase.SetTools(commandMakerSpecificSource);
+        }
+
         public static RootCommand MakeRootCommand(CommandDescriptor descriptor)
         {
             var (success, messages) = descriptor.ValidateRoot();
@@ -29,6 +39,7 @@ namespace System.CommandLine.GeneralAppModel
             var _ = descriptor.Name ?? throw new InvalidOperationException("The name for a non-root command cannot be null");
             var subCommand = new Command(descriptor.Name);
             FillCommand(subCommand, descriptor);
+            var modelBinder = CommandMakerSpecificSourceBase.Tools.MakeModelBinder(descriptor );
             return subCommand;
         }
 
@@ -45,7 +56,7 @@ namespace System.CommandLine.GeneralAppModel
                                     .Select(o => MakeOption(o)));
             command.AddCommands(descriptor.SubCommands
                                     .Select(c => MakeCommand(c)));
-            descriptor.SetBinding(command);
+            descriptor.SetSymbol(command);
         }
 
         private static void SetHandlerIfNeeded(Command command, CommandDescriptor descriptor)
@@ -77,6 +88,7 @@ namespace System.CommandLine.GeneralAppModel
 
             option.IsHidden = descriptor.IsHidden;
             option.Required = descriptor.Required;
+            descriptor.SetSymbol(option);
             return option;
         }
 
@@ -107,6 +119,7 @@ namespace System.CommandLine.GeneralAppModel
             {
                 arg.SetDefaultValue(descriptor.DefaultValue.DefaultValue);
             }
+            descriptor.SetSymbol(arg);
             return arg;
         }
     }

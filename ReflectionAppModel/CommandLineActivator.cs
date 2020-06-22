@@ -55,12 +55,12 @@ namespace System.CommandLine
             {
                 throw new InvalidOperationException("Cannot create instance unless bound to a type.");
             }
-            var typeOrMethodInfo = commandDescriptor.Raw as Type;
-            if (typeOrMethodInfo is null)
+            var typeInfo = commandDescriptor.Raw as Type;
+            if (typeInfo is null)
             {
                 throw new InvalidOperationException("Cannot create instance when bound to a method.");
             }
-            var binder = new ModelBinder(typeOrMethodInfo);
+            var binder = new ModelBinder(typeInfo);
             var bindingContext = new BindingContext(command.Parse(args));
             return (TRoot)binder.CreateInstance(bindingContext);
         }

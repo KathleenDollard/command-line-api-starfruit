@@ -24,7 +24,7 @@ namespace System.CommandLine.NamedAttributeRules
                                                                    IEnumerable<object> traits,
                                                                    ISymbolDescriptor parentSymbolDescriptor)
         {
-            SpecificSource tools = SpecificSource.Tools;
+            DescriptorMakerSpecificSourceBase tools = DescriptorMakerSpecificSourceBase.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);
             if (!matchingTraits.Any())
             {
@@ -44,7 +44,7 @@ namespace System.CommandLine.NamedAttributeRules
                 };
             }
 
-            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<bool>(AttributeName, PropertyName,
+            var fromAllTraits = matchingTraits.SelectMany(trait => DescriptorMakerSpecificSourceBase.Tools.GetAllValues<bool>(AttributeName, PropertyName,
                                     symbolDescriptor, trait, parentSymbolDescriptor))
                                  .ToList();
             return fromAllTraits.Any()

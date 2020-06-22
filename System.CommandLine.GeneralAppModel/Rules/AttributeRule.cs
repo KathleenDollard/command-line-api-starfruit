@@ -23,7 +23,7 @@ namespace System.CommandLine.GeneralAppModel
                                               IEnumerable<TTraitType> traits,
                                               ISymbolDescriptor parentSymbolDescriptor)
             => traits.Where(
-                 trait => SpecificSource.Tools.DoesTraitMatch<TAttribute, TTraitType>(symbolDescriptor, trait, parentSymbolDescriptor));
+                 trait => DescriptorMakerSpecificSourceBase.Tools.DoesTraitMatch<TAttribute, TTraitType>(symbolDescriptor, trait, parentSymbolDescriptor));
 
         public override string RuleDescription<TIRuleSet>()
            => (typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))

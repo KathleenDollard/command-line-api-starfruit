@@ -81,7 +81,7 @@ namespace System.CommandLine.GeneralAppModel
             }
             return values;
         }
-        public void ReplaceAbstractRules(SpecificSource tools)
+        public void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             var abstractRules = this.Where(r => typeof(IAbstractRule).IsAssignableFrom(r.GetType()));
             var toReplace = new List<(TRule oldRule, TRule newRule)>();
@@ -124,7 +124,7 @@ namespace System.CommandLine.GeneralAppModel
                 return derivedRule;
             }
 
-            static Type GetNewRuleType(SpecificSource tools, TRule abstractRule)
+            static Type GetNewRuleType(DescriptorMakerSpecificSourceBase tools, TRule abstractRule)
             {
                 // We might want to cache this
                 var assembly = tools.GetType().Assembly;

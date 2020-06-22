@@ -25,9 +25,9 @@ namespace System.CommandLine.GeneralAppModel
     /// </remarks>
     public abstract class DescriptorMakerBase
     {
-        protected DescriptorMakerBase(Strategy strategy, SpecificSource tools, object dataSource)
+        protected DescriptorMakerBase(Strategy strategy, DescriptorMakerSpecificSourceBase tools, object dataSource)
         {
-            SpecificSource.SetTools(tools);
+            DescriptorMakerSpecificSourceBase.SetTools(tools);
             Strategy = strategy;
             DataSource = dataSource;
             ReplaceAbstractRules(strategy, tools);
@@ -84,7 +84,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         protected CommandDescriptor CommandFrom(ISymbolDescriptor parentSymbolDescriptor)
-            => GetCommand(SpecificSource.Tools.CreateCandidate(DataSource), parentSymbolDescriptor);
+            => GetCommand(DescriptorMakerSpecificSourceBase.Tools.CreateCandidate(DataSource), parentSymbolDescriptor);
 
         protected CommandDescriptor GetCommand(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
@@ -94,7 +94,7 @@ namespace System.CommandLine.GeneralAppModel
             descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
             SetInvokeMethodIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
 
-            var candidates = SpecificSource.Tools.GetChildCandidates(Strategy, descriptor);
+            var candidates = DescriptorMakerSpecificSourceBase.Tools.GetChildCandidates(Strategy, descriptor);
             candidates = candidates.Where(c => !InNamesToIgnore(Strategy, candidate));
             var (optionItems, subCommandItems, argumentItems) = ClassifyChildren(candidates, descriptor);
 
@@ -114,7 +114,7 @@ namespace System.CommandLine.GeneralAppModel
 
         private ArgumentDescriptor GetArgument(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var argumentType = SpecificSource.Tools.GetArgTypeInfo(candidate) ?? throw new InvalidOperationException("Type must be supplied for argument");
+            var argumentType = DescriptorMakerSpecificSourceBase.Tools.GetArgTypeInfo(candidate) ?? throw new InvalidOperationException("Type must be supplied for argument");
             var descriptor = new ArgumentDescriptor(argumentType, parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
@@ -206,7 +206,7 @@ namespace System.CommandLine.GeneralAppModel
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }
 
-        private void ReplaceAbstractRules(Strategy strategy, SpecificSource tools)
+        private void ReplaceAbstractRules(Strategy strategy, DescriptorMakerSpecificSourceBase tools)
         {
             strategy.GetCandidateRules.ReplaceAbstractRules(tools);
             strategy.SelectSymbolRules.ReplaceAbstractRules(tools);
