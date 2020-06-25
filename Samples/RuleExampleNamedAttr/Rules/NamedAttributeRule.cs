@@ -26,7 +26,7 @@ namespace System.CommandLine.NamedAttributeRules
                                               IEnumerable<TTraitType> traits,
                                               ISymbolDescriptor parentSymbolDescriptor)
             => traits.Where(
-                 trait => SpecificSource.Tools.DoesTraitMatch(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
+                 trait => DescriptorMakerSpecificSourceBase.Tools.DoesTraitMatch(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor));
 
         public override string RuleDescription<TIRuleSet>()
            => (typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))

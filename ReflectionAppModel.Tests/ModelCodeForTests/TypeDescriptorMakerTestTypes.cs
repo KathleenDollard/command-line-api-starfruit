@@ -165,8 +165,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
         public void Invoke(string p1, int p2) { }
     }
 
-
-
+  
     // Option test classes
 
     public class PropertyOptionWithName
@@ -291,10 +290,16 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
     {
         public int Prop { get; set; }
     }
+    public class PropertiesThatArePublicAndPrivate
+    {
+        public string? First { get; set; }
+        private string? Second { get; set; }
+    }
 
 
 
 
+    // Argument
     public class PropertyArgumentWithName
     {
         public string? GeorgeArg { get; set; }

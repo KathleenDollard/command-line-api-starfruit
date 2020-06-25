@@ -9,7 +9,7 @@
         //    RequiredRules.Add(requiredRule);
         //}
 
-        public override void ReplaceAbstractRules(SpecificSource tools)
+        public override void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             base.ReplaceAbstractRules(tools);
             RequiredRules.ReplaceAbstractRules(tools);

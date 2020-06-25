@@ -40,14 +40,14 @@ namespace System.CommandLine.NamedAttributeRules
         // This might be the wrong return value
         private protected IEnumerable<TValue> GetAllValuesInternal(ISymbolDescriptor symbolDescriptor, IEnumerable<object> traits, ISymbolDescriptor parentSymbolDescriptor)
         {
-            SpecificSource tools = SpecificSource.Tools;
+            DescriptorMakerSpecificSourceBase tools = DescriptorMakerSpecificSourceBase.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);
             if (!matchingTraits.Any())
             {
                 return Enumerable.Empty<TValue>();
             }
 
-            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TValue>(AttributeName, PropertyName,
+            var fromAllTraits = matchingTraits.SelectMany(trait => DescriptorMakerSpecificSourceBase.Tools.GetAllValues<TValue>(AttributeName, PropertyName,
                                     symbolDescriptor, trait, parentSymbolDescriptor))
                                  .ToList();
             return fromAllTraits;

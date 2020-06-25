@@ -8,7 +8,7 @@
         public RuleGroup<IRuleGetValues<object[]>> AllowedValuesRules { get; } = new RuleGroup<IRuleGetValues<object[]>>();
         public RuleGroup<IRuleGetValue<Type>> SpecialArgumentTypeRules { get; } = new RuleGroup<IRuleGetValue<Type>>();
 
-        public override void ReplaceAbstractRules(SpecificSource tools)
+        public override void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             base.ReplaceAbstractRules(tools);
             ArityRules.ReplaceAbstractRules(tools);

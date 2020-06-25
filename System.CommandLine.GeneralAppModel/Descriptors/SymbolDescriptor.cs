@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.Binding;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -20,6 +21,11 @@ namespace System.CommandLine.GeneralAppModel
             Raw = raw;
             SymbolType = symbolType;
         }
+
+        public ISymbol SymbolToBind { get; private set; }
+
+        internal void SetSymbol(ISymbol symbol)
+            => SymbolToBind = symbol;
 
         /// <summary>
         /// Rules sometimes rely on the parent, although the only current known

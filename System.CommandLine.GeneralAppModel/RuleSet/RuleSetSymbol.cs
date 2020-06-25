@@ -39,7 +39,7 @@ namespace System.CommandLine.GeneralAppModel
         //    IsHiddenRules.Add(isHiddenRule);
         //}
 
-        public override void ReplaceAbstractRules(SpecificSource tools)
+        public override void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             DescriptionRules.ReplaceAbstractRules(tools);
             NameRules.ReplaceAbstractRules(tools);

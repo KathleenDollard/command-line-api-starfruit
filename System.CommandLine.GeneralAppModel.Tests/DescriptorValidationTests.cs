@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.GeneralAppModel.Tests.Maker;
 using System.Text;
 using Xunit;
 
@@ -64,8 +65,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("george")]
         public void DescriptorValidationDoesNotThrowForNotEmptySubCommandName(string? name)
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
-            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, null)
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandBasicsTestData));
+            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandBasicsTestData))
             {
                 Name = name
             });

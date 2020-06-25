@@ -9,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class OptionBasicsTestData : MakerCommandTestData
     {
         public OptionBasicsTestData(string name, string description, string[] aliases, bool isHidden, bool required)
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest) { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(OptionBasicsTestData)) { Name = DummyCommandName })
         {
             Descriptor.Options.Add(
                         new OptionDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)

@@ -19,7 +19,7 @@ namespace System.CommandLine.GeneralAppModel
                      .ToList();
         }
 
-        public override void ReplaceAbstractRules(SpecificSource tools)
+        public override void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             Rules.ReplaceAbstractRules(tools);
         }

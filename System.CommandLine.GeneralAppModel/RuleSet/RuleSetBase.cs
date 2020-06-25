@@ -8,7 +8,7 @@ namespace System.CommandLine.GeneralAppModel
     {
         public abstract string Report(int tabsCount);
 
-        public abstract void ReplaceAbstractRules(SpecificSource tools);
+        public abstract void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools);
 
     }
 }
