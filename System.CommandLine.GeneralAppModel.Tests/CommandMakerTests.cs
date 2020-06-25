@@ -14,13 +14,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public const string aliasAsStringMuitple = "x,y,z";
         public const string aliasAsStringSingle = "a";
 
-        private CommandMaker commandMaker;
-
-        public CommandMakerTests()
-        {
-            commandMaker = new CommandMaker(ReflectionAppModel.)
-        }
-
         [Theory]
         [InlineData(name, desc, aliasAsStringMuitple, true, true)]
         [InlineData(name, desc, aliasAsStringSingle, false, false)]

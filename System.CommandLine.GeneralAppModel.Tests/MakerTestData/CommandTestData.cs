@@ -12,7 +12,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     {
         public CommandBasicsTestData(string name, string description, string[] aliases, bool isHidden, bool treatUnmatchedTokensAsErrors)
             : base(
-                      new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                      new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandBasicsTestData))
                       {
                           Name = name,
                           Description = description,
@@ -55,10 +55,10 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     {
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandOneSubCommandTestData(string subCommandName)
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest) { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandOneSubCommandTestData)) { Name = DummyCommandName })
         {
             Descriptor.SubCommands.Add(
-                new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandDescriptor))
                 {
                     Name = subCommandName
                 });
@@ -81,15 +81,15 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     {
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandTwoSubCommandsTestData(string subCommandName1, string subCommandName2)
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest) { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandTwoSubCommandsTestData)) { Name = DummyCommandName })
         {
             Descriptor.SubCommands.Add(
-                new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandHandlerRunsTestData))
                 {
                     Name = subCommandName1
                 });
             Descriptor.SubCommands.Add(
-                new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandHandlerRunsTestData))
                 {
                     Name = subCommandName2
                 });
@@ -158,7 +158,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         private static string checkValue = "";
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandInvokeMethodTestData()
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandInvokeMethodTestData))
               {
                   Name = DummyCommandName,
                   InvokeMethod = new InvokeMethodInfo(typeof(CommandInvokeMethodTestData).GetMethod("Invoke")!, "Invoke", 0)
@@ -194,7 +194,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         private static string checkValue = "";
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandInvokeMethodMultipleParametersTestData()
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandInvokeMethodMultipleParametersTestData))
               {
                   Name = DummyCommandName,
                   InvokeMethod = new InvokeMethodInfo(typeof(CommandInvokeMethodMultipleParametersTestData).GetMethod("Invoke")!, "Invoke", 0)

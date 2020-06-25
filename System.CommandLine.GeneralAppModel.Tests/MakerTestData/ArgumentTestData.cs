@@ -1,4 +1,5 @@
-﻿using FluentAssertions.Execution;
+﻿using FluentAssertions;
+using FluentAssertions.Execution;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
 using Xunit.Sdk;
@@ -8,7 +9,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentBasicsTestData : MakerCommandTestData
     {
         public ArgumentBasicsTestData(string name, string description, string[] aliases, bool isHidden, Type argumentType)
-            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(ArgumentBasicsTestData)) { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
                 new ArgumentDescriptor(new ArgTypeInfo ( argumentType), SymbolDescriptor.Empty, DummyRaw)
@@ -47,7 +48,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentArityTestData : MakerCommandTestData
     {
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
-            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(ArgumentArityTestData)) { Name = DummyCommandName })
         {
             var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo (  typeof(string)), SymbolDescriptor.Empty, DummyRaw)
             {
@@ -86,7 +87,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentDefaultValueTestData : MakerCommandTestData
     {
         public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
-            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyRaw) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(ArgumentDefaultValueTestData)) { Name = DummyCommandName })
         {
             var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, DummyRaw)
             {
@@ -114,4 +115,5 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
             actual.Should().HaveDefaultValue(IsSet, DefaultValue );
         }
     }
+
 }
