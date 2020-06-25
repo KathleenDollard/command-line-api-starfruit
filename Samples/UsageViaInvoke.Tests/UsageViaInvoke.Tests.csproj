@@ -27,7 +27,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
-    <ProjectReference Include="..\ManageGlobalJsonCommandModel\ManageGlobalJsonCommandModel.csproj" />
+    <ProjectReference Include="..\MidSizePropertyBasedModel\MidSizePropertyBasedModel.csproj" />
     <ProjectReference Include="..\UsageViaInvoke\UsageViaInvoke.csproj" />
   </ItemGroup>
 

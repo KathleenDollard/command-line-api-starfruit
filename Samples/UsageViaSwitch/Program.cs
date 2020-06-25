@@ -1,4 +1,4 @@
-﻿using System.CommandLine.GeneralAppModel;
+﻿using System.CommandLine.ReflectionAppModel;
 
 namespace System.CommandLine.Samples
 {
@@ -7,7 +7,7 @@ namespace System.CommandLine.Samples
     {
        public static int Main(string[] args)
         {
-            var typedArg = CommandLineActivator.CreateInstance<ManageGlobalJson>(args);
+            var typedArg = new CommandLineActivator().CreateInstance<ManageGlobalJson>(args);
             return typedArg switch
             {
                 ManageGlobalJson.Find x => OutputAndReturnFind(),

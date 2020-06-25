@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel;
-using System.Text;
+using System.CommandLine.ReflectionAppModel;
 
 namespace Playground.PotentialPatterns
 {
@@ -9,7 +7,7 @@ namespace Playground.PotentialPatterns
     {
         public static int Main1(string[] args)
         {
-            var typedArg =  Strategy.Standard.CreateInstance<ManageGlobalJson>(args);
+            var typedArg = new CommandLineActivator().CreateInstance<ManageGlobalJson>(args);
             // System.CommandLine.CommandLine.CreateInstance<T>(args, [Strategy])
             return typedArg switch
             {
