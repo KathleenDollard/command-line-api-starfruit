@@ -37,7 +37,7 @@ namespace System.CommandLine.GeneralAppModel
                 => obj.Item.GetHashCode();
         }
 
-        public override void ReplaceAbstractRules(SpecificSource tools)
+        public override void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             Rules.ReplaceAbstractRules(tools);
         }

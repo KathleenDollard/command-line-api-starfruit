@@ -43,14 +43,14 @@ namespace System.CommandLine.GeneralAppModel
                                                                    IEnumerable<object> traits,
                                                                    ISymbolDescriptor parentSymbolDescriptor)
         {
-            SpecificSource tools = SpecificSource.Tools;
+            DescriptorMakerSpecificSourceBase tools = DescriptorMakerSpecificSourceBase.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor);
             if (!matchingTraits.Any())
             {
                 return Enumerable.Empty<TValue>();
             }
 
-            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TAttribute, TValue>(PropertyName,
+            var fromAllTraits = matchingTraits.SelectMany(trait => DescriptorMakerSpecificSourceBase.Tools.GetAllValues<TAttribute, TValue>(PropertyName,
                                     symbolDescriptor, trait, parentSymbolDescriptor))
                                  .ToList();
             return fromAllTraits;

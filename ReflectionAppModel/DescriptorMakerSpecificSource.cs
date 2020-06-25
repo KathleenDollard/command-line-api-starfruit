@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace System.CommandLine.ReflectionAppModel
 {
-    public class ReflectionSpecificSource : SpecificSource
+    public class DescriptorMakerSpecificSource : DescriptorMakerSpecificSourceBase
     {
         public override IEnumerable<Candidate> GetChildCandidates(Strategy strategy, SymbolDescriptor commandDescriptor)
         {

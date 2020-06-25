@@ -14,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel
                                                         IEnumerable<object> traits,
                                                         ISymbolDescriptor parentSymbolDescriptor)
         {
-            SpecificSource tools = SpecificSource.Tools;
+            DescriptorMakerSpecificSourceBase tools = DescriptorMakerSpecificSourceBase.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
             if (!matchingTraits.Any())
             {
@@ -36,7 +36,7 @@ namespace System.CommandLine.GeneralAppModel
                 };
             }
 
-            var fromAllTraits = matchingTraits.SelectMany(trait => SpecificSource.Tools.GetAllValues<TAttribute, TValue>
+            var fromAllTraits = matchingTraits.SelectMany(trait => DescriptorMakerSpecificSourceBase.Tools.GetAllValues<TAttribute, TValue>
                                     ( PropertyName, symbolDescriptor, trait, parentSymbolDescriptor))
                                     .ToList();
             return fromAllTraits.Any()

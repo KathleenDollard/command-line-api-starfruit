@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.Binding;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel.Descriptors
 {
@@ -7,11 +10,6 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public CommandDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
                                  object? raw)
             : base(parentSymbolDescriptorBase, raw, SymbolType.Command) { }
-
-        public Symbol SymbolToBind { get; private set; }
-
-        public void SetBinding(Symbol symbol)
-            => SymbolToBind = symbol;
 
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();

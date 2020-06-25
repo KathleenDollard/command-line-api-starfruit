@@ -6,14 +6,14 @@ namespace System.CommandLine.GeneralAppModel
     /// This is the base class for source specific code - such as reflection of Roslyn specific code. 
     /// GeneralAppModel should have no (zero, nada) dependencies on any specific type of source.
     /// </summary>
-    public abstract class SpecificSource
+    public abstract class DescriptorMakerSpecificSourceBase
     {
-        private static SpecificSource? tools;
+        private static DescriptorMakerSpecificSourceBase? tools;
 
         /// <summary>
         /// This provides a singleton for access to the methods technology specific layer (like Roslyn, Reflection or JSON)
         /// </summary>
-        public static SpecificSource Tools
+        public static DescriptorMakerSpecificSourceBase Tools
         {
             get
             {
@@ -25,7 +25,7 @@ namespace System.CommandLine.GeneralAppModel
         /// <summary>
         /// This provides a singleton for access to the methods technology specific layer (like Roslyn, Reflection or JSON)
         /// </summary>
-        internal static void SetTools(SpecificSource value)
+        internal static void SetTools(DescriptorMakerSpecificSourceBase value)
         {
             tools = value;
         }

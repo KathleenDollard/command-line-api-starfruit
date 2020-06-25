@@ -24,7 +24,7 @@ namespace System.CommandLine.NamedAttributeRules
                                                                                        IEnumerable<object> traits,
                                                                                        ISymbolDescriptor parentSymbolDescriptor)
         {
-            SpecificSource tools = SpecificSource.Tools;
+            DescriptorMakerSpecificSourceBase tools = DescriptorMakerSpecificSourceBase.Tools;
             var matchingTraits = GetMatches(symbolDescriptor, traits, parentSymbolDescriptor).ToList();
             var complexValues = matchingTraits.SelectMany(trait =>
                     tools.GetComplexValue<object>(AttributeName, symbolDescriptor, trait, parentSymbolDescriptor)

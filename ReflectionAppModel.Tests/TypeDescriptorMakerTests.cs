@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Execution;
+using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
 using System.CommandLine.ReflectionAppModel;
@@ -268,6 +270,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     .Should().HaveArgumentType(argType);
         }
 
+        [Theory]
+        [InlineData(typeof(PropertiesThatArePublicAndPrivate))]
+        public void PrivatePropertiesAreIgnored(Type typeToTest)
+        {
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor( typeToTest);
+            using var x = new AssertionScope();
+            descriptor.Options.Count().Should().Be(1);
+            descriptor.Options.First().Name.Should().Be($"--{nameof(PropertiesThatArePublicAndPrivate.First)}");
+        }
+
         #endregion
 
         #region Argument Tests
@@ -391,6 +403,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     .Should().HaveName("Prop");
             descriptor.SubCommands.Should().BeEmpty();
         }
+
+
         #endregion
 
     }

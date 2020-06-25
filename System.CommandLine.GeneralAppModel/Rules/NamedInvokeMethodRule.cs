@@ -22,7 +22,7 @@ namespace System.CommandLine.GeneralAppModel.Rules
         {
             if (symbolDescriptor is CommandDescriptor commandDescriptor)
             {
-                var available = SpecificSource.Tools.GetAvailableInvokeMethodInfos(commandDescriptor.Raw, commandDescriptor, TreatParametersAsCandidates );
+                var available = DescriptorMakerSpecificSourceBase.Tools.GetAvailableInvokeMethodInfos(commandDescriptor.Raw, commandDescriptor, TreatParametersAsCandidates );
                 var match = available.Where(x => x.Name == Name);
                 if (!match.Any())
                 {
