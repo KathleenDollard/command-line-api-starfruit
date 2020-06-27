@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel;
-using System.CommandLine.GeneralAppModel.Descriptors;
-using System.CommandLine.GeneralAppModel.Rules;
+﻿using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.NamedAttributeRules
 {

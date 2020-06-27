@@ -18,6 +18,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.GeneralAppModel.Hosting.Tests", "System.CommandLine.GeneralAppModel.Hosting.Tests\System.CommandLine.GeneralAppModel.Hosting.Tests.csproj", "{6066038A-D8B4-4E0B-BB77-AFAC84D94DE4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{3745E0E0-AB20-4594-8071-CD4AA755DB08}"
+	ProjectSection(SolutionItems) = preProject
+		Samples\Directory.Build.props = Samples\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleExampleNamedAttr", "Samples\RuleExampleNamedAttr\RuleExampleNamedAttr.csproj", "{E84DE315-81D8-4CAD-B6F7-7B129C7B5735}"
 EndProject
@@ -34,6 +37,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29061BA0-EDD1-40AA-9AA2-27F74E59D7C5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidSizePropertyBasedModel", "Samples\MidSizePropertyBasedModel\MidSizePropertyBasedModel.csproj", "{EF6F8AAD-E3D7-413F-8418-76056F37A9AD}"

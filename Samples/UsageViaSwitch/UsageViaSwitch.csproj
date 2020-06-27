@@ -6,16 +6,6 @@
     <LangVersion>8</LangVersion>
   </PropertyGroup>
 
-  <!--<PropertyGroup>
-    <OutputPath>..\..\..\artifacts\</OutputPath>
-  </PropertyGroup>-->
-
-  <ItemGroup>
-    <Reference Include="System.CommandLine">
-      <HintPath>..\..\..\..\command-line-api\command-line-api\artifacts\bin\System.CommandLine\Debug\netstandard2.0\System.CommandLine.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj" />
     <ProjectReference Include="..\..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />
