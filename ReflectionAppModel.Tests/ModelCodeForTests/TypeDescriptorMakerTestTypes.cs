@@ -290,6 +290,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAtt
     {
         public int Prop { get; set; }
     }
+ 
     public class PropertiesThatArePublicAndPrivate
     {
         public string? First { get; set; }

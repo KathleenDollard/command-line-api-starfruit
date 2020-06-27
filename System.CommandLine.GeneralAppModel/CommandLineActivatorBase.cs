@@ -6,6 +6,7 @@ using System.Linq;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Reflection;
 using System.CommandLine;
+using System.Security.Cryptography;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -13,7 +14,7 @@ namespace System.CommandLine.GeneralAppModel
     {
         protected abstract CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null);
 
-        public  int Invoke<TRoot>(string[] args, Strategy? strategy = null)
+        public int Invoke<TRoot>(string[] args, Strategy? strategy = null)
         {
             var descriptor = GetCommandDescriptor<TRoot>(strategy);
             var command = CommandMaker.MakeRootCommand(descriptor);
@@ -23,6 +24,7 @@ namespace System.CommandLine.GeneralAppModel
             var parseResult = parser.Parse(args);
             if (parseResult.Errors.Any())
             {
+                // TODO: Figure out strategy here
                 Console.WriteLine("Errors!");
             }
             return command.Invoke(args);
@@ -35,7 +37,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         [return: MaybeNull]
-        public  TRoot CreateInstance<TRoot>(string args, Strategy? strategy = null, string? commandName = null)
+        public TRoot CreateInstance<TRoot>(string args, Strategy? strategy = null, string? commandName = null)
         {
             var descriptor = GetCommandDescriptor<TRoot>(strategy);
             var command = commandName is null
@@ -47,43 +49,44 @@ namespace System.CommandLine.GeneralAppModel
             var parseResult = parser.Parse(args);
             if (parseResult.Errors.Any())
             {
+                // TODO: Figure out strategy here
                 Console.WriteLine("Errors!");
             }
- 
-           var commandDescriptor = GetCommandDescriptor(descriptor,parseResult.CommandResult.Command );
+
+            var commandDescriptor = GetCommandDescriptor(descriptor, parseResult.CommandResult.Command);
             var _ = commandDescriptor ?? throw new InvalidOperationException("Descriptor for command not found.");
-            var binder = GetBinder(commandDescriptor);
+            var binder = CommandMaker.MakeModelBinder(commandDescriptor);
             var bindingContext = new BindingContext(command.Parse(args));
             return (TRoot)binder.CreateInstance(bindingContext);
         }
 
-        private static ModelBinder GetBinder(CommandDescriptor commandDescriptor)
-        {
-            if (commandDescriptor is null)
-            {
-                throw new InvalidOperationException("Cannot create instance unless bound to a type.");
-            }
-            if (!(commandDescriptor.Raw is Type type))
-            {
-                throw new InvalidOperationException("Cannot create instance when bound to a method.");
-            } 
-            var binder  = new ModelBinder(type);
+        //private static ModelBinder GetBinder(CommandDescriptor commandDescriptor)
+        //{
+        //    if (commandDescriptor is null)
+        //    {
+        //        throw new InvalidOperationException("Cannot create instance unless bound to a type.");
+        //    }
+        //    if (!(commandDescriptor.Raw is Type type))
+        //    {
+        //        throw new InvalidOperationException("Cannot create instance when bound to a method.");
+        //    } 
+        //    var binder  = new ModelBinder(type);
 
-            foreach (var desc in commandDescriptor.Arguments )
-            {
-                if (!(desc.Raw is PropertyInfo propertyInfo))
-                {
-                    throw new InvalidOperationException("Argument not backed by a property on the type.");
-                }
-                if (!(desc.SymbolToBind is IValueDescriptor valueDescriptor ))
-                {
-                    throw new InvalidOperationException("Property not backed by something recognized as producing a value.");
-                }
-                binder.BindMemberFromValue(propertyInfo, valueDescriptor);
-            }
+        //    foreach (var desc in commandDescriptor.Arguments )
+        //    {
+        //        if (!(desc.Raw is PropertyInfo propertyInfo))
+        //        {
+        //            throw new InvalidOperationException("Argument not backed by a property on the type.");
+        //        }
+        //        if (!(desc.SymbolToBind is IValueDescriptor valueDescriptor ))
+        //        {
+        //            throw new InvalidOperationException("Property not backed by something recognized as producing a value.");
+        //        }
+        //        binder.BindMemberFromValue(propertyInfo, valueDescriptor);
+        //    }
 
-            return binder;
-        }
+        //    return binder;
+        //}
 
         private static CommandDescriptor? GetCommandDescriptor(CommandDescriptor descriptor, ICommand command)
         {

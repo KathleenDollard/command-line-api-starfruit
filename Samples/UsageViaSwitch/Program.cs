@@ -10,27 +10,27 @@ namespace System.CommandLine.Samples
             var typedArg = new CommandLineActivator().CreateInstance<ManageGlobalJson>(args);
             return typedArg switch
             {
-                ManageGlobalJson.Find x => OutputAndReturnFind(),
-                ManageGlobalJson.List x => OutputAndReturnList(),
+                ManageGlobalJson.Find x => OutputAndReturnFind(x),
+                ManageGlobalJson.List x => OutputAndReturnList(x),
                 ManageGlobalJson.Update x => x.Invoke(),
-                ManageGlobalJson.Check x => OutputAndReturnCheck(),
+                ManageGlobalJson.Check x => OutputAndReturnCheck(x),
                 _ => throw new NotImplementedException(),
             };
         }
 
-        private static int OutputAndReturnFind()
+        private static int OutputAndReturnFind(ManageGlobalJson.Find x)
         {
             Console.WriteLine("Find");
             return 5;
         }
 
-        private static int OutputAndReturnList()
+        private static int OutputAndReturnList(ManageGlobalJson.List x)
         {
             Console.WriteLine("List");
             return 7;
         }
 
-        private static int OutputAndReturnCheck()
+        private static int OutputAndReturnCheck(ManageGlobalJson.Check x)
         {
             Console.WriteLine("Check");
             return 9;

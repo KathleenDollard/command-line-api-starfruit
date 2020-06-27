@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Tests;
-using System.CommandLine.ReflectionAppModel.Attributes;
-using System.ComponentModel;
-using System.Text;
+﻿using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.NamedAttributeRules.Tests.ModelCodeForTests.NamedAttributes
 

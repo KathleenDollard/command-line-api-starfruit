@@ -1,5 +1,4 @@
-﻿using System.CommandLine.ReflectionAppModel.Attributes;
-using System.ComponentModel;
+﻿using System.CommandLine.GeneralAppModel;
 
 namespace System.CommandLine.ReflectionAppModel.DotnetCLI
 {

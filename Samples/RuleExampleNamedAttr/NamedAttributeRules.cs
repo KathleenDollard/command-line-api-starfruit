@@ -57,7 +57,7 @@ namespace System.CommandLine.NamedAttributeRules
                 ;
 
             rules.DefaultValueRules
-                .Add(new NamedAttributeWithOptionalValueRule<object>("DefaultValue", "Value"))
+                .Add(new NamedAttributeWithOptionalValueRule<object>("DefaultValue", "DefaultValue"))
                 // DefaultValue on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
                 ;
 

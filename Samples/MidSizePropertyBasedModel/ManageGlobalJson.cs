@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel;
 using System.CommandLine.ReflectionAppModel;
-using System.CommandLine.ReflectionAppModel.Attributes;
-using System.ComponentModel;
 using System.IO;
-using System.Text;
 
 namespace System.CommandLine.Samples
 {

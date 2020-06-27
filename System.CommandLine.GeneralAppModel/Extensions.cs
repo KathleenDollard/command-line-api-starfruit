@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel.Descriptors;
 using System.Linq;
+using System.Reflection;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -53,8 +55,31 @@ namespace System.CommandLine.GeneralAppModel
         {
             if (!isOK)
             {
-                messages.Add(new ValidationFailureInfo(id, path,message));
+                messages.Add(new ValidationFailureInfo(id, path, message));
             }
+        }
+
+        public static SymbolDescriptor? GetOptionOrArgument(this CommandDescriptor commandDescriptor, PropertyInfo propertyInfo)
+        {
+            SymbolDescriptor symbol = commandDescriptor.Options
+                                        .Where(x => ((PropertyInfo?)x.Raw)?.Name == propertyInfo.Name)
+                                        .FirstOrDefault();
+            if (!(symbol is null))
+            {
+                return symbol;
+            }
+            symbol = commandDescriptor.Arguments
+                           .Where(x => ((PropertyInfo?)x.Raw)?.Name == propertyInfo.Name)
+                           .FirstOrDefault();
+            if (!(symbol is null))
+            {
+                return symbol;
+            }
+            if (commandDescriptor.ParentSymbolDescriptorBase is CommandDescriptor parentDescriptor)
+            {
+                return GetOptionOrArgument(parentDescriptor, propertyInfo);
+            }
+            return null;
         }
     }
 }

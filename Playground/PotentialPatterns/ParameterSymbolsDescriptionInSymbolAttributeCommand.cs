@@ -1,5 +1,5 @@
-﻿using System.CommandLine.ReflectionAppModel;
-using System.CommandLine.ReflectionAppModel.Attributes;
+﻿using System.CommandLine.GeneralAppModel;
+using System.CommandLine.ReflectionAppModel;
 using System.IO;
 
 // SubCommands are via derived classes. This makes binding and accessing data in parent classes super easy.
