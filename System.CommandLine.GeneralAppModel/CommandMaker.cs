@@ -25,7 +25,7 @@ namespace System.CommandLine.GeneralAppModel
             return MakeCommandInternal(new Command(descriptor.Name), descriptor);
         }
 
-        public static ModelBinder MakeModelBinder(CommandDescriptor descriptor)
+        public static ModelBinder? MakeModelBinder(CommandDescriptor descriptor)
         {
             var maker = new CommandMaker();
             var _ = maker.ValidateDescriptor(descriptor); // method throws
@@ -98,8 +98,10 @@ namespace System.CommandLine.GeneralAppModel
 
         protected override Argument MakeArgument(ArgumentDescriptor descriptor)
         {
-            var arg = new Argument(descriptor.Name);
-            arg.ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>(); // need work here for Roslyn source generation
+            var arg = new Argument(descriptor.Name)
+            {
+                ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>() // need work here for Roslyn source generation
+            };
             AddAliases(arg, descriptor.Aliases);
             if (descriptor.Arity != null)
             {
@@ -151,7 +153,7 @@ namespace System.CommandLine.GeneralAppModel
             return commandDescriptor.Raw switch
             {
                 Type t => GetModelBinderForType(t, commandDescriptor),
-                MethodInfo m => null,
+                MethodInfo _ => null,
                 _ => throw new InvalidOperationException()
             };
         }

@@ -18,7 +18,11 @@ namespace System.CommandLine.GeneralAppModel.Rules
         public string Name { get; }
         public bool TreatParametersAsCandidates { get; }
 
-        public (bool success, InvokeMethodInfo value) GetOptionalValue(ISymbolDescriptor symbolDescriptor, IEnumerable<object> item, ISymbolDescriptor parentSymbolDescriptor)
+
+        // This is suppressed because support for nullable tuple members not yet available
+#pragma warning disable CS8613 // Nullability of reference types in return type doesn't match implicitly implemented member.
+        public (bool success, InvokeMethodInfo? value) GetOptionalValue(ISymbolDescriptor symbolDescriptor, IEnumerable<object> item, ISymbolDescriptor parentSymbolDescriptor)
+#pragma warning restore CS8613 // Nullability of reference types in return type doesn't match implicitly implemented member.
         {
             if (symbolDescriptor is CommandDescriptor commandDescriptor)
             {
@@ -33,7 +37,7 @@ namespace System.CommandLine.GeneralAppModel.Rules
                 {
                     0 => (false, null),
                     1 => (true, match.First()),
-                    2 => (true, match.First(x => x.Score == max))
+                    _ => (true, match.First(x => x.Score == max))
                 };
             }
             return (false, null);
