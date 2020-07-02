@@ -4,6 +4,7 @@ using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace System.CommandLine.ReflectionAppModel
@@ -19,9 +20,9 @@ namespace System.CommandLine.ReflectionAppModel
         }
 
         public static CommandDescriptor RootCommandDescriptor(
-                                           MethodInfo entryMethod,
-                                           Type[]? ommittedTypes = null)
-                  => RootCommandDescriptor(Strategy.Standard, entryMethod, ommittedTypes);
+                                     MethodInfo entryMethod,
+                                     Type[]? ommittedTypes = null)
+            => RootCommandDescriptor(Strategy.Standard, entryMethod, ommittedTypes);
 
         public static CommandDescriptor RootCommandDescriptor<TRoot>(
                                         Type[]? ommittedTypes = null)

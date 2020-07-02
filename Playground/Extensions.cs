@@ -8,7 +8,7 @@ using System.CommandLine.Invocation;
 using System.Reflection;
 using System.CommandLine.GeneralAppModel.Descriptors;
 
-namespace UserStudyTest2
+namespace System.CommandLine.GeneralAppModel
 {
     public static class Extensions
     {
@@ -41,31 +41,5 @@ namespace UserStudyTest2
             }
             return null;
         }
-
-        public static int Invoke<T>(this Strategy strategy, Func<T, int> toRun, string[] args)
-            where T : new()
-        {
-            var type = typeof(T);
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, type);
-            var command = CommandMaker.MakeRootCommand(descriptor);
-            command.Handler = CommandHandler.Create(toRun);
-            return command.Invoke(args);
-        }
-
-        public static int InvokeMethod(this Strategy strategy, MethodInfo methodInfo, string[] args)
-        {
-            System.Reflection.MethodInfo entryMethod = typeof(Program).GetMethod("Test");
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, entryMethod);
-            var command = CommandMaker.MakeRootCommand(descriptor);
-            command.Handler = CommandHandler.Create(methodInfo);
-            command.Invoke(args);
-            return 0;
-        }
-
-        public static void Report(this Strategy strategy)
-        {
-            Console.WriteLine(strategy.Report());
-        }
-
     }
 }

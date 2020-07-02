@@ -50,6 +50,7 @@ namespace System.CommandLine.GeneralAppModel
 
             rules.AliasRules
                 .Add(new AttributeWithPropertyValueRule<ArgumentAttribute, string[]>("Aliases"))
+                .Add(new AttributeWithImpliedPropertyRule<AliasesAttribute, string[]>())
                 ;
 
             rules.DefaultValueRules
@@ -90,6 +91,7 @@ namespace System.CommandLine.GeneralAppModel
 
             rules.AliasRules
                 .Add(new AttributeWithPropertyValueRule<OptionAttribute, string[]>("Aliases"))
+                .Add(new AttributeWithImpliedPropertyRule<AliasesAttribute, string[]>())
                 ;
 
             return rules;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine.GeneralAppModel.Tests;
-using System.CommandLine.ReflectionAppModel.Attributes;
-using System.ComponentModel;
-using System.Text;
+﻿using System.CommandLine.GeneralAppModel;
 using constant = System.CommandLine.NamedAttributeRules.Tests.TypeDescriptorMakerTests;
 
 namespace System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttributes

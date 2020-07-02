@@ -35,7 +35,7 @@ namespace System.CommandLine.GeneralAppModel
         /// If sibling evaluation is needed, plan a post processing step.
         /// </summary>
         public ISymbolDescriptor ParentSymbolDescriptorBase { get; }
-
+ 
         /// <summary>
         /// This is the underlying thing rules were evaluated against. For
         /// example MethodInfo, Type, ParameterInfo and PropertyInfo appear

@@ -1,7 +1,4 @@
-﻿using System.CommandLine.ReflectionAppModel.Attributes;
-using System.ComponentModel;
-
-namespace System.CommandLine.ReflectionAppModel.DotnetCLI
+﻿namespace System.CommandLine.ReflectionAppModel.DotnetCLI
 {
     public class Build : Dotnet
     { 

@@ -1,39 +1,26 @@
-﻿using Playground;
-using System;
-using System.CommandLine.GeneralAppModel;
-using System.CommandLine.ReflectionAppModel;
-using System.Security.Cryptography.X509Certificates;
+﻿using Playground.PotentialPatterns;
+using System.Threading.Tasks;
 
 namespace UserStudyTest2
 {
     class Program
     {
-        // Old debug: --name "Hello" --a 7 --b 13 --c 17
-        static int Main(string[] args)
+        static async Task Main(string[] args)
         {
-            return ManageGlobalJsonProgram.Main2(args);
+             // Currently, args are not piped through, but 
+             await MainWithGeneraicHostInvokeWithConfiguration.Main1(args);
 
-            //var strategy = new Strategy("Full").SetReflectionRules();
 
-            //Console.WriteLine(strategy.Report());
-
-            //strategy.InvokeMethod(typeof(Program).GetMethod("Test"), args);
-
-            //var instance = strategy.CreateInstance<MyClass>(args);
-            //Console.WriteLine($"From Type: Name: {instance.Name} A: {instance.A} B: {instance.B} C: {instance.C}");
         }
 
-        public static void Test(string name, int a, string b, int c)
-        {
-            Console.WriteLine($"From Method: Name: {name} A: {a} B: {b} C: {c}");
-        }
-    }
-
-    public class MyClass
-    {
-        public string Name { get; set; }
-        public int A { get; set; }
-        public string B { get; set; }
-        public int C { get; set; }
+        //    var arg = "start Update start2 --allow-prerelease";
+        //    var result = GetParseResult(arg);
+        //private static ParseResult GetParseResult(string arg)
+        //{
+        //    var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor<ManageGlobalJson>(Strategy.Standard);
+        //    var builder = new CommandLineBuilder();
+        //    CommandMaker.FillCommand(builder.Command, descriptor);
+        //    return builder.Build().Parse(arg);
+        //}
     }
 }

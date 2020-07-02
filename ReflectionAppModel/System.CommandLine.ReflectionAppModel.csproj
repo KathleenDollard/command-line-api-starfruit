@@ -7,14 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
+    <Compile Remove="System.Diagnostics.CodeAnalysis.cs" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <Reference Include="System.CommandLine">
-      <HintPath>..\..\..\command-line-api\command-line-api\artifacts\bin\System.CommandLine\Debug\netstandard2.0\System.CommandLine.dll</HintPath>
-    </Reference>
-  </ItemGroup>-->
 
   <ItemGroup>
     <ProjectReference Include="..\System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj" />

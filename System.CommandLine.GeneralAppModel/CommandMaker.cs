@@ -25,12 +25,11 @@ namespace System.CommandLine.GeneralAppModel
             return MakeCommandInternal(new Command(descriptor.Name), descriptor);
         }
 
-        public static ModelBinder MakeModelBinder<TCommand>(CommandDescriptor descriptor)
-            where TCommand : Command
+        public static ModelBinder MakeModelBinder(CommandDescriptor descriptor)
         {
             var maker = new CommandMaker();
             var _ = maker.ValidateDescriptor(descriptor); // method throws
-            return maker.MakeModelBinder(descriptor);
+            return maker.MakeModelBinderInternal(descriptor);
         }
 
         public static void FillCommand(Command command, CommandDescriptor descriptor)
@@ -116,16 +115,42 @@ namespace System.CommandLine.GeneralAppModel
             return arg;
         }
 
+        protected override ModelBinder? GetModelBinderForType(Type type, CommandDescriptor commandDescriptor)
+        {
+            var modelBinder = new ModelBinder(type);
+            // Note that these flags explicitly include the base, where creation of the CommandDescriptor is explicitly DeclaredOnly so options are only on parent command
+            var flags = BindingFlags.Public | BindingFlags.Instance;
+            var properties = type.GetProperties(flags);
+            foreach (var property in properties)
+            {
+                var descriptor = commandDescriptor.GetOptionOrArgument(property);
+                if (descriptor is null)
+                {
+                    continue;
+                }
+                switch (descriptor.SymbolToBind)
+                {
+                    case Option o: modelBinder.BindMemberFromValue(property, o); break;
+                    case Argument a: modelBinder.BindMemberFromValue(property, a); break;
+                    default:
+                        throw new InvalidOperationException($"Don't know how to bind type {descriptor.SymbolType.GetType()}");
+                }
+            }
+            return modelBinder;
+        }
+
+
+
         // Basic logic:
         //    Set modelbinder when the binding context is created.
         //    Create and check the parse result
         //    Create an instance from the parse result
         //    Use that instance to call invoke or the method. Check if Invocatin handles this better. 
-        protected override ModelBinder? MakeModelBinder(CommandDescriptor commandDescriptor)
+        protected override ModelBinder? MakeModelBinderInternal(CommandDescriptor commandDescriptor)
         {
             return commandDescriptor.Raw switch
             {
-                Type t => GetModelBinderForType(new ModelBinder(t), commandDescriptor),
+                Type t => GetModelBinderForType(t, commandDescriptor),
                 MethodInfo m => null,
                 _ => throw new InvalidOperationException()
             };
@@ -143,19 +168,6 @@ namespace System.CommandLine.GeneralAppModel
             }
         }
 
-        protected override void BindOption(ModelBinder modelBinder, PropertyInfo target, Option option)
-        {
-            modelBinder.BindMemberFromValue(target, option);
-        }
 
-        protected override void BindArgument(ModelBinder modelBinder, PropertyInfo target, Argument argument)
-        {
-            modelBinder.BindMemberFromValue(target, argument);
-        }
-
-        protected override void BindSubCommand(ModelBinder modelBinder, Type target, Command option)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

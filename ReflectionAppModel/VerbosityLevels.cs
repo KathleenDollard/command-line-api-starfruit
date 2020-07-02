@@ -6,9 +6,9 @@ namespace System.CommandLine.ReflectionAppModel
 {
     public enum VerbosityLevel
     {
+        Normal, 
         Quiet, 
         Minimal, 
-        Normal, 
         Detailed, 
         Diagnostic
     }
