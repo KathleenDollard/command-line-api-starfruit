@@ -3,6 +3,7 @@ using FluentAssertions.Execution;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
+using System.CommandLine.Parsing;
 using System.CommandLine.ReflectionAppModel;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.TypedAttributes;
@@ -15,6 +16,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
     public class TypeDescriptorMakerTests
     {
         internal const string Name = "George";
+        internal const string CommandOrOptionName = "george";
         internal const string NameForEmpty = "DummyName";
         internal const string Description = "Awesome description!";
         internal const string AliasAsStringMultiple = "a,b,c";
@@ -26,15 +28,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const int AllowedValuesAsIntThird = 7;
         internal const string ArgumentName = "Red";
         internal const string ArgumentName2 = "Blue";
-        internal const string OptionName = "East";
-        internal const string OptionName2 = "West";
+        internal const string OptionName = "east";
+        internal const string OptionName2 = "west";
         internal const string PropertyOptionName = "Prop";
         internal const string PropertyArgName = "Prop";
         internal const string DefaultValueString = "MyDefault";
         internal const int DefaultValueInt = 42;
+        internal const string EmptyMethodName = "empty-method";
+        internal const string EmptyTypeName = "empty-type";
 
-        internal const string TestMethodName = "Method";
-        internal const string ParameterOptionName = "Param";
+        internal const string TestMethodName = "method";
+        internal const string ParameterOptionName = "param";
         internal const string ParameterArgName = "Param";
 
         private readonly Strategy fullStrategy;
@@ -50,16 +54,19 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         #region CommandTests
         [Theory]
-        [InlineData(full, typeof(EmptyType), nameof(EmptyType), "")]
-        [InlineData(full, typeof(TypeWithNameAttribute), Name, "")]
-        [InlineData(full, typeof(TypeWithNameInCommandAttribute), Name, "")]
+        [InlineData(full, typeof(EmptyType), EmptyTypeName, "")]
+        [InlineData(full, typeof(TypeWithNameAttribute), CommandOrOptionName, "")]
+        [InlineData(full, typeof(TypeWithNameInCommandAttribute), CommandOrOptionName, "")]
         [InlineData(full, typeof(TypeWithDescriptionAttribute), nameof(TypeWithDescriptionAttribute), Description)]
         [InlineData(full, typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
-        [InlineData(standard, typeof(EmptyType), nameof(EmptyType), "")]
-        [InlineData(standard, typeof(TypeWithNameInCommandAttribute), Name, "")]
+        [InlineData(standard, typeof(EmptyType), EmptyTypeName, "")]
+        [InlineData(standard, typeof(TypeWithNameInCommandAttribute), CommandOrOptionName, "")]
         [InlineData(standard, typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
         public void CommandNameAndDescriptionFromType(string useStrategy, Type typeToTest, string name, string description)
         {
+            name = char.IsUpper(name[0])
+                    ? name.ToKebabCase()
+                    : name;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveName(name)
@@ -132,6 +139,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(standard, typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
         public void CommandWithSubCommands(string useStrategy, Type typeToTest, params string[] argNames)
         {
+            argNames = argNames.Select(x => x.ToKebabCase()).ToArray();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveSubCommandsNamed(argNames);
@@ -178,16 +186,17 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(full, typeof(PropertyOptionWithName), "--" + Name, "")]
-        [InlineData(full, typeof(PropertyOptionWithNameAttribute), "--" + Name, "")]
-        [InlineData(full, typeof(PropertyOptionWithNameInOptionAttribute), "--" + Name, "")]
-        [InlineData(full, typeof(PropertyOptionWithDescriptionAttribute), "--" + PropertyOptionName, Description)]
-        [InlineData(full, typeof(PropertyOptionWithDescriptionInOptionAttribute), "--" + PropertyOptionName, Description)]
-        [InlineData(standard, typeof(PropertyOptionWithName), "--" + Name, "")]
-        [InlineData(standard, typeof(PropertyOptionWithNameInOptionAttribute), "--" + Name, "")]
-        [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), "--" + PropertyOptionName, Description)]
+        [InlineData(full, typeof(PropertyOptionWithName), Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithNameAttribute), Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
+        [InlineData(full, typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
+        [InlineData(full, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
+        [InlineData(standard, typeof(PropertyOptionWithName), Name, "")]
+        [InlineData(standard, typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
+        [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(string useStrategy, Type typeToTest, string name, string description)
         {
+            name = "--" + name.ToKebabCase();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
@@ -274,10 +283,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(typeof(PropertiesThatArePublicAndPrivate))]
         public void PrivatePropertiesAreIgnored(Type typeToTest)
         {
-            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor( typeToTest);
+            var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(typeToTest);
             using var x = new AssertionScope();
             descriptor.Options.Count().Should().Be(1);
-            descriptor.Options.First().Name.Should().Be($"--{nameof(PropertiesThatArePublicAndPrivate.First)}");
+            descriptor.Options.First().Name.Should().Be($"--{nameof(PropertiesThatArePublicAndPrivate.First).ToKebabCase()}");
         }
 
         #endregion

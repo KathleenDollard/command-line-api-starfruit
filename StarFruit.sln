@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29721.120
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "Playground\Playground.csproj", "{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.GeneralAppModel", "System.CommandLine.GeneralAppModel\System.CommandLine.GeneralAppModel.csproj", "{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.CommandLine.ReflectionAppModel", "ReflectionAppModel\System.CommandLine.ReflectionAppModel.csproj", "{94431F4D-ACB0-4FCC-95CD-B808C1AF5CE5}"
@@ -50,10 +48,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E20BA35-D2BE-4304-826A-D6AE6FA8EE22}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3326DE58-1D7C-4C88-9EB2-B32518CE79A7}.Release|Any CPU.ActiveCfg = Release|Any CPU

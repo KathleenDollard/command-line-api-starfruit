@@ -25,8 +25,8 @@ namespace System.CommandLine.ReflectionAppModel.Tests
         }
 
         [Theory()]
-        [InlineData("A", false)]
-        [InlineData("A --allow", true)]
+        [InlineData("a", false)]
+        [InlineData("a --allow", true)]
         public void CommandWithSubCommands(string args, bool allow)
         {
             // args[0] = $"{commandName} {args[0]}";

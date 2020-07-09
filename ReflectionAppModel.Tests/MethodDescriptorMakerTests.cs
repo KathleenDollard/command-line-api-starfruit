@@ -27,13 +27,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         #region Command tests
         [Theory]
-        [InlineData(full, typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), "")]
-        [InlineData(full, typeof(MethodWithNameAttribute), constant.Name, "")]
-        [InlineData(full, typeof(MethodWithNameInCommandAttribute), constant.Name, "")]
+        [InlineData(full, typeof(MethodEmptyMethod), constant.EmptyMethodName , "")]
+        [InlineData(full, typeof(MethodWithNameAttribute), constant.CommandOrOptionName , "")]
+        [InlineData(full, typeof(MethodWithNameInCommandAttribute), constant.CommandOrOptionName, "")]
         [InlineData(full, typeof(MethodWithDescriptionAttribute), constant.TestMethodName, constant.Description)]
         [InlineData(full, typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
-        [InlineData(standard, typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), "")]
-        [InlineData(standard, typeof(MethodWithNameInCommandAttribute), constant.Name, "")]
+        [InlineData(standard, typeof(MethodEmptyMethod), constant.EmptyMethodName, "")]
+        [InlineData(standard, typeof(MethodWithNameInCommandAttribute), constant.CommandOrOptionName, "")]
         [InlineData(standard, typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
         public void NameAndDescriptionFromType(string useStrategy, Type typeToTest, string name, string description)
         {
@@ -128,13 +128,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(full, typeof(ParameterOptionWithName), "--" + constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithNameAttribute), "--" + constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.Name, "")]
+        [InlineData(full, typeof(ParameterOptionWithName), "--" + constant.CommandOrOptionName, "")]
+        [InlineData(full, typeof(ParameterOptionWithNameAttribute), "--" + constant.CommandOrOptionName, "")]
+        [InlineData(full, typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.CommandOrOptionName, "")]
         [InlineData(full, typeof(ParameterOptionWithDescriptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
         [InlineData(full, typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
-        [InlineData(standard, typeof(ParameterOptionWithName), "--" + constant.Name, "")]
-        [InlineData(standard, typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.Name, "")]
+        [InlineData(standard, typeof(ParameterOptionWithName), "--" + constant.CommandOrOptionName, "")]
+        [InlineData(standard, typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.CommandOrOptionName, "")]
         [InlineData(standard, typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
         public void OptionNameAndDescriptionFromParameter(string useStrategy, Type typeToTest, string name, string description)
         {

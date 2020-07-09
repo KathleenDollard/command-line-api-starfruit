@@ -12,7 +12,7 @@ namespace System.CommandLine.Samples
             return 0;
         }
 
-        public static int List(DirectoryInfo startPathArg, VerbosityLevel verbosity, string output)
+        public static int List(DirectoryInfo startPathArg, VerbosityLevel verbosity, FileInfo output)
         {
             Console.WriteLine($"Run List from {startPathArg} with verbosity {verbosity}");
             return 0;
