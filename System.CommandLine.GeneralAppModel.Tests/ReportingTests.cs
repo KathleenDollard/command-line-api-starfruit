@@ -119,7 +119,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             var strategy = new Strategy().SetStandardRules();
             var report = strategy.Report();
-            report.Length.Should().BeGreaterThan(4500);
+            report.Length.Should().BeGreaterThan(4000);
         }
     }
 }
