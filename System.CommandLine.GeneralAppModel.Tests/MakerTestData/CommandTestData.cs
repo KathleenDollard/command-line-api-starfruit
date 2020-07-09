@@ -143,7 +143,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
                                  .UseDefaults()
                                  .Build();
 
-            var parseResult = parser.Parse($"DummyCommandName {HelloTo}");
+            var parseResult = parser.Parse($"dummy-command-name {HelloTo}");
             parseResult.Errors.Should().BeEmpty();
 
             var ret = parser.Invoke(HelloTo);
@@ -178,7 +178,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
                                  .UseDefaults()
                                  .Build();
 
-            var parseResult = parser.Parse($"DummyCommandName");
+            var parseResult = parser.Parse($"dummy-command-name");
             parseResult.Errors.Should().BeEmpty();
 
             var ret = parser.Invoke("");
@@ -230,7 +230,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
                                  .Build();
 
             string commandLine = $"{HelloTo} --all-caps";
-            var parseResult = parser.Parse("DummyCommandName " + commandLine);
+            var parseResult = parser.Parse("dummy-command-name " + commandLine);
             parseResult.Errors.Should().BeEmpty();
 
             var ret = parser.Invoke(commandLine);

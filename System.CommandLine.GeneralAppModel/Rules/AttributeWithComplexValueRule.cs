@@ -36,7 +36,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{typeof(TAttribute).Name}': {string.Join(", ", PropertyNamesAndTypes.Select(p => ReportNameAndType(p)))}";
+            => $"If there is an attribute named '{typeof(TAttribute).NameWithGenericArguments()}': {string.Join(", ", PropertyNamesAndTypes.Select(p => ReportNameAndType(p)))}";
 
         private string ReportNameAndType(NameAndType p)
         {

@@ -15,7 +15,7 @@ namespace System.CommandLine.ReflectionAppModel
 {
     public class CommandLineActivator : CommandLineActivatorBase
     {
-        protected override CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null)
+        public override CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null)
         {
             strategy ??= Strategy.Standard;
             return ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeof(TRoot));

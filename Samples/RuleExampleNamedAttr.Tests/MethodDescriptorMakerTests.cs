@@ -33,7 +33,6 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
         public void NameAndDescriptionFromType(Type typeToTest, string name, string description)
         {
-            name = name.ToKebabCase();
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
 
@@ -122,7 +121,6 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
         public void OptionNameAndDescriptionFromParameter(Type typeToTest, string name, string description)
         {
-            name = "--" + name.ToKebabCase();
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
 

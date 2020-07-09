@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
+using System.CommandLine.Parsing;
 using System.Linq;
 using Xunit;
 
@@ -7,9 +8,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 {
     public class CommandMakerTests
     {
-        public const string name = "Fred";
-        public const string name2 = "Bill";
-        public const string nameForEmpty = "NameIsRequired";
+        public const string name = "fred";
+        public const string name2 = "bill";
+        public const string nameForEmpty = "name-is-required";
         public const string desc = "This is awesome!";
         public const string aliasAsStringMuitple = "x,y,z";
         public const string aliasAsStringSingle = "a";
@@ -38,7 +39,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
                           ? new string[] { }
                           : aliasesAsString.Split(',').Select(s => s.Trim()).ToArray();
             var data = new CommandBasicsTestData(name, description, aliases, isHidden, treatUnmatchedTokensAsErrors);
-            var command = new Command(name);
+            var command = new Command(name.ToKebabCase());
             CommandMaker.FillCommand(command, data.Descriptor);
             data.Check(command);
         }

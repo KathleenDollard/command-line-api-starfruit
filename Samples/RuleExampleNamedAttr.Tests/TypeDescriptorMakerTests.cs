@@ -27,8 +27,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         internal const int AllowedValuesAsIntThird = 7;
         internal const string ArgumentName = "Red";
         internal const string ArgumentName2 = "Blue";
-        internal const string OptionName = "east";
-        internal const string OptionName2 = "west";
+        internal const string OptionName = "East";
+        internal const string OptionName2 = "West";
         internal const string PropertyOptionName = "Prop";
         internal const string PropertyArgName = "Prop";
         internal const string DefaultValueString = "MyDefault";
@@ -55,7 +55,6 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
         public void CommandNameAndDescriptionFromType(Type typeToTest, string name, string description)
         {
-            name = name.ToKebabCase();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Should().HaveName(name)
@@ -115,8 +114,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOneCommandByDerivedType), "a")]
-        [InlineData(typeof(TypeWithTwoCommandsByDerivedType), "a", "b")]
+        [InlineData(typeof(TypeWithOneCommandByDerivedType), "A")]
+        [InlineData(typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
         public void CommandWithSubCommands(Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
@@ -147,7 +146,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
         {
-            name = "--" + name.ToKebabCase();
+            name = "--" + name;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Options.First()

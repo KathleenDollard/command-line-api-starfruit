@@ -4,6 +4,7 @@
     {
         public static Strategy SetStandardRules(this Strategy strategy)
         {
+            StandardRules.SetDescriptorContextRules(strategy.DescriptorContextRules);
             StandardRules.SetSelectSymbolRules(strategy.SelectSymbolRules);
             StandardRules.SetCandidatesRules(strategy.GetCandidateRules);
             StandardRules.SetArgumentRules(strategy.ArgumentRules);

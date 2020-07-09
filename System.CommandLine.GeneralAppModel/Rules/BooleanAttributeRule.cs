@@ -60,7 +60,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{typeof(TAttribute).Name}', its '{PropertyName}' property, with type {typeof(bool)}";
+            => $"If there is an attribute named '{typeof(TAttribute).NameWithGenericArguments()}', its '{PropertyName}' property, with type {typeof(bool)}";
 
 
     }

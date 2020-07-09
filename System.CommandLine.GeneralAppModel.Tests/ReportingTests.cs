@@ -113,5 +113,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var report = strategy.Report();
             report.Length.Should().BeGreaterThan(4500);
         }
+
+        [Fact]
+        public void StandardStrategyReportIsAboutTheRightLength()
+        {
+            var strategy = new Strategy().SetStandardRules();
+            var report = strategy.Report();
+            report.Length.Should().BeGreaterThan(4500);
+        }
     }
 }

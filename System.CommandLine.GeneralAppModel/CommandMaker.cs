@@ -22,7 +22,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             var _ = descriptor.Name ?? throw new InvalidOperationException("The name for a non-root command cannot be null");
 
-            return MakeCommandInternal(new Command(descriptor.Name), descriptor);
+            return MakeCommandInternal(new Command(descriptor.Name.ToKebabCase()), descriptor);
         }
 
         public static ModelBinder? MakeModelBinder(CommandDescriptor descriptor)

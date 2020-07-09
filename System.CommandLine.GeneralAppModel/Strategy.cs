@@ -11,6 +11,7 @@
         }
 
         public string Name { get; }
+        public RuleSetDescriptorContext DescriptorContextRules { get; } = new RuleSetDescriptorContext();
         public RuleSetGetCandidatesRule GetCandidateRules { get; } = new RuleSetGetCandidatesRule();
         public RuleSetSelectSymbols SelectSymbolRules { get; } = new RuleSetSelectSymbols();
         public RuleSetArgument ArgumentRules { get; } = new RuleSetArgument();
@@ -22,10 +23,10 @@
         {
             return $@"
 Strategy: {Name}
-   To classify symols:{ SelectSymbolRules.Report(2)}
-   For argument details:{ ArgumentRules.Report(2)}
-   For option details:{ OptionRules.Report(2)}
-   For command details:{ CommandRules.Report(2)}
+   Classify symbols as:{ SelectSymbolRules.Report(2)}
+   Argument details:{ ArgumentRules.Report(2)}
+   Option details:{ OptionRules.Report(2)}
+   Command details:{ CommandRules.Report(2)}
 ";
         }
 

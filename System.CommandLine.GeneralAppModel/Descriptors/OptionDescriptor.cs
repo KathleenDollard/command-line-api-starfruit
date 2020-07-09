@@ -11,5 +11,11 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
         public bool Required { get; set; }
 
+        public override string ReportInternal(int tabsCount)
+        {
+            string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
+            return $"{whitespace}Required:{Required}" ;
+        }
+
     }
 }

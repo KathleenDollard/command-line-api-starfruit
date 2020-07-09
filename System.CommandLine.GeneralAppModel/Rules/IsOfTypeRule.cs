@@ -15,7 +15,7 @@ namespace System.CommandLine.GeneralAppModel
         public Type Type { get; }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"Item is of type {Type}.";
+            => $"Item is of type {Type.NameWithGenericArguments()}.";
     }
 
     public class IsOfTypeRule<TType> : IsOfTypeRule, IRuleGetCandidates

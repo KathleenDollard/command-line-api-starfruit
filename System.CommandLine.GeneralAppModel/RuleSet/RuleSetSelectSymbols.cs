@@ -22,7 +22,7 @@ namespace System.CommandLine.GeneralAppModel
                                 .OfType<IRuleGetCandidates>()
                                 .Where(x => x.SymbolType == symbolType)
                                 .ToList();
-            return rules                 
+            return rules
                     .SelectMany(r => r.GetCandidates(candidates, commandDescriptor))
                     .Distinct(new CompareRaw())
                     .ToList();
@@ -30,10 +30,10 @@ namespace System.CommandLine.GeneralAppModel
 
         private class CompareRaw : IEqualityComparer<Candidate>
         {
-            public bool Equals(Candidate x, Candidate y) 
+            public bool Equals(Candidate x, Candidate y)
                 => x.Item == y.Item;
 
-            public int GetHashCode(Candidate obj) 
+            public int GetHashCode(Candidate obj)
                 => obj.Item.GetHashCode();
         }
 
@@ -45,7 +45,15 @@ namespace System.CommandLine.GeneralAppModel
         public override string Report(int tabsCount)
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
-            return string.Join("", Rules.Select(r => whitespace + $"Is {r.SymbolType.ToString().ProperAnOrA()} if {r.RuleDescription<IRuleGetCandidates>()} ({r.GetType().Name})"));
+            return string.Join("", Rules.Select(r => whitespace + 
+                                    $"{ProperName(r.SymbolType)} if " +
+                                    $"{r.RuleDescription<IRuleGetCandidates>()} " +
+                                    $"({r.GetType().NameWithGenericArguments()})"));
+
+            string ProperName(SymbolType symbolType)
+            {
+                return symbolType.ToString();
+            }
         }
     }
 }

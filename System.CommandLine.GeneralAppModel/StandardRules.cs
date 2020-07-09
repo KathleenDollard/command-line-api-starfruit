@@ -6,6 +6,14 @@ namespace System.CommandLine.GeneralAppModel
 {
     public static class StandardRules
     {
+        public static RuleSetDescriptorContext SetDescriptorContextRules(RuleSetDescriptorContext rules)
+        {
+            rules.DescriptionSourceRules
+                .Add(new AttributeWithImpliedPropertyRule<DescriptionSourceAttribute, Type>())
+                ;
+            return rules;
+        }
+
         public static RuleSetGetCandidatesRule SetCandidatesRules(RuleSetGetCandidatesRule rules)
         {
             rules.Rules
@@ -157,6 +165,5 @@ namespace System.CommandLine.GeneralAppModel
             
             return rules;
         }
-
     }
 }

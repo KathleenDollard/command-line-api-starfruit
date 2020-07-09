@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
 using System.Reflection;
 
@@ -41,14 +42,45 @@ namespace System.CommandLine.GeneralAppModel
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             string indentedWhitespace = CoreExtensions.NewLineWithTabs(tabsCount + 1);
-            return $"{ whitespace}To determine {what}  { string.Join("", ruleGroup.Select(r => indentedWhitespace + r.RuleDescription<TRule>() + $" ({r.GetType().Name})"))}";
+            return $"{ whitespace}To determine {what}:  { string.Join("", ruleGroup.Select(r => indentedWhitespace + r.RuleDescription<TRule>() + $" ({r.GetType().NameWithGenericArguments()})"))}";
         }
 
-        public static string ProperAnOrA(this string s)
+        public static string PrefixAnOrA(this string s)
         {
             return new char[] { 'A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u' }.Contains(s.First())
                     ? "an " + s
                     : "a " + s;
+        }
+
+        public static string PrefixUpperAnOrA(this string s)
+        {
+            return new char[] { 'A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u' }.Contains(s.First())
+                    ? "An " + s
+                    : "A " + s;
+        }
+
+        public static string NameWithGenericArguments(this Type type)
+        {
+            return type.IsGenericType
+                ? NameWithoutGeneric(type) + GenericArguments(type)
+                : type.Name;
+
+            static string NameWithoutGeneric(Type type)
+            {
+                var name = type.Name;
+                var pos = name.IndexOf("`");
+                return pos >= 0
+                    ? name.Substring(0, pos)
+                    : name;
+            }
+
+            static string GenericArguments(Type type)
+            {
+                return "<" + string.Join(", ", type
+                                    .GetGenericArguments()
+                                    .Select(x => x.Name)) +
+                            ">";
+            }
         }
 
         public static void Assert(this List<ValidationFailureInfo> messages, bool isOK, string id, string path, string message)
