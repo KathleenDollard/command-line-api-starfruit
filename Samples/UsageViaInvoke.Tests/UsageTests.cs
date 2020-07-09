@@ -10,7 +10,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void InvokingMainReturnsSeven()
         {
-            var arg = "start Update start2 --allow-prerelease";
+            var arg = "start update start2 --allow-prerelease";
             var x = Samples.Program.Main(arg.Split(' '));
             x.Should().Be(7);
         }

@@ -9,6 +9,7 @@ using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests;
 using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttributes;
 using System.Linq;
 using Xunit;
+using System.CommandLine.Parsing;
 
 namespace System.CommandLine.NamedAttributeRules.Tests
 {
@@ -26,8 +27,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         internal const int AllowedValuesAsIntThird = 7;
         internal const string ArgumentName = "Red";
         internal const string ArgumentName2 = "Blue";
-        internal const string OptionName = "East";
-        internal const string OptionName2 = "West";
+        internal const string OptionName = "east";
+        internal const string OptionName2 = "west";
         internal const string PropertyOptionName = "Prop";
         internal const string PropertyArgName = "Prop";
         internal const string DefaultValueString = "MyDefault";
@@ -54,6 +55,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
         public void CommandNameAndDescriptionFromType(Type typeToTest, string name, string description)
         {
+            name = name.ToKebabCase();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Should().HaveName(name)
@@ -113,8 +115,8 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOneCommandByDerivedType), "A")]
-        [InlineData(typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
+        [InlineData(typeof(TypeWithOneCommandByDerivedType), "a")]
+        [InlineData(typeof(TypeWithTwoCommandsByDerivedType), "a", "b")]
         public void CommandWithSubCommands(Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
@@ -138,13 +140,14 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(PropertyOptionWithName), "--" + Name, "")]
-        [InlineData(typeof(PropertyOptionWithNameAttribute), "--" + Name, "")]
-        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), "--" + Name, "")]
-        [InlineData(typeof(PropertyOptionWithDescriptionAttribute), "--" + PropertyOptionName, Description)]
-        [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), "--" + PropertyOptionName, Description)]
+        [InlineData(typeof(PropertyOptionWithName), Name, "")]
+        [InlineData(typeof(PropertyOptionWithNameAttribute), Name, "")]
+        [InlineData(typeof(PropertyOptionWithNameInOptionAttribute), Name, "")]
+        [InlineData(typeof(PropertyOptionWithDescriptionAttribute), PropertyOptionName, Description)]
+        [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
         {
+            name = "--" + name.ToKebabCase();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Options.First()

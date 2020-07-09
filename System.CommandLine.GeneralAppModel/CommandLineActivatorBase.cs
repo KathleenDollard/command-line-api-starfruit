@@ -56,6 +56,10 @@ namespace System.CommandLine.GeneralAppModel
             var commandDescriptor = GetCommandDescriptor(descriptor, parseResult.CommandResult.Command);
             var _ = commandDescriptor ?? throw new InvalidOperationException("Descriptor for command not found.");
             var binder = CommandMaker.MakeModelBinder(commandDescriptor);
+            if (binder is null)
+            {
+                throw new InvalidOperationException("Expected binder to be created. Is the bound uten a method?");
+            }
             var bindingContext = new BindingContext(command.Parse(args));
             return (TRoot)binder.CreateInstance(bindingContext);
         }

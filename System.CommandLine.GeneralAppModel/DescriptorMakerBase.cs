@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
+using System.CommandLine.Parsing;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
@@ -195,16 +196,22 @@ namespace System.CommandLine.GeneralAppModel
             var aliases = ruleSet.AliasRules.GetAllValues<string[]>(descriptor, candidate, parentSymbolDescriptor)
                                      .SelectMany(x => x);
             aliases = aliases.SelectMany(x => x.Split(','));
-            if (symbolDescriptor is OptionDescriptor)
-            {
-                aliases = aliases.Select(x => x.StartsWith("-") ? x : "-" + x);
-                name = name.StartsWith("--") ? name : "--" + name;
-            }
-            descriptor.Name = name;
+            aliases = descriptor is OptionDescriptor
+                        ? aliases.Select(x => x.StartsWith("-") ? x : "-" + x)
+                        : aliases;
+            descriptor.Name = GetName(descriptor, name);
             descriptor.Aliases = aliases.ToList();
             descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }
+
+        private string GetName(SymbolDescriptor symbol, string name) 
+            => symbol switch
+                {
+                    OptionDescriptor _ => name.StartsWith("--") ? name : "--" + name.ToKebabCase(),
+                    CommandDescriptor _ => name.ToKebabCase(),
+                    _ => name
+                };
 
         private void ReplaceAbstractRules(Strategy strategy, DescriptorMakerSpecificSourceBase tools)
         {

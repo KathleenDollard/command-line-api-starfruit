@@ -21,12 +21,17 @@ namespace System.CommandLine.Samples
 
         public class Find : ManageGlobalJson
         {
+            public int Invoke()
+                 => ManageGlobalJsonImplementation.Find(StartPathArg, Verbosity);
         }
 
         public class List : ManageGlobalJson
         {
             [Aliases("o")]
             public FileInfo Output { get; set; }
+
+            public int Invoke()
+                => ManageGlobalJsonImplementation.List(StartPathArg, Verbosity, Output);
         }
 
         public class Update : ManageGlobalJson
@@ -38,14 +43,15 @@ namespace System.CommandLine.Samples
             public RollForward RollForward { get; set; }
 
             public int Invoke()
-            {
-                return ManageGlobalJsonImplementation.Update(StartPathArg, Verbosity, FilePathArg, OldVersion, NewVersion, AllowPrerelease, RollForward);
-            }
+                => ManageGlobalJsonImplementation.Update(StartPathArg, Verbosity, FilePathArg, OldVersion, NewVersion, AllowPrerelease, RollForward);
         }
 
         public class Check : ManageGlobalJson
         {
             public bool SdkOnly { get; set; }
+
+            public int Invoke()
+                => ManageGlobalJsonImplementation.Check(StartPathArg, Verbosity);
         }
 
 

@@ -22,7 +22,7 @@ namespace System.CommandLine.GeneralAppModel
             SymbolType = symbolType;
         }
 
-        public ISymbol SymbolToBind { get; private set; }
+        public ISymbol? SymbolToBind { get; private set; }
 
         internal void SetSymbol(ISymbol symbol)
             => SymbolToBind = symbol;

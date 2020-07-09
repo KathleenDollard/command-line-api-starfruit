@@ -12,19 +12,19 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void InvokingMainReturnsSeven()
         {
-            var arg = "start Update start2 --allow-prerelease";
+            var arg = "start update start2 --allow-prerelease";
             var x = Samples.Program.Main(arg.Split(' '));
             x.Should().Be(7);
         }
 
         [Theory]
-        //[InlineData("Find", VerbosityLevel.Normal, "")]
-        //[InlineData("--verbosity Quiet Find ", VerbosityLevel.Quiet,"")]
-        //[InlineData("starting Find", VerbosityLevel.Normal, "starting")]
-        //[InlineData("starting --verbosity minimal Find", VerbosityLevel.Minimal, "starting")]
-        //[InlineData("--verbosity minimal starting Find", VerbosityLevel.Minimal, "starting")]
-        //[InlineData("starting -v minimal Find", VerbosityLevel.Minimal, "starting")]
-        [InlineData("-v minimal starting Find", VerbosityLevel.Minimal, "starting")]
+        //[InlineData("find", VerbosityLevel.Normal, "")]
+        //[InlineData("--verbosity quiet find ", VerbosityLevel.Quiet,"")]
+        //[InlineData("starting find", VerbosityLevel.Normal, "starting")]
+        //[InlineData("starting --verbosity minimal find", VerbosityLevel.Minimal, "starting")]
+        //[InlineData("--verbosity minimal starting find", VerbosityLevel.Minimal, "starting")]
+        //[InlineData("starting -v minimal find", VerbosityLevel.Minimal, "starting")]
+        [InlineData("-v minimal starting find", VerbosityLevel.Minimal, "starting")]
         public void ArgsForFindBuildCorrectInstance(string args, VerbosityLevel verbosity, string startPath)
         {
             var typedArg = new CommandLineActivator().CreateInstance<ManageGlobalJson>(args);

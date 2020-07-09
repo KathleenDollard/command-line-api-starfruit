@@ -10,6 +10,7 @@ using System.CommandLine.ReflectionAppModel.Tests.ModelCodeForTests.NamedAttribu
 using System.Linq;
 using Xunit;
 using constant = System.CommandLine.NamedAttributeRules.Tests.TypeDescriptorMakerTests;
+using System.CommandLine.Parsing;
 
 namespace System.CommandLine.NamedAttributeRules.Tests
 {
@@ -32,6 +33,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
         public void NameAndDescriptionFromType(Type typeToTest, string name, string description)
         {
+            name = name.ToKebabCase();
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
 
@@ -120,6 +122,7 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
         public void OptionNameAndDescriptionFromParameter(Type typeToTest, string name, string description)
         {
+            name = "--" + name.ToKebabCase();
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, method);
 
