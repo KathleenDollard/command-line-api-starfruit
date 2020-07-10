@@ -19,7 +19,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public DefaultValueDescriptor? DefaultValue { get; set; }
         public bool Required { get; set; }
 
-        public override string ReportInternal(int tabsCount)
+        public override string ReportInternal(int tabsCount, VerbosityLevel verbosity )
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             return $"{whitespace}Arity:{Arity}" +

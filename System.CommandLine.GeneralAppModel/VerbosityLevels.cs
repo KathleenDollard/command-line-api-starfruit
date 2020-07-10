@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace System.CommandLine.ReflectionAppModel
+namespace System.CommandLine.GeneralAppModel 
 {
     public enum VerbosityLevel
     {

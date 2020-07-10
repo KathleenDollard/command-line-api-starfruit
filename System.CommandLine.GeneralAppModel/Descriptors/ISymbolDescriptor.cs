@@ -1,8 +1,17 @@
-﻿namespace System.CommandLine.GeneralAppModel
+﻿using System.Collections.Generic;
+
+namespace System.CommandLine.GeneralAppModel
 {
     public interface ISymbolDescriptor
     {
         SymbolType SymbolType { get; }
-        string Report(int tabsCount);
+        object? Raw { get; }
+        IEnumerable<string>? Aliases { get; }
+        //TODO: Understand raw aliases: public IReadOnlyList<string> RawAliases { get; }
+        string? Description { get; }
+        string? Name { get; }
+        string? CommandLineName { get; }
+        bool IsHidden { get; set; }
+        string Report(int tabsCount, VerbosityLevel verbosity);
     }
 }

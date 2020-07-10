@@ -88,7 +88,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             var ruleSet = Strategy.DescriptorContextRules;
             var candidate = DescriptorMakerSpecificSourceBase.Tools.CreateCandidate(DataSource);
-            var sources = ruleSet.DescriptionSourceRules.GetAllValues<Type>(new EmptySymbolDescriptor(), candidate, parentSymbolDescriptor);
+            var sources = ruleSet.DescriptionSourceRules.GetAllValues<Type>(SymbolDescriptor.Empty, candidate, parentSymbolDescriptor);
             descriptionSources = sources
                                     .Select(x => Activator.CreateInstance(x))
                                     .OfType<IDescriptionSource>()
@@ -208,19 +208,11 @@ namespace System.CommandLine.GeneralAppModel
             aliases = descriptor is OptionDescriptor
                         ? aliases.Select(x => x.StartsWith("-") ? x : "-" + x)
                         : aliases;
-            descriptor.Name = GetName(descriptor, name);
+            descriptor.Name = name;
             descriptor.Aliases = aliases.ToList();
             descriptor.Description = GetDescription(descriptor, ruleSet.DescriptionRules, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }
-
-        private string GetName(SymbolDescriptor symbol, string name)
-            => symbol switch
-            {
-                OptionDescriptor _ => name.StartsWith("--") ? name : "--" + name,
-                CommandDescriptor _ => name,
-                _ => name
-            };
 
         private string GetDescription(SymbolDescriptor descriptor, RuleGroup<IRuleGetValue<string>> rules, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
@@ -243,6 +235,10 @@ namespace System.CommandLine.GeneralAppModel
             parent = parent.EndsWith("+")
                         ? parent.Substring(0,parent.Length-1)
                         : parent;
+            // I don't like this approach and think it suggests we are applying -- too early
+            parent = parent.EndsWith("--")
+                         ? parent.Substring(2)
+                         : parent;
 
             var plus = string.IsNullOrEmpty(parent) ? string.Empty : "+";
             return $"{parent}{plus}{descriptor.Name}";
