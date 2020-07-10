@@ -124,9 +124,9 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
-        [InlineData(typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
-        [InlineData(typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
+        [InlineData(typeof(TypeWithOnlyOneProperty),OptionName)]
+        [InlineData(typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
         public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
@@ -146,7 +146,6 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         [InlineData(typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(Type typeToTest, string name, string description)
         {
-            name = "--" + name;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(strategy, typeToTest);
 
             descriptor.Options.First()

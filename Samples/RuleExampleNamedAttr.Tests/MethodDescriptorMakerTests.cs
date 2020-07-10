@@ -98,9 +98,9 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         }
 
         [Theory]
-        [InlineData(typeof(MethodWithOnlyOneParameter), "--" + constant.OptionName)]
-        [InlineData(typeof(MethodWithOneOptionByRemaining), "--" + constant.OptionName)]
-        [InlineData(typeof(MethodWithTwoOptionsByRemaining), "--" + constant.OptionName, "--" + constant.OptionName2)]
+        [InlineData(typeof(MethodWithOnlyOneParameter), constant.OptionName)]
+        [InlineData(typeof(MethodWithOneOptionByRemaining), constant.OptionName)]
+        [InlineData(typeof(MethodWithTwoOptionsByRemaining), constant.OptionName, constant.OptionName2)]
         public void CommandWithSubOptions(Type typeToTest, params string[] argNames)
         {
             var method = typeToTest.GetMethods().First();
@@ -114,11 +114,11 @@ namespace System.CommandLine.NamedAttributeRules.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(typeof(ParameterOptionWithName), "--" + constant.Name, "")]
-        [InlineData(typeof(ParameterOptionWithNameAttribute), "--" + constant.Name, "")]
-        [InlineData(typeof(ParameterOptionWithNameInOptionAttribute), "--" + constant.Name, "")]
-        [InlineData(typeof(ParameterOptionWithDescriptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
-        [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), "--" + constant.ParameterOptionName, constant.Description)]
+        [InlineData(typeof(ParameterOptionWithName), constant.Name, "")]
+        [InlineData(typeof(ParameterOptionWithNameAttribute), constant.Name, "")]
+        [InlineData(typeof(ParameterOptionWithNameInOptionAttribute), constant.Name, "")]
+        [InlineData(typeof(ParameterOptionWithDescriptionAttribute), constant.ParameterOptionName, constant.Description)]
+        [InlineData(typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.Description)]
         public void OptionNameAndDescriptionFromParameter(Type typeToTest, string name, string description)
         {
             var method = typeToTest.GetMethods().First();

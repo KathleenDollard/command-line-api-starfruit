@@ -140,12 +140,12 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         [Theory]
-        [InlineData(full, typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
-        [InlineData(full, typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
-        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
-        [InlineData(standard, typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
-        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
-        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
+        [InlineData(full, typeof(TypeWithOnlyOneProperty),OptionName)]
+        [InlineData(full, typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining),OptionName,OptionName2)]
+        [InlineData(standard, typeof(TypeWithOnlyOneProperty), OptionName)]
+        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
         public void CommandWithSubOptions(string useStrategy, Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
@@ -190,7 +190,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(string useStrategy, Type typeToTest, string name, string description)
         {
-            name = "--" + name;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
@@ -280,7 +279,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(typeToTest);
             using var x = new AssertionScope();
             descriptor.Options.Count().Should().Be(1);
-            descriptor.Options.First().Name.Should().Be($"--{nameof(PropertiesThatArePublicAndPrivate.First)}");
+            descriptor.Options.First().Name.Should().Be(nameof(PropertiesThatArePublicAndPrivate.First));
         }
 
         #endregion
