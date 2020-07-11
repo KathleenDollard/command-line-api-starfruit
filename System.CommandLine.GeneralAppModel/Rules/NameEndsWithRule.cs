@@ -9,6 +9,6 @@
                                 SymbolType symbolType = SymbolType.All)
              : base(StringPosition.EndsWith , compareTo, symbolType) { }
 
-        protected override string NameOrString => "name";
+        protected override string NameOrString => "Name";
     }
 }

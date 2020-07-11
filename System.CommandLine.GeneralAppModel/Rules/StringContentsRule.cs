@@ -89,9 +89,12 @@ namespace System.CommandLine.GeneralAppModel
                                 .Any());
 
         public override string RuleDescription<TIRuleSet>()
-         => typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
-               ? $@"If {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}', remove '{CompareTo}'"
-               : $@"the {NameOrString} {Position.ToString().FriendlyFromPascal()} '{CompareTo}'";
+        {
+            var position = Position.ToString().FriendlyFromPascal();
+            return typeof(RuleSetSymbol).IsAssignableFrom(typeof(TIRuleSet))
+                          ? $@"has a {NameOrString} that {position} '{CompareTo}', use {NameOrString} without '{CompareTo}'"
+                          : $@"with a {NameOrString} that {position} '{CompareTo}'";
+        }
 
         protected virtual string NameOrString => "string";
 

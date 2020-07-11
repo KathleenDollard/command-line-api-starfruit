@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -30,6 +31,13 @@ namespace System.CommandLine.GeneralAppModel
                     + IsHiddenRules.ReportRuleGroup(tabsCount, "whether to hide this in the CLI");
         }
 
-
+        public  virtual IEnumerable<DetailReportStructure> GetRulesReportStructure()
+        {
+            return NameRules.Select(x => new DetailReportStructure("Name", x.RuleDescription<RuleSetSymbol>(), x.GetType()))
+                .Union(DescriptionRules.Select(x => new DetailReportStructure("Description", x.RuleDescription<RuleSetSymbol>(), x.GetType())))
+                .Union(AliasRules.Select(x => new DetailReportStructure("Alias", x.RuleDescription<RuleSetSymbol>(), x.GetType())))
+                .Union(IsHiddenRules.Select(x => new DetailReportStructure("(IsHidden", x.RuleDescription<RuleSetSymbol>(), x.GetType())))
+                ;
+        }
     }
 }

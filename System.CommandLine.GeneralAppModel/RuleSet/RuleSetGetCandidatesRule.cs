@@ -4,7 +4,6 @@ using System.Linq;
 namespace System.CommandLine.GeneralAppModel
 {
 
-
     public class RuleSetGetCandidatesRule : RuleSetBase
     {
         public RuleGroup<IRuleGetAvailableCandidates> Rules { get; } = new RuleGroup<IRuleGetAvailableCandidates>();
@@ -28,5 +27,11 @@ namespace System.CommandLine.GeneralAppModel
         {
             return $@"{CoreExtensions.NewLineWithTabs(tabsCount)}Arity Rules:  { string.Join("", Rules.Select(r => CoreExtensions.NewLineWithTabs(tabsCount + 1) + r.RuleDescription<RuleSetGetCandidatesRule>()))}";
         }
+
+        public IEnumerable<ReportStructure> GetRulesReportStructure()
+        {
+            return Rules.Select(x => new ReportStructure(x.SymbolType.ToString(), x.RuleDescription<IRuleGetCandidates>(), x.GetType()));
+        }
+
     }
 }

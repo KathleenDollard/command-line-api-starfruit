@@ -22,6 +22,6 @@ namespace System.CommandLine.GeneralAppModel
             return (false, default);
         }
          public override string RuleDescription<TIRuleSet>()
-           => "The identity, usually the name.";
+           => "has not been matched, use the identity which is usually the Name";
    }
 }

@@ -28,6 +28,6 @@ namespace System.CommandLine.GeneralAppModel
         public override string RuleDescription<TIRuleSet>()
            => (typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
                 ? "If " : "")
-            + $"there is an attribute named '{typeof(TAttribute).NameWithGenericArguments()}'";
+            + $"with an attribute named '{typeof(TAttribute).Name.WithoutAttributeSuffix()}'";
     }
 }
