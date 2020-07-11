@@ -12,12 +12,21 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         }
 
         public ArityDescriptor? Arity { get; set; }
-        //TODO: AllowedValues aren't supported in DescriptorMakerBase or tests
+        //TODO: AllowedValues aren't yet supported in DescriptorMakerBase or tests
         public List<object> AllowedValues { get; } = new List<object>();
-        // TODO: Consider how ArgumentType works when coming from JSON. 
+        // TODO: Consider how ArgumentType works when coming from JSON. If we do Json
         public ArgTypeInfo ArgumentType { get; }
         public DefaultValueDescriptor? DefaultValue { get; set; }
         public bool Required { get; set; }
 
+        public override string ReportInternal(int tabsCount, VerbosityLevel verbosity )
+        {
+            string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
+            return $"{whitespace}Arity:{Arity}" +
+                   $"{whitespace}AllowedValues:{Name}" +
+                   $"{whitespace}ArgumentType:{ArgumentType}" +
+                   $"{whitespace}DefaultValue:{DefaultValue}" +
+                   $"{whitespace}Required:{Required}";
+        }
     }
 }

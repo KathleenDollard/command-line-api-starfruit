@@ -28,17 +28,15 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const int AllowedValuesAsIntThird = 7;
         internal const string ArgumentName = "Red";
         internal const string ArgumentName2 = "Blue";
-        internal const string OptionName = "east";
-        internal const string OptionName2 = "west";
+        internal const string OptionName = "East";
+        internal const string OptionName2 = "West";
         internal const string PropertyOptionName = "Prop";
         internal const string PropertyArgName = "Prop";
         internal const string DefaultValueString = "MyDefault";
         internal const int DefaultValueInt = 42;
-        internal const string EmptyMethodName = "empty-method";
-        internal const string EmptyTypeName = "empty-type";
 
-        internal const string TestMethodName = "method";
-        internal const string ParameterOptionName = "param";
+        internal const string TestMethodName = "Method";
+        internal const string ParameterOptionName = "Param";
         internal const string ParameterArgName = "Param";
 
         private readonly Strategy fullStrategy;
@@ -54,19 +52,16 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         #region CommandTests
         [Theory]
-        [InlineData(full, typeof(EmptyType), EmptyTypeName, "")]
-        [InlineData(full, typeof(TypeWithNameAttribute), CommandOrOptionName, "")]
-        [InlineData(full, typeof(TypeWithNameInCommandAttribute), CommandOrOptionName, "")]
+        [InlineData(full, typeof(EmptyType), nameof(EmptyType), "")]
+        [InlineData(full, typeof(TypeWithNameAttribute), Name, "")]
+        [InlineData(full, typeof(TypeWithNameInCommandAttribute), Name, "")]
         [InlineData(full, typeof(TypeWithDescriptionAttribute), nameof(TypeWithDescriptionAttribute), Description)]
         [InlineData(full, typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
-        [InlineData(standard, typeof(EmptyType), EmptyTypeName, "")]
-        [InlineData(standard, typeof(TypeWithNameInCommandAttribute), CommandOrOptionName, "")]
+        [InlineData(standard, typeof(EmptyType), nameof(EmptyType), "")]
+        [InlineData(standard, typeof(TypeWithNameInCommandAttribute), Name, "")]
         [InlineData(standard, typeof(TypeWithDescriptionInCommandAttribute), nameof(TypeWithDescriptionInCommandAttribute), Description)]
         public void CommandNameAndDescriptionFromType(string useStrategy, Type typeToTest, string name, string description)
         {
-            name = char.IsUpper(name[0])
-                    ? name.ToKebabCase()
-                    : name;
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveName(name)
@@ -139,19 +134,18 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(standard, typeof(TypeWithTwoCommandsByDerivedType), "A", "B")]
         public void CommandWithSubCommands(string useStrategy, Type typeToTest, params string[] argNames)
         {
-            argNames = argNames.Select(x => x.ToKebabCase()).ToArray();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Should().HaveSubCommandsNamed(argNames);
         }
 
         [Theory]
-        [InlineData(full, typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
-        [InlineData(full, typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
-        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
-        [InlineData(standard, typeof(TypeWithOnlyOneProperty), "--" + OptionName)]
-        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), "--" + OptionName)]
-        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), "--" + OptionName, "--" + OptionName2)]
+        [InlineData(full, typeof(TypeWithOnlyOneProperty),OptionName)]
+        [InlineData(full, typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(full, typeof(TypeWithTwoOptionsByRemaining),OptionName,OptionName2)]
+        [InlineData(standard, typeof(TypeWithOnlyOneProperty), OptionName)]
+        [InlineData(standard, typeof(TypeWithOneOptionByRemaining), OptionName)]
+        [InlineData(standard, typeof(TypeWithTwoOptionsByRemaining), OptionName, OptionName2)]
         public void CommandWithSubOptions(string useStrategy, Type typeToTest, params string[] argNames)
         {
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
@@ -196,7 +190,6 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(standard, typeof(PropertyOptionWithDescriptionInOptionAttribute), PropertyOptionName, Description)]
         public void OptionNameAndDescriptionFromProperty(string useStrategy, Type typeToTest, string name, string description)
         {
-            name = "--" + name.ToKebabCase();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, typeToTest);
 
             descriptor.Options.First()
@@ -286,7 +279,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(typeToTest);
             using var x = new AssertionScope();
             descriptor.Options.Count().Should().Be(1);
-            descriptor.Options.First().Name.Should().Be($"--{nameof(PropertiesThatArePublicAndPrivate.First).ToKebabCase()}");
+            descriptor.Options.First().Name.Should().Be(nameof(PropertiesThatArePublicAndPrivate.First));
         }
 
         #endregion

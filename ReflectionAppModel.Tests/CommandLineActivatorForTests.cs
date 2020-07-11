@@ -18,7 +18,7 @@ namespace System.CommandLine.ReflectionAppModel.Tests
                 this.commandDescriptor = commandDescriptor;
             }
 
-            protected override CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null)
+            public override CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null)
             {
                 return commandDescriptor;
             }

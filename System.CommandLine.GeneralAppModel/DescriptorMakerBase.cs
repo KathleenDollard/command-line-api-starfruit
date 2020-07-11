@@ -37,7 +37,7 @@ namespace System.CommandLine.GeneralAppModel
 
         protected Strategy Strategy { get; }
         protected object DataSource { get; }
-
+        private IEnumerable<IDescriptionSource> descriptionSources = new List<IDescriptionSource>();
 
         private (IEnumerable<Candidate> optionItems, IEnumerable<Candidate> subCommandItems, IEnumerable<Candidate> argumentItems)
              ClassifyChildren(IEnumerable<Candidate> candidates, ISymbolDescriptor commandDescriptor)
@@ -85,9 +85,18 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         protected CommandDescriptor CommandFrom(ISymbolDescriptor parentSymbolDescriptor)
-            => GetCommand(DescriptorMakerSpecificSourceBase.Tools.CreateCandidate(DataSource), parentSymbolDescriptor);
+        {
+            var ruleSet = Strategy.DescriptorContextRules;
+            var candidate = DescriptorMakerSpecificSourceBase.Tools.CreateCandidate(DataSource);
+            var sources = ruleSet.DescriptionSourceRules.GetAllValues<Type>(SymbolDescriptor.Empty, candidate, parentSymbolDescriptor);
+            descriptionSources = sources
+                                    .Select(x => Activator.CreateInstance(x))
+                                    .OfType<IDescriptionSource>()
+                                    .ToList();
+            return GetCommand(candidate, parentSymbolDescriptor);
+        }
 
-        protected CommandDescriptor GetCommand(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
+        private CommandDescriptor GetCommand(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var descriptor = new CommandDescriptor(parentSymbolDescriptor, candidate.Item);
             var ruleSet = Strategy.CommandRules;
@@ -199,19 +208,52 @@ namespace System.CommandLine.GeneralAppModel
             aliases = descriptor is OptionDescriptor
                         ? aliases.Select(x => x.StartsWith("-") ? x : "-" + x)
                         : aliases;
-            descriptor.Name = GetName(descriptor, name);
+            descriptor.Name = name;
             descriptor.Aliases = aliases.ToList();
-            descriptor.Description = ruleSet.DescriptionRules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
+            descriptor.Description = GetDescription(descriptor, ruleSet.DescriptionRules, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
         }
 
-        private string GetName(SymbolDescriptor symbol, string name) 
-            => symbol switch
-                {
-                    OptionDescriptor _ => name.StartsWith("--") ? name : "--" + name.ToKebabCase(),
-                    CommandDescriptor _ => name.ToKebabCase(),
-                    _ => name
-                };
+        private string GetDescription(SymbolDescriptor descriptor, RuleGroup<IRuleGetValue<string>> rules, Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
+        {
+            var description = rules.GetFirstOrDefaultValue<string>(descriptor, candidate, parentSymbolDescriptor);
+            if (!string.IsNullOrWhiteSpace(description) && !(description is null))
+            {
+                return description;
+            }
+            var route = GetRoute(descriptor, parentSymbolDescriptor);
+            var source = descriptionSources
+                    .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.GetDescription(route)));
+            return source is null
+                    ? string.Empty
+                    : source.GetDescription(route);
+        }
+
+        private string GetRoute(SymbolDescriptor descriptor, ISymbolDescriptor parentSymbolDescriptor)
+        {
+            var parent = GetParentRoute(parentSymbolDescriptor);
+            parent = parent.EndsWith("+")
+                        ? parent.Substring(0,parent.Length-1)
+                        : parent;
+            // I don't like this approach and think it suggests we are applying -- too early
+            parent = parent.EndsWith("--")
+                         ? parent.Substring(2)
+                         : parent;
+
+            var plus = string.IsNullOrEmpty(parent) ? string.Empty : "+";
+            return $"{parent}{plus}{descriptor.Name}";
+        }
+
+        private string GetParentRoute(ISymbolDescriptor parentSymbolDescriptor)
+        {
+            if (parentSymbolDescriptor is SymbolDescriptor parentDescriptor)
+            {
+                var parent = GetParentRoute(parentDescriptor.ParentSymbolDescriptorBase);
+                var plus = string.IsNullOrEmpty(parent) ? string.Empty : "+";
+                return $"{parent}{plus}{parentDescriptor.Name}";
+            }
+            return string.Empty;
+        }
 
         private void ReplaceAbstractRules(Strategy strategy, DescriptorMakerSpecificSourceBase tools)
         {

@@ -1,4 +1,5 @@
-﻿using System.CommandLine.ReflectionAppModel;
+﻿using System.CommandLine.GeneralAppModel;
+using System.CommandLine.ReflectionAppModel;
 using System.IO;
 
 namespace System.CommandLine.Samples

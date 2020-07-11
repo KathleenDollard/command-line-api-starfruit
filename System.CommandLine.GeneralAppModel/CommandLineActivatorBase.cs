@@ -12,7 +12,13 @@ namespace System.CommandLine.GeneralAppModel
 {
     public abstract class CommandLineActivatorBase
     {
-        protected abstract CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null);
+        /// <summary>
+        /// This test is public for testing purposes
+        /// </summary>
+        /// <typeparam name="TRoot"></typeparam>
+        /// <param name="strategy"></param>
+        /// <returns></returns>
+        public abstract CommandDescriptor GetCommandDescriptor<TRoot>(Strategy? strategy = null);
 
         public int Invoke<TRoot>(string[] args, Strategy? strategy = null)
         {

@@ -12,7 +12,8 @@ namespace System.CommandLine.Samples
     /// The actual rules for SDK selection depend on the highest SDK version installed 
     /// (or ever installed) on the machine.
     /// </remarks>
-    public class ManageGlobalJson
+    [DescriptionSource(typeof(ManageGlobalJson))]
+    public class ManageGlobalJson : IDescriptionSource
     {
         public DirectoryInfo StartPathArg { get; set; }
 
@@ -54,13 +55,17 @@ namespace System.CommandLine.Samples
                 => ManageGlobalJsonImplementation.Check(StartPathArg, Verbosity);
         }
 
+        public string GetDescription(string route)
+            => HelpText.TryGetValue(route, out var description)
+                ? description
+                : null;
 
         private const string startName = nameof(ManageGlobalJson);
         private const string findName = nameof(Find);
         private const string listName = nameof(List);
         private const string updateName = nameof(Update);
         private const string checkName = nameof(Check);
-        public Dictionary<string, string> HelpText = new Dictionary<string, string>
+        public Dictionary<string, string> HelpText = new Dictionary<string, string>()
             {
                 { startName, "Future global tool to manage global.json. See https://aka.ms/globaljson."},
                 { startName + $"+{nameof(StartPathArg)}","Location where processing should begin." },
@@ -85,5 +90,7 @@ namespace System.CommandLine.Samples
                 { nameof(RollForward) + $"+{nameof(RollForward.Disable)}", "Doesn't roll forward. Exact match required." },
 
             };
+
+
     }
 }

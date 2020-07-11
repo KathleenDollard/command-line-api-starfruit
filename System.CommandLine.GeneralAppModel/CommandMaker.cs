@@ -22,7 +22,7 @@ namespace System.CommandLine.GeneralAppModel
         {
             var _ = descriptor.Name ?? throw new InvalidOperationException("The name for a non-root command cannot be null");
 
-            return MakeCommandInternal(new Command(descriptor.Name), descriptor);
+            return MakeCommandInternal(new Command(descriptor.Name.ToKebabCase()), descriptor);
         }
 
         public static ModelBinder? MakeModelBinder(CommandDescriptor descriptor)
@@ -98,15 +98,16 @@ namespace System.CommandLine.GeneralAppModel
 
         protected override Argument MakeArgument(ArgumentDescriptor descriptor)
         {
-            var arg = new Argument(descriptor.Name)
+            if (descriptor is null)
+            {
+                throw new InvalidOperationException("The descriptor cannot be null");
+            }
+            var arg = new Argument(descriptor.Name ?? string.Empty)
             {
                 ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>() // need work here for Roslyn source generation
             };
             AddAliases(arg, descriptor.Aliases);
-            if (descriptor.Arity != null)
-            {
-                arg.Arity = new ArgumentArity(descriptor.Arity.MinimumCount, descriptor.Arity.MaximumCount);
-            }
+            AddArity(descriptor, arg);
             arg.Description = descriptor.Description;
             arg.IsHidden = descriptor.IsHidden;
             if (descriptor.DefaultValue != null)
@@ -115,6 +116,24 @@ namespace System.CommandLine.GeneralAppModel
             }
             descriptor.SetSymbol(arg);
             return arg;
+
+           static void AddArity(ArgumentDescriptor descriptor, Argument arg)
+            {
+                if (descriptor.Arity != null)
+                {
+                    var minCount = descriptor.Arity.MinimumCount;
+                    minCount = descriptor.Required && minCount == 0
+                                ? 1
+                                : minCount;
+                    arg.Arity = new ArgumentArity(minCount, descriptor.Arity.MaximumCount);
+                }
+                else
+                {
+                    arg.Arity =  new ArgumentArity(
+                                descriptor.Required ? 1: 0,
+                                arg.Arity.MaximumNumberOfValues);
+                }
+            }
         }
 
         protected override ModelBinder? GetModelBinderForType(Type type, CommandDescriptor commandDescriptor)
