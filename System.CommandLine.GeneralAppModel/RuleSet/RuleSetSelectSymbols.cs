@@ -55,5 +55,24 @@ namespace System.CommandLine.GeneralAppModel
                 return symbolType.ToString();
             }
         }
+
+        public IEnumerable<ReportStructure> GetRulesReportStructure ()
+        {
+            return Rules.Select(x=>new ReportStructure(x.SymbolType.ToString(), x.RuleDescription<IRuleGetCandidates>(),x.GetType()));
+        }
+
+        public struct ReportStructure
+        {
+            public ReportStructure(string symbolName, string description, Type ruleType)
+            {
+                SymbolName = symbolName;
+                Description = description;
+                RuleType = ruleType;
+            }
+
+            public string SymbolName { get; }
+            public string Description { get; }
+            public Type RuleType { get; }
+        }
     }
 }

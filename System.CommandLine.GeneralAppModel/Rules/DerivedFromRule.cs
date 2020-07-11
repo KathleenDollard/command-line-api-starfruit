@@ -29,8 +29,12 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"DerivedFrom Abstract Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
-
+        {
+            var ns = IgnoreNamespace && !string.IsNullOrWhiteSpace(NamespaceName)
+                        ? string.Empty  
+                        : $"namespace '{NamespaceName}'";
+            return $"Types in assembly '{AssemblyName}' {ns} derived from root type";
+        }
     }
 }
 

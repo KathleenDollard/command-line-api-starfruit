@@ -1,4 +1,7 @@
-﻿namespace System.CommandLine.GeneralAppModel
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace System.CommandLine.GeneralAppModel
 {
     public class RuleSetArgument : RuleSetSymbol
     {
@@ -24,6 +27,15 @@
                     + ArityRules.ReportRuleGroup(tabsCount, "the arity (number of values allowed)")
                     + SpecialArgumentTypeRules.ReportRuleGroup(tabsCount, "argument type in a special way");
 
+        }
+
+        public override IEnumerable<DetailReportStructure> GetRulesReportStructure()
+        {
+            return base.GetRulesReportStructure()
+                    .Union(RequiredRules.Select(r => new DetailReportStructure("Required", r.RuleDescription<RuleSetArgument>(), r.GetType())))
+                    .Union(ArityRules.Select(r => new DetailReportStructure("Arity", r.RuleDescription<RuleSetArgument>(), r.GetType())))
+                    .Union(SpecialArgumentTypeRules.Select(r => new DetailReportStructure("SpecialArgumentType", r.RuleDescription<RuleSetArgument>(), r.GetType())))
+                    ;
         }
     }
 }

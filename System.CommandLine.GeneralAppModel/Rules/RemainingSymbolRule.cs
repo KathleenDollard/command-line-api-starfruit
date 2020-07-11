@@ -17,6 +17,6 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => "not already matched";
+            => "that is not already matched";
     }
 }

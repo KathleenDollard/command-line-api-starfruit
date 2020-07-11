@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace System.CommandLine.GeneralAppModel
@@ -18,5 +19,12 @@ namespace System.CommandLine.GeneralAppModel
         {
             throw new NotImplementedException();
         }
+
+        internal IEnumerable<DetailReportStructure> GetRulesReportStructure()
+        {
+            return DescriptionSourceRules.Select(x => new DetailReportStructure("Description source", x.RuleDescription<IRuleGetCandidates>(), x.GetType()));
+        }
+
+   
     }
 }

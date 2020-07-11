@@ -23,9 +23,6 @@ namespace System.CommandLine.ReflectionAppModel
         }
         private bool useTypeAssembly { get; set; }
 
-        public override string RuleDescription<TIRuleSet>()
-            => $"DerivedFromReflectionRule Rule: NamespaceName: {NamespaceName} AssemblyName: {AssemblyName} IgnoreNamespace: {IgnoreNamespace}";
-
         public override IEnumerable<Candidate> GetChildCandidates(ISymbolDescriptor generalSymbolDescriptor)
         {
             if (!(generalSymbolDescriptor is SymbolDescriptor symbolDescriptor)
@@ -72,6 +69,12 @@ namespace System.CommandLine.ReflectionAppModel
                 cacheAssemblyName = assembly.FullName;
                 cacheNamespaceName = namespaceName;
             }
+        }
+
+        public override string RuleDescription<TIRuleSet>()
+        {
+            var ns = $"namespace '{NamespaceName}'";
+            return $"Types in assembly '{AssemblyName}' {(IgnoreNamespace ? string.Empty : ns)}";
         }
     }
 }

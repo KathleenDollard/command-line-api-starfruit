@@ -54,7 +54,7 @@ namespace System.CommandLine.GeneralAppModel
         }
 
         public override string RuleDescription<TIRuleSet>()
-            => $"If there is an attribute named '{typeof(TAttribute).NameWithGenericArguments()}', its first property, with type {typeof(TValue)}";
+            => $"has an attribute named '{typeof(TAttribute).Name.WithoutAttributeSuffix()}', use it";
 
 
     }

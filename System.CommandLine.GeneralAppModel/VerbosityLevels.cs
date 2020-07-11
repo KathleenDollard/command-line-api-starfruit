@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.CommandLine.GeneralAppModel 
+﻿namespace System.CommandLine.GeneralAppModel
 {
     public enum VerbosityLevel
     {
-        Normal, 
-        Quiet, 
+        Quiet = 1, 
         Minimal, 
+        Normal, 
         Detailed, 
         Diagnostic
     }

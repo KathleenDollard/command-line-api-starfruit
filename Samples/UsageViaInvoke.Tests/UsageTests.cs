@@ -30,6 +30,18 @@ namespace System.CommandLine.GeneralAppModel.Tests
         }
 
         /// <summary>
+        /// The strategy report let's you know what features are available as you 
+        /// build your model - what rules are in play
+        /// </summary>
+        [Fact]
+        public void MarkdownStrategyReportShouldBeLong()
+        {
+            var strategy = new Strategy().SetStandardRules();
+            var report = strategy.Report( Strategy.ReportFormat.Markdown, VerbosityLevel.Minimal  );
+            report.Length.Should().BeGreaterThan(1000);
+        }
+
+        /// <summary>
         /// The Descriptor report describes the interim model that captures your intent 
         /// </summary>
         [Fact]
