@@ -33,16 +33,35 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             Execute.Assertion
                      .ForCondition(Subject.Name == expected)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Name", expected, Subject.Name));
+                     .FailWith(Utils.DisplayEqualsFailure(Subject.SymbolType , "Name", expected, Subject.Name));
 
             return new AndConstraint<TAssert>((TAssert)this);
         }
+
+        public AndConstraint<TAssert> HaveOriginalName(string expected)
+        {
+            Execute.Assertion
+                     .ForCondition(Subject.OriginalName == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(Subject.SymbolType, "OriginalName", expected, Subject.OriginalName));
+
+            return new AndConstraint<TAssert>((TAssert)this);
+        }
+
+        public AndConstraint<TAssert> HaveCommandLineName(string expected)
+        {
+            Execute.Assertion
+                     .ForCondition(Subject.CommandLineName == expected)
+                     .FailWith(Utils.DisplayEqualsFailure(Subject.SymbolType, "CommandLineName", expected, Subject.CommandLineName));
+
+            return new AndConstraint<TAssert>((TAssert)this);
+        }
+
 
         public AndConstraint<TAssert> HaveDescription(string expected)
         {
             Execute.Assertion
                      .ForCondition(Subject.Description == expected)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Description", expected, Subject.Description));
+                     .FailWith(Utils.DisplayEqualsFailure(Subject.SymbolType, "Description", expected, Subject.Description));
 
             return new AndConstraint<TAssert>((TAssert)this);
         }
@@ -51,7 +70,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         {
             Execute.Assertion
                      .ForCondition(Subject.IsHidden == expected)
-                     .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "IsHidden", expected, Subject.IsHidden));
+                     .FailWith(Utils.DisplayEqualsFailure(Subject.SymbolType, "IsHidden", expected, Subject.IsHidden));
 
             return new AndConstraint<TAssert>((TAssert)this);
         }
@@ -80,7 +99,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             }
             Execute.Assertion
                              .ForCondition(expectedAliases == actualAliases)
-                             .FailWith(Utils.DisplayEqualsFailure(SymbolType.Command, "Aliases", expected, Subject.Aliases));
+                             .FailWith(Utils.DisplayEqualsFailure(Subject.SymbolType, "Aliases", expected, Subject.Aliases));
 
             return new AndConstraint<TAssert>((TAssert)this);
         }

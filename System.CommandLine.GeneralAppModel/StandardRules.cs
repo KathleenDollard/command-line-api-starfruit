@@ -48,6 +48,9 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new IdentityRule<string>())
                 ;
 
+            //rules.CommandLineNameRules  // None for now
+            //;
+
             rules.RequiredRules
                 .Add(new BooleanAttributeRule<ArgumentAttribute>("Required"))
             ;
@@ -89,6 +92,11 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new NameEndsWithRule("Option"))
                 .Add(new IdentityRule<string>());
 
+            rules.CommandLineNameRules
+                .Add(new MorphNameCasingRule(MorphNameCasingRule.StringCasing.LowerKebab))
+                .Add(new MorphNamePrefixRule("--")) 
+            ;
+
             rules.RequiredRules
                 .Add(new BooleanAttributeRule<OptionAttribute>("OptionRequired"))
              ;
@@ -120,7 +128,7 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<OptionAttribute, bool>("ArgumentRequired", SymbolType.Option))
             ;
 
-            rules.RequiredRules
+            rules.IsHiddenRules
                 .Add(new AttributeWithPropertyValueRule<OptionAttribute, bool>("ArgumentIsHidden", SymbolType.Option))
             ;
 
@@ -147,6 +155,10 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<CommandAttribute, string>("Name"))
                 .Add(new NameEndsWithRule("Command"))
                 .Add(new IdentityRule<string>())
+            ;
+
+            rules.CommandLineNameRules
+                .Add(new MorphNameCasingRule(MorphNameCasingRule.StringCasing.LowerKebab))
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules

@@ -98,7 +98,7 @@ namespace System.CommandLine.GeneralAppModel
 
         private CommandDescriptor GetCommand(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var descriptor = new CommandDescriptor(parentSymbolDescriptor, candidate.Item);
+            var descriptor = new CommandDescriptor(parentSymbolDescriptor, candidate.Identity, candidate.Item);
             var ruleSet = Strategy.CommandRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             descriptor.TreatUnmatchedTokensAsErrors = ruleSet.TreatUnmatchedTokensAsErrorsRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
@@ -125,7 +125,7 @@ namespace System.CommandLine.GeneralAppModel
         private ArgumentDescriptor GetArgument(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
             var argumentType = DescriptorMakerSpecificSourceBase.Tools.GetArgTypeInfo(candidate) ?? throw new InvalidOperationException("Type must be supplied for argument");
-            var descriptor = new ArgumentDescriptor(argumentType, parentSymbolDescriptor, candidate.Item);
+            var descriptor = new ArgumentDescriptor(argumentType, parentSymbolDescriptor, candidate.Identity, candidate.Item);
             var ruleSet = Strategy.ArgumentRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
             SetArityIfNeeded(ruleSet, descriptor, candidate, parentSymbolDescriptor);
@@ -183,7 +183,7 @@ namespace System.CommandLine.GeneralAppModel
 
         private OptionDescriptor GetOption(Candidate candidate, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Item);
+            var descriptor = new OptionDescriptor(parentSymbolDescriptor, candidate.Identity, candidate.Item);
             descriptor.Arguments.Add(GetArgument(candidate, descriptor));
             var ruleSet = Strategy.OptionRules;
             FillSymbol(descriptor, ruleSet, candidate, parentSymbolDescriptor);
@@ -209,6 +209,7 @@ namespace System.CommandLine.GeneralAppModel
                         ? aliases.Select(x => x.StartsWith("-") ? x : "-" + x)
                         : aliases;
             descriptor.Name = name;
+            descriptor.CommandLineName  = ruleSet.CommandLineNameRules.MorphNameAgainstAllRules (name, descriptor, candidate, parentSymbolDescriptor) ?? string.Empty;
             descriptor.Aliases = aliases.ToList();
             descriptor.Description = GetDescription(descriptor, ruleSet.DescriptionRules, candidate, parentSymbolDescriptor);
             descriptor.IsHidden = ruleSet.IsHiddenRules.GetFirstOrDefaultValue<bool>(descriptor, candidate, parentSymbolDescriptor);
@@ -235,13 +236,13 @@ namespace System.CommandLine.GeneralAppModel
             parent = parent.EndsWith("+")
                         ? parent.Substring(0,parent.Length-1)
                         : parent;
-            // I don't like this approach and think it suggests we are applying -- too early
-            parent = parent.EndsWith("--")
-                         ? parent.Substring(2)
-                         : parent;
+            //// I don't like this approach and think it suggests we are applying -- too early
+            //parent = parent.EndsWith("--")
+            //             ? parent.Substring(2)
+            //             : parent;
 
             var plus = string.IsNullOrEmpty(parent) ? string.Empty : "+";
-            return $"{parent}{plus}{descriptor.Name}";
+            return $"{parent}{plus}{descriptor.OriginalName}";
         }
 
         private string GetParentRoute(ISymbolDescriptor parentSymbolDescriptor)

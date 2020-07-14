@@ -11,6 +11,7 @@ namespace System.CommandLine.GeneralAppModel
         string? Description { get; }
         string? Name { get; }
         string? CommandLineName { get; }
+        string OriginalName { get; }
         bool IsHidden { get; set; }
         string Report(int tabsCount, VerbosityLevel verbosity);
     }

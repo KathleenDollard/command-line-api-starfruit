@@ -21,8 +21,9 @@ namespace System.CommandLine.GeneralAppModel
         public static Command MakeCommand(CommandDescriptor descriptor)
         {
             var _ = descriptor.Name ?? throw new InvalidOperationException("The name for a non-root command cannot be null");
+            var commandLineName = descriptor.CommandLineName ?? descriptor.Name;
 
-            return MakeCommandInternal(new Command(descriptor.Name.ToKebabCase()), descriptor);
+            return MakeCommandInternal(new Command(commandLineName), descriptor);
         }
 
         public static ModelBinder? MakeModelBinder(CommandDescriptor descriptor)
@@ -80,7 +81,7 @@ namespace System.CommandLine.GeneralAppModel
         protected override Option MakeOption(OptionDescriptor descriptor)
         {
             var _ = descriptor.Name ?? throw new InvalidOperationException("The name for an option cannot be null");
-            var option = new Option("--" + descriptor.Name.ToKebabCase(), descriptor.Description);
+            var option = new Option(descriptor.CommandLineName, descriptor.Description);
             if (descriptor.Arguments.Any())
             {
                 option.Argument = descriptor
@@ -102,7 +103,7 @@ namespace System.CommandLine.GeneralAppModel
             {
                 throw new InvalidOperationException("The descriptor cannot be null");
             }
-            var arg = new Argument(descriptor.Name ?? string.Empty)
+            var arg = new Argument(descriptor.CommandLineName ?? string.Empty)
             {
                 ArgumentType = descriptor.ArgumentType.GetArgumentType<Type>() // need work here for Roslyn source generation
             };
@@ -117,7 +118,7 @@ namespace System.CommandLine.GeneralAppModel
             descriptor.SetSymbol(arg);
             return arg;
 
-           static void AddArity(ArgumentDescriptor descriptor, Argument arg)
+            static void AddArity(ArgumentDescriptor descriptor, Argument arg)
             {
                 if (descriptor.Arity != null)
                 {
@@ -129,8 +130,8 @@ namespace System.CommandLine.GeneralAppModel
                 }
                 else
                 {
-                    arg.Arity =  new ArgumentArity(
-                                descriptor.Required ? 1: 0,
+                    arg.Arity = new ArgumentArity(
+                                descriptor.Required ? 1 : 0,
                                 arg.Arity.MaximumNumberOfValues);
                 }
             }

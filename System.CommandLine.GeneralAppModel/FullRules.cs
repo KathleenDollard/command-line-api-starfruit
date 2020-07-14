@@ -44,6 +44,9 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new IdentityRule<string>())
                 ;
 
+            //rules.CommandLineNameRules  // None for now
+            //;
+
             rules.DefaultValueRules
                 .Add(new AttributeWithOptionalValueRule<DefaultValueAttribute, object>( ))
                 // DefaultValue on the Argument attribute is not trivial becaues we need to recognize when that is set in a generalized way"
@@ -89,6 +92,11 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<OptionAttribute, string>( "Name"))
                 .Add(new NameEndsWithRule("Option"))
                 .Add(new IdentityRule<string>());
+
+            rules.CommandLineNameRules
+                .Add(new MorphNameCasingRule(MorphNameCasingRule.StringCasing.LowerKebab))
+                .Add(new MorphNamePrefixRule("--"))
+            ;
 
             rules.RequiredRules
                 .Add(new BooleanAttributeRule<RequiredAttribute>())
@@ -153,6 +161,10 @@ namespace System.CommandLine.GeneralAppModel
                 .Add(new AttributeWithPropertyValueRule<CommandAttribute, string>( "Name"))
                 .Add(new NameEndsWithRule("Command"))
                 .Add(new IdentityRule<string>())
+            ;
+
+            rules.CommandLineNameRules
+                .Add(new MorphNameCasingRule(MorphNameCasingRule.StringCasing.LowerKebab))
             ;
 
             rules.TreatUnmatchedTokensAsErrorsRules

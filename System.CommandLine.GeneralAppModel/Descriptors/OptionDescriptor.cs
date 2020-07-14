@@ -5,8 +5,9 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
     public class OptionDescriptor : SymbolDescriptor
     {
         public OptionDescriptor(ISymbolDescriptor parentSymbolDescriptorBase, 
+                                string originalName,
                                 object? raw)
-            : base(parentSymbolDescriptorBase, raw,  SymbolType.Option) { }
+            : base(parentSymbolDescriptorBase, originalName, raw, SymbolType.Option) { }
 
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
         public bool Required { get; set; }
@@ -15,7 +16,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public override string ReportInternal(int tabsCount, VerbosityLevel verbosity)
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
-            return $"{whitespace}Required:{Required}" ;
+            return $"{whitespace}Required:{Required}";
         }
 
     }

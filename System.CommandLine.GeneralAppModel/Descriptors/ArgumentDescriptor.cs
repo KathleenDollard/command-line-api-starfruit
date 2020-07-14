@@ -5,8 +5,9 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
     public class ArgumentDescriptor : SymbolDescriptor
     {
         public ArgumentDescriptor(ArgTypeInfo argumentTypeInfo, ISymbolDescriptor parentSymbolDescriptorBase,
+                                   string originalName,
                                    object? raw)
-            : base(parentSymbolDescriptorBase, raw, SymbolType.Argument)
+            : base(parentSymbolDescriptorBase, originalName,raw,  SymbolType.Argument)
         {
             ArgumentType = argumentTypeInfo;
         }
@@ -19,7 +20,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public DefaultValueDescriptor? DefaultValue { get; set; }
         public bool Required { get; set; }
 
-        public override string ReportInternal(int tabsCount, VerbosityLevel verbosity )
+        public override string ReportInternal(int tabsCount, VerbosityLevel verbosity)
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             return $"{whitespace}Arity:{Arity}" +

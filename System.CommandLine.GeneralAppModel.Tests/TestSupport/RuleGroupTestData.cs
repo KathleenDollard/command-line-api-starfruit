@@ -42,13 +42,13 @@ namespace System.CommandLine.GeneralAppModel.Tests
     {
         public string CompareTo { get; set; }
 
-        public NamePatternTestData(StringContentsRule.StringPosition position, string compareTo)
+        public NamePatternTestData(StringPosition position, string compareTo)
         {
             CompareTo = compareTo;
             Position = position;
         }
 
-        public StringContentsRule.StringPosition Position { get; set; }
+        public StringPosition Position { get; set; }
     }
 
     public class IdentityRuleTestData : RuleBaseTestData

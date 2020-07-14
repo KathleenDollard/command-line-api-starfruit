@@ -9,8 +9,9 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
     public class CommandDescriptor : SymbolDescriptor
     {
         public CommandDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
+                                 string originalName,
                                  object? raw)
-            : base(parentSymbolDescriptorBase, raw,  SymbolType.Command) { }
+            : base(parentSymbolDescriptorBase, originalName, raw, SymbolType.Command) { }
 
         public bool TreatUnmatchedTokensAsErrors { get; set; } = true;
         public List<ArgumentDescriptor> Arguments { get; } = new List<ArgumentDescriptor>();
@@ -18,7 +19,7 @@ namespace System.CommandLine.GeneralAppModel.Descriptors
         public InvokeMethodInfo? InvokeMethod { get; set; } // in Reflection models, this is a MethodInfo, in Roslyn it will be something else
         public List<CommandDescriptor> SubCommands { get; } = new List<CommandDescriptor>();
 
-        public override string ReportInternal(int tabsCount, VerbosityLevel verbosity )
+        public override string ReportInternal(int tabsCount, VerbosityLevel verbosity)
         {
             string whitespace = CoreExtensions.NewLineWithTabs(tabsCount);
             return $"{whitespace}TreatUnmatchedTokensAsErrors:{TreatUnmatchedTokensAsErrors}" +

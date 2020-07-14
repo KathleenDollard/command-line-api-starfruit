@@ -26,8 +26,6 @@ namespace System.CommandLine.GeneralAppModel
                  trait => DescriptorMakerSpecificSourceBase.Tools.DoesTraitMatch<TAttribute, TTraitType>(symbolDescriptor, trait, parentSymbolDescriptor));
 
         public override string RuleDescription<TIRuleSet>()
-           => (typeof(IRuleGetValue<string>).IsAssignableFrom(typeof(TIRuleSet))
-                ? "If " : "")
-            + $"with an attribute named '{typeof(TAttribute).Name.WithoutAttributeSuffix()}'";
+           =>  $"with an attribute named '{typeof(TAttribute).Name.WithoutAttributeSuffix()}'";
     }
 }

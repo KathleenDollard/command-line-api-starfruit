@@ -9,17 +9,19 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentBasicsTestData : MakerCommandTestData
     {
         public ArgumentBasicsTestData(string name, string description, string[] aliases, bool isHidden, Type argumentType)
-            : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(ArgumentBasicsTestData)) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, name, raw: typeof(ArgumentBasicsTestData)) { Name = DummyCommandName })
         {
             Descriptor.Arguments.Add(
-                new ArgumentDescriptor(new ArgTypeInfo ( argumentType), SymbolDescriptor.Empty, DummyRaw)
+                new ArgumentDescriptor(new ArgTypeInfo(argumentType), SymbolDescriptor.Empty, name, DummyRaw)
                 {
                     Name = name,
+                    CommandLineName = name,
                     Description = description,
                     Aliases = aliases,
                     IsHidden = isHidden,
                 });
             Name = name;
+            CommandLineName = name;
             Description = description;
             Aliases = aliases;
             IsHidden = isHidden;
@@ -27,6 +29,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         }
 
         public string Name { get; }
+        public string CommandLineName { get; }
         public string Description { get; }
         public string[] Aliases { get; }
         public bool IsHidden { get; }
@@ -48,9 +51,9 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentArityTestData : MakerCommandTestData
     {
         public ArgumentArityTestData(bool isSet, int? minValue = null, int? maxValue = null)
-            : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(ArgumentArityTestData)) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyCommandName, raw: typeof(ArgumentArityTestData)) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo (  typeof(string)), SymbolDescriptor.Empty, DummyRaw)
+            var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, DummyArgumentName, DummyRaw)
             {
                 Name = DummyArgumentName,
             };
@@ -87,16 +90,16 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class ArgumentDefaultValueTestData : MakerCommandTestData
     {
         public ArgumentDefaultValueTestData(bool isSet, object defaultValue)
-            : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(ArgumentDefaultValueTestData)) { Name = DummyCommandName })
+            : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyCommandName, raw: typeof(ArgumentDefaultValueTestData)) { Name = DummyCommandName })
         {
-            var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, DummyRaw)
+            var argDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, DummyArgumentName, DummyRaw)
             {
                 Name = DummyArgumentName,
             };
 
             if (isSet)
             {
-                argDescriptor.DefaultValue  = new DefaultValueDescriptor(defaultValue)
+                argDescriptor.DefaultValue = new DefaultValueDescriptor(defaultValue)
                 { };
             }
             Descriptor.Arguments.Add(argDescriptor);
@@ -112,7 +115,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
             var actual = command.Arguments.FirstOrDefault();
 
             using var scope = new AssertionScope();
-            actual.Should().HaveDefaultValue(IsSet, DefaultValue );
+            actual.Should().HaveDefaultValue(IsSet, DefaultValue);
         }
     }
 

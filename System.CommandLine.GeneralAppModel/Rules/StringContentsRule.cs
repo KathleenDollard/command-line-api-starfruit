@@ -17,12 +17,7 @@ namespace System.CommandLine.GeneralAppModel
         public StringPosition Position { get; }
         public string CompareTo { get; }
 
-        public enum StringPosition
-        {
-            BeginsWith = 1,
-            EndsWith,
-            Contains
-        }
+ 
 
         protected virtual string MorphValueInternal(ISymbolDescriptor symbolDescriptor,
                                                     object item,
