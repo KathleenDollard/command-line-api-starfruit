@@ -27,20 +27,22 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         #region Command tests
         [Theory]
-        [InlineData(full, typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), "")]
-        [InlineData(full, typeof(MethodWithNameAttribute), constant.Name , "")]
-        [InlineData(full, typeof(MethodWithNameInCommandAttribute), constant.Name, "")]
-        [InlineData(full, typeof(MethodWithDescriptionAttribute), constant.TestMethodName, constant.Description)]
-        [InlineData(full, typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
-        [InlineData(standard, typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), "")]
-        [InlineData(standard, typeof(MethodWithNameInCommandAttribute), constant.Name, "")]
-        [InlineData(standard, typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, constant.Description)]
-        public void NameAndDescriptionFromType(string useStrategy, Type typeToTest, string name, string description)
+        [InlineData(full, typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), constant.KebabMethodString, "")]
+        [InlineData(full, typeof(MethodWithNameAttribute), constant.Name, nameof(MethodWithNameAttribute.Method), constant.KebabName, "")]
+        [InlineData(full, typeof(MethodWithNameInCommandAttribute), constant.Name, nameof(MethodWithNameInCommandAttribute.Method), constant.KebabName, "")]
+        [InlineData(full, typeof(MethodWithDescriptionAttribute), constant.TestMethodName, nameof(MethodWithDescriptionAttribute.Method), constant.KebabTestMethodName, constant.Description)]
+        [InlineData(full, typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, nameof(MethodWithDescriptionInCommandAttribute.Method), constant.KebabTestMethodName, constant.Description)]
+        [InlineData(standard, typeof(MethodEmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), nameof(MethodEmptyMethod.EmptyMethod), constant.KebabMethodString, "")]
+        [InlineData(standard, typeof(MethodWithNameInCommandAttribute), constant.Name, nameof(MethodWithNameInCommandAttribute.Method), constant.KebabName, "")]
+        [InlineData(standard, typeof(MethodWithDescriptionInCommandAttribute), constant.TestMethodName, nameof(MethodWithDescriptionInCommandAttribute.Method), constant.KebabTestMethodName, constant.Description)]
+        public void MethodNameAndDescriptionFrom(string useStrategy, Type typeToTest, string name, string originalName, string commandLineName, string description)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy , method);
 
             descriptor.Should().HaveName(name)
+                    .And.HaveOriginalName(originalName)
+                    .And.HaveCommandLineName(commandLineName)
                     .And.HaveDescription(description);
         }
 
@@ -48,7 +50,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Theory]
         [InlineData(full, typeof(MethodWithOneAliasAttribute), constant.AliasAsStringSingle)]
         [InlineData(full, typeof(MethodWithThreeAliasesInOneAttribute), constant.AliasAsStringMultiple)]
-        public void AliasesFromType(string useStrategy, Type typeToTest, string aliasesAsString)
+        public void AliasesFromMethod(string useStrategy, Type typeToTest, string aliasesAsString)
         {
             var aliases = aliasesAsString is null
                           ? null
@@ -68,7 +70,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(full, typeof(MethodWithIsHiddenTrueAsImplied), true)]
         [InlineData(standard, typeof(MethodWithIsHiddenTrueInCommandAttribute), true)]
         [InlineData(standard, typeof(MethodWithIsHiddenFalseInCommandAttribute), false)]
-        public void CommandIsHiddenFromType(string useStrategy, Type typeToTest, bool isHidden)
+        public void CommandIsHiddenFromMethod(string useStrategy, Type typeToTest, bool isHidden)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
@@ -84,7 +86,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(full, typeof(MethodWithTreatUnmatchedTokensAsErrorsTrueAsImplied), true)]
         [InlineData(standard, typeof(MethodWithTreatUnmatchedTokensAsErrorsTrueInCommandAttribute), true)]
         [InlineData(standard, typeof(MethodWithTreatUnmatchedTokensAsErrorsFalseInCommandAttribute), false)]
-        public void CommandTreatUnmatchedTokensAsErrorsFromType(string useStrategy, Type typeToTest, bool treatUnmatchedTokensAsErrors)
+        public void CommandTreatUnmatchedTokensAsErrorsFromMethod(string useStrategy, Type typeToTest, bool treatUnmatchedTokensAsErrors)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
@@ -128,21 +130,24 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Option tests
 
         [Theory]
-        [InlineData(full, typeof(ParameterOptionWithName), constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithNameAttribute), constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithNameInOptionAttribute), constant.Name, "")]
-        [InlineData(full, typeof(ParameterOptionWithDescriptionAttribute), constant.ParameterOptionName, constant.Description)]
-        [InlineData(full, typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.Description)]
-        [InlineData(standard, typeof(ParameterOptionWithName), constant.Name, "")]
-        [InlineData(standard, typeof(ParameterOptionWithNameInOptionAttribute),  constant.Name, "")]
-        [InlineData(standard, typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.Description)]
-        public void OptionNameAndDescriptionFromParameter(string useStrategy, Type typeToTest, string name, string description)
+        [InlineData(full, typeof(ParameterOptionWithName), constant.Name, constant.Name, constant.KebabName, "")]
+        [InlineData(full, typeof(ParameterOptionWithNameAttribute), constant.Name, constant.ParameterOptionName, constant.KebabName, "")]
+        [InlineData(full, typeof(ParameterOptionWithNameInOptionAttribute), constant.Name, constant.ParameterOptionName, constant.KebabName, "")]
+        [InlineData(full, typeof(ParameterOptionWithDescriptionAttribute), constant.ParameterOptionName, constant.ParameterOptionName, constant.KebabParameterOptionName, constant.Description)]
+        [InlineData(full, typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.ParameterOptionName, constant.KebabParameterOptionName, constant.Description)]
+        [InlineData(standard, typeof(ParameterOptionWithName), constant.Name, constant.Name, constant.KebabName, "")]
+        [InlineData(standard, typeof(ParameterOptionWithNameInOptionAttribute),  constant.Name, constant.ParameterOptionName, constant.KebabName, "")]
+        [InlineData(standard, typeof(ParameterOptionWithDescriptionInOptionAttribute), constant.ParameterOptionName, constant.ParameterOptionName, constant.KebabParameterOptionName, constant.Description)]
+        public void OptionNameAndDescriptionFromParameter(string useStrategy, Type typeToTest, string name, string originalName, string commandLineName, string description)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
+            commandLineName = "--" + commandLineName;
 
             descriptor.Options.First()
                     .Should().HaveName(name)
+                    .And.HaveOriginalName(originalName)
+                    .And.HaveCommandLineName(commandLineName)
                     .And.HaveDescription(description);
         }
 
@@ -231,21 +236,23 @@ namespace System.CommandLine.GeneralAppModel.Tests
         #region Argument Tests
 
         [Theory]
-        [InlineData(full, typeof(ParameterArgumentWithName), constant.Name, "")]
-        [InlineData(full, typeof(ParameterArgumentWithNameAttribute), constant.Name, "")]
-        [InlineData(full, typeof(ParameterArgumentWithNameInArgumentAttribute), constant.Name, "")]
-        [InlineData(full, typeof(ParameterArgumentWithDescriptionAttribute), constant.ParameterArgName, constant.Description)]
-        [InlineData(full, typeof(ParameterArgumentWithDescriptionInArgumentAttribute), constant.ParameterArgName, constant.Description)]
-        [InlineData(standard, typeof(ParameterArgumentWithName), constant.Name, "")]
-        [InlineData(standard, typeof(ParameterArgumentWithNameInArgumentAttribute), constant.Name, "")]
-        [InlineData(standard, typeof(ParameterArgumentWithDescriptionInArgumentAttribute), constant.ParameterArgName, constant.Description)]
-        public void ArgumentNameAndDescriptionFromParameter(string useStrategy, Type typeToTest, string name, string description)
+        [InlineData(full, typeof(ParameterArgumentWithName), constant.Name, constant.Name + "Arg", constant.Name, "")]
+        [InlineData(full, typeof(ParameterArgumentWithNameAttribute), constant.Name, "ParamArg", constant.Name, "")]
+        [InlineData(full, typeof(ParameterArgumentWithNameInArgumentAttribute), constant.Name, "ParamArg", constant.Name, "")]
+        [InlineData(full, typeof(ParameterArgumentWithDescriptionAttribute), constant.ParameterArgName, constant.ParameterArgName + "Arg", constant.ParameterArgName, constant.Description)]
+        [InlineData(full, typeof(ParameterArgumentWithDescriptionInArgumentAttribute), constant.ParameterArgName, constant.ParameterArgName + "Arg", constant.ParameterArgName, constant.Description)]
+        [InlineData(standard, typeof(ParameterArgumentWithName), constant.Name, constant.Name + "Arg", constant.Name, "")]
+        [InlineData(standard, typeof(ParameterArgumentWithNameInArgumentAttribute), constant.Name, "ParamArg", constant.Name, "")]
+        [InlineData(standard, typeof(ParameterArgumentWithDescriptionInArgumentAttribute), constant.ParameterArgName, constant.ParameterArgName + "Arg", constant.ParameterArgName, constant.Description)]
+        public void ArgumentNameAndDescriptionFromParameter(string useStrategy, Type typeToTest, string name, string originalName, string commandLineName, string description)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
 
             descriptor.Arguments.First()
                     .Should().HaveName(name)
+                    .And.HaveOriginalName(originalName)
+                    .And.HaveCommandLineName(commandLineName)
                     .And.HaveDescription(description);
         }
 
@@ -306,7 +313,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(full, typeof(ParameterArgumentWithRequiredTrueAsImplied), true)]
         [InlineData(standard, typeof(ParameterArgumentWithRequiredTrueInArgumentAttribute), true)]
         [InlineData(standard, typeof(ParameterArgumentWithRequiredFalseInArgumentAttribute), false)]
-        public void ArgumentRequiredFromType(string useStrategy, Type typeToTest, bool isHidden)
+        public void ArgumentRequiredFromMethod(string useStrategy, Type typeToTest, bool isHidden)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
@@ -322,7 +329,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(standard, typeof(ParameterArgumentWithNoArity), false, 0, int.MaxValue)]
         [InlineData(standard, typeof(ParameterArgumentWithArityLowerBoundOnly), true, 2, int.MaxValue)]
         [InlineData(standard, typeof(ParameterArgumentWithArityBothBounds), true, 2, 3)]
-        public void ArgumentArityFromType(string useStrategy, Type typeToTest, bool isSet, int minCount, int maxCount)
+        public void ArgumentArityFromMethod(string useStrategy, Type typeToTest, bool isSet, int minCount, int maxCount)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);
@@ -338,7 +345,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData(standard, typeof(ParameterArgumentWithNoDefaultValue), false, null)]
         [InlineData(standard, typeof(ParameterArgumentWithStringDefaultValue), true, constant.DefaultValueString)]
         [InlineData(standard, typeof(ParameterArgumentWithIntegerDefaultValue), true, constant.DefaultValueInt)]
-        public void ArgumentDefaultValuesFromType(string useStrategy, Type typeToTest, bool isSet, object value)
+        public void ArgumentDefaultValuesFromMethod(string useStrategy, Type typeToTest, bool isSet, object value)
         {
             var method = typeToTest.GetMethods().First();
             var descriptor = ReflectionDescriptorMaker.RootCommandDescriptor(useStrategy == full ? fullStrategy : standardStrategy, method);

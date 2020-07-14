@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.CommandLine.GeneralAppModel.Descriptors;
 using System.CommandLine.GeneralAppModel.Tests.Maker;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -17,8 +18,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("\t")]
         public void DescriptorValidationThrowsIfSubCommandNameNullOrWhitespace(string? name)
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
-            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, null)
+#pragma warning disable CS8604 // This is part of the test, do not fix
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, name, raw: null);
+            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, name, raw: null)
+#pragma warning restore CS8604 // Possible null reference argument.
             { Name = name });
 
             var ex = Assert.Throws<InvalidOperationException>(() => CommandMaker.MakeRootCommand(descriptor));
@@ -35,8 +38,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("\t")]
         public void DescriptorValidationThrowsIfOptionNameNullOrWhitespace(string? name)
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
-            descriptor.Options.Add(new OptionDescriptor(SymbolDescriptor.Empty, null)
+#pragma warning disable CS8604 // This is part of the test, do not fix
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, name, raw: null);
+            descriptor.Options.Add(new OptionDescriptor(SymbolDescriptor.Empty, name, null)
+#pragma warning restore CS8604 // Possible null reference argument.
             { Name = name });
 
             var ex = Assert.Throws<InvalidOperationException>(() => CommandMaker.MakeRootCommand(descriptor));
@@ -53,7 +58,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("\t")]
         public void DescriptorValidationDoesNotThrowForEmptyRootName(string? name)
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null)
+#pragma warning disable CS8604 // This is part of the test, do not fix
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, name, raw: null)
+#pragma warning restore CS8604 // Possible null reference argument.
             { Name = name };
 
             var root = CommandMaker.MakeRootCommand(descriptor);
@@ -65,8 +72,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("george")]
         public void DescriptorValidationDoesNotThrowForNotEmptySubCommandName(string? name)
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandBasicsTestData));
-            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandBasicsTestData))
+#pragma warning disable CS8604 // This is part of the test, do not fix
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, name, raw: typeof(CommandBasicsTestData));
+            descriptor.CommandLineName = name;
+            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, name, raw: typeof(CommandBasicsTestData))
+#pragma warning restore CS8604 // Possible null reference argument.
             {
                 Name = name
             });
@@ -80,11 +90,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [InlineData("george")]
         public void DescriptorValidationDoesNotThrowForNotEmptyOptionName(string? name)
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
-            descriptor.Options.Add(new OptionDescriptor(SymbolDescriptor.Empty, null)
+#pragma warning disable CS8604 // This is part of the test, do not fix
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, name, raw: null);
+            descriptor.Options.Add(new OptionDescriptor(SymbolDescriptor.Empty, name, null)
+#pragma warning disable CS8604 // This is part of the test, do not fix
             {
                 Name = name
             });
+            descriptor.Options.First().CommandLineName  = name;
 
             var root = CommandMaker.MakeRootCommand(descriptor);
             root.Should().NotBeNull(); // Just be sure there is no exception
@@ -93,10 +106,10 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void DescriptorValidationThrowsIfArgumentTypeIsNull()
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, "", raw: null);
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             // DO NOT FIX THE NULLABLE IN THE NEXT LINE
-            descriptor.Arguments.Add(new ArgumentDescriptor(null, SymbolDescriptor.Empty, null));
+            descriptor.Arguments.Add(new ArgumentDescriptor(null, SymbolDescriptor.Empty, "", null));
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             var ex = Assert.Throws<InvalidOperationException>(() => CommandMaker.MakeRootCommand(descriptor));
@@ -109,14 +122,14 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void DescriptorValidationCanReportMultipleIssues()
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
-            descriptor.Options.Add(new OptionDescriptor(SymbolDescriptor.Empty, null)
-            { Name = null });
-            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, null)
-            { Name = null });
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null, raw: null);
+            descriptor.Options.Add(new OptionDescriptor(SymbolDescriptor.Empty, null, null)
+            { Name = null });
+            descriptor.SubCommands.Add(new CommandDescriptor(SymbolDescriptor.Empty, null, raw: null)
+            { Name = null });
             // DO NOT FIX THE NULLABLE IN THE NEXT LINE
-            descriptor.Arguments.Add(new ArgumentDescriptor(null, SymbolDescriptor.Empty, null));
+            descriptor.Arguments.Add(new ArgumentDescriptor(null, SymbolDescriptor.Empty, null, null));
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             var ex = Assert.Throws<InvalidOperationException>(() => CommandMaker.MakeRootCommand(descriptor));
@@ -132,9 +145,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         [Fact]
         public void DescriptorValidationThrowsIfALlowedValuesOfWrongType()
         {
-            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, null);
+            var descriptor = new CommandDescriptor(SymbolDescriptor.Empty, "", raw: null);
             // ArgumentType is int, value is string
-            var argumentDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(int)), SymbolDescriptor.Empty, null);
+            var argumentDescriptor = new ArgumentDescriptor(new ArgTypeInfo(typeof(int)), SymbolDescriptor.Empty, "", null);
             argumentDescriptor.AllowedValues.Add("Fred");
             descriptor.Arguments.Add(argumentDescriptor);
 

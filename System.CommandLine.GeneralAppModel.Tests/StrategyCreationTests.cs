@@ -37,11 +37,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
             rules.Should().HaveCount(7);
             rules[0].CheckAttributeRule<CommandAttribute>(SymbolType.Command);
-            rules[1].CheckNamePatternRule(SymbolType.Command, StringContentsRule.StringPosition.EndsWith, "Command");
+            rules[1].CheckNamePatternRule(SymbolType.Command, StringPosition.EndsWith, "Command");
             rules[2].CheckIsOfTypeRule(SymbolType.Command, typeof(Type));
             rules[3].CheckAttributeRule<ArgumentAttribute>(SymbolType.Argument);
-            rules[4].CheckNamePatternRule(SymbolType.Argument, StringContentsRule.StringPosition.EndsWith, "Argument");
-            rules[5].CheckNamePatternRule(SymbolType.Argument, StringContentsRule.StringPosition.EndsWith, "Arg");
+            rules[4].CheckNamePatternRule(SymbolType.Argument, StringPosition.EndsWith, "Argument");
+            rules[5].CheckNamePatternRule(SymbolType.Argument, StringPosition.EndsWith, "Arg");
             rules[6].CheckRule<RemainingSymbolRule>(SymbolType.Option);
 
         }
@@ -70,8 +70,8 @@ namespace System.CommandLine.GeneralAppModel.Tests
                     {
                         new NamedAttributeWithPropertyTestData("Name","Name", typeof(string)),
                         new NamedAttributeWithPropertyTestData("Argument","Name", typeof(string)),
-                        new NamePatternTestData(StringContentsRule.StringPosition.EndsWith, "Arg"),
-                        new NamePatternTestData(StringContentsRule.StringPosition.EndsWith, "Argument"),
+                        new NamePatternTestData(StringPosition.EndsWith, "Arg"),
+                        new NamePatternTestData(StringPosition.EndsWith, "Argument"),
                         new IdentityRuleTestData(typeof(string))
                     }
             });

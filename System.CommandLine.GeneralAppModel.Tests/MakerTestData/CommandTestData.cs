@@ -12,7 +12,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     {
         public CommandBasicsTestData(string name, string description, string[] aliases, bool isHidden, bool treatUnmatchedTokensAsErrors)
             : base(
-                      new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandBasicsTestData))
+                      new CommandDescriptor(SymbolDescriptor.Empty, name, raw: typeof(CommandBasicsTestData))
                       {
                           Name = name,
                           Description = description,
@@ -55,10 +55,10 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     {
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandOneSubCommandTestData(string subCommandName)
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandOneSubCommandTestData)) { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyCommandName, raw: typeof(CommandOneSubCommandTestData)) { Name = DummyCommandName })
         {
             Descriptor.SubCommands.Add(
-                new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandDescriptor))
+                new CommandDescriptor(SymbolDescriptor.Empty, subCommandName, raw: typeof(CommandDescriptor))
                 {
                     Name = subCommandName
                 });
@@ -81,15 +81,15 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     {
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandTwoSubCommandsTestData(string subCommandName1, string subCommandName2)
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandTwoSubCommandsTestData)) { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyCommandName, raw: typeof(CommandTwoSubCommandsTestData)) { Name = DummyCommandName })
         {
             Descriptor.SubCommands.Add(
-                new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandHandlerRunsTestData))
+                new CommandDescriptor(SymbolDescriptor.Empty, subCommandName1, raw: typeof(CommandHandlerRunsTestData))
                 {
                     Name = subCommandName1
                 });
             Descriptor.SubCommands.Add(
-                new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandHandlerRunsTestData))
+                new CommandDescriptor(SymbolDescriptor.Empty, subCommandName2, raw: typeof(CommandHandlerRunsTestData))
                 {
                     Name = subCommandName2
                 });
@@ -119,13 +119,17 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         private static string checkValue = "";
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandHandlerRunsTestData()
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandHandlerRunsTestData).GetMethod("Run")!)
-              { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, "Run", raw: typeof(CommandHandlerRunsTestData).GetMethod("Run")!)
+              {
+                  Name = DummyCommandName,
+                  CommandLineName = KebabDummyCommandName
+              })
         {
             Descriptor.Arguments.Add(
-                    new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                    new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, "HelloTo", Utils.EmptyRawForTest)
                     {
-                        Name = "HelloTo"
+                        Name = "HelloTo",
+                        CommandLineName = "HelloTo"
                     }
                 );
         }
@@ -158,9 +162,10 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         private static string checkValue = "";
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandInvokeMethodTestData()
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandInvokeMethodTestData))
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyCommandName, raw: typeof(CommandInvokeMethodTestData))
               {
                   Name = DummyCommandName,
+                  CommandLineName = KebabDummyCommandName,
                   InvokeMethod = new InvokeMethodInfo(typeof(CommandInvokeMethodTestData).GetMethod("Invoke")!, "Invoke", 0)
               })
         { }
@@ -194,22 +199,25 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         private static string checkValue = "";
         // Option and ArgumentTestData of necessity test adding a single option and argument
         public CommandInvokeMethodMultipleParametersTestData()
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(CommandInvokeMethodMultipleParametersTestData))
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, DummyCommandName, raw: typeof(CommandInvokeMethodMultipleParametersTestData))
               {
                   Name = DummyCommandName,
+                  CommandLineName = KebabDummyCommandName,
                   InvokeMethod = new InvokeMethodInfo(typeof(CommandInvokeMethodMultipleParametersTestData).GetMethod("Invoke")!, "Invoke", 0)
               })
         {
             Descriptor.Arguments.Add(
-                  new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                  new ArgumentDescriptor(new ArgTypeInfo(typeof(string)), SymbolDescriptor.Empty, "To", Utils.EmptyRawForTest)
                   {
-                      Name = "To"
+                      Name = "To",
+                      CommandLineName = "to"
                   }
               );
             Descriptor.Options.Add(
-                 new OptionDescriptor( SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                 new OptionDescriptor(SymbolDescriptor.Empty, "AllCaps", Utils.EmptyRawForTest)
                  {
-                     Name = "AllCaps"
+                     Name = "AllCaps",
+                     CommandLineName = "--all-caps"
                  }
              );
         }

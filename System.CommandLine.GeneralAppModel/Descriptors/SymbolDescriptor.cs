@@ -7,12 +7,21 @@ namespace System.CommandLine.GeneralAppModel
 
     public class EmptySymbolDescriptor : ISymbolDescriptor
     {
+        public EmptySymbolDescriptor()
+        {
+            OriginalName = string.Empty;
+        }
         public SymbolType SymbolType { get; }
         public object? Raw { get; }
         public IEnumerable<string>? Aliases { get; }
         public string? Description { get; }
-        public string? Name { get; }
+
+          public string? Name { get; }
+
         public string? CommandLineName { get; }
+
+        public string OriginalName { get; }
+
         public bool IsHidden { get; set; }
 
         public  string Report(int tabsCount, VerbosityLevel verbosity)
@@ -24,11 +33,13 @@ namespace System.CommandLine.GeneralAppModel
         public static ISymbolDescriptor Empty = new EmptySymbolDescriptor();
 
         public SymbolDescriptor(ISymbolDescriptor parentSymbolDescriptorBase,
+                                    string originalName,
                                     object? raw,
                                     SymbolType symbolType)
         {
             ParentSymbolDescriptorBase = parentSymbolDescriptorBase;
             Raw = raw;
+            OriginalName = originalName;
             SymbolType = symbolType;
         }
 
@@ -92,8 +103,35 @@ namespace System.CommandLine.GeneralAppModel
         public IEnumerable<string>? Aliases { get; set; }
         // TODO: Understand raw aliases: public IReadOnlyList<string> RawAliases { get; }
         public string? Description { get; set; }
+
+        /// <summary>
+        /// The name as used to communicate with the end user. For example, an Arg suffix might be removed
+        /// but the option prefix is not included.
+        /// </summary>
+        /// <remarks>
+        /// The Name should not be ambiguous with an OriginalName and vice versa. For example, if you are 
+        /// removing Arg suffixes via rules (a standard scenario), then having an BlahArg and a BlahArgArg 
+        /// argument woudl not be legal. 
+        /// </remarks>
         public virtual string? Name { get; set; }
-        public string? CommandLineName { get; }
+
+        /// <summary>
+        /// The name as used when System.CommandLine objects are created. This name includes option prefixes
+        /// and is the name as it should appear in automated help. 
+        /// </summary>
+        public string? CommandLineName { get; set; }
+
+        /// <summary>
+        /// The original name in the model. This is used for DescriptionSource (which recognizes either Name or 
+        /// OriginalName
+        /// </summary>
+        /// <remarks>
+        /// The Name should not be ambiguous with an OriginalName and vice versa. For example, if you are 
+        /// removing Arg suffixes via rules (a standard scenario), then having an BlahArg and a BlahArgArg 
+        /// argument woudl not be legal. 
+        /// </remarks>
+        public string OriginalName { get; }
+
         public bool IsHidden { get; set; }
     }
 }

@@ -39,6 +39,11 @@ namespace System.CommandLine.GeneralAppModel.Tests
         internal const string ParameterOptionName = "Param";
         internal const string ParameterArgName = "Param";
 
+        internal const string KebabMethodString = "empty-method";
+        internal const string KebabName = "george";
+        internal const string KebabTestMethodName = "method";
+        internal const string KebabParameterOptionName = "param";
+
         private readonly Strategy fullStrategy;
         private readonly Strategy standardStrategy;
         private const string full = "Full";

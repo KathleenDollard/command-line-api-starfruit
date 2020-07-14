@@ -36,7 +36,7 @@ namespace System.CommandLine.GeneralAppModel.Tests
             rule.SymbolType.Should().IncludeSymbolType(symbolType);
         }
 
-        public static void CheckNamePatternRule(this IRule rule, SymbolType symbolType, StringContentsRule.StringPosition position, string compareTo)
+        public static void CheckNamePatternRule(this IRule rule, SymbolType symbolType, StringPosition position, string compareTo)
         {
             rule.CheckRule<NameEndsWithRule>(symbolType);
             var typeRule = rule as NameEndsWithRule;

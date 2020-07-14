@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace System.CommandLine.GeneralAppModel
 {
@@ -81,6 +82,20 @@ namespace System.CommandLine.GeneralAppModel
             }
             return values;
         }
+
+        public virtual string MorphNameAgainstAllRules(string name, 
+                                                       ISymbolDescriptor symbolDescriptor,
+                                                       Candidate candidate,
+                                                       ISymbolDescriptor parentSymbolDescriptor)
+        {
+            var nameRules = Rules.OfType<IMorphNameRule >().ToList();
+            foreach (var rule in nameRules)
+            {
+                name = rule.MorphName(name, symbolDescriptor, candidate.Traits, parentSymbolDescriptor);
+            }
+            return name;
+        }
+
         public void ReplaceAbstractRules(DescriptorMakerSpecificSourceBase tools)
         {
             var abstractRules = this.Where(r => typeof(IAbstractRule).IsAssignableFrom(r.GetType()));
@@ -134,5 +149,6 @@ namespace System.CommandLine.GeneralAppModel
                 return derivedType;
             }
         }
+    
     }
 }

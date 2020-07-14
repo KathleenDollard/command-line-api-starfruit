@@ -15,7 +15,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static OptionDescriptor CreateDescriptor(this OptionTestData data, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var option = new OptionDescriptor(SymbolDescriptor.Empty, data.Raw)
+#pragma warning disable CS8604 // Possible null reference argument.
+            var option = new OptionDescriptor(SymbolDescriptor.Empty, data.Name, data.Raw)
+#pragma warning restore CS8604 // Possible null reference argument.
             {
                 Name = data.Name,
                 Description = data.Description,
@@ -34,7 +36,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
         public static ArgumentDescriptor CreateDescriptor(this ArgumentTestData data, ISymbolDescriptor parentSymbolDescriptor)
         {
             var _ = data.ArgumentType ?? throw new InvalidOperationException("ArgumentType cannot be null");
-            var arg = new ArgumentDescriptor(new ArgTypeInfo(data.ArgumentType), parentSymbolDescriptor, data.Raw)
+#pragma warning disable CS8604 // Possible null reference argument.
+            var arg = new ArgumentDescriptor(new ArgTypeInfo(data.ArgumentType), parentSymbolDescriptor, data.Name, data.Raw)
+#pragma warning restore CS8604 // Possible null reference argument.
             {
                 Name = data.Name,
                 Description = data.Description,
@@ -58,7 +62,9 @@ namespace System.CommandLine.GeneralAppModel.Tests
 
         public static CommandDescriptor CreateDescriptor(this CommandTestData data, ISymbolDescriptor parentSymbolDescriptor)
         {
-            var command = new CommandDescriptor(parentSymbolDescriptor, data.Raw)
+#pragma warning disable CS8604 // Possible null reference argument.
+            var command = new CommandDescriptor(parentSymbolDescriptor, data.Name, raw: data.Raw)
+#pragma warning restore CS8604 // Possible null reference argument.
             {
                 Name = data.Name,
                 Description = data.Description,

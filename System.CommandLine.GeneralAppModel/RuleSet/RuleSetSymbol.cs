@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.CommandLine.GeneralAppModel.Rules;
 using System.Linq;
 
 namespace System.CommandLine.GeneralAppModel
@@ -12,6 +13,7 @@ namespace System.CommandLine.GeneralAppModel
         /// Some NameRules will also morph the names. When morphing names, only those name rules with IRuleMorphValue<string>  will be used
         /// </summary>
         public RuleGroup<IRuleGetValue<string>> NameRules { get; } = new RuleGroup<IRuleGetValue<string>>();
+        public RuleGroup<IMorphNameRule> CommandLineNameRules { get; } = new RuleGroup<IMorphNameRule>();
         public RuleGroup<IRuleGetValues<string[]>> AliasRules { get; } = new RuleGroup<IRuleGetValues<string[]>>();
         public RuleGroup<IRuleGetValue<bool>> IsHiddenRules { get; } = new RuleGroup<IRuleGetValue<bool>>();
 
@@ -31,7 +33,7 @@ namespace System.CommandLine.GeneralAppModel
                     + IsHiddenRules.ReportRuleGroup(tabsCount, "whether to hide this in the CLI");
         }
 
-        public  virtual IEnumerable<DetailReportStructure> GetRulesReportStructure()
+        public virtual IEnumerable<DetailReportStructure> GetRulesReportStructure()
         {
             return NameRules.Select(x => new DetailReportStructure("Name", x.RuleDescription<RuleSetSymbol>(), x.GetType()))
                 .Union(DescriptionRules.Select(x => new DetailReportStructure("Description", x.RuleDescription<RuleSetSymbol>(), x.GetType())))

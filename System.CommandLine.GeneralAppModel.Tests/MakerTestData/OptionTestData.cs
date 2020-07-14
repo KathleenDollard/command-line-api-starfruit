@@ -9,12 +9,17 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
     public class OptionBasicsTestData : MakerCommandTestData
     {
         public OptionBasicsTestData(string name, string description, string[] aliases, bool isHidden, bool required)
-              : base(new CommandDescriptor(SymbolDescriptor.Empty, typeof(OptionBasicsTestData)) { Name = DummyCommandName })
+              : base(new CommandDescriptor(SymbolDescriptor.Empty, name, raw: typeof(OptionBasicsTestData))
+              {
+                  Name = DummyCommandName,
+                  CommandLineName = KebabDummyCommandName
+              })
         {
             Descriptor.Options.Add(
-                        new OptionDescriptor(SymbolDescriptor.Empty, Utils.EmptyRawForTest)
+                        new OptionDescriptor(SymbolDescriptor.Empty, name, Utils.EmptyRawForTest)
                         {
                             Name = name,
+                            CommandLineName = name,
                             Description = description,
                             Aliases = aliases,
                             IsHidden = isHidden,
@@ -34,7 +39,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         public bool IsHidden { get; }
         public bool Required { get; }
 
-        public override void Check(Command  command)
+        public override void Check(Command command)
         {
             var actual = command.Options.FirstOrDefault();
             var name = Name.ToKebabCase().ToLowerInvariant();

@@ -8,6 +8,7 @@ namespace System.CommandLine.GeneralAppModel.Tests.Maker
         protected const string DummyArgumentName = "DummyArgumentName";
         protected const string DummyCommandName = "DummyCommandName";
         protected const string DummyRaw = "Explicit Descriptor";
+        protected const string KebabDummyCommandName = "dummy-command-name";
 
         public MakerCommandTestData(CommandDescriptor descriptor)
         {
